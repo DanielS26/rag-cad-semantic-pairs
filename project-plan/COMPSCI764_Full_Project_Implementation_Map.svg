@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2900" viewBox="0 0 1800 2900" role="img" aria-labelledby="title desc">
+  <title id="title">COMPSCI 764 full project implementation map</title>
+  <desc id="desc">A top-to-bottom architecture map for native Windows development, GitHub version control, Colab GPU execution, official CAD release validation, Google Drive artefact storage, controlled dataset construction, fixed CAD training, and fixed RAG evaluation.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475467"/>
+    </marker>
+    <style>
+      .page { fill:#ffffff; }
+      .band { fill:#f8fafc; stroke:#98a2b3; stroke-width:2; rx:18; }
+      .band-title { font:700 25px Arial, Helvetica, sans-serif; fill:#172b4d; }
+      .band-subtitle { font:400 16px Arial, Helvetica, sans-serif; fill:#667085; }
+      .node-title { font:700 18px Arial, Helvetica, sans-serif; text-anchor:middle; fill:#172b4d; }
+      .node-body { font:400 15px Arial, Helvetica, sans-serif; text-anchor:middle; fill:#344054; }
+      .small { font:400 14px Arial, Helvetica, sans-serif; text-anchor:middle; fill:#475467; }
+      .edge-label { font:700 14px Arial, Helvetica, sans-serif; text-anchor:middle; fill:#344054; paint-order:stroke; stroke:#fff; stroke-width:5px; stroke-linejoin:round; }
+      .edge { fill:none; stroke:#475467; stroke-width:3; marker-end:url(#arrow); }
+      .edge-thin { fill:none; stroke:#667085; stroke-width:2.4; marker-end:url(#arrow); }
+      .edge-dashed { fill:none; stroke:#7c4dcc; stroke-width:2.7; stroke-dasharray:10 8; marker-end:url(#arrow); }
+      .edge-note { fill:none; stroke:#667085; stroke-width:2.2; stroke-dasharray:7 6; marker-end:url(#arrow); }
+      .external { fill:#e8f1ff; stroke:#2563a8; stroke-width:2.5; }
+      .project { fill:#fff3df; stroke:#c76a00; stroke-width:2.5; }
+      .fixed { fill:#e9f7ef; stroke:#238653; stroke-width:2.5; }
+      .gate { fill:#fff0f0; stroke:#c73838; stroke-width:2.5; }
+      .diagnostic { fill:#f3f4f6; stroke:#667085; stroke-width:2.5; }
+      .optional { fill:#f3ebff; stroke:#7c4dcc; stroke-width:2.5; stroke-dasharray:8 6; }
+      .note { fill:#ffffff; stroke:#98a2b3; stroke-width:1.8; }
+      .stage-pill { fill:#172b4d; }
+      .stage-number { font:700 18px Arial, Helvetica, sans-serif; text-anchor:middle; fill:#ffffff; }
+    </style>
+  </defs>
+
+  <rect class="page" x="0" y="0" width="1800" height="2900"/>
+  <text x="900" y="46" text-anchor="middle" style="font:700 31px Arial, Helvetica, sans-serif; fill:#101828;">COMPSCI 764 — Full Project Implementation Map</text>
+  <text x="900" y="76" text-anchor="middle" style="font:400 17px Arial, Helvetica, sans-serif; fill:#667085;">Semantic minimal-pair supervision for a fixed CAD-derived RAG trust scorer · Version 4.1 · 19 September 2026</text>
+
+  <!-- Stage backgrounds -->
+  <rect class="band" x="40" y="100" width="1720" height="470" rx="18"/>
+  <rect class="stage-pill" x="65" y="120" width="35" height="35" rx="9"/><text class="stage-number" x="82.5" y="144">A</text>
+  <text class="band-title" x="115" y="146">Development, execution, and persistence spine</text>
+  <text class="band-subtitle" x="115" y="172">Code stays in GitHub; compute happens on temporary Colab storage; only validated artefacts persist in Drive.</text>
+
+  <rect class="band" x="40" y="600" width="1720" height="500" rx="18"/>
+  <rect class="stage-pill" x="65" y="620" width="35" height="35" rx="9"/><text class="stage-number" x="82.5" y="644">0</text>
+  <text class="band-title" x="115" y="646">Upstream evidence, governance, and scientific freeze gates</text>
+  <text class="band-subtitle" x="115" y="672">Validate the official release and resolve representation provenance before producing final features.</text>
+
+  <rect class="band" x="40" y="1130" width="1720" height="370" rx="18"/>
+  <rect class="stage-pill" x="65" y="1150" width="35" height="35" rx="9"/><text class="stage-number" x="82.5" y="1174">1</text>
+  <text class="band-title" x="115" y="1176">Project-owned controlled data layer</text>
+  <text class="band-subtitle" x="115" y="1202">Split by pair family before expansion; equalise augmentation budgets; validate leakage and provenance.</text>
+
+  <rect class="band" x="40" y="1530" width="1720" height="470" rx="18"/>
+  <rect class="stage-pill" x="65" y="1550" width="35" height="35" rx="9"/><text class="stage-number" x="82.5" y="1574">2</text>
+  <text class="band-title" x="115" y="1576">Fixed CAD-derived feature, training, and offline evaluation pipeline</text>
+  <text class="band-subtitle" x="115" y="1602">Change only the selected training rows; keep representation, encoder, architecture, training recipe, validation, and tests fixed.</text>
+
+  <rect class="band" x="40" y="2030" width="1720" height="590" rx="18"/>
+  <rect class="stage-pill" x="65" y="2050" width="35" height="35" rx="9"/><text class="stage-number" x="82.5" y="2074">3</text>
+  <text class="band-title" x="115" y="2076">Fixed end-to-end RAG harness</text>
+  <text class="band-subtitle" x="115" y="2102">Replay the same retrieved passages; switch only the CAD checkpoint; never train the generator.</text>
+
+  <rect class="band" x="40" y="2650" width="1720" height="210" rx="18"/>
+  <text class="band-title" x="70" y="2684">Legend and reading guide</text>
+
+  <!-- All connectors are deliberately drawn before nodes so arrows remain behind boxes. -->
+  <g id="connectors">
+    <!-- Execution spine -->
+    <path class="edge" d="M370 238 H420"/>
+    <path class="edge" d="M700 238 H750"/>
+    <path class="edge" d="M1040 238 H1124"/>
+    <path class="edge" d="M1215 292 V330 H1230 V350"/>
+    <path class="edge" d="M1306 238 H1405 V350"/>
+    <path class="edge" d="M1080 397 H1030"/>
+    <path class="edge" d="M730 397 H700"/>
+    <path class="edge" d="M400 397 H370"/>
+    <path class="edge-note" d="M230 444 V525 H1230 V444"/>
+    <text class="edge-label" x="1250" y="326">PASS</text>
+    <text class="edge-label" x="1364" y="226">FAIL</text>
+    <text class="edge-label" x="720" y="516">later runtime: restore by artefact ID + hash</text>
+
+    <!-- Execution to evidence -->
+    <path class="edge" d="M880 444 V585 H270 V708"/>
+    <text class="edge-label" x="630" y="580">runs audited workflow</text>
+
+    <!-- Evidence and gates -->
+    <path class="edge" d="M280 808 V815 H550 V825"/>
+    <path class="edge" d="M460 751 H930 V876 H1145"/>
+    <path class="edge" d="M1150 794 V810 H1235 V825"/>
+    <path class="edge" d="M550 927 V952 H260 V972"/>
+    <path class="edge" d="M550 927 V952 H590 V972"/>
+    <path class="edge" d="M1235 927 V972 H1170"/>
+    <path class="edge-note" d="M550 927 V945 H1370 V1018 H1400"/>
+    <path class="edge-note" d="M1325 876 H1380 V1008 H1400"/>
+    <text class="edge-label" x="350" y="947">PASS</text>
+    <text class="edge-label" x="650" y="947">FAIL</text>
+
+    <!-- Evidence to data -->
+    <path class="edge" d="M260 1065 V1228"/>
+    <path class="edge-thin" style="marker-end:none" d="M590 1065 V1105 H260"/>
+
+    <!-- Data pipeline -->
+    <path class="edge" d="M410 1266 H455 V1210 H985 V1222"/>
+    <path class="edge" d="M790 1266 H845"/>
+    <path class="edge" d="M1125 1266 H1225"/>
+    <path class="edge-thin" d="M1375 1310 V1335 H245 V1370"/>
+    <path class="edge-thin" d="M1375 1310 V1335 H655 V1370"/>
+    <path class="edge-thin" d="M1375 1310 V1335 H1065 V1370"/>
+    <path class="edge-thin" d="M1375 1310 V1370 H1475"/>
+
+    <!-- Data conditions into CAD manifest via a single bus -->
+    <path class="edge-thin" d="M245 1462 V1510"/>
+    <path class="edge-thin" d="M655 1462 V1510"/>
+    <path class="edge-thin" d="M1065 1462 V1510"/>
+    <path class="edge-thin" d="M1475 1462 V1510"/>
+    <path class="edge-thin" d="M245 1510 H1475" marker-end="none"/>
+    <path class="edge" d="M245 1510 V1640"/>
+
+    <!-- Frozen specification to feature builder routed around the data band -->
+    <path class="edge" d="M1170 1065 H1725 V1620 H600 V1640"/>
+    <text class="edge-label" x="1480" y="1613">frozen feature specification</text>
+
+    <!-- CAD pipeline -->
+    <path class="edge" d="M390 1685 H440"/>
+    <path class="edge" d="M730 1685 H780"/>
+    <path class="edge" d="M1070 1685 H1120"/>
+    <path class="edge" d="M1410 1685 H1460"/>
+    <path class="edge" d="M700 1885 H770"/>
+    <path class="edge" d="M1070 1885 H1150"/>
+    <path class="edge" d="M1585 1730 V1785 H920 V1838"/>
+    <path class="edge-dashed" d="M260 1065 H55 V1790 H80"/>
+    <path class="edge-dashed" d="M350 1790 H720 V1885 H770"/>
+
+    <!-- CAD checkpoint registry to RAG selector, routed at right margin -->
+    <path class="edge" d="M1585 1730 H1730 V2180 H1580 V2230"/>
+    <path class="edge" d="M1450 2271 H640 V2330"/>
+    <text class="edge-label" x="1080" y="2263">select condition + seed</text>
+
+    <!-- RAG fixed retrieval -->
+    <path class="edge" d="M390 2175 H450"/>
+    <path class="edge" d="M740 2175 H800"/>
+    <path class="edge" d="M1090 2175 H1150"/>
+    <path class="edge" d="M1295 2220 V2250 H250 V2330"/>
+    <text class="edge-label" x="775" y="2242">identical cached passages for every scorer</text>
+
+    <!-- RAG scoring and generation -->
+    <path class="edge" d="M400 2375 H490"/>
+    <path class="edge" d="M790 2375 H860"/>
+    <path class="edge" d="M1160 2375 H1240"/>
+    <path class="edge-note" d="M250 2420 V2450 H1430 V2420"/>
+    <text class="edge-label" x="900" y="2442">N0 no-defence reference</text>
+
+    <!-- Outputs and comparison -->
+    <path class="edge" d="M1430 2420 V2490"/>
+    <path class="edge" d="M1260 2532 H1150"/>
+    <path class="edge" d="M850 2532 H780"/>
+    <path class="edge-dashed" d="M1460 1770 H1750 V2588 H390 V2532"/>
+    <text class="edge-label" x="452" y="2580">secondary benchmark only</text>
+  </g>
+
+  <g id="nodes">
+    <!-- Execution nodes -->
+    <g><rect class="project" x="90" y="195" width="280" height="86" rx="15"/><text class="node-title" x="230" y="226">Native Windows + VS Code</text><text class="node-body" x="230" y="251">edit · review · CPU/fake tests</text></g>
+    <g><path class="external" d="M420 207 C420 191 700 191 700 207 V269 C700 285 420 285 420 269 Z"/><ellipse class="external" cx="560" cy="207" rx="140" ry="16"/><text class="node-title" x="560" y="227">Private GitHub</text><text class="node-body" x="560" y="251">source of truth · PRs · exact commits · CI</text></g>
+    <g><rect class="external" x="750" y="195" width="290" height="86"/><text class="node-title" x="895" y="226">Hosted Colab Linux GPU</text><text class="node-body" x="895" y="251">thin runner · exact detached commit</text></g>
+    <g><polygon class="gate" points="1215,184 1306,238 1215,292 1124,238"/><text class="node-title" x="1215" y="226">Fresh-runtime gate</text><text class="small" x="1215" y="249">lock · tests · GPU &gt; 8 GiB</text></g>
+    <g><rect class="diagnostic" x="1410" y="350" width="280" height="94" rx="15"/><text class="node-title" x="1550" y="382">STOP</text><text class="node-body" x="1550" y="407">diagnose; do not scale</text><text class="node-body" x="1550" y="427">or pay for a long run</text></g>
+    <g><rect class="project" x="1080" y="350" width="300" height="94" rx="15"/><text class="node-title" x="1230" y="382">Restore verified inputs</text><text class="node-body" x="1230" y="408">copy from Drive by artefact ID</text><text class="node-body" x="1230" y="428">and verify SHA-256</text></g>
+    <g><rect class="project" x="730" y="350" width="300" height="94" rx="15"/><text class="node-title" x="880" y="382">/content/work</text><text class="node-body" x="880" y="408">run project CLI on fast</text><text class="node-body" x="880" y="428">temporary local disk</text></g>
+    <g><rect class="project" x="400" y="350" width="300" height="94" rx="15"/><text class="node-title" x="550" y="382">Validate and publish</text><text class="node-body" x="550" y="408">hash first; success marker last;</text><text class="node-body" x="550" y="428">never overwrite a completed run</text></g>
+    <g><path class="external" d="M90 364 C90 345 370 345 370 364 V428 C370 447 90 447 90 428 Z"/><ellipse class="external" cx="230" cy="364" rx="140" ry="19"/><text class="node-title" x="230" y="389">Google Drive</text><text class="node-body" x="230" y="414">immutable large artefacts + manifests</text></g>
+
+    <!-- Evidence nodes -->
+    <g><rect class="external" x="100" y="708" width="360" height="100"/><text class="node-title" x="280" y="741">CAD paper + repo + HF release</text><text class="node-body" x="280" y="767">pin code, data, and model revisions</text><text class="node-body" x="280" y="789">full SHAs recorded in every run manifest</text></g>
+    <g><rect class="external" x="990" y="708" width="320" height="86"/><text class="node-title" x="1150" y="740">Jina embeddings v3</text><text class="node-body" x="1150" y="766">frozen encoder · pin exact revision</text></g>
+    <g><polygon class="gate" points="550,825 640,876 550,927 460,876"/><text class="node-title" x="550" y="858">Official release</text><text class="small" x="550" y="881">revisions · hashes · schema</text><text class="small" x="550" y="899">checkpoint compatible?</text></g>
+    <g><polygon class="gate" points="1235,825 1325,876 1235,927 1145,876"/><text class="node-title" x="1235" y="865">Representation</text><text class="small" x="1235" y="888">paper-exact or repo-compatible?</text></g>
+    <g><path class="external" d="M100 986 C100 970 420 970 420 986 V1049 C420 1065 100 1065 100 1049 Z"/><ellipse class="external" cx="260" cy="986" rx="160" ry="16"/><text class="node-title" x="260" y="1008">Audited official release</text><text class="node-body" x="260" y="1032">D0 + test + base checkpoint reference</text></g>
+    <g><path class="diagnostic" d="M430 986 C430 970 750 970 750 986 V1049 C750 1065 430 1065 430 1049 Z"/><ellipse class="diagnostic" cx="590" cy="986" rx="160" ry="16"/><text class="node-title" x="590" y="1008">Fallback reconstructed D0</text><text class="node-body" x="590" y="1032">only after documented release failure</text></g>
+    <g><rect class="fixed" x="1000" y="972" width="340" height="93" rx="15"/><text class="node-title" x="1170" y="1003">Freeze scientific specification</text><text class="node-body" x="1170" y="1029">representation · encoder · segmenter</text><text class="node-body" x="1170" y="1049">dtype · environment</text></g>
+    <g><path class="project" d="M1400 986 C1400 970 1700 970 1700 986 V1049 C1700 1065 1400 1065 1400 1049 Z"/><ellipse class="project" cx="1550" cy="986" rx="150" ry="16"/><text class="node-title" x="1550" y="1008">Decision log</text><text class="node-body" x="1550" y="1032">agent proposes · researcher confirms · append</text></g>
+
+    <!-- Controlled data nodes -->
+    <g><path class="project" d="M100 1238 C100 1220 410 1220 410 1238 V1292 C410 1310 100 1310 100 1292 Z"/><ellipse class="project" cx="255" cy="1238" rx="155" ry="18"/><text class="node-title" x="255" y="1260">Adapted official D0</text><text class="node-body" x="255" y="1284">explicit labels · immutable provenance</text></g>
+    <g><path class="project" d="M500 1238 C500 1220 790 1220 790 1238 V1292 C790 1310 500 1310 500 1292 Z"/><ellipse class="project" cx="645" cy="1238" rx="145" ry="18"/><text class="node-title" x="645" y="1260">Augmentation pools</text><text class="node-body" x="645" y="1284">shared malicious + three benign strategies</text></g>
+    <g><rect class="project" x="845" y="1222" width="280" height="88" rx="15"/><text class="node-title" x="985" y="1253">Family/group split</text><text class="node-body" x="985" y="1278">before expansion</text></g>
+    <g><rect class="project" x="1225" y="1222" width="300" height="88" rx="15"/><text class="node-title" x="1375" y="1253">Dataset validator</text><text class="node-body" x="1375" y="1278">schema · licence · duplicates · leakage · budgets</text></g>
+    <g><path class="diagnostic" d="M100 1386 C100 1370 390 1370 390 1386 V1446 C390 1462 100 1462 100 1446 Z"/><ellipse class="diagnostic" cx="245" cy="1386" rx="145" ry="16"/><text class="node-title" x="245" y="1408">M0 · D0 only</text><text class="node-body" x="245" y="1433">smaller diagnostic reference</text></g>
+    <g><path class="project" d="M510 1386 C510 1370 800 1370 800 1386 V1446 C800 1462 510 1462 510 1446 Z"/><ellipse class="project" cx="655" cy="1386" rx="145" ry="16"/><text class="node-title" x="655" y="1408">M1 · random benign</text><text class="node-body" x="655" y="1433">quantity/diversity control</text></g>
+    <g><path class="project" d="M920 1386 C920 1370 1210 1370 1210 1386 V1446 C1210 1462 920 1462 920 1446 Z"/><ellipse class="project" cx="1065" cy="1386" rx="145" ry="16"/><text class="node-title" x="1065" y="1408">M2 · keyword-rich benign</text><text class="node-body" x="1065" y="1433">hard-negative control</text></g>
+    <g><path class="project" d="M1330 1386 C1330 1370 1620 1370 1620 1386 V1446 C1620 1462 1330 1462 1330 1446 Z"/><ellipse class="project" cx="1475" cy="1386" rx="145" ry="16"/><text class="node-title" x="1475" y="1408">M3 · semantic counterparts</text><text class="node-body" x="1475" y="1433">proposed method</text></g>
+
+    <!-- CAD pipeline nodes -->
+    <g><polygon class="project" points="100,1640 390,1640 370,1730 80,1730"/><text class="node-title" x="235" y="1672">Condition manifest</text><text class="node-body" x="235" y="1696">selects train rows; common</text><text class="node-body" x="235" y="1716">validation and test</text></g>
+    <g><rect class="fixed" x="440" y="1640" width="290" height="90" rx="15"/><text class="node-title" x="585" y="1671">Frozen feature builder</text><text class="node-body" x="585" y="1696">explicit labels + aligned metadata</text><text class="node-body" x="585" y="1716">shared rows encoded once</text></g>
+    <g><path class="project" d="M780 1657 C780 1640 1070 1640 1070 1657 V1713 C1070 1730 780 1730 780 1713 Z"/><ellipse class="project" cx="925" cy="1657" rx="145" ry="17"/><text class="node-title" x="925" y="1681">Reusable feature shards</text><text class="node-body" x="925" y="1706">content-addressed · resumable</text></g>
+    <g><rect class="fixed" x="1120" y="1640" width="290" height="90" rx="15"/><text class="node-title" x="1265" y="1671">Fixed trainer</text><text class="node-body" x="1265" y="1696">2048 → 256 → 128 → 2</text><text class="node-body" x="1265" y="1716">same recipe · seeds 0, 1, 2</text></g>
+    <g><path class="project" d="M1460 1657 C1460 1640 1710 1640 1710 1657 V1713 C1710 1730 1460 1730 1460 1713 Z"/><ellipse class="project" cx="1585" cy="1657" rx="125" ry="17"/><text class="node-title" x="1585" y="1681">Checkpoint registry</text><text class="node-body" x="1585" y="1706">M0–M3 × seeds</text></g>
+    <g><path class="external" d="M80 1767 C80 1750 350 1750 350 1767 V1811 C350 1828 80 1828 80 1811 Z"/><ellipse class="external" cx="215" cy="1767" rx="135" ry="17"/><text class="node-title" x="215" y="1789">Official base checkpoint</text><text class="node-body" x="215" y="1813">compatibility smoke · reference only</text></g>
+    <g><path class="fixed" d="M300 1854 C300 1838 700 1838 700 1854 V1916 C700 1932 300 1932 300 1916 Z"/><ellipse class="fixed" cx="500" cy="1854" rx="200" ry="16"/><text class="node-title" x="500" y="1877">Common held-out tests</text><text class="node-body" x="500" y="1902">generic + unseen pair families + slices</text></g>
+    <g><rect class="project" x="770" y="1838" width="300" height="94" rx="15"/><text class="node-title" x="920" y="1871">Offline evaluator</text><text class="node-body" x="920" y="1896">no upstream boundary mask</text><text class="node-body" x="920" y="1916">paired + unpaired metrics</text></g>
+    <g><polygon class="project" points="1180,1838 1600,1838 1570,1932 1150,1932"/><text class="node-title" x="1375" y="1871">Offline report</text><text class="node-body" x="1375" y="1896">pair ranking · PR-AUC · errors</text><text class="node-body" x="1375" y="1916">calibration · uncertainty</text></g>
+
+    <!-- Fixed RAG nodes -->
+    <g><path class="project" d="M100 2147 C100 2130 390 2130 390 2147 V2203 C390 2220 100 2220 100 2203 Z"/><ellipse class="project" cx="245" cy="2147" rx="145" ry="17"/><text class="node-title" x="245" y="2172">Held-out RAG corpus</text><text class="node-body" x="245" y="2197">clean + injected documents</text></g>
+    <g><path class="project" d="M450 2147 C450 2130 740 2130 740 2147 V2203 C740 2220 450 2220 450 2203 Z"/><ellipse class="project" cx="595" cy="2147" rx="145" ry="17"/><text class="node-title" x="595" y="2172">Deterministic index</text><text class="node-body" x="595" y="2197">chunks · embeddings · CPU FAISS</text></g>
+    <g><rect class="fixed" x="800" y="2130" width="290" height="90" rx="15"/><text class="node-title" x="945" y="2163">Fixed retriever</text><text class="node-body" x="945" y="2188">same top-k and settings</text></g>
+    <g><path class="fixed" d="M1150 2147 C1150 2130 1440 2130 1440 2147 V2203 C1440 2220 1150 2220 1150 2203 Z"/><ellipse class="fixed" cx="1295" cy="2147" rx="145" ry="17"/><text class="node-title" x="1295" y="2172">Retrieval cache</text><text class="node-body" x="1295" y="2197">identical passages for all scorers</text></g>
+    <g><polygon class="fixed" points="120,2330 400,2330 380,2420 100,2420"/><text class="node-title" x="250" y="2361">Evaluation query</text><text class="node-body" x="250" y="2386">+ cached passages</text></g>
+    <g><rect class="project" x="1450" y="2230" width="260" height="82" rx="15"/><text class="node-title" x="1580" y="2260">Checkpoint selector</text><text class="node-body" x="1580" y="2285">change condition + seed</text></g>
+    <g><rect class="project" x="490" y="2330" width="300" height="90" rx="15"/><text class="node-title" x="640" y="2361">Generic CADScorer</text><text class="node-body" x="640" y="2386">query + passage → sentence risks</text></g>
+    <g><rect class="fixed" x="860" y="2330" width="300" height="90" rx="15"/><text class="node-title" x="1010" y="2361">Fixed filter</text><text class="node-body" x="1010" y="2386">remove sentence risk above 0.5</text></g>
+    <g><rect class="fixed" x="1240" y="2330" width="380" height="90" rx="15"/><text class="node-title" x="1430" y="2361">Fixed prompt + generator</text><text class="node-body" x="1430" y="2386">inference only · never train</text></g>
+    <g><path class="project" d="M1260 2506 C1260 2490 1600 2490 1600 2506 V2558 C1600 2574 1260 2574 1260 2558 Z"/><ellipse class="project" cx="1430" cy="2506" rx="170" ry="16"/><text class="node-title" x="1430" y="2528">Case outputs</text><text class="node-body" x="1430" y="2552">scores · removals · answers · evidence · latency</text></g>
+    <g><rect class="project" x="850" y="2490" width="300" height="84" rx="15"/><text class="node-title" x="1000" y="2521">RAG evaluator</text><text class="node-body" x="1000" y="2546">attack success · utility · latency</text></g>
+    <g><polygon class="project" points="450,2490 780,2490 760,2574 430,2574"/><text class="node-title" x="605" y="2521">Final comparison</text><text class="node-body" x="605" y="2546">M1 vs M2 vs M3 · M0/N0 references</text></g>
+    <g><rect class="optional" x="100" y="2490" width="290" height="84" rx="15"/><text class="node-title" x="245" y="2521">Optional AgentDojo</text><text class="node-body" x="245" y="2546">secondary benchmark only</text></g>
+
+    <!-- Legend -->
+    <g><rect class="note" x="70" y="2705" width="540" height="125" rx="14"/><text class="node-title" x="340" y="2734">COLOUR = ownership/control</text><rect class="external" x="95" y="2752" width="24" height="18"/><text class="small" x="170" y="2767">external / pinned</text><rect class="project" x="265" y="2752" width="24" height="18"/><text class="small" x="365" y="2767">project-owned</text><rect class="fixed" x="460" y="2752" width="24" height="18"/><text class="small" x="535" y="2767">fixed</text><rect class="gate" x="95" y="2791" width="24" height="18"/><text class="small" x="161" y="2806">gate</text><rect class="diagnostic" x="240" y="2791" width="24" height="18"/><text class="small" x="348" y="2806">diagnostic / stop</text><rect class="optional" x="455" y="2791" width="24" height="18"/><text class="small" x="535" y="2806">optional</text></g>
+    <g><rect class="note" x="630" y="2705" width="520" height="125" rx="14"/><text class="node-title" x="890" y="2734">SHAPE = component role</text><rect class="external" x="660" y="2750" width="45" height="25"/><text class="small" x="778" y="2767">rectangle: external</text><rect class="project" x="875" y="2750" width="45" height="25" rx="9"/><text class="small" x="1000" y="2767">rounded: process</text><ellipse class="project" cx="681" cy="2800" rx="23" ry="9"/><path class="project" d="M658 2800 V2816 C658 2825 704 2825 704 2816 V2800"/><text class="small" x="790" y="2812">cylinder: stored data</text><polygon class="gate" points="910,2785 930,2805 910,2825 890,2805"/><text class="small" x="1010" y="2812">diamond: decision</text></g>
+    <g><rect class="note" x="1170" y="2705" width="560" height="125" rx="14"/><text class="node-title" x="1450" y="2734">LINE = dependency / flow</text><path class="edge" d="M1200 2760 H1330"/><text class="small" x="1480" y="2766">solid: required flow</text><path class="edge-dashed" d="M1200 2805 H1330"/><text class="small" x="1505" y="2811">dashed: restore, reference, or optional</text></g>
+  </g>
+</svg>

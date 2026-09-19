@@ -1,0 +1,186 @@
+flowchart TD
+  %% COMPSCI 764: semantic minimal-pair supervision for a CAD-derived RAG trust scorer.
+  %% Authoritative implementation map, version 4.1, verified 2026-09-19.
+  %% Colour describes ownership/control. Shape describes component role.
+
+  subgraph GX["A. Development, execution, and persistence spine"]
+    direction TB
+    subgraph GX1[" "]
+      direction LR
+      DEV("Native Windows + VS Code — edit, review, CPU/fake tests"):::create
+      GH[("Private GitHub — source of truth, pull requests, exact commits, CI")]:::reuse
+      COLAB["Hosted Colab Linux GPU — thin runner, exact detached commit"]:::reuse
+      ENV{"Fresh-runtime gate — lock, tests, GPU above 8 GiB"}:::gate
+      DEV --> GH --> COLAB --> ENV
+    end
+    subgraph GX2[" "]
+      direction LR
+      STOP("Stop — diagnose locally; do not scale or pay for a long run"):::diagnostic
+      REST("Restore verified Drive inputs to temporary workspace"):::create
+      WORK("/content/work — run project CLI on fast temporary disk"):::create
+      PUB("Validate, hash, publish; write success marker last"):::create
+      DRIVE[("Google Drive — immutable large artefacts and manifests")]:::reuse
+      REST --> WORK --> PUB --> DRIVE
+    end
+    ENV -->|Pass| REST
+    ENV -->|Fail| STOP
+    DRIVE -.->|Later runtime: restore by ID and hash| REST
+  end
+
+  subgraph G0["0. Upstream evidence, governance, and scientific freeze gates"]
+    direction TB
+    subgraph G0R1[" "]
+      direction LR
+      P["CAD paper + repository + official HF release — pin every revision"]:::reuse
+      J["Jina embeddings v3 — frozen encoder; pin exact revision"]:::reuse
+    end
+    subgraph G0R2[" "]
+      direction LR
+      A{"Official release integrity — revisions, hashes, schema, checkpoint?"}:::gate
+      C{"Representation conformance — paper-exact or repo-compatible?"}:::gate
+    end
+    subgraph G0R3[" "]
+      direction LR
+      OA[("Audited official release — D0, test, paraphrases, base checkpoint")]:::reuse
+      D0[("Fallback reconstructed D0 — only after a documented release failure")]:::diagnostic
+      FZ("Freeze representation, encoder, segmenter, dtype, environment"):::fixed
+      LOG[("Decision log — agent proposes; researcher confirms; append")]:::create
+    end
+    P --> A
+    P --> C
+    J --> C
+    A -->|Pass| OA
+    A -->|Fail| D0
+    C --> FZ
+    A --> LOG
+    C --> LOG
+  end
+
+  subgraph G1["1. Project-owned controlled data layer"]
+    direction TB
+    subgraph G1R1[" "]
+      direction LR
+      BASE[("Adapted base D0 — official rows, explicit labels, provenance")]:::create
+      POOLS[("Pools — shared malicious plus three benign strategies")]:::create
+      SPLIT("Family/group split before expansion"):::create
+      VALID("Validator — schema, licence, duplicates, leakage, budgets"):::create
+      BASE --> SPLIT
+      POOLS --> SPLIT
+      SPLIT --> VALID
+    end
+    subgraph G1R2[" "]
+      direction LR
+      M0[("M0: D0 only — smaller diagnostic")]:::diagnostic
+      M1[("M1: random benign — primary quantity/diversity control")]:::create
+      M2[("M2: keyword-rich benign — primary hard-negative control")]:::create
+      M3[("M3: semantic counterparts — proposed method")]:::create
+    end
+    VALID --> M0
+    VALID --> M1
+    VALID --> M2
+    VALID --> M3
+  end
+
+  subgraph G2["2. Fixed CAD-derived feature, training, and offline evaluation pipeline"]
+    direction TB
+    subgraph G2R1[" "]
+      direction LR
+      CFG[/"Condition manifest selects training rows; validation/test stay common"/]:::create
+      FB("Frozen feature builder — explicit labels and aligned metadata"):::fixed
+      FS[("Reusable shards and assembled tensors — shared rows encoded once")]:::create
+      TR("Fixed trainer — 2048 to 256 to 128 to 2; same recipe and budget"):::fixed
+      CK[("Checkpoint registry — M0–M3 by seeds 0, 1, and 2")]:::create
+      CFG --> FB --> FS --> TR --> CK
+    end
+    subgraph G2R2[" "]
+      direction LR
+      UPCK[("Official base checkpoint — compatibility smoke/reference")]:::reuse
+      TEST[("Common tests — generic plus unseen pair families and slices")]:::fixed
+      OFF("Offline evaluator — no upstream boundary mask"):::create
+      REP[/"Report — pair metrics, PR-AUC, errors, calibration, uncertainty"/]:::create
+      UPCK -.-> OFF
+      TEST --> OFF --> REP
+    end
+    CK --> OFF
+  end
+
+  subgraph G3["3. Fixed end-to-end RAG harness"]
+    direction TB
+    subgraph G3R1[" "]
+      direction LR
+      CORP[("Held-out RAG corpus — clean and injected documents")]:::create
+      IDX[("Deterministic chunks, embeddings, CPU FAISS index")]:::create
+      RET("Fixed retriever — same top-k and settings"):::fixed
+      RC[("Retrieval cache — identical passages for every scorer")]:::fixed
+      CORP --> IDX --> RET --> RC
+    end
+    subgraph G3R2[" "]
+      direction LR
+      Q[/"Evaluation query plus cached passages"/]:::fixed
+      SEL("Checkpoint selector — change only condition and seed"):::create
+      SC("Generic CADScorer — query plus passage to sentence risks"):::create
+      FILT("Fixed filter — remove sentence risk above 0.5"):::fixed
+      GEN("Fixed prompt and generator — inference only; never train"):::fixed
+      Q --> SC --> FILT --> GEN
+      SEL --> SC
+      Q -.->|N0 no-defence reference| GEN
+    end
+    subgraph G3R3[" "]
+      direction LR
+      OUT[("Case outputs — scores, removals, evidence, answers, latency")]:::create
+      RE("RAG evaluator — attack success, utility, evidence, latency"):::create
+      FINAL[/"Final — M1 versus M2 versus M3; M0/N0 are references"/]:::create
+      AD("Optional AgentDojo benchmark — secondary only"):::optional
+      OUT --> RE --> FINAL
+    end
+    RC --> Q
+    GEN --> OUT
+    CK --> SEL
+    CK -.-> AD
+  end
+
+  WORK -->|Runs audited workflow| P
+  P --> BASE
+  OA --> BASE
+  D0 --> BASE
+  OA -.-> UPCK
+  FZ --> FB
+  M0 --> CFG
+  M1 --> CFG
+  M2 --> CFG
+  M3 --> CFG
+
+  DRIVE ~~~ P
+  LOG ~~~ BASE
+  M3 ~~~ CFG
+  REP ~~~ CORP
+
+  subgraph LEGEND["Legend and reading guide"]
+    direction LR
+    LCOLORS["COLOURS — Blue: external/pinned; Orange: project-owned; Green: fixed; Red: gate; Grey: diagnostic/stop; Purple dashed: optional"]:::note
+    LSHAPES["SHAPES — Rectangle: external; Rounded: process/adapter; Cylinder: stored data/cache/model/log; Slanted: input/report/output; Diamond: decision"]:::note
+    LLINES["LINES — Solid: required flow; Dashed: restore/reference/optional. Colour describes control; shape describes role; text is authoritative."]:::note
+    LCOLORS ~~~ LSHAPES ~~~ LLINES
+  end
+  FINAL ~~~ LCOLORS
+
+  style GX1 fill:transparent,stroke:transparent
+  style GX2 fill:transparent,stroke:transparent
+  style G0R1 fill:transparent,stroke:transparent
+  style G0R2 fill:transparent,stroke:transparent
+  style G0R3 fill:transparent,stroke:transparent
+  style G1R1 fill:transparent,stroke:transparent
+  style G1R2 fill:transparent,stroke:transparent
+  style G2R1 fill:transparent,stroke:transparent
+  style G2R2 fill:transparent,stroke:transparent
+  style G3R1 fill:transparent,stroke:transparent
+  style G3R2 fill:transparent,stroke:transparent
+  style G3R3 fill:transparent,stroke:transparent
+
+  classDef reuse fill:#e8f1ff,stroke:#2563a8,color:#102a43,stroke-width:2px;
+  classDef create fill:#fff3df,stroke:#c76a00,color:#4a2b00,stroke-width:2px;
+  classDef gate fill:#fff0f0,stroke:#c73838,color:#5b1111,stroke-width:2px;
+  classDef fixed fill:#e9f7ef,stroke:#238653,color:#103b25,stroke-width:2px;
+  classDef diagnostic fill:#f3f4f6,stroke:#667085,color:#1f2937,stroke-width:2px;
+  classDef optional fill:#f3ebff,stroke:#7c4dcc,color:#372064,stroke-width:2px,stroke-dasharray:5 4;
+  classDef note fill:#ffffff,stroke:#98a2b3,color:#344054,stroke-width:1.5px;
