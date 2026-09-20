@@ -85,3 +85,122 @@ Historical audit claims are distinguished from checks executed in this session.
   live Colab Run A/Run B verification remain open.
 - D0 and reference-checkpoint adoption and the schema/conformance policy are now
   approved, but approval is not evidence of implementation or successful runs.
+
+## 2026-09-21 - Phase 1A Authorised
+
+- The researcher authorised Phase 1A only, following approved decisions.
+- The preceding documentation PR was manually merged as
+  0379a810d85ffdb559330bbc4b5f6baad5ea6d13; local main was fast-forwarded and clean.
+- GitHub CLI authentication and private-repository access were verified. Main
+  requires PRs and prohibits force pushes. Collaborator access remains unverified.
+- Created task branch phase1a-foundation from that reviewed main commit.
+- GitHub API verified upstream CAD commit
+  26e38a67f0a9e1de4cb3a876e4b021900a5d1c27. Recorded the separately approved
+  history-preserving integration as D-20260921-08.
+- Only Python 3.14, 3.13, and 3.9 were initially registered. Installed the
+  plan's Python 3.12 interpreter (3.12.10) using the official user-scoped WinGet
+  package; WinGet verified the installer hash. This is a local development
+  interpreter, not an approved or tested Colab profile.
+- Implementation, CPU tests, CI, and upstream import remain in progress. No CAD
+  archive/checkpoint or Jina download, GPU execution, or Drive mount has occurred.
+
+### Local CPU Scaffold Evidence
+
+- Imported pinned CAD source through local merge commit
+  75db76e4e1be25e1b7c1788f26731f251830ebab, with parents
+  0379a810d85ffdb559330bbc4b5f6baad5ea6d13 and
+  26e38a67f0a9e1de4cb3a876e4b021900a5d1c27. No history was rewritten. Upstream
+  source-tree metadata was checked for prohibited model/data archive filenames
+  before obtaining the source. The vendored optional benchmark source is
+  preserved, not installed or executed.
+- Created the isolated Python 3.12.10 `.venv`, development inputs and resolved
+  lock, installable project-only package, configs, tests, CLI, and CI workflow.
+  Root README/ignore additions are explicit; original detector, adversarial
+  training, evaluation, third-party source, original requirements, benchmark
+  scripts, and licence remain unchanged.
+- `python -m pip install -r requirements/dev.lock.txt -e . --no-build-isolation`
+  succeeded in the project venv. `python -m pip check` reported
+  `No broken requirements found.` No PyTorch, Jina, Transformers, FAISS, or
+  AgentDojo dependency was installed in this CPU environment.
+- `python -m pytest tests -m "not gpu and not integration" -q` passed:
+  **53 passed**. Tests cover candidate/tested stage restrictions, preflight
+  refusal, preserved upstream source, synthetic release transport/hash/count
+  validation, archive safety, extracted segmenter integrity, checkpoint
+  weights-only loading through a fake loader, hand-computed representations,
+  fake RAG checkpoint swaps, immutable artefact round trips, bootstrap secret
+  cleanup, notebook structure, and fake Run A/Run B orchestration. Network
+  connections are refused by the CPU test fixture.
+- `python -m ruff check .` passed after excluding all preserved upstream Python
+  from project linting. No upstream lint issues were repaired or hidden by
+  changing upstream code. `git diff --check` passed.
+- `python -m rag_cad.cli audit upstream` returned the pinned CAD commit and
+  `source_unchanged: true`. The audit also verifies ancestry.
+- The thin notebook passed nbformat validation and compilation of every code
+  cell with empty outputs and null execution counts. No notebook cell was run.
+  The notebook creation tool failed twice; a valid empty notebook was created
+  and its cells were added using the notebook editor, then statically validated.
+- Pylance initially selected global Python 3.14; changed the workspace editor
+  interpreter to the tested project venv. Rechecking project diagnostics no
+  longer reported the prior missing pytest/NumPy/project imports.
+- Real adapter/backend functions remain execution-unverified. Fake smoke outputs
+  do not count as Colab acceptance. The candidate config is unapproved with
+  unresolved values; the provisional Colab dependency input is not a tested lock.
+- No final datasets, full features, primary model training/evaluation, real
+  generator, GPU operation, Drive mount, or official binary download was run.
+
+### Review And Remaining Gates
+
+- Local scaffold checks are complete; GitHub Actions on the published commit and
+  researcher review/merge are still pending. Do not mark Phase 1A fully accepted
+  until those results exist. Publish only after showing the diff/test evidence.
+- The Phase 1A integration PR must use a merge commit, not squash/rebase, to retain
+  approved CAD ancestry. Main protections remain enabled.
+- Future Phase 1B requires approved candidate environment/model/segmenter/
+  tolerance settings, reviewed Linux candidate lock, confirmed Drive/operator,
+  exact reviewed project SHA, and separate execution authorisation. Missing
+  implementation after review requires bounded CPU-only corrective authorisation.
+- The handoff's "empty test suite" wording is incorrect: pytest returns a
+  nonzero status when no tests are collected. Acceptance uses the substantive
+  passing CPU suite instead. The original clone-first checklist is updated to
+  the approved ancestry/source-preservation criterion in D-20260921-08.
+
+### First Published CI Failure And Correction
+
+- The researcher authorised committing/pushing the scaffold, opening a PR, and
+  running CPU CI. Published scaffold commit ce9e51f on phase1a-foundation and
+  opened [PR #2](https://github.com/DanielS26/rag-cad-semantic-pairs/pull/2).
+- GitHub Actions run 35513130108 failed on Windows and Ubuntu during test
+  collection: `ModuleNotFoundError: No module named 'rag_cad.data'`.
+- Cause: inherited upstream `data/` ignore pattern also matched the project
+  source directory. Local tests used its existing files, but Git had omitted the
+  two adapter source files. Added a narrowly scoped exception for
+  `src/rag_cad/data/*.py` without exposing raw datasets, and added a regression
+  check for inherited ignore rules hiding project Python source.
+- The correction is being validated before republishing. No CI success is
+  claimed for ce9e51f; upstream source remains unchanged.
+
+### Passing Fresh-Checkout And CI Evidence
+
+- Correction commit 844afe6 tracks both adapter source files and the ignore-rule
+  regression test. A fresh local clone of this committed branch passed all
+  **54 CPU tests** using the existing tested dev interpreter; this checked the
+  committed file set, not just the original working tree.
+- Fresh Windows and Ubuntu GitHub runners installed the dev lock and editable
+  package and passed pip check, all CPU tests, Ruff, the pinned-source audit,
+  and the clean tracked-worktree check.
+- Successful push run:
+  https://github.com/DanielS26/rag-cad-semantic-pairs/actions/runs/35513252959
+- Successful PR run:
+  https://github.com/DanielS26/rag-cad-semantic-pairs/actions/runs/35513254852
+- `gh pr checks 2 --json name,state,link` returned SUCCESS for both operating
+  systems on both runs. Branch phase1a-foundation matched its remote and had a
+  clean working tree before this factual documentation update.
+- Project-file credential-pattern scan found no GitHub/Hugging Face token or
+  private-key patterns before publication. This is a bounded pattern scan, not
+  a claim to detect every possible secret.
+- Phase 1A implementation and local/fresh-runner CPU checks are complete.
+  [PR #2](https://github.com/DanielS26/rag-cad-semantic-pairs/pull/2) remains open
+  for researcher review and a merge commit. Main was not changed by the agent.
+  The merged SHA cannot be recorded until that review/merge occurs.
+- No Phase 1B execution was authorised or performed. All live smoke, profile
+  promotion, real-model conformance, and Drive gates remain unchecked.

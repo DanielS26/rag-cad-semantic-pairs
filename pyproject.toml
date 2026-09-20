@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag-cad-semantic-pairs"
+version = "0.1.0"
+description = "CPU-testable infrastructure for the COMPSCI764 CAD data study"
+requires-python = ">=3.11"
+dependencies = ["PyYAML==6.0.2", "numpy==2.2.6"]
+
+[project.scripts]
+rag-cad = "rag_cad.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["rag_cad*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "--strict-markers"
+markers = ["gpu: requires an explicitly authorised GPU runtime", "integration: requires real external components"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = ["src/detector", "src/adversarial_training", "third_party", "evaluation"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"notebooks/*.ipynb" = ["E402"]

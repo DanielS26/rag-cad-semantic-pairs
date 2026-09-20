@@ -1,0 +1,13 @@
+retriever_model: null
+retriever_revision: null
+corpus_manifest: null
+retrieval_cache: null
+chunk_tokens: null
+overlap_tokens: null
+top_k: null
+generator_provider: null
+generator_model: null
+generator_revision: null
+prompt: null
+generation_settings: null
+evaluation_cases: null

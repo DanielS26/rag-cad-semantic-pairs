@@ -1,0 +1,1 @@
+"""CAD primitives with no import-time model or benchmark dependency."""

@@ -142,3 +142,18 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song, explicit protected-main clarification in the coding session on 2026-09-21.
 - Related files, commands, results, correspondence, or commit: [PROGRESS.md](PROGRESS.md); D-20260921-01; rejected local-only root commit ce3c0452c15dcc1100cf588b7bfd13bbe1a334c9.
 - Supersedes / superseded by: Supersedes D-20260921-01 for the history-rewrite/publication method.
+
+## D-20260921-08 - Integrate pinned CAD history without rewriting main
+
+- Status: Confirmed
+- Date: 2026-09-21
+- Project phase: Phase 1A foundation
+- Category: Implementation
+- Decision or important note: Integrate CAD commit 26e38a67f0a9e1de4cb3a876e4b021900a5d1c27 on a Phase 1A task branch through a history-preserving merge. Keep existing project history and documents, retain CAD as upstream, and verify imported upstream source remains unchanged. Submit changes through the protected-main PR workflow.
+- Context and reason: The project already has published documentation history, so the original empty-directory clone procedure no longer applies.
+- Evidence: GitHub API verified the exact CAD commit; current main is 0379a810d85ffdb559330bbc4b5f6baad5ea6d13. Main rules require PRs and prohibit force pushes, but do not require linear history.
+- Alternatives considered: A pinned source snapshot without CAD ancestry; a history-preserving integration retaining both histories. The researcher selected the latter.
+- Consequences for implementation/evaluation/report: Verify CAD ancestry and unchanged upstream source instead of claiming the initial project commit was the CAD commit. Preserve upstream licences. Review project-owned packaging and root configuration additions explicitly. No model/data release downloads, real smoke execution, or experiment-setting changes are authorised by this integration.
+- Approved by: Daniel Song, explicit answer "Approve history-preserving CAD integration" on 2026-09-21.
+- Related files, commands, results, correspondence, or commit: [Handoff](project-plan/COMPSCI764_Project_Implementation_Handoff.md), [PROGRESS.md](PROGRESS.md); D-20260921-07; GitHub commit and branch-rules API checks.
+- Supersedes / superseded by: None. Resolves the upstream-integration question left open in D-20260921-07.

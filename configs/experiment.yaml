@@ -1,0 +1,25 @@
+representation: null
+encoder:
+  model: jinaai/jina-embeddings-v3
+  revision: null
+  licence: CC-BY-NC-4.0
+segmenter: null
+dtype: float32
+architecture: {input_dim: 2048, hidden: [256, 128], output_dim: 2, dropout: 0.3}
+training:
+  seeds: [0, 1, 2]
+  epochs: 30
+  batch_size: 64
+  optimizer: AdamW
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  schedule: cosine
+  loss: inverse_frequency_class_balanced_cross_entropy
+  primary_checkpoint_epoch: 30
+threshold: 0.5
+filter: remove_sentences_strictly_above_threshold
+augmentation_budget_sentence_rows: null
+split_ratios: null
+split_seed: 764
+d0_holdout_policy: null
+shared_malicious_tutor_approval: null

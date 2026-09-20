@@ -1,0 +1,27 @@
+status: candidate
+approved: false
+approved_by: null
+minimum_free_bytes: null
+expected:
+  python: null
+  packages: null
+  lock_sha256: null
+  gpu_name: null
+  gpu_memory_bytes: null
+  cuda: null
+  driver: null
+  encoder_revision: null
+  representation: null
+  dtype: float32
+  segmenter: null
+segmenter_resource:
+  revision: null
+  sha256: null
+tolerance:
+  atol: null
+  rtol: null
+evidence:
+  run_a_manifest_sha256: null
+  run_b_manifest_sha256: null
+  lock_sha256: null
+  reviewed_commit: null

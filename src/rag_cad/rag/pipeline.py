@@ -1,0 +1,43 @@
+"""Small injectable RAG shell for security and checkpoint-swap plumbing tests."""
+
+from dataclasses import dataclass
+
+import numpy as np
+
+from rag_cad.operations.provenance import digest
+
+
+@dataclass(frozen=True)
+class Passage:
+    chunk_id: str
+    sentences: tuple[str, ...]
+
+
+class RAGPipeline:
+    def __init__(self, retriever, generator, prompt: str):
+        self.retriever = retriever
+        self.generator = generator
+        self.prompt = prompt
+
+    def run(self, query: str, scorer=None, retrieved_passages=None) -> dict:
+        passages = (self.retriever(query) if retrieved_passages is None else retrieved_passages)
+        evidence = []
+        contexts = []
+        for passage in passages:
+            scores = np.zeros(len(passage.sentences)) if scorer is None else np.asarray(
+                scorer(query, list(passage.sentences)), dtype=float)
+            if scores.shape != (len(passage.sentences),) or not np.isfinite(scores).all():
+                raise ValueError("Invalid sentence probabilities")
+            if ((scores < 0) | (scores > 1)).any():
+                raise ValueError("Probabilities must be in [0,1]")
+            retained = [index for index, score in enumerate(scores) if score <= 0.5]
+            contexts.append("\n".join(passage.sentences[index] for index in retained))
+            evidence.append({"chunk_id": passage.chunk_id, "scores": scores.tolist(),
+                             "retained_ids": retained,
+                             "removed_ids": [index for index in range(len(scores)) if index not in retained]})
+        prompt = self.prompt.format(query=query, context="\n\n".join(contexts))
+        return {"answer": self.generator(prompt), "evidence": evidence,
+                "retrieval_hash": digest([{"id": passage.chunk_id, "sentences": passage.sentences}
+                                          for passage in passages]),
+                "prompt_template_hash": digest(self.prompt), "prompt_hash": digest(prompt),
+                "threshold": 0.5}
