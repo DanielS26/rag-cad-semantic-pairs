@@ -1,0 +1,5 @@
+condition_id: m3_semantic
+train_manifest: datasets/processed/m3_semantic/train.jsonl
+validation_manifest: datasets/processed/common/validation.jsonl
+test_manifest: datasets/processed/common/test.jsonl
+augmentation_budget_unit: sentence_representation

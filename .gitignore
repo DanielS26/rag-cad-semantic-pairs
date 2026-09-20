@@ -30,3 +30,22 @@ outputs/models/**/*.pth
 
 # Local data (not published)
 data/
+
+# Project development and generated artefacts
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.env.*
+!.env.example
+/outputs/
+/datasets/raw/
+/datasets/interim/
+/datasets/processed/
+*.pt
+*.pth
+*.safetensors
+*.tar.gz
+.ipynb_checkpoints/

@@ -1184,17 +1184,17 @@ Acceptance criterion: configs/experiment.yaml has no unresolved value that chang
 
 Checklist:
 
-- [ ] git rev-parse HEAD equals the pinned CAD commit before project commits.
-- [ ] python -m pip install -e . succeeds.
-- [ ] python -m pytest -q succeeds.
-- [ ] python -m ruff check . succeeds.
-- [ ] Windows CPU/fake tests pass without CUDA, Jina download, FAISS-GPU, or AgentDojo.
+- [x] Pinned CAD is an ancestor and imported upstream source is unchanged (approved D-20260921-08 replaces the clone-first requirement).
+- [x] Editable package installation succeeds from the documented development environment.
+- [x] python -m pytest -q succeeds.
+- [x] python -m ruff check . succeeds.
+- [x] Windows CPU/fake tests pass without CUDA, Jina download, FAISS-GPU, or AgentDojo.
 - [ ] GitHub Actions passes on the same commit.
-- [ ] The notebook contains orchestration only and no duplicated research logic.
-- [ ] docs/DECISIONS.md contains the Section 1.1 template and states that consequential entries require researcher confirmation before writing.
-- [ ] Upstream source is unchanged except for separately reviewed compatibility fixes.
+- [x] The notebook contains orchestration only and no duplicated research logic.
+- [x] docs/DECISIONS.md contains the Section 1.1 template and states that consequential entries require researcher confirmation before writing.
+- [x] Upstream source is unchanged except for separately reviewed compatibility fixes.
 
-Acceptance criterion: a fresh clone can install and run an empty test suite from the README.
+Acceptance criterion: a fresh clone can install and run the substantive CPU/fake test suite from the README. Local evidence is recorded in docs/PROGRESS.md; same-commit CI and review/merge remain required.
 
 ### Phase 1B - Prove the hosted execution and persistence path
 
@@ -1613,14 +1613,14 @@ Recommended defaults:
 
 ### Code
 
-- [ ] Repository cloned and branch created.
-- [ ] Python environment reproducible.
+- [x] Pinned CAD history integrated and Phase 1A task branch created under D-20260921-08.
+- [ ] Python environment reproducible across local and CI fresh installs.
 - [ ] Native Windows CPU/fake test path and GitHub Actions pass.
-- [ ] Thin Colab runner notebook implemented and output-cleared.
-- [ ] Environment preflight implemented.
-- [ ] Immutable artefact publish/restore/verify commands implemented.
-- [ ] Project package scaffolded.
-- [ ] Confirmed decision log created from the approved template.
+- [x] Thin Colab runner notebook implemented and output-cleared.
+- [x] Environment preflight implemented and CPU/fake-tested; live gate remains pending.
+- [x] Immutable artefact publish/restore/verify commands implemented and locally tested; Drive gate remains pending.
+- [x] Project package scaffolded.
+- [x] Confirmed decision log created from the approved template.
 - [ ] Data schema/validator implemented.
 - [ ] Leakage tests implemented.
 - [ ] Equal-budget tests implemented.

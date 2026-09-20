@@ -1,0 +1,1 @@
+"""Minimal checkpoint-swapping interfaces for smoke tests, not the final retriever."""

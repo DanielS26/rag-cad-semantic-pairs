@@ -1,0 +1,32 @@
+cad_commit: 26e38a67f0a9e1de4cb3a876e4b021900a5d1c27
+data_repository: tavialiu/CAD-data
+data_revision: f5efab920d61f8f37fa17260b71b770bf91ab79b
+models_repository: tavialiu/CAD-models
+models_revision: 550e8cf87ebf33adf6ef83e56b24629d876e0512
+data_licence: CC-BY-4.0
+model_licence: MIT
+evidence: docs/project-plan/COMPSCI764_CAD_Release_Audit_2026-09-19.md
+files:
+  training_data_original.tar.gz:
+    repository_type: dataset
+    kind: original_train
+    bytes: 87754
+    sha256: a4d34914fa434f70956a2d73cb205bcf7843c8264d38258d16bf1745a7667ffe
+    counts: {records: 1080, rows: 24665, malicious: 1625, benign: 23040, count_mismatches: 0}
+  testing_data_original.tar.gz:
+    repository_type: dataset
+    kind: original_test
+    bytes: 47447
+    sha256: fa666226a68801b046233393a2fe4ab29f6d6d6fb54f425193150ce7807807e7
+    counts: {records: 389, rows: 9776, malicious: 3729, benign: 6047, count_mismatches: 0}
+  training_data_paraphrased.tar.gz:
+    repository_type: dataset
+    kind: paraphrased_train
+    bytes: 311165
+    sha256: e5c5635c14d41e054ee0dd21442d9ac6c091cc5e9b132b2160e31bc7d4a39015
+    counts: {records: 3376, rows: 86341, malicious: 10052, benign: 76289, count_mismatches: 1278}
+  classifier_fullcad.pt:
+    repository_type: model
+    kind: checkpoint
+    bytes: 2233718
+    sha256: 56c939b393e2e8fc9045cd6a878a599f62cd30e4defecd292f536b32ab398e6d

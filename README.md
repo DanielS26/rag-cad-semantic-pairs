@@ -1,3 +1,56 @@
+# COMPSCI764: CAD Semantic-Pair Study
+
+Phase 1A adds CPU-testable project infrastructure on top of pinned CAD source.
+It does not contain final datasets, trained project models, or a completed Colab
+smoke gate. The upstream README is preserved below for reference; its unpinned
+download and full AgentDojo installation commands are **not** the project workflow.
+
+## Native Windows Development
+
+From this repository's root, with Python 3.12 installed:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements/dev.lock.txt
+.\.venv\Scripts\python.exe -m pip install -e . --no-deps --no-build-isolation
+.\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe -m pytest -m "not gpu and not integration" -q
+.\.venv\Scripts\python.exe -m ruff check .
+.\.venv\Scripts\python.exe -m rag_cad.cli audit upstream
+```
+
+On Linux use `python3.12 -m venv .venv` and `.venv/bin/python` for the same
+commands. No local CUDA, Jina, FAISS, PyTorch, or AgentDojo install is needed for
+the CPU suite. The package only includes `rag_cad`, not upstream `detector` or
+the vendored benchmark. Generated artefacts, credentials, and environments stay
+out of Git.
+
+The CLI supports upstream auditing, guarded release fetch/validation,
+environment preflight, immutable artefact publish/verify/restore, and bounded
+smoke Run A/Run B. `smoke fake --output <new-directory>` tests local plumbing only.
+Real commands require `--execute`, an exact clean commit, a reviewed lock, and an
+explicitly approved profile. Consult `python -m rag_cad.cli --help` and
+[the operator runbook](docs/COLAB_RUNBOOK.md).
+
+## Review And Gates
+
+- [Approved decisions](docs/DECISIONS.md) override conflicting older plan wording.
+- [Progress](docs/PROGRESS.md), [evidence](docs/EVIDENCE.md), and
+  [data card](docs/DATA_CARD.md) distinguish executed CPU tests from unverified
+  real-model, Linux dependency, and Drive behaviour.
+- Scientific choices remain null in configs. No tested Colab profile or tested
+  core lock is fabricated. The Colab input file is provisional, not a lock.
+- Missing smoke prerequisites after review require a bounded CPU-only correction
+  authorisation. No project code may be edited or pushed from Colab.
+- Merge the Phase 1A integration PR with **Create a merge commit**, not squash or
+  rebase, so pinned CAD remains an ancestor. Future upstream changes require a
+  new approved audit. Main protections remain enabled.
+
+The final feature store, dataset splitting/budget validators, primary trainer,
+full RAG retriever/generator, and scientific evaluators belong to later phases.
+
+---
+
 # CAD: Robust Context-Aware Detection of Malicious Instructions in Text
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)

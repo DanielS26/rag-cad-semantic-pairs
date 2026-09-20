@@ -1,0 +1,5 @@
+condition_id: m2_keyword
+train_manifest: datasets/processed/m2_keyword/train.jsonl
+validation_manifest: datasets/processed/common/validation.jsonl
+test_manifest: datasets/processed/common/test.jsonl
+augmentation_budget_unit: sentence_representation
