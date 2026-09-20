@@ -85,3 +85,21 @@ Historical audit claims are distinguished from checks executed in this session.
   live Colab Run A/Run B verification remain open.
 - D0 and reference-checkpoint adoption and the schema/conformance policy are now
   approved, but approval is not evidence of implementation or successful runs.
+
+## 2026-09-21 - Phase 1A Authorised
+
+- The researcher authorised Phase 1A only, following approved decisions.
+- The preceding documentation PR was manually merged as
+  0379a810d85ffdb559330bbc4b5f6baad5ea6d13; local main was fast-forwarded and clean.
+- GitHub CLI authentication and private-repository access were verified. Main
+  requires PRs and prohibits force pushes. Collaborator access remains unverified.
+- Created task branch phase1a-foundation from that reviewed main commit.
+- GitHub API verified upstream CAD commit
+  26e38a67f0a9e1de4cb3a876e4b021900a5d1c27. Recorded the separately approved
+  history-preserving integration as D-20260921-08.
+- Only Python 3.14, 3.13, and 3.9 were initially registered. Installed the
+  plan's Python 3.12 interpreter (3.12.10) using the official user-scoped WinGet
+  package; WinGet verified the installer hash. This is a local development
+  interpreter, not an approved or tested Colab profile.
+- Implementation, CPU tests, CI, and upstream import remain in progress. No CAD
+  archive/checkpoint or Jina download, GPU execution, or Drive mount has occurred.
