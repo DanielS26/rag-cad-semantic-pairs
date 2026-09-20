@@ -32,6 +32,8 @@ outputs/models/**/*.pth
 data/
 
 # Project development and generated artefacts
+!src/rag_cad/data/
+!src/rag_cad/data/*.py
 .venv/
 .pytest_cache/
 .ruff_cache/

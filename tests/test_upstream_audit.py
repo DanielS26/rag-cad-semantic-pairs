@@ -20,6 +20,14 @@ def test_upstream_ancestry_and_preservation():
     subprocess.run(["git", "-C", str(ROOT), "merge-base", "--is-ancestor", CAD_COMMIT, "HEAD"], check=True)
 
 
+def test_project_python_source_is_not_hidden_by_inherited_ignore_rules():
+    for path in (ROOT / "src/rag_cad").rglob("*.py"):
+        relative = path.relative_to(ROOT).as_posix()
+        result = subprocess.run(["git", "-C", str(ROOT), "check-ignore", "--no-index", relative],
+                                capture_output=True, text=True)
+        assert result.returncode == 1, f"Project source is ignored: {relative}"
+
+
 def test_named_release_manifest_and_explicit_network_gate(tmp_path):
     spec = load_config(ROOT / "configs/upstream/cad_release.yaml")
     validate_release_spec(spec)

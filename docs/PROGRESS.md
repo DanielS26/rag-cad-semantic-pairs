@@ -163,3 +163,18 @@ Historical audit claims are distinguished from checks executed in this session.
   nonzero status when no tests are collected. Acceptance uses the substantive
   passing CPU suite instead. The original clone-first checklist is updated to
   the approved ancestry/source-preservation criterion in D-20260921-08.
+
+### First Published CI Failure And Correction
+
+- The researcher authorised committing/pushing the scaffold, opening a PR, and
+  running CPU CI. Published scaffold commit ce9e51f on phase1a-foundation and
+  opened [PR #2](https://github.com/DanielS26/rag-cad-semantic-pairs/pull/2).
+- GitHub Actions run 35513130108 failed on Windows and Ubuntu during test
+  collection: `ModuleNotFoundError: No module named 'rag_cad.data'`.
+- Cause: inherited upstream `data/` ignore pattern also matched the project
+  source directory. Local tests used its existing files, but Git had omitted the
+  two adapter source files. Added a narrowly scoped exception for
+  `src/rag_cad/data/*.py` without exposing raw datasets, and added a regression
+  check for inherited ignore rules hiding project Python source.
+- The correction is being validated before republishing. No CI success is
+  claimed for ce9e51f; upstream source remains unchanged.
