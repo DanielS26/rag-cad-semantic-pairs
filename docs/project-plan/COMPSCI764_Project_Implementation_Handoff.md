@@ -7,7 +7,7 @@
 **Document role:** authoritative implementation brief and living progress record  
 **Version:** 4.1  
 **Evidence/repository check date:** 19 September 2026  
-**Current state:** official CAD data/model release audited and integrated into the plan; live Colab smoke gate and implementation have not started
+**Current state:** Phase 1A scaffold implemented with passing Windows/Ubuntu CPU CI; researcher PR review/merge and live Colab smoke gate remain pending. See docs/PROGRESS.md and docs/DECISIONS.md for current evidence and approved corrections.
 
 ---
 
@@ -1189,7 +1189,7 @@ Checklist:
 - [x] python -m pytest -q succeeds.
 - [x] python -m ruff check . succeeds.
 - [x] Windows CPU/fake tests pass without CUDA, Jina download, FAISS-GPU, or AgentDojo.
-- [ ] GitHub Actions passes on the same commit.
+- [x] GitHub Actions passes on the same code commit on Windows and Ubuntu (runs linked in docs/PROGRESS.md).
 - [x] The notebook contains orchestration only and no duplicated research logic.
 - [x] docs/DECISIONS.md contains the Section 1.1 template and states that consequential entries require researcher confirmation before writing.
 - [x] Upstream source is unchanged except for separately reviewed compatibility fixes.
@@ -1555,7 +1555,7 @@ Do not use a mutable Drive path as provenance. The reproducible identity of an i
 These are the material open decisions currently known. They do not prevent the reversible Phase 1A scaffold, but each must be resolved at its named gate before the affected data, feature, training, or end-to-end run is frozen.
 
 1. Which representation becomes primary: paper_exact or repo_compatible, after the checkpoint conformance test and author clarification?
-2. Does the team approve the official `training_data_original` release as the common D0 component and the official checkpoint as reference/smoke only?
+2. Resolved by D-20260921-03 and D-20260921-04: the team approves official original-training D0 after validation/adaptation and the checkpoint as reference/smoke only. Real execution and adaptation remain gated.
 3. What is the exact augmentation budget N at the sentence-representation level?
 4. What train/validation/test split proportions will be used for the project-created semantic families, and will any official D0 records be held out?
 5. Which live Colab GPU/runtime/dependency profile passes Phase 1B and becomes the final feature environment? The platform choice is fixed; the tested profile is not yet known.
@@ -1614,8 +1614,8 @@ Recommended defaults:
 ### Code
 
 - [x] Pinned CAD history integrated and Phase 1A task branch created under D-20260921-08.
-- [ ] Python environment reproducible across local and CI fresh installs.
-- [ ] Native Windows CPU/fake test path and GitHub Actions pass.
+- [x] Development environment reproducible across local and CI fresh installs; Colab environment remains untested.
+- [x] Native Windows CPU/fake test path and GitHub Actions pass.
 - [x] Thin Colab runner notebook implemented and output-cleared.
 - [x] Environment preflight implemented and CPU/fake-tested; live gate remains pending.
 - [x] Immutable artefact publish/restore/verify commands implemented and locally tested; Drive gate remains pending.

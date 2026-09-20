@@ -178,3 +178,29 @@ Historical audit claims are distinguished from checks executed in this session.
   check for inherited ignore rules hiding project Python source.
 - The correction is being validated before republishing. No CI success is
   claimed for ce9e51f; upstream source remains unchanged.
+
+### Passing Fresh-Checkout And CI Evidence
+
+- Correction commit 844afe6 tracks both adapter source files and the ignore-rule
+  regression test. A fresh local clone of this committed branch passed all
+  **54 CPU tests** using the existing tested dev interpreter; this checked the
+  committed file set, not just the original working tree.
+- Fresh Windows and Ubuntu GitHub runners installed the dev lock and editable
+  package and passed pip check, all CPU tests, Ruff, the pinned-source audit,
+  and the clean tracked-worktree check.
+- Successful push run:
+  https://github.com/DanielS26/rag-cad-semantic-pairs/actions/runs/35513252959
+- Successful PR run:
+  https://github.com/DanielS26/rag-cad-semantic-pairs/actions/runs/35513254852
+- `gh pr checks 2 --json name,state,link` returned SUCCESS for both operating
+  systems on both runs. Branch phase1a-foundation matched its remote and had a
+  clean working tree before this factual documentation update.
+- Project-file credential-pattern scan found no GitHub/Hugging Face token or
+  private-key patterns before publication. This is a bounded pattern scan, not
+  a claim to detect every possible secret.
+- Phase 1A implementation and local/fresh-runner CPU checks are complete.
+  [PR #2](https://github.com/DanielS26/rag-cad-semantic-pairs/pull/2) remains open
+  for researcher review and a merge commit. Main was not changed by the agent.
+  The merged SHA cannot be recorded until that review/merge occurs.
+- No Phase 1B execution was authorised or performed. All live smoke, profile
+  promotion, real-model conformance, and Drive gates remain unchecked.
