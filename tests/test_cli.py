@@ -48,8 +48,32 @@ def test_artefact_cli_roundtrip(tmp_path, capsys):
     manifest = tmp_path / "store/smoke/fixture/manifest.json"
     assert main(["artefact", "verify", "--manifest", str(manifest)]) == 0
     assert main(["artefact", "restore", "--manifest", str(manifest),
-                 "--destination", str(tmp_path / "restored")]) == 0
+                 "--destination", str(tmp_path / "restored"),
+                 "--receipt", str(tmp_path / "receipt.json")]) == 0
     assert (tmp_path / "restored/fixture.txt").read_text() == "synthetic"
+    from rag_cad.operations.artefacts import verify_restored
+
+    assert verify_restored(tmp_path / "receipt.json", tmp_path / "restored")["manifest"]["run_id"] == "fixture"
+    (tmp_path / "restored/fixture.txt").write_text("changed", encoding="utf-8")
+    import pytest
+
+    with pytest.raises(ValueError, match="changed"):
+        verify_restored(tmp_path / "receipt.json", tmp_path / "restored")
+
+
+def test_failed_discovery_report_written_before_cli_refuses(tmp_path, monkeypatch):
+    from rag_cad import cli
+    from rag_cad.operations.preflight import PreflightError
+
+    def fail(args):
+        raise PreflightError("Measured GPU memory must exceed 8 GiB", {"environment": {"gpu_memory_bytes": 0}})
+
+    monkeypatch.setattr(cli, "_gate", fail)
+    output = tmp_path / "failed.json"
+    assert main(["environment", "preflight", "--profile", "synthetic", "--lock", "synthetic",
+                 "--stage", "smoke", "--commit", "a" * 40, "--workspace", str(tmp_path),
+                 "--output", str(output)]) == 2
+    assert json.loads(output.read_text())["passed"] is False
 
 
 def test_upstream_cli_routes_only_after_gate(tmp_path, monkeypatch):

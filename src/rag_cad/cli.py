@@ -55,6 +55,7 @@ def parser() -> argparse.ArgumentParser:
         command.add_argument("--manifest", type=Path, required=True)
         if name == "restore":
             command.add_argument("--destination", type=Path, required=True)
+            command.add_argument("--receipt", type=Path)
     smoke = commands.add_parser("smoke").add_subparsers(dest="action", required=True)
     fake = smoke.add_parser("fake")
     fake.add_argument("--output", type=Path, required=True)
@@ -68,8 +69,8 @@ def parser() -> argparse.ArgumentParser:
         command.add_argument("--output", type=Path, required=True)
         command.add_argument("--allow-network", action="store_true")
         if name == "run-b":
-            command.add_argument("--manifest", type=Path, required=True)
             command.add_argument("--destination", type=Path, required=True)
+            command.add_argument("--receipt", type=Path, required=True)
     return root
 
 
@@ -102,7 +103,16 @@ def execute(args) -> dict:
             return artefacts.verify(args.manifest)
         if args.action == "restore":
             local_path(args.destination)
-            return artefacts.restore(args.manifest, args.destination)
+            if args.receipt:
+                local_path(args.receipt)
+                if args.receipt.resolve().is_relative_to(args.destination.resolve()):
+                    raise ValueError("Receipt must be outside restored payload")
+            restored = artefacts.restore(args.manifest, args.destination)
+            if args.receipt:
+                write_json(args.receipt, {"manifest": restored,
+                           "source_manifest_sha256": sha256(args.manifest),
+                           "destination": str(args.destination.resolve())})
+            return restored
         local_path(args.source)
         local_path(args.metadata)
         config = load_config(args.storage_config)
@@ -134,6 +144,9 @@ def execute(args) -> dict:
         write_json(args.output, result)
         return result
     started = time.perf_counter()
+    receipt = None
+    if args.action == "run-b":
+        receipt = artefacts.verify_restored(args.receipt, args.destination)
     source_manifest = validate_release(spec, args.source, load_model=True)
     validation_seconds = time.perf_counter() - started
     if not args.resources.exists():
@@ -146,10 +159,9 @@ def execute(args) -> dict:
             raise ValueError("Determinism tolerances must be approved explicitly")
         return smoke_a(backend, args.output, evidence, runtime_identity(), **tolerance,
                        source_manifest=source_manifest, validation_seconds=validation_seconds)
-    artefacts.restore(args.manifest, args.destination)
     result = smoke_b(backend, args.destination, evidence, runtime_identity())
     result["source_manifest"] = source_manifest
-    result["parent_artefact_manifest_sha256"] = sha256(args.manifest)
+    result["parent_artefact_manifest_sha256"] = receipt["source_manifest_sha256"]
     result["validation_seconds"] = validation_seconds
     write_json(args.output, result)
     write_json(args.output.parent / "source_manifest.json", source_manifest)

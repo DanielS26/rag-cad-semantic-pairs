@@ -31,10 +31,16 @@ jobs:
         with:
           python-version: '3.12.14'
       - run: python -m pip install -r requirements/dev.lock.txt
+      - name: Free disposable runner tools not used by this Python job
+        run: |
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          df -h "$RUNNER_TEMP"
       - name: Resolve candidate on Linux CPU
         run: |
           mkdir -p "$RUNNER_TEMP/candidate-evidence"
           python -m piptools compile --resolver=backtracking --strip-extras --allow-unsafe --no-header --no-annotate --no-emit-index-url --no-emit-trusted-host --output-file "$RUNNER_TEMP/candidate-evidence/colab-core.candidate.lock.txt" requirements/colab-core.in
+          python -m pip cache purge
           python -m venv "$RUNNER_TEMP/candidate-venv"
           "$RUNNER_TEMP/candidate-venv/bin/python" -m pip install --no-cache-dir --report "$RUNNER_TEMP/candidate-evidence/install-report.json" -r "$RUNNER_TEMP/candidate-evidence/colab-core.candidate.lock.txt"
           "$RUNNER_TEMP/candidate-venv/bin/python" -m pip install -e . --no-deps --no-build-isolation

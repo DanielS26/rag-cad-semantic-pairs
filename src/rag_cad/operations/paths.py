@@ -27,7 +27,7 @@ def local_path(path: Path, workspace: Path | None = None) -> Path:
 
 def execution_paths(args) -> None:
     workspace = local_path(args.workspace)
-    for name in ("source", "resources", "model_bundle", "output", "destination"):
+    for name in ("source", "resources", "model_bundle", "output", "destination", "receipt"):
         value = getattr(args, name, None)
         if value is not None:
             local_path(value, workspace)

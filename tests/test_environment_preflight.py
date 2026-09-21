@@ -141,3 +141,90 @@ def test_preflight_checks_commit_cleanliness_and_lock_before_hardware(profile, t
     state["commit"] = "b" * 40
     with pytest.raises(ValueError, match="commit"):
         operations.preflight(tmp_path, "a" * 40, profile, "smoke", lock, tmp_path)
+
+
+@pytest.fixture
+def discovery_gate(profile, tmp_path, monkeypatch):
+    import importlib
+    import sys
+    from types import SimpleNamespace
+
+    from rag_cad.config import DISCOVERABLE_FIELDS
+    from rag_cad.operations.provenance import sha256
+
+    operations = importlib.import_module("rag_cad.operations.preflight")
+    lock = tmp_path / "candidate.lock.txt"
+    lock.write_text("fake==1.0", encoding="utf-8")
+    profile["expected"]["lock_sha256"] = sha256(lock)
+    profile["minimum_free_bytes"] = 1
+    actual = deepcopy(profile["expected"])
+    for key in DISCOVERABLE_FIELDS:
+        profile["expected"][key] = None
+    monkeypatch.setattr(operations, "git_output", lambda repo, *args: "a" * 40 if args[0] == "rev-parse" else "")
+    monkeypatch.setattr(operations, "verify_upstream", lambda repo: {"source_unchanged": True})
+    monkeypatch.setattr(operations, "observe_environment", lambda *args: actual)
+    monkeypatch.setattr(operations.subprocess, "run", lambda *args, **kwargs: None)
+
+    class Tensor:
+        def __add__(self, value):
+            return self
+
+        def item(self):
+            return 2
+
+    monkeypatch.setitem(sys.modules, "torch", SimpleNamespace(ones=lambda *args, **kwargs: Tensor()))
+    return operations, profile, actual, lock, tmp_path
+
+
+def test_discovery_precedes_matching_and_records_actual_runtime(discovery_gate):
+    operations, profile, actual, lock, work = discovery_gate
+    before = deepcopy(profile)
+    report = operations.preflight(work, "a" * 40, profile, "smoke", lock, work)
+    assert report["passed"] and report["environment"] == actual
+    assert report["environment_id"] and profile == before
+
+
+@pytest.mark.parametrize("field,value", [("gpu_memory_bytes", 8 * 1024**3), ("cuda", None),
+                                       ("driver", ""), ("packages", {"wrong": "1"})])
+def test_failed_discovery_keeps_measurements(discovery_gate, field, value):
+    operations, profile, actual, lock, work = discovery_gate
+    actual[field] = value
+    with pytest.raises(operations.PreflightError) as error:
+        operations.preflight(work, "a" * 40, profile, "smoke", lock, work)
+    assert error.value.report["passed"] is False
+    assert error.value.report["environment"][field] == value
+
+
+@pytest.mark.parametrize("failure", ["no_gpu", "driver", "allocation", "pip"])
+def test_runtime_failures_abort_with_safe_report(discovery_gate, monkeypatch, failure):
+    import subprocess
+    import sys
+
+    operations, profile, actual, lock, work = discovery_gate
+
+    def fail(*args, **kwargs):
+        if failure == "no_gpu":
+            raise ValueError("GPU stage requires CUDA")
+        if failure in {"driver", "pip"}:
+            raise subprocess.CalledProcessError(1, "synthetic-command")
+        raise RuntimeError("synthetic GPU allocation failed")
+
+    if failure in {"no_gpu", "driver"}:
+        monkeypatch.setattr(operations, "observe_environment", fail)
+    elif failure == "allocation":
+        monkeypatch.setattr(sys.modules["torch"], "ones", fail)
+    else:
+        monkeypatch.setattr(operations.subprocess, "run", fail)
+    with pytest.raises(operations.PreflightError):
+        operations.preflight(work, "a" * 40, profile, "smoke", lock, work)
+
+
+def test_tested_profiles_never_discover_unknowns(profile):
+    profile["status"] = "tested"
+    profile["evidence"] = {"run_a_manifest_sha256": "a" * 64, "run_b_manifest_sha256": "b" * 64,
+                           "lock_sha256": "a" * 64, "reviewed_commit": "c" * 40}
+    actual = deepcopy(profile["expected"])
+    profile["expected"]["gpu_name"] = None
+    for stage in ("smoke", "features", "train", "evaluate"):
+        with pytest.raises(ValueError, match="Unresolved"):
+            validate_profile(profile, stage, actual)

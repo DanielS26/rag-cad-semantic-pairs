@@ -68,3 +68,14 @@ def test_bootstrap_network_permissions_fail_before_subprocess(tmp_path, monkeypa
         BOOTSTRAP["clone_exact"]("https://github.com/team/repo.git", "a" * 40, tmp_path / "checkout")
     with pytest.raises(ValueError, match="network permission"):
         BOOTSTRAP["install_and_test"](tmp_path, "https://github.com/team/repo.git", "a" * 40, "candidate.lock.txt")
+
+
+def test_combined_budget_uses_first_limit_and_rejects_invalid_values(monkeypatch):
+    monkeypatch.setattr(BOOTSTRAP["time"], "monotonic", lambda: 100.0)
+    remaining = BOOTSTRAP["remaining_seconds"]
+    assert remaining(100.0, 7200, 19, 2) == 1800
+    assert remaining(100.0, 10700, 0, 1) == 100
+    for args in ((100, 10800, 0, 1), (100, 0, 20, 1), (100, 0, 0, 0),
+                 (100, -1, 0, 1), (100, 0, float("nan"), 1)):
+        with pytest.raises(ValueError):
+            remaining(*args)
