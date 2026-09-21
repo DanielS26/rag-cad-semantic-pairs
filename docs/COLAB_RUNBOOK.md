@@ -61,9 +61,15 @@ It clears the temporary environment and removes askpass before verifying the
 exact checkout and clean remote. It then hashes and executes the local helper.
 
 Installation, CPU tests, and preflight run before the explicit Drive mount cell.
-Scientific commands always run in new Python subprocesses, so the notebook
-kernel never holds imported ML binaries across installation. A preflight failure
-blocks mounting and execution. Work happens under the temporary workspace.
+The bootstrap creates a fresh isolated virtual environment outside the checkout
+(`/content/rag-cad-venv`), installs the committed candidate lock and the project
+into it, and returns its interpreter. `pip check`, the CPU tests, preflight and
+every later project CLI command use that interpreter, never Colab's system
+Python, whose preinstalled packages conflict with each other and with the lock
+(D-20260921-10). Scientific commands always run in new Python subprocesses, so
+the notebook kernel never holds imported ML binaries across installation. A
+preflight failure blocks mounting and execution. Work happens under the
+temporary workspace.
 
 Drive mounts only for required input restoration, then unmounts in finally before
 model loading. Run B uses a local verified input directory and separate receipt

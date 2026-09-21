@@ -101,11 +101,16 @@ def test_install_verifies_lock_space_and_total_timeout(tmp_path, monkeypatch):
 
     monkeypatch.setattr(BOOTSTRAP["subprocess"], "run", run)
     monkeypatch.setattr(BOOTSTRAP["shutil"], "disk_usage", lambda path: SimpleNamespace(free=100))
-    clock = iter([100.0, 101.0, 102.0, 103.0, 104.0])
+    clock = iter([100.0, 101.0, 102.0, 103.0, 104.0, 105.0])
     monkeypatch.setattr(BOOTSTRAP["time"], "monotonic", lambda: next(clock))
-    BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True, timeout=50)
-    installers = [kwargs for command, kwargs in calls if "pip" in command or "pytest" in command]
-    assert [item["timeout"] for item in installers] == [49.0, 48.0, 47.0, 46.0]
+    environment = tmp_path.parent / "synthetic-isolated-environment"
+    python = BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True,
+                                           timeout=50, environment=environment)
+    assert python == BOOTSTRAP["environment_python"](environment.resolve())
+    stages = [(command, kwargs) for command, kwargs in calls if command[0] != "git"]
+    assert [item["timeout"] for command, item in stages] == [49.0, 48.0, 47.0, 46.0, 45.0]
+    assert stages[0][0] == [BOOTSTRAP["sys"].executable, "-m", "venv", str(environment.resolve())]
+    assert all(command[0] == str(python) for command, item in stages[1:])
     monkeypatch.setattr(BOOTSTRAP["shutil"], "disk_usage", lambda path: SimpleNamespace(free=0))
     with pytest.raises(ValueError, match="disk"):
         BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True)
@@ -162,9 +167,39 @@ def test_stage_is_allowlisted_and_success_output_preserved(monkeypatch, capsys):
     assert calls[0]["timeout"] == 17 and calls[0]["capture_output"] is True
 
 
+def test_install_requires_fresh_isolated_environment_outside_checkout(tmp_path, monkeypatch):
+    import hashlib
+    import json
+
+    url, commit = "https://github.com/team/repo.git", "a" * 40
+    lock = tmp_path / "candidate.lock.txt"
+    lock.write_text("synthetic==1.0\n", encoding="utf-8")
+    evidence = tmp_path / "configs/environments/colab_candidate_cpu_evidence.json"
+    evidence.parent.mkdir(parents=True)
+    evidence.write_text(json.dumps({"lock_sha256": hashlib.sha256(lock.read_bytes()).hexdigest(),
+                                   "storage": {"runtime_free_before_install_bytes": 1}}))
+    commands = []
+
+    def run(command, **kwargs):
+        assert command[0] == "git", "No installation may start without an acceptable environment"
+        commands.append(command)
+        output = commit if "rev-parse" in command else url if "remote" in command else ""
+        return SimpleNamespace(returncode=0, stdout=output, stderr="")
+
+    monkeypatch.setattr(BOOTSTRAP["subprocess"], "run", run)
+    monkeypatch.setattr(BOOTSTRAP["shutil"], "disk_usage", lambda path: SimpleNamespace(free=100))
+    existing = tmp_path.parent / "synthetic-existing-environment"
+    existing.mkdir(exist_ok=True)
+    for environment in (tmp_path / "inside-checkout", existing):
+        with pytest.raises(ValueError, match="isolated environment"):
+            BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True,
+                                          environment=environment)
+    assert commands and all(command[0] == "git" for command in commands)
+
+
 @pytest.mark.parametrize("failed_index,stage", [
-    (0, "locked_dependency_install"), (1, "editable_project_install"),
-    (2, "pip_check"), (3, "cpu_tests"),
+    (0, "virtual_environment_create"), (1, "locked_dependency_install"),
+    (2, "editable_project_install"), (3, "pip_check"), (4, "cpu_tests"),
 ])
 @pytest.mark.parametrize("timed_out", [False, True])
 def test_install_failure_identifies_exact_stage_without_disclosure(
@@ -198,8 +233,10 @@ def test_install_failure_identifies_exact_stage_without_disclosure(
 
     monkeypatch.setattr(BOOTSTRAP["subprocess"], "run", run)
     monkeypatch.setattr(BOOTSTRAP["shutil"], "disk_usage", lambda path: SimpleNamespace(free=100))
+    environment = (tmp_path.parent / "synthetic-isolated-environment").resolve()
     with pytest.raises(RuntimeError) as error:
-        BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True, timeout=50)
+        BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True,
+                                      timeout=50, environment=environment)
     expected = "timed_out" if timed_out else "exit_code=31"
     assert str(error.value) == f"{stage}: {expected}"
     assert error.value.__context__ is None and error.value.__cause__ is None
@@ -207,11 +244,13 @@ def test_install_failure_identifies_exact_stage_without_disclosure(
     captured = capsys.readouterr()
     assert captured.out == captured.err == ""
     assert len(commands) == failed_index + 1
+    python = str(BOOTSTRAP["environment_python"](environment))
     expected_commands = [
-        [BOOTSTRAP["sys"].executable, "-m", "pip", "install", "--no-cache-dir", "-r", str(lock)],
-        [BOOTSTRAP["sys"].executable, "-m", "pip", "install", "-e", ".", "--no-deps", "--no-build-isolation"],
-        [BOOTSTRAP["sys"].executable, "-m", "pip", "check"],
-        [BOOTSTRAP["sys"].executable, "-m", "pytest", "-m", "not gpu and not integration", "-q"],
+        [BOOTSTRAP["sys"].executable, "-m", "venv", str(environment)],
+        [python, "-m", "pip", "install", "--no-cache-dir", "-r", str(lock)],
+        [python, "-m", "pip", "install", "-e", ".", "--no-deps", "--no-build-isolation"],
+        [python, "-m", "pip", "check"],
+        [python, "-m", "pytest", "-m", "not gpu and not integration", "-q"],
     ]
     assert commands == expected_commands[:failed_index + 1]
 

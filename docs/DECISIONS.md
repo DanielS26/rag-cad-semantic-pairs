@@ -172,3 +172,17 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song, explicit confirmation to append the proposed entry on 2026-09-21.
 - Related files, commands, results, correspondence, or commit: [Candidate profile](../configs/environments/colab_candidate.yaml), [approval regression tests](../tests/test_candidate_preparation.py), [preparation evidence](PHASE1B_PREPARATION.md); candidate base 7830d588715cc8e607847ca93dec8ccdebabf2bc; approval commit 6f73c34dfa3f4389b42bd6a9e4e5b0b9ffca42dd; D-20260921-02.
 - Supersedes / superseded by: None.
+## D-20260921-10 - Isolate the Colab candidate environment in a virtual environment
+
+- Status: Confirmed
+- Date: 2026-09-21
+- Project phase: Phase 1B bootstrap correction before Run A
+- Category: Implementation
+- Decision or important note: The Phase 1B bootstrap installs the committed candidate lock into a dedicated virtual environment inside the Colab runtime, and every dependency check, test, preflight and project CLI command runs with that environment's interpreter rather than Colab's system Python.
+- Context and reason: Run A on ffabf8369c18d162bee2cb8ea49e563f90501b6a reached the pip_check stage and failed only because of Google-preinstalled packages, including one conflict (missing jedi for ipython) that exists before any project install. The system interpreter cannot satisfy the gate, and the candidate-linux CI job already validates the lock in an isolated environment.
+- Evidence: The eight-line `pip check` output from that attempt named only preinstalled Colab packages (ipython, google-colab, diffusers, datasets, gcsfs, gradio, cuda-python, torchvision) conflicting with the lock's requests, huggingface-hub, fsspec, cuda-bindings and torch pins; passing candidate-linux CI on the same lock at the same commit.
+- Alternatives considered: Relax or scope pip check, which weakens the gate; re-pin to Colab's preinstalled versions, which abandons the paper's environment and drifts with Google's image.
+- Consequences for implementation/evaluation/report: No pin, lock, profile, budget or scientific change. The recorded environment fingerprint describes the isolated environment. The change requires a reviewed PR, a new bootstrap hash and fresh execution authorisation.
+- Approved by: Daniel Song, explicit "I authorise" for the proposed entry in the coding session on 2026-09-21.
+- Related files, commands, results, correspondence, or commit: [Bootstrap helper](../scripts/bootstrap_colab.py), [runner notebook](../notebooks/COMPSCI764_Colab_Runner.ipynb), [bootstrap tests](../tests/test_colab_bootstrap.py), [Colab runbook](COLAB_RUNBOOK.md), [PROGRESS.md](PROGRESS.md); failed attempt from ffabf8369c18d162bee2cb8ea49e563f90501b6a; D-20260921-02; D-20260921-09.
+- Supersedes / superseded by: None.
