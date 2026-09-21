@@ -17,7 +17,7 @@ from pathlib import Path
 
 CAD_COMMIT = "26e38a67f0a9e1de4cb3a876e4b021900a5d1c27"
 STAGES = frozenset({
-    "git_clone", "git_checkout", "checkout_verification",
+    "git_clone", "git_checkout", "checkout_verification", "virtual_environment_create",
     "locked_dependency_install", "editable_project_install", "pip_check", "cpu_tests",
     "environment_preflight", "artefact_restore", "upstream_fetch",
     "smoke_run_a", "smoke_run_b", "artefact_publish",
@@ -101,25 +101,42 @@ def clone_exact(repo_url: str, commit: str, checkout: Path, token: str | None = 
     verify_checkout(checkout, repo_url, commit)
 
 
+def environment_python(environment: Path) -> Path:
+    """Interpreter of the isolated project environment created by install_and_test."""
+    return environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+
+
 def install_and_test(checkout: Path, repo_url: str, commit: str, lock_relative: str, *,
-                     allow_network: bool = False, timeout: float = 3600) -> None:
+                     allow_network: bool = False, timeout: float = 3600,
+                     environment: Path | None = None) -> Path:
+    """Install the committed lock into a fresh isolated environment and return its interpreter.
+
+    Colab's system interpreter carries hundreds of preinstalled packages whose declared
+    requirements conflict with each other and with the candidate lock, so dependency
+    checks and project commands run only inside the isolated environment.
+    """
     if allow_network is not True:
         raise ValueError("Explicit network permission is required for dependency installation")
     verify_checkout(checkout, repo_url, commit)
     lock = (checkout / lock_relative).resolve()
     if not lock.is_relative_to(checkout.resolve()) or not lock.name.endswith(".lock.txt") or not lock.is_file():
         raise ValueError("A reviewed committed dependency lock is required")
+    environment = (checkout.parent / "rag-cad-venv" if environment is None else Path(environment)).resolve()
+    if environment.is_relative_to(checkout.resolve()) or environment.exists():
+        raise ValueError("A fresh isolated environment outside the checkout is required")
     evidence = json.loads((checkout / "configs/environments/colab_candidate_cpu_evidence.json").read_text(encoding="utf-8"))
     if hashlib.sha256(lock.read_bytes()).hexdigest() != evidence["lock_sha256"]:
         raise ValueError("Candidate lock differs from Ubuntu CPU evidence")
     if shutil.disk_usage(checkout).free < evidence["storage"]["runtime_free_before_install_bytes"]:
         raise ValueError("Insufficient disk for locked installation and smoke working space")
+    python = str(environment_python(environment))
     deadline = time.monotonic() + min(timeout, 10800)
     commands = [
-        ("locked_dependency_install", [sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", str(lock)]),
-        ("editable_project_install", [sys.executable, "-m", "pip", "install", "-e", ".", "--no-deps", "--no-build-isolation"]),
-        ("pip_check", [sys.executable, "-m", "pip", "check"]),
-        ("cpu_tests", [sys.executable, "-m", "pytest", "-m", "not gpu and not integration", "-q"]),
+        ("virtual_environment_create", [sys.executable, "-m", "venv", str(environment)]),
+        ("locked_dependency_install", [python, "-m", "pip", "install", "--no-cache-dir", "-r", str(lock)]),
+        ("editable_project_install", [python, "-m", "pip", "install", "-e", ".", "--no-deps", "--no-build-isolation"]),
+        ("pip_check", [python, "-m", "pip", "check"]),
+        ("cpu_tests", [python, "-m", "pytest", "-m", "not gpu and not integration", "-q"]),
     ]
     for stage, command in commands:
         remaining = deadline - time.monotonic()
@@ -127,6 +144,7 @@ def install_and_test(checkout: Path, repo_url: str, commit: str, lock_relative: 
             raise ValueError("Installation/test budget exhausted; disconnect runtime")
         _run(command, stage=stage, cwd=checkout, timeout=remaining)
     verify_checkout(checkout, repo_url, commit)
+    return environment_python(environment)
 
 
 def remaining_seconds(started: float, connected_seconds_used: float,

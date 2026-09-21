@@ -400,3 +400,84 @@ Historical audit claims are distinguished from checks executed in this session.
   clock with deterministic readings and asserted the exact remaining timeout
   sequence. Production timeouts and budget code are unchanged; CI is rerun on
   the test-only correction. This is not a fix for the failed Colab execution.
+## 2026-09-21 - PR #7 Merge Verification And Runner Input Preparation
+
+- [PR #7](https://github.com/DanielS26/rag-cad-semantic-pairs/pull/7) was manually
+  merged by Daniel Song at 2026-09-21T07:21:49Z as merge commit
+  ffabf8369c18d162bee2cb8ea49e563f90501b6a, with parents
+  4bff790c154d34561f3673d9423ca77ef22a324f (main) and
+  3a16f462f1925d85863ff70a7aa4c57e33df32aa (reviewed head). The merge tree is
+  byte-identical to the reviewed head; only the five reviewed files differ from
+  the previous main. Pinned CAD ancestry is retained. No open PRs remain.
+- Post-merge push [CI run 35572605522](https://github.com/DanielS26/rag-cad-semantic-pairs/actions/runs/35572605522)
+  on the merge commit succeeded: cpu (ubuntu-latest), cpu (windows-latest) and
+  candidate-linux all completed with conclusion success.
+- Committed bytes at the merge commit: `scripts/bootstrap_colab.py` SHA-256
+  6c61d1bc828b75b40961e2e1d461d336b04aea12c319318c6a2b4ce3ce054b61 (matches the
+  reviewed head; the historical failed-execution hash 6f92c1a4... is unchanged);
+  runner notebook blob 66b37130651e6046208a7941e4b2a5810552c702, file SHA-256
+  396709ec68440d5cd96fd415eb47104ed8b68454a424e12d6abe42073cac0ab8, nbformat
+  valid, all code cells compile, outputs and execution counts cleared. The
+  committed candidate lock hash still equals the Ubuntu CPU evidence value
+  4d4624e4d23591ca6471818686bdcddbb59d80c53807e622423deb9a91939f43.
+- Local checks from the rag-cad-smoke-approval worktree at the merge commit,
+  using the Windows Python 3.12.10 dev interpreter with this worktree's source
+  path: 172 CPU/fake tests passed; Ruff passed; pip check passed; upstream audit
+  returned the pinned CAD commit and source_unchanged true; git diff --check
+  passed. Local main was fast-forwarded to the merge commit in that worktree.
+- A disposable Cell 1 input block for Run A from the merge commit and new
+  bootstrap hash was prepared for review outside the repository. It carries
+  forward 1,860 connected seconds and 0.42 compute units and leaves the unit
+  rate to be read at the starting snapshot. Authorisation flags remain false.
+- No Colab, GPU, Drive, secret, model/data download, or notebook execution
+  occurred. The old Run A authorisation, runner, run ID and bootstrap hash are
+  not reused; execution from the merge commit requires fresh authorisation.
+  The Cell 4 failure cause remains unknown and no dependency change was made.
+
+## 2026-09-21 - Run A Attempt From ffabf836 And Environment Isolation Correction
+
+- Daniel Song authorised Run A from ffabf8369c18d162bee2cb8ea49e563f90501b6a
+  with bootstrap hash 6c61d1bc828b75b40961e2e1d461d336b04aea12c319318c6a2b4ce3ce054b61
+  and executed the committed runner in a fresh Colab GPU runtime. Cells 2 and 3
+  (inputs, clone, exact checkout and bootstrap hash check) passed. Cell 4 failed
+  with the sanitized diagnostic `pip_check: exit_code=1`; the locked dependency
+  install and editable project install stages therefore completed. The runtime
+  was deleted after one read-only `pip check` diagnostic cell.
+- Reported usage for the attempt: about 6 minutes and 0.2 compute units.
+  Recorded conservatively as 360 connected seconds and 0.2 units, giving a
+  carry-forward of 2,220 connected seconds and 0.62 units against the shared
+  10,800-second/20-unit cap. The displayed unit rate was not re-read; it must be
+  remeasured at the next starting snapshot.
+- The `pip check` output listed eight broken requirements, all raised by
+  Google-preinstalled Colab packages (ipython/jedi, google-colab, diffusers,
+  datasets, gcsfs, gradio, cuda-python, torchvision) against the lock's requests,
+  huggingface-hub, fsspec, cuda-bindings and torch versions. The ipython/jedi
+  conflict exists before any project install. No conflict involved two
+  project-locked packages; the candidate-linux CI job installs the same lock
+  into an empty virtual environment and passes. Colab's image now ships torch
+  2.11.0, so the locked install downgraded torch to the paper's 2.10.0.
+- Daniel Song authorised one bounded CPU-only corrective pass and approved
+  D-20260921-10. Branch fix/phase1b-venv-isolation starts from ffabf836. The
+  bootstrap now creates a fresh isolated virtual environment outside the
+  checkout (default `/content/rag-cad-venv`, rejected if inside the checkout or
+  already present), installs the lock and project into it, runs pip check and
+  the CPU tests with its interpreter, and returns that interpreter. A new
+  sanitized stage label `virtual_environment_create` precedes the existing four.
+  Cell 4 binds the returned interpreter and every later CLI command uses it;
+  the notebook no longer references the kernel's sys.executable.
+- Pins, lock, candidate profile, budget constants, scientific settings, command
+  arguments, ordering, timeouts and secret handling are unchanged. This entry
+  also carries the earlier PR #7 merge-verification entry above into the same
+  branch instead of a separate documentation PR.
+- Local checks on the corrective branch from the rag-cad-smoke-approval worktree
+  with the Windows Python 3.12.10 dev interpreter and this worktree's source:
+  179 CPU/fake tests passed (new: isolated-environment guard, venv stage in the
+  deadline sequence and failure-label mapping, notebook interpreter binding);
+  Ruff, pip check, upstream audit, notebook schema/syntax/cleared-output checks,
+  documentation links and git diff --check passed.
+- Not verified locally: that Colab's system Python can create a venv with a
+  working pip, and that the isolated CUDA-enabled torch wheel sees the GPU.
+  Both are live-gate checks; a failure will be reported by stage label. No
+  Colab, GPU, Drive, secret, model/data download or notebook execution occurred
+  in this pass. Execution from the resulting merge requires its new bootstrap
+  hash and fresh authorisation.

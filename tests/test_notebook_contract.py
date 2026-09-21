@@ -29,6 +29,10 @@ def test_notebook_is_output_cleared_guarded_orchestration():
     assert combined.index("ALLOW_NETWORK is not True") < combined.index('userdata.get("GH_READ_TOKEN")')
     assert '"--model-bundle"' in combined
     assert 'allow_network=ALLOW_NETWORK' in combined
+    assert "sys.executable" not in combined and "import sys" not in combined
+    assert 'PYTHON = bootstrap["install_and_test"](' in code[2]
+    assert 'common = [str(PYTHON), "-m", "rag_cad.cli"' in code[2]
+    assert code[2].index('PYTHON = bootstrap["install_and_test"](') < code[2].index("common = [str(PYTHON)")
     assert "flush_and_unmount" in code[3]
     assert "ismount" in code[4]
     assert "--receipt" in code[4] and "--manifest" not in code[4]
