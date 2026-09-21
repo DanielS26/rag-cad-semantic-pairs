@@ -1,9 +1,9 @@
 status: candidate
-approved: false
-approved_by: null
+approved: true
+approved_by: Daniel Song
 network_approved: true
 remote_code_approved: true
-proposal_only: true
+proposal_only: false
 operator: Daniel Song
 compute_budget_approved: true
 licence_scope: noncommercial_academic_with_attribution_no_jina_weight_redistribution
