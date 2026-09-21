@@ -83,4 +83,4 @@ def validate_profile(profile: dict, stage: str, observed: dict | None = None) ->
     if not isinstance(observed["gpu_name"], str) or not observed["gpu_name"].strip():
         raise ValueError("Missing measured GPU name")
     if not re.fullmatch(r"3\.12\.\d+", observed["python"]):
-        raise ValueError("Candidate lock requires Python 3.12.x")
+        raise ValueError("Candidate lock requires Python 3.13.x")

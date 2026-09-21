@@ -10,7 +10,7 @@ def profile():
     return {
         "status": "candidate", "approved": True, "approved_by": "synthetic-test-only",
         "expected": {
-            "python": "3.12.10", "packages": {"fake": "1.0"}, "lock_sha256": "a" * 64,
+            "python": "3.13.15", "packages": {"fake": "1.0"}, "lock_sha256": "a" * 64,
             "gpu_name": "synthetic-device", "gpu_memory_bytes": 16 * 1024**3,
             "cuda": "fake", "driver": "fake", "encoder_revision": "b" * 40,
             "encoder_code_revision": "c" * 40, "attention": "native",
@@ -90,7 +90,7 @@ def test_candidate_discovers_only_runtime_fields_without_mutation(profile):
 
 @pytest.mark.parametrize("field,value", [("gpu_memory_bytes", 8 * 1024**3),
     ("gpu_memory_bytes", 0), ("gpu_memory_bytes", True), ("driver", None),
-    ("cuda", ""), ("gpu_name", ""), ("python", "3.13.0")])
+    ("cuda", ""), ("gpu_name", ""), ("python", "3.12.14")])
 def test_bad_discovered_runtime_fails(profile, field, value):
     from rag_cad.config import DISCOVERABLE_FIELDS
 

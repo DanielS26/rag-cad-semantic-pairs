@@ -28,7 +28,7 @@ outside that authorisation. No code changes may be made or pushed from Colab.
 4. Explicitly approve the overall candidate before execution. Smoke/conformance
    may discover null Python patch, GPU name/VRAM, CUDA, and driver fields.
    Measurements must be complete; CUDA must be available, VRAM strictly greater
-   than 8 GiB, and Python must be 3.12.x. Non-null expectations must match.
+   than 8 GiB, and Python must be 3.13.x (D-20260921-11). Non-null expectations must match.
    Packages, lock, model/code pins, dtype, attention and segmenter are never
    inferred or relaxed. Failed measurement validation records failure and stops
    before models. Success records the measured fingerprint without editing the
@@ -62,10 +62,13 @@ exact checkout and clean remote. It then hashes and executes the local helper.
 
 Installation, CPU tests, and preflight run before the explicit Drive mount cell.
 The bootstrap creates a fresh isolated virtual environment outside the checkout
-(`/content/rag-cad-venv`), installs the committed candidate lock and the project
-into it, and returns its interpreter. `pip check`, the CPU tests, preflight and
-every later project CLI command use that interpreter, never Colab's system
-Python, whose preinstalled packages conflict with each other and with the lock
+(`/content/rag-cad-venv`) without pip, because Colab's Python build lacks
+`ensurepip`; Colab's system pip then installs the committed candidate lock
+(which pins pip and setuptools) into that environment with `pip --python`, and
+the environment's own interpreter installs the project and returns as the
+project interpreter. `pip check`, the CPU tests, preflight and every later
+project CLI command use that interpreter, never Colab's system Python, whose
+preinstalled packages conflict with each other and with the lock
 (D-20260921-10). Scientific commands always run in new Python subprocesses, so
 the notebook kernel never holds imported ML binaries across installation. A
 preflight failure blocks mounting and execution. Work happens under the

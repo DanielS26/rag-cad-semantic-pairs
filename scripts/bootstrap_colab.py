@@ -113,7 +113,9 @@ def install_and_test(checkout: Path, repo_url: str, commit: str, lock_relative: 
 
     Colab's system interpreter carries hundreds of preinstalled packages whose declared
     requirements conflict with each other and with the candidate lock, so dependency
-    checks and project commands run only inside the isolated environment.
+    checks and project commands run only inside the isolated environment. Colab's Python
+    build lacks ensurepip, so the environment is created without pip and the system pip
+    installs the lock (which pins pip and setuptools) into it via ``--python``.
     """
     if allow_network is not True:
         raise ValueError("Explicit network permission is required for dependency installation")
@@ -132,8 +134,9 @@ def install_and_test(checkout: Path, repo_url: str, commit: str, lock_relative: 
     python = str(environment_python(environment))
     deadline = time.monotonic() + min(timeout, 10800)
     commands = [
-        ("virtual_environment_create", [sys.executable, "-m", "venv", str(environment)]),
-        ("locked_dependency_install", [python, "-m", "pip", "install", "--no-cache-dir", "-r", str(lock)]),
+        ("virtual_environment_create", [sys.executable, "-m", "venv", "--without-pip", str(environment)]),
+        ("locked_dependency_install", [sys.executable, "-m", "pip", "--python", python, "install",
+                                       "--no-cache-dir", "-r", str(lock)]),
         ("editable_project_install", [python, "-m", "pip", "install", "-e", ".", "--no-deps", "--no-build-isolation"]),
         ("pip_check", [python, "-m", "pip", "check"]),
         ("cpu_tests", [python, "-m", "pytest", "-m", "not gpu and not integration", "-q"]),
