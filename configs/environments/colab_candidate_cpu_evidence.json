@@ -1,7 +1,7 @@
 {
   "candidate_only": true,
   "gpu_used": false,
-  "lock_sha256": "4d4624e4d23591ca6471818686bdcddbb59d80c53807e622423deb9a91939f43",
+  "lock_sha256": "1b270c043e4cbe273dd7c5e67b6f720bd9ec18a2b105ffcc83a7900d746f11e9",
   "packages": {
     "attrs": "26.1.0",
     "build": "1.6.1",
@@ -63,7 +63,7 @@
     "safetensors": "0.8.0",
     "scikit-learn": "1.6.1",
     "scipy": "1.18.1",
-    "sentencepiece": "0.2.0",
+    "sentencepiece": "0.2.1",
     "setuptools": "80.9.0",
     "sympy": "1.14.0",
     "threadpoolctl": "3.7.0",
@@ -78,14 +78,14 @@
     "wheel": "0.48.0"
   },
   "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
-  "project_commit": "98d64db763b3920f9686776c3a27b2a1c46cca82",
-  "python": "3.12.14",
+  "project_commit": "b542456cc38d3f31e6e21dc950cde3ce033cc2b9",
+  "python": "3.13.15",
   "storage": {
     "cad_archive_bytes": 2680084,
-    "compressed_wheels_bytes": 4263907370,
+    "compressed_wheels_bytes": 4265602104,
     "drive_basis": "Two smoke runs: 32 MiB each, doubled for partial publication; no Jina weights",
     "drive_free_bytes": 134217728,
-    "installed_dependencies_bytes": 7893686879,
+    "installed_dependencies_bytes": 7891871567,
     "model_cache_copies": 2,
     "model_code_reserve_bytes": 1048576,
     "named_model_bytes": 1161771987,
@@ -119,10 +119,10 @@
       "version": "2026.7.22"
     },
     {
-      "bytes": 248801,
-      "file": "charset_normalizer-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "bytes": 250638,
+      "file": "charset_normalizer-3.5.1-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
       "name": "charset-normalizer",
-      "sha256": "b9af956078716df40d985fb0dfeb2c2120c5ca92ba4ff4b388acfd01cdc14d08",
+      "sha256": "62b55f6722735a6c472f88361cde6640608773d9443cebdbb51abf436a1fcdd3",
       "version": "3.5.1"
     },
     {
@@ -140,10 +140,10 @@
       "version": "3.1.2"
     },
     {
-      "bytes": 12151019,
-      "file": "cuda_bindings-12.9.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl",
+      "bytes": 11906628,
+      "file": "cuda_bindings-12.9.4-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl",
       "name": "cuda-bindings",
-      "sha256": "fda147a344e8eaeca0c6ff113d2851ffca8f7dfc0a6c932374ee5c47caa649c8",
+      "sha256": "32bdc5a76906be4c61eb98f546a6786c5773a881f3b166486449b5d141e4a39f",
       "version": "12.9.4"
     },
     {
@@ -161,11 +161,18 @@
       "version": "0.8.1"
     },
     {
-      "bytes": 30663859,
-      "file": "faiss_cpu-1.10.0-cp312-cp312-manylinux_2_28_x86_64.whl",
+      "bytes": 30663948,
+      "file": "faiss_cpu-1.10.0-cp313-cp313-manylinux_2_28_x86_64.whl",
       "name": "faiss-cpu",
-      "sha256": "9899c340f92bd94071d6faf4bef0ccb5362843daea42144d4ba857a2a1f67511",
+      "sha256": "e02af3696a6b9e1f9072e502f48095a305de2163c42ceb1f6f6b1db9e7ffe574",
       "version": "1.10.0"
+    },
+    {
+      "bytes": 16526072,
+      "file": "numpy-2.2.6-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "name": "numpy",
+      "sha256": "1bc23a79bfabc5d056d106f9befb8d50c31ced2fbc70eedb8155aec74a45798f",
+      "version": "2.2.6"
     },
     {
       "bytes": 27413,
@@ -252,10 +259,10 @@
       "version": "5.9.1"
     },
     {
-      "bytes": 22947,
-      "file": "markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "bytes": 22980,
+      "file": "markupsafe-3.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
       "name": "MarkupSafe",
-      "sha256": "d6dd0be5b5b189d31db7cda48b91d7e0a9795f31430b7f271219ab30f1d3ac9d",
+      "sha256": "ccfcd093f13f0f0b7fdd0f198b90053bf7b2f02a3927a30e63f3ccc9df56b676",
       "version": "3.0.3"
     },
     {
@@ -285,13 +292,6 @@
       "name": "nltk",
       "sha256": "4fa26829c5b00715afe3061398a8989dc643b92ce7dd93fb4585a70930d168a1",
       "version": "3.9.1"
-    },
-    {
-      "bytes": 16527618,
-      "file": "numpy-2.2.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
-      "name": "numpy",
-      "sha256": "fd83c01228a688733f1ded5201c678f0c53ecc1006ffbc404db9f7a899ac6249",
-      "version": "2.2.6"
     },
     {
       "bytes": 594346921,
@@ -441,10 +441,10 @@
       "version": "8.3.5"
     },
     {
-      "bytes": 767542,
-      "file": "PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "bytes": 759523,
+      "file": "PyYAML-6.0.2-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
       "name": "PyYAML",
-      "sha256": "80bab7bfc629882493af4aa31a4cfa43a4c57c83813253626916b8c7ada83476",
+      "sha256": "70b189594dbe54f75ab3a1acec5f1e3faa7e8cf2f1e08d9b561cb41b845f69d5",
       "version": "6.0.2"
     },
     {
@@ -455,10 +455,10 @@
       "version": "0.37.0"
     },
     {
-      "bytes": 804587,
-      "file": "regex-2026.9.10-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "bytes": 804578,
+      "file": "regex-2026.9.10-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
       "name": "regex",
-      "sha256": "2e67f8843f0e4b931f1fa860bf3bbe4134b714c0155cc5c7c0d7ea450230aae0",
+      "sha256": "bafa41b0dd63669e5c0f8adf3d24819efeb73c847f492eb011212eb352e69041",
       "version": "2026.9.10"
     },
     {
@@ -469,10 +469,17 @@
       "version": "2.34.2"
     },
     {
-      "bytes": 366189,
-      "file": "rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "bytes": 135717,
+      "file": "urllib3-2.8.0-py3-none-any.whl",
+      "name": "urllib3",
+      "sha256": "0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3",
+      "version": "2.8.0"
+    },
+    {
+      "bytes": 365678,
+      "file": "rpds_py-2026.6.3-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
       "name": "rpds-py",
-      "sha256": "ecabd69db66de867690f9797f2f8fa27ba501bbc24540cbdbdc649cd15888ba6",
+      "sha256": "acac386b453c2516111b50985d60ce46e7fadb5ea71ae7b25f4c946935bf27cf",
       "version": "2026.6.3"
     },
     {
@@ -490,25 +497,25 @@
       "version": "0.8.0"
     },
     {
-      "bytes": 13147700,
-      "file": "scikit_learn-1.6.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "bytes": 13171776,
+      "file": "scikit_learn-1.6.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
       "name": "scikit-learn",
-      "sha256": "2e69fab4ebfc9c9b580a7a80111b43d214ab06250f8a7ef590a4edf72464dd86",
+      "sha256": "e8ca8cb270fee8f1f76fa9bfd5c3507d60c6438bbee5687f81042e2bb98e5a97",
       "version": "1.6.1"
     },
     {
-      "bytes": 35344199,
-      "file": "scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "bytes": 35312578,
+      "file": "scipy-1.18.1-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
       "name": "scipy",
-      "sha256": "f55fa87b6c612ecd6b058f167c53231b1d14e412efe361d3d6e38b3631c73218",
+      "sha256": "fdaf5ea890a6183d0565f51a61799d67081bd5b1cf03c5f4b3fd3732108625c9",
       "version": "1.18.1"
     },
     {
-      "bytes": 1301706,
-      "file": "sentencepiece-0.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "bytes": 1387882,
+      "file": "sentencepiece-0.2.1-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
       "name": "sentencepiece",
-      "sha256": "f295105c6bdbb05bd5e1b0cafbd78ff95036f5d3641e7949455a3f4e5e7c3109",
-      "version": "0.2.0"
+      "sha256": "c7f0fd2f2693309e6628aeeb2e2faf6edd221134dfccac3308ca0de01f8dab47",
+      "version": "0.2.1"
     },
     {
       "bytes": 6299353,
@@ -532,10 +539,10 @@
       "version": "0.22.2"
     },
     {
-      "bytes": 915622781,
-      "file": "torch-2.10.0-3-cp312-cp312-manylinux_2_28_x86_64.whl",
+      "bytes": 915627275,
+      "file": "torch-2.10.0-3-cp313-cp313-manylinux_2_28_x86_64.whl",
       "name": "torch",
-      "sha256": "98c01b8bb5e3240426dcde1446eed6f40c778091c8544767ef1168fc663a05a6",
+      "sha256": "80b1b5bfe38eb0e9f5ff09f206dcac0a87aadd084230d4a36eea5ec5232c115b",
       "version": "2.10.0"
     },
     {
@@ -560,10 +567,10 @@
       "version": "4.57.1"
     },
     {
-      "bytes": 188266850,
-      "file": "triton-3.6.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "bytes": 188289450,
+      "file": "triton-3.6.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
       "name": "triton",
-      "sha256": "74caf5e34b66d9f3a429af689c1c7128daba1d8208df60e81106b115c00d6fca",
+      "sha256": "10c7f76c6e72d2ef08df639e3d0d30729112f47a56b0c81672edc05ee5116ac9",
       "version": "3.6.0"
     },
     {
@@ -574,18 +581,18 @@
       "version": "4.16.0"
     },
     {
-      "bytes": 135717,
-      "file": "urllib3-2.8.0-py3-none-any.whl",
-      "name": "urllib3",
-      "sha256": "0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3",
-      "version": "2.8.0"
-    },
-    {
       "bytes": 33320,
       "file": "wheel-0.48.0-py3-none-any.whl",
       "name": "wheel",
       "sha256": "3217dcc807155e45db462d7ef2431f5ddda0d7273b700d05a67b271ceb1287ab",
       "version": "0.48.0"
+    },
+    {
+      "bytes": 1841526,
+      "file": "pip-25.0.1-py3-none-any.whl",
+      "name": "pip",
+      "sha256": "c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f",
+      "version": "25.0.1"
     },
     {
       "bytes": 1201486,

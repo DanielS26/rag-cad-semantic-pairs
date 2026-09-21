@@ -481,3 +481,55 @@ Historical audit claims are distinguished from checks executed in this session.
   Colab, GPU, Drive, secret, model/data download or notebook execution occurred
   in this pass. Execution from the resulting merge requires its new bootstrap
   hash and fresh authorisation.
+
+## 2026-09-21 - Run A Attempt From 44dce5f3, Python 3.13 Re-lock And Venv Without Pip
+
+- Daniel Song authorised and executed Run A from
+  44dce5f300e9101913c07df1b45d3c1b1bd43836 with bootstrap hash
+  dc1962b8d2dfbf3b2e0efb1983bbfb09a5b6cde91d0d6674448eba7086d405f6. Cells 2 and
+  3 passed. Cell 4 failed with `virtual_environment_create: exit_code=1`. A
+  read-only diagnostic cell showed `Python 3.13.15` at `/usr/local/bin/python`,
+  `python -m venv` failing inside ensurepip, `No module named 'ensurepip'`, and
+  no virtualenv or uv module. The runtime was deleted. Connected time and units
+  for this attempt were not yet reported when this entry was written; the
+  carry-forward remains 2,220 seconds and 0.62 units plus that attempt's usage.
+- Two causes: Colab's Python build lacks ensurepip, and Colab's runtime is
+  Python 3.13.15 while the candidate gate required 3.12.x, so preflight would
+  also have failed after a full install. Daniel Song chose to re-target the
+  candidate to Python 3.13 (D-20260921-11) over installing 3.12 inside Colab
+  or relying on Colab's temporary fallback runtime.
+- Branch fix/phase1b-python313-relock starts from 44dce5f3. The bootstrap now
+  creates the isolated environment with `--without-pip` and installs the lock
+  into it with the system pip's `--python` option; the lock pins pip 25.0.1
+  and setuptools 80.9.0, so the environment then owns its pip. The candidate
+  lock and candidate-linux CI jobs use Python 3.13.15 and the profile rule
+  accepts 3.13.x only. The Windows/Ubuntu dev matrix remains Python 3.12.
+- Commit ee822ff was pushed with seven failing tests because a pipe to `tail`
+  masked pytest's exit code in the agent's command chain; the regex on the
+  Python rule had not been updated. Its push CI and lock runs were cancelled
+  and the correction committed as 9ef6123 (179 passed). Later chains enforce
+  pipefail.
+- First lock run 35595612985 on 9ef6123 resolved the lock on Python 3.13.15,
+  passed pip check, 179 tests and Ruff, then failed in the evidence script:
+  sentencepiece 0.2.0 has no Python 3.13 wheel on PyPI and was compiled from
+  source, which the wheel-only storage accounting refuses. All 72 resolved pins
+  were otherwise identical to the committed lock. PyPI metadata showed 0.2.1
+  (2025-08-12) as the first release with a cp313 manylinux wheel; the input
+  now requires sentencepiece==0.2.1 (commit b542456).
+- Second lock run
+  https://github.com/DanielS26/rag-cad-semantic-pairs/actions/runs/35596374112
+  on b542456 succeeded. The committed lock is byte-identical to its artefact;
+  SHA-256 1b270c043e4cbe273dd7c5e67b6f720bd9ec18a2b105ffcc83a7900d746f11e9.
+  Evidence: Python 3.13.15, 72 named PyPI wheels, only sentencepiece changed
+  (0.2.0 -> 0.2.1), compressed wheels 4,265,602,104 bytes, installed
+  7,891,871,567 bytes, runtime/Drive reservations unchanged. The profile's
+  expected lock hash and sentencepiece version were updated; approval flags,
+  pins, model revisions, representation, tolerances and budget are unchanged.
+  Push CI on b542456 passed Windows, Ubuntu and candidate-linux (3.13.15).
+- Local checks on the final branch state from the rag-cad-smoke-approval
+  worktree with the Windows Python 3.12.10 dev interpreter and this worktree's
+  source: 179 CPU/fake tests passed; Ruff, pip check, upstream audit, notebook
+  schema/syntax/cleared-output checks, documentation links and git diff --check
+  passed. No Colab, GPU, Drive, secret, model/data download or notebook
+  execution occurred in this pass. Execution from the resulting merge requires
+  its bootstrap hash and fresh authorisation.
