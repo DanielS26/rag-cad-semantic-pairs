@@ -8,6 +8,7 @@ from pathlib import Path
 from rag_cad.cad.upstream_adapter import load_checkpoint
 from rag_cad.config import require_sha
 from rag_cad.data.cad_release_adapter import validate_archive
+from rag_cad.operations.paths import local_path
 from rag_cad.operations.provenance import CAD_COMMIT, sha256
 
 NAMED_FILES = {"training_data_original.tar.gz", "testing_data_original.tar.gz",
@@ -34,12 +35,14 @@ def validate_release_spec(spec: dict) -> None:
 def fetch_release(spec: dict, destination: Path, *, allow_network: bool = False,
                   opener=urllib.request.urlopen) -> list[str]:
     validate_release_spec(spec)
-    if not allow_network:
+    local_path(destination)
+    if allow_network is not True:
         raise ValueError("Explicit network authorisation is required")
     destination.mkdir(parents=True, exist_ok=True)
     fetched = []
     for filename, entry in spec["files"].items():
         target = destination / filename
+        local_path(target)
         if target.exists():
             if target.stat().st_size != entry["bytes"] or sha256(target) != entry["sha256"]:
                 raise ValueError("Existing release file failed integrity check")
@@ -69,16 +72,21 @@ def fetch_release(spec: dict, destination: Path, *, allow_network: bool = False,
 
 
 def validate_release(spec: dict, source: Path, *, load_model: bool = False) -> dict:
+    local_path(source)
     validate_release_spec(spec)
     results = []
     for filename, entry in spec["files"].items():
         path = source / filename
+        local_path(path)
         if path.stat().st_size != entry["bytes"] or sha256(path) != entry["sha256"]:
             raise ValueError("Release hash/size mismatch")
         if entry["kind"] == "checkpoint":
+            inspection = None
             if load_model:
-                load_checkpoint(path, entry["sha256"])
-            results.append({"file": filename, "sha256": sha256(path), "safely_loaded": load_model})
+                _, inspection = load_checkpoint(path, entry["sha256"], with_inspection=True)
+            results.append({"file": filename, "bytes": path.stat().st_size,
+                            "sha256": sha256(path), "safely_loaded": load_model,
+                            "checkpoint_inspection": inspection})
         else:
             results.append(validate_archive(path, entry))
     return {"cad_commit": spec["cad_commit"], "data_revision": spec["data_revision"],
@@ -92,14 +100,16 @@ def prepare_resources(profile: dict, destination: Path, *, allow_network: bool =
     from rag_cad.operations.artefacts import safe_path
 
     resource = profile.get("segmenter_resource", {})
+    local_path(destination)
     revision = require_sha(resource.get("revision"))
     expected_hash = require_sha(resource.get("sha256"), 64)
-    if not allow_network:
+    if allow_network is not True:
         raise ValueError("Explicit resource-download authorisation is required")
     if destination.exists():
         raise FileExistsError("Resource destination must be new")
     destination.mkdir(parents=True)
     archive_path = destination / "punkt_tab.zip"
+    local_path(archive_path)
     url = f"https://raw.githubusercontent.com/nltk/nltk_data/{revision}/packages/tokenizers/punkt_tab.zip"
     with archive_path.open("xb") as output, opener(url, timeout=60) as response:
         total = 0
@@ -132,12 +142,14 @@ def prepare_resources(profile: dict, destination: Path, *, allow_network: bool =
 
 
 def validate_resources(profile: dict, destination: Path) -> None:
+    local_path(destination)
     import zipfile
 
     from rag_cad.operations.artefacts import safe_path
     from rag_cad.operations.provenance import digest
 
     resource = profile["segmenter_resource"]
+    local_path(destination / "punkt_tab.zip")
     if digest(resource) != profile["expected"]["segmenter"]:
         raise ValueError("Segmenter fingerprint mismatch")
     if sha256(destination / "punkt_tab.zip") != resource["sha256"]:
@@ -150,6 +162,7 @@ def validate_resources(profile: dict, destination: Path) -> None:
                 continue
             expected_files.add(str(relative))
             target = destination / "tokenizers" / str(relative)
+            local_path(target)
             if target.is_symlink() or not target.is_file():
                 raise ValueError("Segmenter resource file missing or linked")
             with archive.open(member) as source:

@@ -2,7 +2,9 @@
 
 ## Current Gate
 
-Phase 1A is CPU-only. The notebook is committed source, not permission to execute
+Phase 1A was merged at 7848aff703ed0af5fc4a851a86d18f32dff525e9. The bounded
+CPU-only corrective pass is documented in [the corrective review](PHASE1A_CORRECTIVE_REVIEW.md).
+The notebook is source, not permission to execute
 it. The candidate template is intentionally unapproved and unresolved. Do not
 download Jina/CAD binaries, mount Drive, or execute a real smoke until separately
 authorised under D-20260921-02. No code changes may be made or pushed from Colab.
@@ -12,7 +14,8 @@ authorised under D-20260921-02. No code changes may be made or pushed from Colab
 1. Review the Phase 1A diff and passing CPU/CI checks. Merge using a merge commit
    to retain the pinned upstream ancestor. Record the exact resulting SHA.
 2. Resolve and review the candidate Linux dependency lock, candidate GPU/Python/
-   package fingerprint, encoder revision, temporary smoke representation,
+   package fingerprint, separate weights/tokenizer and remote-code revisions,
+   explicit native attention, temporary smoke representation,
    segmenter resource revision/hash, and numeric tolerances. The provisional
    `requirements/colab-core.in` is not an approved lock. Its generator is absent
    intentionally because Phase 1B uses a fake generator.
@@ -22,15 +25,23 @@ authorised under D-20260921-02. No code changes may be made or pushed from Colab
    corrective authorisation before proceeding, as D-20260921-02 requires.
 4. Populate and explicitly approve the candidate profile. Its `expected` mapping
    must match the runtime exactly; `lock_sha256` identifies the committed lock.
-   `segmenter` is the canonical JSON SHA-256 of `segmenter_resource`, including
+   `proposal_only` must cease to be true only after explicit approval. Network,
+   remote-code execution, licence use, and compute budget need their own review;
+   changing one approval flag does not grant the others. `segmenter` is the
+   canonical JSON SHA-256 of `segmenter_resource`, including
    its immutable NLTK-data revision and zip hash. No NLTK resource download occurs
    at import time. Expected versions include torch, transformers, numpy, nltk,
-   scikit-learn, faiss-cpu, and huggingface-hub.
-5. Confirm Drive path/operator/capacity. Set the reviewed storage config's
-   `artefact_root` to the approved Drive artefact directory, not a working path.
+   scikit-learn, faiss-cpu, huggingface-hub, einops, and sentencepiece. The actual
+   CUDA build/driver and GPU memory must be measured, not guessed from a T4 label.
+5. Drive root and operator are confirmed as
+   `/content/drive/MyDrive/COMPSCI764_RAG_CAD/artefacts` and Daniel Song.
+   Capacity, sharing, and live I/O still need manual confirmation.
 6. Record the SHA-256 of `scripts/bootstrap_colab.py` from the reviewed commit.
    Supply the private repository read-only token in Colab Secrets as
    `GH_READ_TOKEN`. No token belongs in an input cell, Git URL, or saved output.
+   The researcher reports this secret is prepared. The corrective pass never
+   accesses it. Bootstrap and installation now require explicit network permission
+   before any secret retrieval or subprocess download.
 
 ## Notebook Sequence
 
@@ -52,11 +63,39 @@ restore an approved source bundle containing `upstream/` and `nltk_data/` into
 the local `inputs/` directory. Existing mismatched/partial inputs are not silently
 overwritten. Use a fresh run/destination after investigating failures.
 
+The Jina loader accepts separate model and code revisions plus `--model-bundle`
+under the active workspace. Only five named model/tokenizer files and ten named
+code files are acquired when both execution and download permissions allow it;
+there is no full-snapshot download. Existing bundles must verify their revision
+and file-hash manifest. Without network permission, a missing bundle fails closed.
+The original configs are retained; derived configs remove remote repository
+prefixes from `auto_map` and remove `_name_or_path`. Model and internal tokenizer
+lookups therefore use the same verified local directory. Loading/inference uses
+local-only settings and a network-denial context, with native attention and
+float32 fixed explicitly. This is defence in depth, not a sandbox: the exact code
+still requires review and explicit remote-code permission before execution.
+
+Every actual active source, resource, model bundle, restore destination, and
+output must stay inside the local workspace; Drive and linked paths are rejected.
+Drive manifest reads and publication destinations are deliberate storage
+exceptions. Neither an innocuous `--workspace` argument nor a symlink can make an
+active Drive path acceptable.
+
 Run A checks deterministic three-row features, released-checkpoint probabilities,
 one synthetic-label MLP epoch/save/reload, tiny CPU FAISS serialization/retrieval,
-and fake-generator checkpoint-swap invariants. The smoke MLP is not a primary
-condition. Reports include provenance, tolerances, timings, output bytes, and
-peak GPU memory. Three-row throughput is not a full-dataset runtime estimate.
+and fake-generator checkpoint-swap invariants using two tiny, explicitly synthetic
+checkpoint-backed CADScorer instances. The smoke MLP is not a primary condition.
+Reports include provenance, tolerances, checkpoint metadata/tensor inspection,
+maximum token length, RAM and disk snapshots, stage timings, output bytes, and
+peak GPU memory. RAM/disk snapshots are not peak-memory or peak-disk claims.
+Three-row throughput is not a full-dataset runtime estimate.
+
+Run A stores `source_manifest.json`, `preflight.json`, its report, predictions,
+features, checkpoints, and real model-bundle manifest inside the stage directory
+that is published. Run B also retains current source validation and references
+the parent artefact manifest hash. Source validation is regenerated and preserved
+even when inputs were restored rather than downloaded. Publication hashes cover
+the entire stage, including these audit records.
 
 Publish after the stage succeeds. The immutable artefact protocol writes the
 success marker last and verifies payload/member hashes. Retain the published

@@ -8,7 +8,9 @@ def test_synthetic_checkpoint_metadata_and_shapes():
     checkpoint = {"input_dim": 2048, "d_hid": 256, "dropout": 0.3, "best_threshold": 0.5,
                   "model_state_dict": {name: np.zeros(shape, dtype=np.float32)
                                        for name, shape in STATE_SHAPES.items()}}
-    validate_checkpoint(checkpoint)
+    inspection = validate_checkpoint(checkpoint)
+    assert inspection["parameter_count"] == 557698
+    assert inspection["tensors"]["net.0.weight"]["shape"] == [256, 2048]
     with pytest.raises(ValueError, match="metadata"):
         validate_checkpoint(checkpoint | {"input_dim": 1024})
     checkpoint["model_state_dict"]["net.6.bias"][0] = np.nan

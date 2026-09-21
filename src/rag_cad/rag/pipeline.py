@@ -37,6 +37,7 @@ class RAGPipeline:
                              "removed_ids": [index for index in range(len(scores)) if index not in retained]})
         prompt = self.prompt.format(query=query, context="\n\n".join(contexts))
         return {"answer": self.generator(prompt), "evidence": evidence,
+            "checkpoint_id": getattr(scorer, "checkpoint_id", None),
                 "retrieval_hash": digest([{"id": passage.chunk_id, "sentences": passage.sentences}
                                           for passage in passages]),
                 "prompt_template_hash": digest(self.prompt), "prompt_hash": digest(prompt),

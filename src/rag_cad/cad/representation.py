@@ -4,10 +4,11 @@ Upstream source and MIT licence are retained. No primary interpretation is selec
 """
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 
-from rag_cad.config import require_sha
+from rag_cad.cad.model_bundle import offline_execution, prepare_bundle
 
 
 @dataclass
@@ -55,28 +56,35 @@ def build_features(query: str, sentences: list[str], encode, mode: str) -> np.nd
 class JinaEncoder:
     """Only constructed behind an approved real-execution preflight."""
 
-    def __init__(self, revision: str):
-        require_sha(revision)
+    def __init__(self, weights_revision: str, code_revision: str, bundle: Path, *,
+                 allow_network: bool = False, allow_remote_code: bool = False):
+        if allow_remote_code is not True:
+            raise ValueError("Explicit reviewed remote-code permission is required")
+        self.bundle_manifest = prepare_bundle(bundle, weights_revision, code_revision,
+                                              allow_network=allow_network)
         import torch
         from transformers import AutoModel, AutoTokenizer
 
         self.torch = torch
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            "jinaai/jina-embeddings-v3", revision=revision,
-            code_revision=revision, trust_remote_code=True,
-        )
-        self.model = AutoModel.from_pretrained(
-            "jinaai/jina-embeddings-v3", revision=revision,
-            code_revision=revision, trust_remote_code=True, torch_dtype=torch.float32,
-        ).to("cuda").eval()
+        self.max_token_length = 0
+        with offline_execution():
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                str(bundle.resolve()), local_files_only=True, trust_remote_code=False,
+            )
+            self.model = AutoModel.from_pretrained(
+                str(bundle.resolve()), local_files_only=True, trust_remote_code=True,
+                torch_dtype=torch.float32, use_safetensors=True, use_flash_attn=False,
+            ).to("cuda").eval()
 
     def __call__(self, text: str) -> Encoding:
-        inputs = self.tokenizer(text, return_tensors="pt", return_offsets_mapping=True,
-                                truncation=False)
+        with offline_execution():
+            inputs = self.tokenizer(text, return_tensors="pt", return_offsets_mapping=True,
+                                    truncation=False)
         offsets = inputs.pop("offset_mapping")[0].tolist()
         if inputs["input_ids"].shape[1] > 8192:
             raise ValueError("Smoke input exceeds encoder token limit; no silent truncation")
+        self.max_token_length = max(self.max_token_length, inputs["input_ids"].shape[1])
         inputs = {name: value.to("cuda") for name, value in inputs.items()}
-        with self.torch.no_grad():
+        with offline_execution(), self.torch.no_grad():
             hidden = self.model(**inputs).last_hidden_state[0].float().cpu().numpy()
         return Encoding(hidden, inputs["attention_mask"][0].cpu().numpy(), offsets)

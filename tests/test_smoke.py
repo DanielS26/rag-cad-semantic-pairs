@@ -9,11 +9,17 @@ def test_fake_smoke_and_restart_contract(tmp_path):
     metadata = {"commit": "f" * 40, "environment_id": "synthetic-only"}
     report = smoke_a(backend, tmp_path / "run-a", metadata, "fake-runtime-a", atol=1e-6, rtol=1e-6)
     assert report["feature_shape"] == [3, 2048]
+    assert report["maximum_token_length"] > 0
+    assert report["resources_before"]["ram_total_bytes"] > 0
+    assert report["resources_after"]["disk_free_bytes"] > 0
+    assert report["checkpoint_inspection"]["swap_heads"][0]["parameter_count"] == 557698
+    assert report["rag"][1]["checkpoint_id"] != report["rag"][2]["checkpoint_id"]
     assert report["live_phase1b_passed"] is False
     bundle = publish(tmp_path / "run-a", tmp_path / "store", "smoke", "fake-a", metadata)
     restore(bundle / "manifest.json", tmp_path / "restored")
     result = smoke_b(backend, tmp_path / "restored", metadata, "fake-runtime-b")
     assert result["restored_predictions_match"]
+    assert result["source_manifest_sha256"] == report["source_manifest_sha256"]
     with pytest.raises(ValueError, match="fresh runtime"):
         smoke_b(backend, tmp_path / "restored", metadata, "fake-runtime-a")
     with pytest.raises(ValueError, match="mismatch"):
@@ -30,3 +36,32 @@ def test_smoke_rejects_nondeterminism(tmp_path):
 
     with pytest.raises(AssertionError):
         smoke_a(Unstable(), tmp_path / "bad", {}, "fake", atol=0, rtol=0)
+
+
+def test_real_backend_forwards_separate_pins_and_offline_permission(tmp_path, monkeypatch):
+    import sys
+    from types import SimpleNamespace
+
+    from rag_cad.operations import smoke
+
+    profile = {"remote_code_approved": True, "network_approved": False,
+               "expected": {"encoder_revision": "a" * 40, "encoder_code_revision": "b" * 40}}
+    calls = []
+
+    def encoder(*args, **kwargs):
+        calls.append((args, kwargs))
+        return SimpleNamespace(max_token_length=0)
+
+    monkeypatch.setitem(sys.modules, "nltk", SimpleNamespace(data=SimpleNamespace(path=[])))
+    monkeypatch.setattr(smoke, "validate_resources", lambda *args: None)
+    monkeypatch.setattr(smoke, "split_units", lambda text: smoke.SENTENCES)
+    monkeypatch.setattr(smoke, "JinaEncoder", encoder)
+    monkeypatch.setattr(smoke, "load_checkpoint", lambda *args, **kwargs: (object(), {"synthetic": True}))
+    backend = smoke.RealBackend(profile, tmp_path, {"files": {"classifier_fullcad.pt": {"sha256": "c" * 64}}},
+                                tmp_path, {}, model_bundle=tmp_path / "bundle")
+    assert calls == [(("a" * 40, "b" * 40, tmp_path / "bundle"),
+                      {"allow_network": False, "allow_remote_code": True})]
+    assert backend.reference_inspection == {"synthetic": True}
+    with pytest.raises(ValueError, match="Network permission"):
+        smoke.RealBackend(profile, tmp_path, {}, tmp_path, {}, model_bundle=tmp_path / "bundle",
+                          allow_network=True)

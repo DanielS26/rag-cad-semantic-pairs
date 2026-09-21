@@ -204,3 +204,73 @@ Historical audit claims are distinguished from checks executed in this session.
   The merged SHA cannot be recorded until that review/merge occurs.
 - No Phase 1B execution was authorised or performed. All live smoke, profile
   promotion, real-model conformance, and Drive gates remain unchecked.
+
+## 2026-09-21 - Bounded CPU-Only Corrective Pass
+
+- Phase 1A PR #2 was manually merged as
+  7848aff703ed0af5fc4a851a86d18f32dff525e9. Its post-merge Windows/Ubuntu
+  [CI run](https://github.com/DanielS26/rag-cad-semantic-pairs/actions/runs/35542730762)
+  passed 54 CPU tests per platform, install, pip check, Ruff, and upstream audit.
+  Earlier entries describing the PR as pending are historical, not current state.
+- The researcher authorised one CPU-only corrective pass after a read-only audit
+  found loader pinning, network/path guards, evidence retention, and scorer-swap
+  coverage gaps. No Phase 1B execution is authorised.
+- Fetched origin/main and verified the exact merged SHA, its presence in
+  origin/main, and pinned CAD ancestry before creating phase1a-corrective directly
+  from that SHA. The prior local PR branch was not used as the base.
+- Researcher reports GH_READ_TOKEN is prepared in Colab Secrets. Its value was
+  not requested, read, printed, or used in this pass. Future artefact root is
+  confirmed as /content/drive/MyDrive/COMPSCI764_RAG_CAD/artefacts and operator as
+  Daniel Song; these are recorded in storage config without accessing Drive.
+- Corrective implementation and local CPU regression verification are in
+  progress. Candidate revisions, dependencies, remote-code permission, attention,
+  tolerances, licences, network scope, and budget remain proposals, not approvals.
+- Public file-name/licence metadata was inspected only at proposed model revision
+  ab036b023d30b4d1138c4c3bfa9f0c445ab455d6 and code revision
+  bd55a5ec8e6c0fb1d6c26efb4b6a4a74ce8a88d3. No model weights, full snapshot, CAD
+  release archive/checkpoint, or remote-code execution was obtained/performed.
+
+### Corrective Results And Stop Gate
+
+- Implemented separate weights/tokenizer and code revision fields, a named-file
+  local model bundle with verified hashes and preserved original configs,
+  explicit remote-code/network permission, offline loading/inference, and local
+  cache placement. Tests mock all model loading and remote acquisition.
+- Added actual source/resource/bundle/output/restore path containment, linked-path
+  refusal, and direct-operation guards. Drive remains a storage-transfer location,
+  never an active compute path. Approved compute budget is required before CLI
+  hardware inspection.
+- Preserved release validation and source manifests in published smoke evidence;
+  added tensor/metadata checkpoint inspection, maximum token length, RAM/disk
+  snapshots, UTC measurement times, and stage timings. Replaced callback-only
+  scorer swaps with two tiny synthetic checkpoint-backed CADScorer instances.
+- Added einops to the untested Colab input. Candidate pins and suggested settings
+  are explicit but unapproved and proposal-only. No candidate Linux lock, tested
+  profile, GPU fingerprint, or scientific decision was fabricated.
+- Updated the thin notebook via the notebook editor and mechanically normalized
+  its JSON metadata with nbformat. Static tests verify syntax, metadata identity
+  and language, cleared outputs, command ordering, and permission guards. A CPU
+  guard test exits before importing Colab or accessing any secret; no notebook
+  runtime, remote code, model, or cloud stage was executed.
+- Final local commands from the repository root using `.venv/Scripts/python.exe`:
+  - `python -m pytest tests -m "not gpu and not integration" -q`: **77 passed**.
+  - `python -m ruff check .`: **All checks passed**.
+  - `python -m pip check`: **No broken requirements found**.
+  - `python -m rag_cad.cli audit upstream`: pinned CAD commit and
+    `source_unchanged: true`.
+  - `git diff --check`: passed; corrective documentation links validated.
+  - Editor diagnostics: no errors reported for changed project modules/tests.
+- No packages were installed in this corrective pass. The full suite uses CPU
+  fakes and synthetic fixtures with network connections denied. Real-runtime
+  compatibility remains unverified; the earlier merged-main CI does not certify
+  these new, uncommitted corrective changes.
+- The [corrective review](PHASE1A_CORRECTIVE_REVIEW.md) contains the exact candidate
+  approval sheet, remaining blockers, and proposed decision-log entries. No
+  changes were made to docs/DECISIONS.md. The two candidate entries remain unwritten.
+- Full tracked and new-file diff is provided as generated review material under
+  `outputs/review/phase1a-corrective.patch`, excluded from Git. No commit, push,
+  merge, or new CI run is authorised/performed in this pass.
+- Recommendation: GO for code review and separately authorised publication/CI;
+  merge only after review and same-commit CI. NO-GO for Phase 1B execution until
+  candidate lock, observed runtime fingerprint, separate approvals, Drive access/
+  capacity confirmation, and bounded execution authorisation are complete.

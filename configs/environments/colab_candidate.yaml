@@ -1,25 +1,41 @@
 status: candidate
 approved: false
 approved_by: null
-minimum_free_bytes: null
+network_approved: false
+remote_code_approved: false
+proposal_only: true
+operator: Daniel Song
+compute_budget_approved: false
+minimum_free_bytes: 21474836480
 expected:
-  python: null
-  packages: null
+  python: '3.12.14'
+  packages:
+    torch: '2.10.0'
+    transformers: '4.57.1'
+    numpy: '2.2.6'
+    nltk: '3.9.1'
+    scikit-learn: '1.6.1'
+    faiss-cpu: '1.10.0'
+    huggingface-hub: '0.34.4'
+    einops: '0.8.1'
+    sentencepiece: '0.2.0'
   lock_sha256: null
   gpu_name: null
   gpu_memory_bytes: null
   cuda: null
   driver: null
-  encoder_revision: null
-  representation: null
+  encoder_revision: ab036b023d30b4d1138c4c3bfa9f0c445ab455d6
+  encoder_code_revision: bd55a5ec8e6c0fb1d6c26efb4b6a4a74ce8a88d3
+  attention: native
+  representation: repo_compatible
   dtype: float32
   segmenter: null
 segmenter_resource:
-  revision: null
-  sha256: null
+  revision: 550b6625bcef1f2abff2ff770a5a0d272c9c6b2a
+  sha256: e57f64187974277726a3417ca6f181ec5403676c717672eef6a748a7b20e0106
 tolerance:
-  atol: null
-  rtol: null
+  atol: 0.000001
+  rtol: 0.00001
 evidence:
   run_a_manifest_sha256: null
   run_b_manifest_sha256: null

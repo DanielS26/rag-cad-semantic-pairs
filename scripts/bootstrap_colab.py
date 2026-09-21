@@ -39,7 +39,10 @@ def verify_checkout(checkout: Path, repo_url: str, commit: str) -> None:
     _run(["git", "merge-base", "--is-ancestor", CAD_COMMIT, "HEAD"], cwd=checkout)
 
 
-def clone_exact(repo_url: str, commit: str, checkout: Path, token: str | None = None) -> None:
+def clone_exact(repo_url: str, commit: str, checkout: Path, token: str | None = None, *,
+                allow_network: bool = False) -> None:
+    if allow_network is not True:
+        raise ValueError("Explicit network permission is required for Git checkout")
     validate_request(repo_url, commit)
     if checkout.exists():
         raise FileExistsError("Bootstrap requires a fresh checkout destination")
@@ -70,7 +73,10 @@ def clone_exact(repo_url: str, commit: str, checkout: Path, token: str | None = 
     verify_checkout(checkout, repo_url, commit)
 
 
-def install_and_test(checkout: Path, repo_url: str, commit: str, lock_relative: str) -> None:
+def install_and_test(checkout: Path, repo_url: str, commit: str, lock_relative: str, *,
+                     allow_network: bool = False) -> None:
+    if allow_network is not True:
+        raise ValueError("Explicit network permission is required for dependency installation")
     verify_checkout(checkout, repo_url, commit)
     lock = (checkout / lock_relative).resolve()
     if not lock.is_relative_to(checkout.resolve()) or not lock.name.endswith(".lock.txt") or not lock.is_file():

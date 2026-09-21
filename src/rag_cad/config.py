@@ -30,6 +30,8 @@ def validate_profile(profile: dict, stage: str, observed: dict) -> None:
         raise ValueError("Unknown environment profile status")
     if profile.get("approved") is not True or not profile.get("approved_by"):
         raise ValueError("Environment profile requires explicit researcher approval")
+    if profile.get("proposal_only", False):
+        raise ValueError("Proposal-only profiles cannot execute")
     if stage in FINAL_STAGES and status != "tested":
         raise ValueError("Final stages require a tested profile")
     if status == "tested":
@@ -42,7 +44,8 @@ def validate_profile(profile: dict, stage: str, observed: dict) -> None:
         raise ValueError("Profile has unresolved expected environment values")
     required = {
         "python", "packages", "lock_sha256", "gpu_name", "gpu_memory_bytes",
-        "cuda", "driver", "encoder_revision", "representation", "dtype", "segmenter",
+        "cuda", "driver", "encoder_revision", "encoder_code_revision", "attention",
+        "representation", "dtype", "segmenter",
     }
     if set(expected) != required or set(observed) != required:
         raise ValueError("Environment fingerprint fields are missing or unknown")
@@ -50,11 +53,14 @@ def validate_profile(profile: dict, stage: str, observed: dict) -> None:
         if value is None or value == "" or value == {}:
             raise ValueError(f"Unresolved environment field: {key}")
     require_sha(expected["encoder_revision"])
+    require_sha(expected["encoder_code_revision"])
     require_sha(expected["lock_sha256"], 64)
     if expected["representation"] not in {"repo_compatible", "paper_exact"}:
         raise ValueError("Unknown representation")
     if expected["dtype"] != "float32":
         raise ValueError("Only the contracted float32 profile is supported")
+    if expected["attention"] != "native":
+        raise ValueError("This candidate loader supports explicit native attention only")
     if not isinstance(expected["packages"], dict):
         raise ValueError("Expected exact package versions")
     if observed != expected:
