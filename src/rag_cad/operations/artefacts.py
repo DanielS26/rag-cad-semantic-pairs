@@ -47,6 +47,8 @@ def _inventory(source: Path) -> list[dict]:
         if path.is_file():
             relative = path.relative_to(source).as_posix()
             safe_path(relative)
+            if path.suffix in {".safetensors", ".bin"}:
+                raise ValueError("Jina/model weight redistribution is forbidden in artefacts")
             if path.suffix in {".json", ".jsonl", ".yaml", ".txt", ".log", ".md"}:
                 reject_secrets(path.read_text(encoding="utf-8"))
             if path.name == ".env" or path.name.endswith((".pem", ".key")):
@@ -150,3 +152,17 @@ def restore(manifest: Path, destination: Path) -> dict:
     if _inventory(destination) != result["files"]:
         raise ValueError("Restored files failed integrity verification")
     return result
+
+
+def verify_restored(receipt: Path, destination: Path) -> dict:
+    local_path(receipt)
+    local_path(destination)
+    recorded = json.loads(receipt.read_text(encoding="utf-8"))
+    if recorded.get("destination") != str(destination.resolve()):
+        raise ValueError("Restore receipt destination differs")
+    if _inventory(destination) != recorded["manifest"]["files"]:
+        raise ValueError("Restored inputs changed after verified transfer")
+    from rag_cad.config import require_sha
+
+    require_sha(recorded["source_manifest_sha256"], 64)
+    return recorded

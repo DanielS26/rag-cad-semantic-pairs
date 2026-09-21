@@ -19,13 +19,20 @@ def test_notebook_is_output_cleared_guarded_orchestration():
     combined = "\n".join(code)
     assert "PHASE1B_AUTHORISED = False" in combined
     assert combined.index('"preflight"') < combined.index("drive.mount")
-    assert combined.index("hashlib.sha256(bootstrap_bytes)") < combined.index("runpy.run_path")
+    assert combined.index("hashlib.sha256(bootstrap_path.read_bytes())") < combined.index("runpy.run_path")
+    assert combined.index("clone_env.clear()") < combined.index("runpy.run_path")
+    assert "urllib.request" not in combined
+    assert '"Authorization"' not in combined
     assert "not STAGE_COMPLETE" in code[-1]
     assert "git push" not in combined
     assert "import torch" not in combined and "import transformers" not in combined
     assert combined.index("ALLOW_NETWORK is not True") < combined.index('userdata.get("GH_READ_TOKEN")')
     assert '"--model-bundle"' in combined
     assert 'allow_network=ALLOW_NETWORK' in combined
+    assert "flush_and_unmount" in code[3]
+    assert "ismount" in code[4]
+    assert "--receipt" in code[4] and "--manifest" not in code[4]
+    assert "flush_and_unmount" in code[5]
 
 
 def test_notebook_permission_guards_stop_without_secret_access():

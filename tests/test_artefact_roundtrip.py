@@ -50,3 +50,11 @@ def test_archive_link_rejected_without_extraction():
     buffer.seek(0)
     with tarfile.open(fileobj=buffer) as archive, pytest.raises(ValueError, match="links"):
         checked_members(archive)
+
+
+def test_no_weight_redistribution(tmp_path):
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "model.safetensors").write_bytes(b"synthetic forbidden weight file")
+    with pytest.raises(ValueError, match="redistribution"):
+        publish(source, tmp_path / "store", "smoke", "fixture", {})

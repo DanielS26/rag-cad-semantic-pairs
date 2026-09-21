@@ -7,6 +7,7 @@ import yaml
 
 SMOKE_STAGES = {"smoke", "conformance"}
 FINAL_STAGES = {"features", "train", "evaluate"}
+DISCOVERABLE_FIELDS = {"python", "gpu_name", "gpu_memory_bytes", "cuda", "driver"}
 
 
 def load_config(path: Path) -> dict:
@@ -22,7 +23,7 @@ def require_sha(value: str, length: int = 40) -> str:
     return value
 
 
-def validate_profile(profile: dict, stage: str, observed: dict) -> None:
+def validate_profile(profile: dict, stage: str, observed: dict | None = None) -> None:
     if stage not in SMOKE_STAGES | FINAL_STAGES:
         raise ValueError("Unknown execution stage")
     status = profile.get("status")
@@ -47,9 +48,12 @@ def validate_profile(profile: dict, stage: str, observed: dict) -> None:
         "cuda", "driver", "encoder_revision", "encoder_code_revision", "attention",
         "representation", "dtype", "segmenter",
     }
-    if set(expected) != required or set(observed) != required:
+    if set(expected) != required or (observed is not None and set(observed) != required):
         raise ValueError("Environment fingerprint fields are missing or unknown")
+    discovery = status == "candidate" and stage in SMOKE_STAGES
     for key, value in expected.items():
+        if discovery and key in DISCOVERABLE_FIELDS and value is None:
+            continue
         if value is None or value == "" or value == {}:
             raise ValueError(f"Unresolved environment field: {key}")
     require_sha(expected["encoder_revision"])
@@ -63,9 +67,20 @@ def validate_profile(profile: dict, stage: str, observed: dict) -> None:
         raise ValueError("This candidate loader supports explicit native attention only")
     if not isinstance(expected["packages"], dict):
         raise ValueError("Expected exact package versions")
-    if observed != expected:
-        raise ValueError("Runtime does not exactly match the approved environment profile")
-    if observed["gpu_memory_bytes"] <= 8 * 1024**3:
-        raise ValueError("GPU memory must exceed 8 GiB")
     if status == "tested" and profile["evidence"]["lock_sha256"] != expected["lock_sha256"]:
         raise ValueError("Tested evidence and runtime lock hashes differ")
+    if observed is None:
+        return
+    for key, value in observed.items():
+        if value is None or value == "" or value == {}:
+            raise ValueError(f"Missing measured environment field: {key}")
+        if not (discovery and key in DISCOVERABLE_FIELDS and expected[key] is None):
+            if value != expected[key]:
+                raise ValueError("Runtime does not exactly match the approved environment profile")
+    memory = observed["gpu_memory_bytes"]
+    if type(memory) is not int or memory <= 8 * 1024**3:
+        raise ValueError("Measured GPU memory must exceed 8 GiB")
+    if not isinstance(observed["gpu_name"], str) or not observed["gpu_name"].strip():
+        raise ValueError("Missing measured GPU name")
+    if not re.fullmatch(r"3\.12\.\d+", observed["python"]):
+        raise ValueError("Candidate lock requires Python 3.12.x")

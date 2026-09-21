@@ -29,3 +29,36 @@ jobs:
       - run: python -m ruff check .
       - run: python -m rag_cad.cli audit upstream
       - run: git diff --exit-code
+
+  candidate-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CUDA_VISIBLE_DEVICES: ''
+      HF_HUB_OFFLINE: '1'
+      TRANSFORMERS_OFFLINE: '1'
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.14'
+      - name: Prepare disposable CPU runner space
+        run: |
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          python -m venv "$RUNNER_TEMP/candidate-runtime"
+      - name: Install committed candidate lock without models
+        run: |
+          "$RUNNER_TEMP/candidate-runtime/bin/python" -m pip install --no-cache-dir -r requirements/colab-core.candidate.lock.txt
+          "$RUNNER_TEMP/candidate-runtime/bin/python" -m pip install -e . --no-deps --no-build-isolation
+      - name: Candidate CPU acceptance
+        run: |
+          "$RUNNER_TEMP/candidate-runtime/bin/python" -m pip check
+          "$RUNNER_TEMP/candidate-runtime/bin/python" -m pytest -m "not gpu and not integration" -q
+          "$RUNNER_TEMP/candidate-runtime/bin/python" -m ruff check .
+          "$RUNNER_TEMP/candidate-runtime/bin/python" -m rag_cad.cli audit upstream
+          git diff --exit-code
