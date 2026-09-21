@@ -345,3 +345,22 @@ Historical audit claims are distinguished from checks executed in this session.
 - Final review/merge and separate Phase 1B execution remain pending. Same-commit
   Windows/Ubuntu/full-candidate CI outcome will be reported on PR #4 and in the
   session close-out. Candidate CPU success does not freeze a tested environment.
+
+## 2026-09-21 - Smoke Candidate Approval Flags
+
+- The researcher approved the candidate at merged-main commit
+  7830d588715cc8e607847ca93dec8ccdebabf2bc for bounded smoke testing only.
+  Created phase1b-smoke-approval directly from that verified commit in a clean
+  worktree; existing notebook edits in other worktrees were preserved.
+- Changed only approved=true, approved_by=Daniel Song, and proposal_only=false
+  in the candidate profile. Status remains candidate; tested evidence remains
+  unset. Pins, dependencies, scientific settings, licence/download/security
+  constraints, and the combined 20-unit/10,800-second budget are unchanged.
+- Updated the directly affected profile test and added regression checks using
+  the actual committed candidate: smoke configuration is accepted, but features,
+  training and evaluation are still refused without tested status.
+- Local CPU suite: 109 passed. Ruff, pip check and upstream audit passed.
+  No runtime code or notebook was changed; no Phase 1B execution, GPU/Colab/Drive,
+  secrets, model/data artefacts, or remote-code execution were accessed.
+- Decision-log proposal is separate and unwritten. This branch requires PR
+  review and passing same-commit CI; it must not be merged by the agent.

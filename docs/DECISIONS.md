@@ -157,3 +157,18 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song, explicit answer "Approve history-preserving CAD integration" on 2026-09-21.
 - Related files, commands, results, correspondence, or commit: [Handoff](project-plan/COMPSCI764_Project_Implementation_Handoff.md), [PROGRESS.md](PROGRESS.md); D-20260921-07; GitHub commit and branch-rules API checks.
 - Supersedes / superseded by: None. Resolves the upstream-integration question left open in D-20260921-07.
+
+## D-20260921-09 - Approve bounded Phase 1B smoke candidate
+
+- Status: Confirmed
+- Date: 2026-09-21
+- Project phase: Phase 1B smoke candidate approval
+- Category: Implementation
+- Decision or important note: Daniel Song approves the candidate from `7830d588715cc8e607847ca93dec8ccdebabf2bc` for bounded smoke testing only, under the existing licence, download, security, and shared 20-unit/three-hour limits.
+- Context and reason: Explicit researcher approval and passing regression tests.
+- Evidence: Daniel Song's explicit approval of the proposed entry exactly as written; [PR #5](https://github.com/DanielS26/rag-cad-semantic-pairs/pull/5); passing Windows, Ubuntu, and candidate-Linux [CI](https://github.com/DanielS26/rag-cad-semantic-pairs/actions/runs/35555877836) at 6f73c34dfa3f4389b42bd6a9e4e5b0b9ffca42dd.
+- Alternatives considered: Leave smoke approval disabled.
+- Consequences for implementation/evaluation/report: Permits smoke validation, not tested/final status.
+- Approved by: Daniel Song, explicit confirmation to append the proposed entry on 2026-09-21.
+- Related files, commands, results, correspondence, or commit: [Candidate profile](../configs/environments/colab_candidate.yaml), [approval regression tests](../tests/test_candidate_preparation.py), [preparation evidence](PHASE1B_PREPARATION.md); candidate base 7830d588715cc8e607847ca93dec8ccdebabf2bc; approval commit 6f73c34dfa3f4389b42bd6a9e4e5b0b9ffca42dd; D-20260921-02.
+- Supersedes / superseded by: None.
