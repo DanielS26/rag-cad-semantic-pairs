@@ -2,19 +2,50 @@
 
 import json
 import platform
+import shutil
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
 
 from rag_cad.cad.representation import Encoding, JinaEncoder, build_features
+from rag_cad.cad.scorer import CADScorer, synthetic_checkpoint
 from rag_cad.cad.upstream_adapter import classifier, load_checkpoint, split_units
+from rag_cad.operations.paths import local_path
 from rag_cad.operations.provenance import digest, sha256, write_json
 from rag_cad.operations.upstream import validate_resources
 from rag_cad.rag.pipeline import Passage, RAGPipeline
 
 QUERY = "Summarise the synthetic passage."
 SENTENCES = ["Synthetic context.", "A synthetic target.", "Synthetic conclusion."]
+
+
+def resource_snapshot(directory: Path) -> dict:
+    local_path(directory)
+    disk = shutil.disk_usage(directory)
+    if platform.system() == "Windows":
+        import ctypes
+
+        class MemoryStatus(ctypes.Structure):
+            _fields_ = [("length", ctypes.c_ulong), ("load", ctypes.c_ulong),
+                        *[(name, ctypes.c_ulonglong) for name in
+                          ("total", "available", "page_total", "page_available",
+                           "virtual_total", "virtual_available", "extended")]]
+
+        memory = MemoryStatus()
+        memory.length = ctypes.sizeof(memory)
+        if not ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(memory)):
+            raise OSError("Cannot record Windows RAM")
+        total, available = memory.total, memory.available
+    else:
+        fields = dict(line.split(":", 1) for line in Path("/proc/meminfo").read_text().splitlines())
+        total = int(fields["MemTotal"].split()[0]) * 1024
+        available = int(fields["MemAvailable"].split()[0]) * 1024
+    return {"timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "ram_total_bytes": total, "ram_available_bytes": available,
+            "disk_total_bytes": disk.total, "disk_used_bytes": disk.used,
+            "disk_free_bytes": disk.free}
 
 
 def runtime_identity() -> str:
@@ -25,9 +56,12 @@ def runtime_identity() -> str:
 
 class FakeBackend:
     kind = "fake"
+    max_token_length = 0
+    load_seconds = 0.0
 
     def encode(self, query, sentences):
         def encoder(text):
+            self.max_token_length = max(self.max_token_length, len(text))
             values = np.array([ord(character) / 128 for character in text], dtype=np.float32)
             hidden = np.repeat(values[:, None], 1024, axis=1)
             hidden += values.mean() / 10
@@ -60,7 +94,15 @@ class FakeBackend:
 class RealBackend:
     kind = "real"
 
-    def __init__(self, profile: dict, source: Path, spec: dict, resources: Path, metadata: dict):
+    def __init__(self, profile: dict, source: Path, spec: dict, resources: Path, metadata: dict,
+                 *, model_bundle: Path, allow_network: bool = False):
+        for path in (source, resources, model_bundle):
+            local_path(path)
+        if profile.get("remote_code_approved") is not True:
+            raise ValueError("Remote-code permission is unapproved")
+        if allow_network and profile.get("network_approved") is not True:
+            raise ValueError("Network permission is unapproved")
+        started = time.perf_counter()
         import nltk
 
         validate_resources(profile, resources)
@@ -69,9 +111,17 @@ class RealBackend:
             raise ValueError("Runtime segmenter changed canonical smoke units")
         self.profile = profile
         self.metadata = metadata
-        self.encoder = JinaEncoder(profile["expected"]["encoder_revision"])
-        self.reference = load_checkpoint(source / "classifier_fullcad.pt",
-                                         spec["files"]["classifier_fullcad.pt"]["sha256"])
+        self.encoder = JinaEncoder(profile["expected"]["encoder_revision"],
+                                   profile["expected"]["encoder_code_revision"], model_bundle,
+                                   allow_network=allow_network, allow_remote_code=True)
+        self.reference, self.reference_inspection = load_checkpoint(
+            source / "classifier_fullcad.pt", spec["files"]["classifier_fullcad.pt"]["sha256"],
+            with_inspection=True)
+        self.load_seconds = time.perf_counter() - started
+
+    @property
+    def max_token_length(self):
+        return self.encoder.max_token_length
 
     def encode(self, query, sentences):
         return build_features(query, sentences, self.encoder, self.profile["expected"]["representation"])
@@ -103,6 +153,7 @@ class RealBackend:
                     "dropout": 0.3, "best_threshold": 0.5, "condition": "smoke_only", "seed": 0,
                     "representation_id": self.profile["expected"]["representation"],
                     "encoder_revision": self.profile["expected"]["encoder_revision"],
+                    "encoder_code_revision": self.profile["expected"]["encoder_code_revision"],
                     "run_metadata": self.metadata}, path)
         with torch.no_grad():
             return torch.softmax(model(torch.from_numpy(features)), dim=-1).numpy()
@@ -110,7 +161,7 @@ class RealBackend:
     def reload_score(self, features, path, expected_hash):
         import torch
 
-        model = load_checkpoint(path, expected_hash)
+        model, self.trained_inspection = load_checkpoint(path, expected_hash, with_inspection=True)
         with torch.no_grad():
             return torch.softmax(model(torch.from_numpy(features)), dim=-1).numpy()
 
@@ -135,10 +186,15 @@ def check_probabilities(values: np.ndarray) -> None:
 
 
 def smoke_a(backend, output: Path, metadata: dict, identity: str,
-            *, atol: float, rtol: float) -> dict:
+            *, atol: float, rtol: float, source_manifest: dict | None = None,
+            validation_seconds: float = 0.0) -> dict:
     if not 0 <= atol <= 0.001 or not 0 <= rtol <= 0.001:
         raise ValueError("Explicit bounded determinism tolerances are required")
+    local_path(output)
+    if backend.kind == "real" and not source_manifest:
+        raise ValueError("Real smoke requires retained release-validation evidence")
     output.mkdir(parents=True, exist_ok=False)
+    before = resource_snapshot(output)
     started = time.perf_counter()
     features = backend.encode(QUERY, SENTENCES)
     feature_seconds = time.perf_counter() - started
@@ -150,18 +206,35 @@ def smoke_a(backend, output: Path, metadata: dict, identity: str,
     check_probabilities(reference)
     if np.ptp(reference[:, 1]) == 0:
         raise ValueError("Reference returned constant probabilities")
+    training_started = time.perf_counter()
     predictions = backend.train_save(features, np.array([0, 1, 0], dtype=np.int64), output / "model.pt")
     check_probabilities(predictions)
     checkpoint_hash = sha256(output / "model.pt")
     restored = backend.reload_score(features, output / "model.pt", checkpoint_hash)
     np.testing.assert_allclose(predictions, restored, atol=atol, rtol=rtol)
+    training_seconds = time.perf_counter() - training_started
+    retrieval_started = time.perf_counter()
     if backend.retrieval_roundtrip(output) != (1, 1):
         raise ValueError("Retrieval roundtrip changed expected chunk ID")
+    retrieval_seconds = time.perf_counter() - retrieval_started
     passages = [Passage("synthetic-chunk", tuple(SENTENCES))]
     pipeline = RAGPipeline(lambda query: passages, lambda prompt: prompt, "{query}\n{context}")
     no_defence = pipeline.run(QUERY)
-    retained = pipeline.run(QUERY, lambda query, sentences: [0.1, 0.9, 0.1])
-    removed = pipeline.run(QUERY, lambda query, sentences: [0.9, 0.1, 0.9])
+    contract = {"representation_id": "synthetic-smoke-only", "encoder_revision": "a" * 40,
+                "encoder_code_revision": "b" * 40}
+
+    def swap_features(query, sentences):
+        values = np.zeros((len(sentences), 2048), dtype=np.float32)
+        values[:, 0] = [0, 1, 0]
+        return values
+
+    scorers = []
+    for index in range(2):
+        path = output / f"synthetic-scorer-{index}.npz"
+        synthetic_checkpoint(path, inverted=bool(index), **contract)
+        scorers.append(CADScorer(path, sha256(path), swap_features, synthetic_only=True, **contract))
+    retained = pipeline.run(QUERY, scorers[0])
+    removed = pipeline.run(QUERY, scorers[1])
     for key in ("retrieval_hash", "prompt_template_hash", "threshold"):
         if not no_defence[key] == retained[key] == removed[key]:
             raise ValueError("Checkpoint swap changed a fixed RAG component")
@@ -169,10 +242,27 @@ def smoke_a(backend, output: Path, metadata: dict, identity: str,
         raise ValueError("Removed text reached the generator")
     np.save(output / "features.npy", features, allow_pickle=False)
     np.save(output / "predictions.npy", predictions, allow_pickle=False)
+    source_manifest = source_manifest or {"synthetic_only": True, "files": []}
+    write_json(output / "source_manifest.json", source_manifest)
+    write_json(output / "preflight.json", metadata)
+    if backend.kind == "real":
+        write_json(output / "model_bundle_manifest.json", backend.encoder.bundle_manifest)
+    after = resource_snapshot(output)
     report = {"execution_kind": backend.kind, "run": "A", "runtime_identity": identity,
               "metadata": metadata, "checkpoint_sha256": checkpoint_hash,
               "feature_shape": list(features.shape), "atol": atol, "rtol": rtol,
               "feature_seconds": feature_seconds,
+              "timings_seconds": {"release_validation": validation_seconds,
+                                  "backend_load": backend.load_seconds,
+                                  "training_and_reload": training_seconds,
+                                  "retrieval_roundtrip": retrieval_seconds},
+              "maximum_token_length": backend.max_token_length,
+              "token_measurement": "model_tokenizer" if backend.kind == "real" else "synthetic_characters",
+              "resources_before": before, "resources_after": after,
+              "source_manifest_sha256": sha256(output / "source_manifest.json"),
+              "checkpoint_inspection": {"reference": getattr(backend, "reference_inspection", {"synthetic_only": True}),
+                                        "trained": getattr(backend, "trained_inspection", {"synthetic_only": True}),
+                                        "swap_heads": [scorer.inspection for scorer in scorers]},
               "smoke_rows_per_second": len(SENTENCES) / max(feature_seconds, 1e-9),
               "query": QUERY, "sentences": SENTENCES,
               "reference_probabilities": reference.tolist(),
@@ -190,6 +280,9 @@ def smoke_a(backend, output: Path, metadata: dict, identity: str,
 
 
 def smoke_b(backend, restored: Path, metadata: dict, identity: str) -> dict:
+    local_path(restored)
+    started = time.perf_counter()
+    before = resource_snapshot(restored)
     original = json.loads((restored / "run_a.json").read_text(encoding="utf-8"))
     if original["runtime_identity"] == identity:
         raise ValueError("Run B requires a different fresh runtime")
@@ -202,4 +295,8 @@ def smoke_b(backend, restored: Path, metadata: dict, identity: str) -> dict:
     np.testing.assert_allclose(actual, expected, atol=original["atol"], rtol=original["rtol"])
     return {"run": "B", "execution_kind": backend.kind, "runtime_identity": identity,
             "run_a_sha256": sha256(restored / "run_a.json"), "metadata": metadata,
-            "restored_predictions_match": True, "profile_promotion_requires_review": True}
+            "restored_predictions_match": True, "profile_promotion_requires_review": True,
+            "duration_seconds": time.perf_counter() - started,
+            "resources_before": before, "resources_after": resource_snapshot(restored),
+            "checkpoint_inspection": getattr(backend, "trained_inspection", {"synthetic_only": True}),
+            "source_manifest_sha256": sha256(restored / "source_manifest.json")}

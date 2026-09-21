@@ -36,3 +36,13 @@ preserved source under its MIT licence.
 Executed commands/results belong in [PROGRESS.md](PROGRESS.md). Scientific and
 material operational decisions require the approval workflow in
 [DECISIONS.md](DECISIONS.md).
+
+## Corrective Boundary
+
+The merged scaffold's 54 passing CPU tests did not establish real-loader
+readiness. The corrective pass separates weights/code revisions, provides
+verified local-only model loading, strengthens actual-path/network guards, and
+retains missing smoke evidence with checkpoint-backed synthetic swap tests.
+See [the corrective review and candidate sheet](PHASE1A_CORRECTIVE_REVIEW.md).
+No candidate setting is approved by adding it to configuration; real execution
+and all Phase 1B acceptance results remain pending.

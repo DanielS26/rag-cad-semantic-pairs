@@ -1,3 +1,4 @@
+# Candidate proposal only: not an approved lock or tested environment.
 -r dev.in
 torch==2.10.0
 transformers==4.57.1
@@ -6,3 +7,4 @@ nltk==3.9.1
 scikit-learn==1.6.1
 faiss-cpu==1.10.0
 sentencepiece==0.2.0
+einops==0.8.1

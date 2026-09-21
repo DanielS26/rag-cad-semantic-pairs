@@ -13,6 +13,7 @@ def profile():
             "python": "3.12.10", "packages": {"fake": "1.0"}, "lock_sha256": "a" * 64,
             "gpu_name": "synthetic-device", "gpu_memory_bytes": 16 * 1024**3,
             "cuda": "fake", "driver": "fake", "encoder_revision": "b" * 40,
+            "encoder_code_revision": "c" * 40, "attention": "native",
             "representation": "repo_compatible", "dtype": "float32", "segmenter": "fake",
         },
     }
@@ -38,6 +39,14 @@ def test_untested_claim_needs_both_runs_and_review(profile):
         "lock_sha256": "a" * 64, "reviewed_commit": "e" * 40,
     }
     validate_profile(profile, "features", profile["expected"])
+
+
+def test_proposals_and_missing_code_pin_fail_even_with_approval_flag(profile):
+    with pytest.raises(ValueError, match="Proposal-only"):
+        validate_profile(profile | {"proposal_only": True}, "smoke", profile["expected"])
+    del profile["expected"]["encoder_code_revision"]
+    with pytest.raises(ValueError, match="fields"):
+        validate_profile(profile, "smoke", profile["expected"])
 
 
 def test_unknown_unapproved_and_mismatched_profiles_fail(profile):

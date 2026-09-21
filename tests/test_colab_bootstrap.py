@@ -39,7 +39,7 @@ def test_token_only_in_clone_environment_and_helper_removed(tmp_path, monkeypatc
         return SimpleNamespace(returncode=0, stdout=output, stderr="")
 
     monkeypatch.setattr(BOOTSTRAP["subprocess"], "run", run)
-    BOOTSTRAP["clone_exact"](url, commit, tmp_path / "checkout", token)
+    BOOTSTRAP["clone_exact"](url, commit, tmp_path / "checkout", token, allow_network=True)
     assert all(not path.exists() for path in helpers)
     assert any("--detach" in command for command in calls)
     assert not any("push" in command for command in calls)
@@ -55,5 +55,16 @@ def test_helper_removed_on_failure_and_output_redacted(tmp_path, monkeypatch):
     monkeypatch.setattr(BOOTSTRAP["subprocess"], "run", run)
     with pytest.raises(RuntimeError, match="suppressed"):
         BOOTSTRAP["clone_exact"]("https://github.com/team/repo.git", "a" * 40,
-                                  tmp_path / "checkout", "synthetic-token")
+                                  tmp_path / "checkout", "synthetic-token", allow_network=True)
     assert all(not path.exists() for path in helpers)
+
+
+def test_bootstrap_network_permissions_fail_before_subprocess(tmp_path, monkeypatch):
+    def forbidden(*args, **kwargs):
+        raise AssertionError("No subprocess without permission")
+
+    monkeypatch.setattr(BOOTSTRAP["subprocess"], "run", forbidden)
+    with pytest.raises(ValueError, match="network permission"):
+        BOOTSTRAP["clone_exact"]("https://github.com/team/repo.git", "a" * 40, tmp_path / "checkout")
+    with pytest.raises(ValueError, match="network permission"):
+        BOOTSTRAP["install_and_test"](tmp_path, "https://github.com/team/repo.git", "a" * 40, "candidate.lock.txt")

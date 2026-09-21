@@ -67,3 +67,60 @@ def test_upstream_cli_routes_only_after_gate(tmp_path, monkeypatch):
     monkeypatch.setattr(cli, "validate_release", lambda *args, **kwargs: {"files": []})
     assert main(arguments + ["--execute", "--allow-network"]) == 0
     assert calls == ["fetch"]
+
+
+def test_real_smoke_cli_preserves_validation_and_publication_evidence(tmp_path, monkeypatch):
+    from rag_cad import cli
+    from rag_cad.operations.smoke import FakeBackend
+
+    captured = {}
+    source = tmp_path / "inputs"
+    source.mkdir()
+    profile = {"tolerance": {"atol": 1e-6, "rtol": 1e-5}}
+    evidence = {"commit": "a" * 40, "synthetic_test": True}
+    release = {"files": [{"file": "fixture.pt", "checkpoint_inspection": {"parameter_count": 557698}}]}
+
+    def backend(*args, **kwargs):
+        captured.update(kwargs)
+        return FakeBackend()
+
+    monkeypatch.setattr(cli, "_gate", lambda args: (profile, evidence))
+    monkeypatch.setattr(cli, "validate_release", lambda *args, **kwargs: release)
+    monkeypatch.setattr(cli, "RealBackend", backend)
+    arguments = ["smoke", "run-a", "--profile", "synthetic", "--lock", "synthetic",
+                 "--release", str(ROOT / "configs/upstream/cad_release.yaml"), "--commit", "a" * 40,
+                 "--workspace", str(tmp_path), "--source", str(source), "--resources", str(source),
+                 "--model-bundle", str(tmp_path / "model"), "--output", str(tmp_path / "run-a"), "--execute"]
+    assert main(arguments) == 0
+    assert captured["allow_network"] is False
+    assert captured["model_bundle"] == tmp_path / "model"
+    assert json.loads((tmp_path / "run-a/source_manifest.json").read_text()) == release
+    report = json.loads((tmp_path / "run-a/run_a.json").read_text())
+    assert report["metadata"] == evidence
+    assert report["source_manifest_sha256"]
+    assert report["timings_seconds"]["release_validation"] >= 0
+
+
+def test_profile_and_flag_both_required_for_downloads(tmp_path, monkeypatch):
+    from rag_cad import cli
+
+    monkeypatch.setattr(cli, "load_config", lambda path: {"network_approved": False, "compute_budget_approved": True})
+    arguments = ["upstream", "fetch-cad", "--profile", "synthetic", "--lock", "synthetic",
+                 "--commit", "a" * 40, "--workspace", str(tmp_path), "--source", str(tmp_path / "source"),
+                 "--output", str(tmp_path / "audit.json"), "--execute", "--allow-network"]
+    assert main(arguments) == 2
+    assert not (tmp_path / "source").exists()
+
+
+def test_compute_budget_is_not_implicitly_approved(tmp_path, monkeypatch):
+    from rag_cad import cli
+
+    monkeypatch.setattr(cli, "load_config", lambda path: {"approved": True, "compute_budget_approved": False})
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Must not inspect GPU before budget approval")
+
+    monkeypatch.setattr(cli, "preflight", forbidden)
+    assert main(["environment", "preflight", "--stage", "smoke", "--execute",
+                 "--profile", "synthetic", "--lock", "synthetic", "--commit", "a" * 40,
+                 "--workspace", str(tmp_path), "--output", str(tmp_path / "report.json")]) == 2

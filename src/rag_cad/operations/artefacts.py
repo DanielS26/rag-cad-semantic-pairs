@@ -6,6 +6,7 @@ import shutil
 import tarfile
 from pathlib import Path, PurePosixPath, PureWindowsPath
 
+from rag_cad.operations.paths import local_path
 from rag_cad.operations.provenance import reject_secrets, sha256, write_json
 
 
@@ -57,6 +58,7 @@ def _inventory(source: Path) -> list[dict]:
 
 
 def publish(source: Path, root: Path, stage: str, run_id: str, metadata: dict) -> Path:
+    local_path(source)
     for value in (stage, run_id):
         if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", value):
             raise ValueError("Invalid stage or run ID")
@@ -134,6 +136,7 @@ def verify(manifest: Path) -> dict:
 
 
 def restore(manifest: Path, destination: Path) -> dict:
+    local_path(destination)
     result = verify(manifest)
     if destination.exists():
         raise FileExistsError("Restore destination must be new")

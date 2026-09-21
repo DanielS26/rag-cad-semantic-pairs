@@ -4,12 +4,14 @@ import argparse
 import json
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 from rag_cad.config import load_config
 from rag_cad.operations import artefacts
+from rag_cad.operations.paths import execution_paths, local_path
 from rag_cad.operations.preflight import preflight
-from rag_cad.operations.provenance import canonical_json, verify_upstream, write_json
+from rag_cad.operations.provenance import canonical_json, sha256, verify_upstream, write_json
 from rag_cad.operations.smoke import FakeBackend, RealBackend, runtime_identity, smoke_a, smoke_b
 from rag_cad.operations.upstream import fetch_release, prepare_resources, validate_release
 
@@ -62,6 +64,7 @@ def parser() -> argparse.ArgumentParser:
         command.add_argument("--release", type=Path, default=Path("configs/upstream/cad_release.yaml"))
         command.add_argument("--source", type=Path, required=True)
         command.add_argument("--resources", type=Path, required=True)
+        command.add_argument("--model-bundle", type=Path, required=True)
         command.add_argument("--output", type=Path, required=True)
         command.add_argument("--allow-network", action="store_true")
         if name == "run-b":
@@ -73,7 +76,19 @@ def parser() -> argparse.ArgumentParser:
 def _gate(args):
     if not args.execute:
         raise ValueError("Real commands require --execute and a separately approved profile")
+    execution_paths(args)
     profile = load_config(args.profile)
+    if profile.get("compute_budget_approved") is not True:
+        raise ValueError("Real execution requires a separately approved bounded compute budget")
+    if getattr(args, "allow_network", False) and profile.get("network_approved") is not True:
+        raise ValueError("Downloads require reviewed profile permission as well as --allow-network")
+    if args.command == "smoke":
+        if profile.get("remote_code_approved") is not True:
+            raise ValueError("Remote-code execution requires explicit profile approval")
+        tolerance = profile.get("tolerance", {})
+        if any(type(tolerance.get(key)) not in (float, int) or not 0 <= tolerance[key] <= 0.001
+               for key in ("atol", "rtol")):
+            raise ValueError("Explicit bounded smoke tolerances are required")
     stage = args.stage if args.command == "environment" else "smoke"
     evidence = preflight(args.repo, args.commit, profile, stage, args.lock, args.workspace)
     return profile, evidence
@@ -86,7 +101,10 @@ def execute(args) -> dict:
         if args.action == "verify":
             return artefacts.verify(args.manifest)
         if args.action == "restore":
+            local_path(args.destination)
             return artefacts.restore(args.manifest, args.destination)
+        local_path(args.source)
+        local_path(args.metadata)
         config = load_config(args.storage_config)
         if not config.get("artefact_root"):
             raise ValueError("Artefact store is unresolved")
@@ -95,6 +113,7 @@ def execute(args) -> dict:
                                  args.run_id, metadata)
         return {"published": str(path), "verified": True}
     if args.command == "smoke" and args.action == "fake":
+        local_path(args.output)
         return smoke_a(FakeBackend(), args.output, {"synthetic_only": True}, "fake-local",
                        atol=1e-6, rtol=1e-6)
     profile, evidence = _gate(args)
@@ -109,18 +128,26 @@ def execute(args) -> dict:
         result["preflight"] = evidence
         write_json(args.output, result)
         return result
-    validate_release(spec, args.source, load_model=True)
+    started = time.perf_counter()
+    source_manifest = validate_release(spec, args.source, load_model=True)
+    validation_seconds = time.perf_counter() - started
     if not args.resources.exists():
         prepare_resources(profile, args.resources, allow_network=args.allow_network)
-    backend = RealBackend(profile, args.source, spec, args.resources, evidence)
+    backend = RealBackend(profile, args.source, spec, args.resources, evidence,
+                          model_bundle=args.model_bundle, allow_network=args.allow_network)
     if args.action == "run-a":
         tolerance = profile.get("tolerance", {})
         if tolerance.get("atol") is None or tolerance.get("rtol") is None:
             raise ValueError("Determinism tolerances must be approved explicitly")
-        return smoke_a(backend, args.output, evidence, runtime_identity(), **tolerance)
+        return smoke_a(backend, args.output, evidence, runtime_identity(), **tolerance,
+                       source_manifest=source_manifest, validation_seconds=validation_seconds)
     artefacts.restore(args.manifest, args.destination)
     result = smoke_b(backend, args.destination, evidence, runtime_identity())
+    result["source_manifest"] = source_manifest
+    result["parent_artefact_manifest_sha256"] = sha256(args.manifest)
+    result["validation_seconds"] = validation_seconds
     write_json(args.output, result)
+    write_json(args.output.parent / "source_manifest.json", source_manifest)
     return result
 
 

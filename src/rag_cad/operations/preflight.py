@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from rag_cad.config import require_sha, validate_profile
+from rag_cad.operations.paths import local_path
 from rag_cad.operations.provenance import (
     digest,
     git_output,
@@ -16,7 +17,8 @@ from rag_cad.operations.provenance import (
     verify_upstream,
 )
 
-PACKAGES = ("torch", "transformers", "numpy", "nltk", "scikit-learn", "faiss-cpu", "huggingface-hub")
+PACKAGES = ("torch", "transformers", "numpy", "nltk", "scikit-learn", "faiss-cpu",
+            "huggingface-hub", "einops", "sentencepiece")
 
 
 def observe_environment(profile: dict, lock: Path) -> dict:
@@ -40,6 +42,8 @@ def observe_environment(profile: dict, lock: Path) -> dict:
         "lock_sha256": sha256(lock), "gpu_name": properties.name,
         "gpu_memory_bytes": properties.total_memory, "cuda": torch.version.cuda,
         "driver": driver, "encoder_revision": profile["expected"]["encoder_revision"],
+        "encoder_code_revision": profile["expected"]["encoder_code_revision"],
+        "attention": "native",
         "representation": profile["expected"]["representation"],
         "dtype": "float32", "segmenter": profile["expected"]["segmenter"],
     }
@@ -62,8 +66,7 @@ def preflight(repo: Path, commit: str, profile: dict, stage: str, lock: Path,
                    "src/rag_cad", "scripts/bootstrap_colab.py")
     if not workspace.is_dir():
         raise ValueError("Working directory must already exist")
-    if any(part.casefold() in {"drive", "mydrive", "shareddrives"} for part in workspace.resolve().parts):
-        raise ValueError("Active execution must not use a mounted Drive directory")
+    local_path(workspace)
     minimum = profile.get("minimum_free_bytes")
     if type(minimum) is not int or minimum <= 0:
         raise ValueError("Profile must declare a positive free-disk requirement")
@@ -76,5 +79,6 @@ def preflight(repo: Path, commit: str, profile: dict, stage: str, lock: Path,
     subprocess.run([sys.executable, "-m", "pip", "check"], check=True,
                    capture_output=True, text=True)
     return {"commit": commit, "dirty": False, "stage": stage, "upstream": upstream,
+            "operator": profile.get("operator"),
             "profile_hash": digest(profile), "environment": actual,
             "environment_id": digest({"commit": commit, "fingerprint": actual})}
