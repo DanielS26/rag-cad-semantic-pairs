@@ -57,11 +57,13 @@ class JinaEncoder:
     """Only constructed behind an approved real-execution preflight."""
 
     def __init__(self, weights_revision: str, code_revision: str, bundle: Path, *,
-                 allow_network: bool = False, allow_remote_code: bool = False):
+                 allow_network: bool = False, allow_remote_code: bool = False, progress=None):
         if allow_remote_code is not True:
             raise ValueError("Explicit reviewed remote-code permission is required")
+        progress = progress or (lambda step: None)
         self.bundle_manifest = prepare_bundle(bundle, weights_revision, code_revision,
                                               allow_network=allow_network)
+        progress("model_bundle_ready")
         import torch
         from transformers import AutoModel, AutoTokenizer
 
@@ -71,10 +73,12 @@ class JinaEncoder:
             self.tokenizer = AutoTokenizer.from_pretrained(
                 str(bundle.resolve()), local_files_only=True, trust_remote_code=False,
             )
+            progress("tokenizer_loaded")
             self.model = AutoModel.from_pretrained(
                 str(bundle.resolve()), local_files_only=True, trust_remote_code=True,
                 torch_dtype=torch.float32, use_safetensors=True, use_flash_attn=False,
             ).to("cuda").eval()
+            progress("model_loaded")
 
     def __call__(self, text: str) -> Encoding:
         with offline_execution():

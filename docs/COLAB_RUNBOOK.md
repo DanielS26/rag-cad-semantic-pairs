@@ -74,6 +74,14 @@ the notebook kernel never holds imported ML binaries across installation. A
 preflight failure blocks mounting and execution. Work happens under the
 temporary workspace.
 
+Failed project CLI commands still print no output. Instead the smoke command
+records fixed-vocabulary progress steps in `smoke_progress.json` under the
+workspace as each stage completes, and a refused command writes
+`last_failure.json` holding only the command labels and the exception class
+name. The smoke cell prints both files after the stage, whether it passed or
+failed, so a failure can be located without exposing command output, paths or
+exception text.
+
 Drive mounts only for required input restoration, then unmounts in finally before
 model loading. Run B uses a local verified input directory and separate receipt
 (`--destination` and `--receipt`), never an active Drive input. The model cell

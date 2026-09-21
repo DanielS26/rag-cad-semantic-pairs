@@ -60,8 +60,40 @@ def test_real_backend_forwards_separate_pins_and_offline_permission(tmp_path, mo
     backend = smoke.RealBackend(profile, tmp_path, {"files": {"classifier_fullcad.pt": {"sha256": "c" * 64}}},
                                 tmp_path, {}, model_bundle=tmp_path / "bundle")
     assert calls == [(("a" * 40, "b" * 40, tmp_path / "bundle"),
-                      {"allow_network": False, "allow_remote_code": True})]
+                      {"allow_network": False, "allow_remote_code": True, "progress": smoke.mark})]
     assert backend.reference_inspection == {"synthetic": True}
     with pytest.raises(ValueError, match="Network permission"):
         smoke.RealBackend(profile, tmp_path, {}, tmp_path, {}, model_bundle=tmp_path / "bundle",
                           allow_network=True)
+
+def test_progress_steps_are_fixed_vocabulary_and_ordered(tmp_path, monkeypatch):
+    import json
+
+    from rag_cad.operations import smoke
+
+    monkeypatch.setattr(smoke, "PROGRESS_PATH", tmp_path / "smoke_progress.json")
+    with pytest.raises(ValueError, match="Unknown progress step"):
+        smoke.mark("synthetic-secret-step")
+    assert not (tmp_path / "smoke_progress.json").exists()
+    metadata = {"commit": "f" * 40, "environment_id": "synthetic-only"}
+    smoke_a(FakeBackend(), tmp_path / "run-a", metadata, "fake-runtime-a", atol=1e-6, rtol=1e-6)
+    steps = json.loads((tmp_path / "smoke_progress.json").read_text(encoding="utf-8"))
+    assert steps == ["output_created", "features_encoded", "features_repeated", "determinism_checked",
+                     "reference_scored", "trained_saved", "reload_checked", "retrieval_checked",
+                     "rag_swap_checked", "report_written"]
+    assert all(step in smoke.STEPS for step in steps)
+    monkeypatch.setattr(smoke, "PROGRESS_PATH", tmp_path / "unstable_progress.json")
+
+    class Unstable(FakeBackend):
+        calls = 0
+
+        def encode(self, query, sentences):
+            self.calls += 1
+            return super().encode(query, sentences) + self.calls
+
+    with pytest.raises(AssertionError):
+        smoke_a(Unstable(), tmp_path / "bad", {}, "fake", atol=0, rtol=0)
+    assert json.loads((tmp_path / "unstable_progress.json").read_text())[-1] == "features_repeated"
+    monkeypatch.setattr(smoke, "PROGRESS_PATH", None)
+    smoke.mark("report_written")
+    assert not (tmp_path / "None").exists()
