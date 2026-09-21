@@ -533,3 +533,57 @@ Historical audit claims are distinguished from checks executed in this session.
   passed. No Colab, GPU, Drive, secret, model/data download or notebook
   execution occurred in this pass. Execution from the resulting merge requires
   its bootstrap hash and fresh authorisation.
+
+## 2026-09-22 - Run A Attempt From 75ed9c00 And Sanitized Smoke Progress Diagnostics
+
+- Daniel Song authorised and executed Run A from
+  75ed9c002688f315b997264fa6ac1740bd46723c with bootstrap hash
+  59f196ff4f9aab3c5efecb3fefd31b6fd37519d98d66b1544b89cc9303312c85. Cells 2 to 5
+  passed for the first time: the isolated environment was created without pip
+  and populated from the lock; pip check, the CPU tests and preflight passed on
+  an NVIDIA L4 (23,659,151,360 bytes), CUDA 12.8, driver 580.82.07, Python
+  3.13.15, with all 72 locked packages verified and environment ID
+  e9754028f076d94a9bca914bcb0db63bbfcf7fd6077677855f00ac6bb5ea355d.
+- Cell 6 fetched and validated the pinned CAD release live for the first time:
+  all four named files matched their expected SHA-256 values; original training
+  parsed to 1,080 records, 24,665 rows, 1,625 malicious and 23,040 benign with
+  zero count mismatches; original test to 389 records and 9,776 rows; the
+  paraphrase bank to 3,376 records and 86,341 rows with the documented 1,278
+  supplied-count mismatches. classifier_fullcad.pt loaded with weights_only on
+  CPU, 557,698 finite non-constant parameters in the expected shapes.
+- The smoke stage then failed with `smoke_run_a: exit_code=2`, the CLI's
+  sanitized code for a refused operation. The exception class printed to
+  stderr was suppressed by design, so the failing step is unknown. The runtime
+  was deleted; connected time and units for this attempt and for the 44dce5f3
+  attempt were not yet reported when this entry was written.
+- Offline checks ruled out several candidates without GPU time: the pinned
+  punkt_tab archive at nltk_data revision 550b6625 hashes to the expected
+  e57f6418... value and the resource preparation/validation code passes on its
+  real bytes; all five model and ten code files exist at the pinned Jina
+  revisions; the released config's remote-code mapping matches the bundle
+  transformation; transformers 4.57.1 assigns the local bundle directory as the
+  model's name_or_path before the remote constructor loads its tokenizer; the
+  remote code falls back to native attention and Torch rotary embeddings when
+  flash-attention is absent and use_flash_attn is false; upstream CAD calls the
+  model through forward().last_hidden_state exactly as the project does.
+- Remaining candidates could not be separated offline: the model bundle
+  download, model construction under transformers 4.57.1, non-determinism
+  between the two encodes, or the reference-checkpoint scores. Branch
+  fix/phase1b-smoke-diagnostics from 75ed9c00 therefore adds fixed-vocabulary
+  progress steps written to `smoke_progress.json` in the workspace as each
+  smoke stage completes (resource validation, segmenter check, bundle ready,
+  tokenizer and model loaded, checkpoint loaded, output created, both encodes,
+  determinism, reference scoring, training, reload, retrieval, RAG swap,
+  report) and a `last_failure.json` record holding only the command labels and
+  the exception class name. The smoke cell prints both files after the stage.
+  Failed command output remains suppressed; no scientific setting, pin, lock,
+  profile, argument or ordering changed.
+- Local checks from the rag-cad-smoke-approval worktree with the Windows Python
+  3.12.10 dev interpreter and this worktree's source: 183 CPU/fake tests
+  passed (new: progress vocabulary/order and failure-position recording,
+  failure record contents excluding exception text, progress reset per run,
+  encoder progress steps, notebook diagnostics printing); Ruff, pip check,
+  upstream audit, notebook schema/syntax/cleared-output checks and git diff
+  --check passed. No Colab, GPU, Drive, secret, model/data download or notebook
+  execution occurred in this pass. Execution from the resulting merge requires
+  its bootstrap hash and fresh authorisation.

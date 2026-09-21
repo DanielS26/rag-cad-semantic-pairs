@@ -148,3 +148,46 @@ def test_compute_budget_is_not_implicitly_approved(tmp_path, monkeypatch):
     assert main(["environment", "preflight", "--stage", "smoke", "--execute",
                  "--profile", "synthetic", "--lock", "synthetic", "--commit", "a" * 40,
                  "--workspace", str(tmp_path), "--output", str(tmp_path / "report.json")]) == 2
+
+def test_failure_record_holds_only_labels_and_exception_class(tmp_path, monkeypatch):
+    from rag_cad import cli
+
+    secret = "synthetic-secret-in-exception-text"
+
+    def fail(args):
+        raise ValueError(secret)
+
+    monkeypatch.setattr(cli, "_gate", fail)
+    assert main(["environment", "preflight", "--stage", "smoke", "--execute", "--profile", "synthetic",
+                 "--lock", "synthetic", "--commit", "a" * 40, "--workspace", str(tmp_path),
+                 "--output", str(tmp_path / "report.json")]) == 2
+    record = (tmp_path / cli.FAILURE_RECORD).read_text(encoding="utf-8")
+    assert secret not in record
+    assert json.loads(record) == {"command": "environment", "action": "preflight", "exception_type": "ValueError"}
+    assert main(["environment", "preflight", "--stage", "smoke", "--execute", "--profile", "synthetic",
+                 "--lock", "synthetic", "--commit", "a" * 40, "--workspace", str(tmp_path / "missing"),
+                 "--output", str(tmp_path / "report.json")]) == 2
+    assert not (tmp_path / "missing").exists()
+
+
+def test_real_smoke_cli_resets_and_binds_progress_record(tmp_path, monkeypatch):
+    from rag_cad import cli
+    from rag_cad.operations import smoke
+    from rag_cad.operations.smoke import FakeBackend
+
+    source = tmp_path / "inputs"
+    source.mkdir()
+    stale = tmp_path / cli.PROGRESS_RECORD
+    stale.write_text('["stale"]', encoding="utf-8")
+    monkeypatch.setattr(cli, "_gate", lambda args: ({"tolerance": {"atol": 1e-6, "rtol": 1e-5}},
+                                                    {"commit": "a" * 40}))
+    monkeypatch.setattr(cli, "validate_release", lambda *args, **kwargs: {"files": []})
+    monkeypatch.setattr(cli, "RealBackend", lambda *args, **kwargs: FakeBackend())
+    monkeypatch.setattr(smoke, "PROGRESS_PATH", None)
+    assert main(["smoke", "run-a", "--profile", "synthetic", "--lock", "synthetic",
+                 "--release", str(ROOT / "configs/upstream/cad_release.yaml"), "--commit", "a" * 40,
+                 "--workspace", str(tmp_path), "--source", str(source), "--resources", str(source),
+                 "--model-bundle", str(tmp_path / "model"), "--output", str(tmp_path / "run-a"),
+                 "--execute"]) == 0
+    steps = json.loads(stale.read_text(encoding="utf-8"))
+    assert "stale" not in steps and steps[0] == "output_created" and steps[-1] == "report_written"

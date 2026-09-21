@@ -9,11 +9,15 @@ from pathlib import Path
 
 from rag_cad.config import load_config
 from rag_cad.operations import artefacts
+from rag_cad.operations import smoke as smoke_operations
 from rag_cad.operations.paths import execution_paths, local_path
 from rag_cad.operations.preflight import PreflightError, preflight
 from rag_cad.operations.provenance import canonical_json, sha256, verify_upstream, write_json
 from rag_cad.operations.smoke import FakeBackend, RealBackend, runtime_identity, smoke_a, smoke_b
 from rag_cad.operations.upstream import fetch_release, prepare_resources, validate_release
+
+FAILURE_RECORD = "last_failure.json"
+PROGRESS_RECORD = "smoke_progress.json"
 
 
 def execution_options(parser):
@@ -151,6 +155,8 @@ def execute(args) -> dict:
     validation_seconds = time.perf_counter() - started
     if not args.resources.exists():
         prepare_resources(profile, args.resources, allow_network=args.allow_network)
+    smoke_operations.PROGRESS_PATH = local_path(args.workspace) / PROGRESS_RECORD
+    smoke_operations.PROGRESS_PATH.unlink(missing_ok=True)
     backend = RealBackend(profile, args.source, spec, args.resources, evidence,
                           model_bundle=args.model_bundle, allow_network=args.allow_network)
     if args.action == "run-a":
@@ -168,6 +174,20 @@ def execute(args) -> dict:
     return result
 
 
+def record_failure(args, error: BaseException) -> None:
+    """Write only fixed command labels and the exception class name, never its text."""
+    workspace = getattr(args, "workspace", None)
+    if workspace is None or not Path(workspace).is_dir():
+        return
+    try:
+        record = Path(workspace) / FAILURE_RECORD
+        record.unlink(missing_ok=True)
+        write_json(record, {"command": args.command, "action": getattr(args, "action", None),
+                            "exception_type": type(error).__name__})
+    except (OSError, ValueError):
+        return
+
+
 def main(argv=None) -> int:
     args = parser().parse_args(argv)
     try:
@@ -175,6 +195,7 @@ def main(argv=None) -> int:
         print(canonical_json(result))
         return 0
     except (ValueError, OSError, KeyError, TypeError, AssertionError, RuntimeError, subprocess.SubprocessError) as error:
+        record_failure(args, error)
         print(f"Operation refused ({type(error).__name__}); verify inputs and approved stage prerequisites.", file=sys.stderr)
         return 2
 

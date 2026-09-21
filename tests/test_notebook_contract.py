@@ -35,6 +35,8 @@ def test_notebook_is_output_cleared_guarded_orchestration():
     assert code[2].index('PYTHON = bootstrap["install_and_test"](') < code[2].index("common = [str(PYTHON)")
     assert "flush_and_unmount" in code[3]
     assert "ismount" in code[4]
+    assert '"smoke_progress.json"' in code[4] and '"last_failure.json"' in code[4]
+    assert code[4].index("finally:") < code[4].index("STAGE_COMPLETE = True")
     assert "--receipt" in code[4] and "--manifest" not in code[4]
     assert "flush_and_unmount" in code[5]
 

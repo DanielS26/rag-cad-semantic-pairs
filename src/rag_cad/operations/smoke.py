@@ -20,6 +20,27 @@ from rag_cad.rag.pipeline import Passage, RAGPipeline
 QUERY = "Summarise the synthetic passage."
 SENTENCES = ["Synthetic context.", "A synthetic target.", "Synthetic conclusion."]
 
+# Fixed-vocabulary progress steps written to PROGRESS_PATH so a sanitized failure can be
+# located without exposing command output, paths, or exception text.
+STEPS = (
+    "resources_validated", "segmenter_checked", "model_bundle_ready", "tokenizer_loaded",
+    "model_loaded", "reference_checkpoint_loaded", "output_created", "features_encoded",
+    "features_repeated", "determinism_checked", "reference_scored", "trained_saved",
+    "reload_checked", "retrieval_checked", "rag_swap_checked", "report_written",
+    "run_a_restored_read", "run_b_reload_checked", "run_b_compared",
+)
+PROGRESS_PATH: Path | None = None
+
+
+def mark(step: str) -> None:
+    if step not in STEPS:
+        raise ValueError("Unknown progress step")
+    if PROGRESS_PATH is None:
+        return
+    steps = json.loads(PROGRESS_PATH.read_text(encoding="utf-8")) if PROGRESS_PATH.exists() else []
+    steps.append(step)
+    PROGRESS_PATH.write_text(json.dumps(steps) + "\n", encoding="utf-8")
+
 
 def resource_snapshot(directory: Path) -> dict:
     local_path(directory)
@@ -106,17 +127,20 @@ class RealBackend:
         import nltk
 
         validate_resources(profile, resources)
+        mark("resources_validated")
         nltk.data.path[:] = [str(resources)]
         if split_units("\n".join(SENTENCES)) != SENTENCES:
             raise ValueError("Runtime segmenter changed canonical smoke units")
+        mark("segmenter_checked")
         self.profile = profile
         self.metadata = metadata
         self.encoder = JinaEncoder(profile["expected"]["encoder_revision"],
                                    profile["expected"]["encoder_code_revision"], model_bundle,
-                                   allow_network=allow_network, allow_remote_code=True)
+                                   allow_network=allow_network, allow_remote_code=True, progress=mark)
         self.reference, self.reference_inspection = load_checkpoint(
             source / "classifier_fullcad.pt", spec["files"]["classifier_fullcad.pt"]["sha256"],
             with_inspection=True)
+        mark("reference_checkpoint_loaded")
         self.load_seconds = time.perf_counter() - started
 
     @property
@@ -194,28 +218,36 @@ def smoke_a(backend, output: Path, metadata: dict, identity: str,
     if backend.kind == "real" and not source_manifest:
         raise ValueError("Real smoke requires retained release-validation evidence")
     output.mkdir(parents=True, exist_ok=False)
+    mark("output_created")
     before = resource_snapshot(output)
     started = time.perf_counter()
     features = backend.encode(QUERY, SENTENCES)
     feature_seconds = time.perf_counter() - started
+    mark("features_encoded")
     repeated = backend.encode(QUERY, SENTENCES)
+    mark("features_repeated")
     if features.shape != (3, 2048) or features.dtype != np.float32 or not np.isfinite(features).all():
         raise ValueError("Smoke features must be finite float32 [3,2048]")
     np.testing.assert_allclose(features, repeated, atol=atol, rtol=rtol)
+    mark("determinism_checked")
     reference = backend.reference_score(features)
     check_probabilities(reference)
     if np.ptp(reference[:, 1]) == 0:
         raise ValueError("Reference returned constant probabilities")
+    mark("reference_scored")
     training_started = time.perf_counter()
     predictions = backend.train_save(features, np.array([0, 1, 0], dtype=np.int64), output / "model.pt")
     check_probabilities(predictions)
     checkpoint_hash = sha256(output / "model.pt")
+    mark("trained_saved")
     restored = backend.reload_score(features, output / "model.pt", checkpoint_hash)
     np.testing.assert_allclose(predictions, restored, atol=atol, rtol=rtol)
+    mark("reload_checked")
     training_seconds = time.perf_counter() - training_started
     retrieval_started = time.perf_counter()
     if backend.retrieval_roundtrip(output) != (1, 1):
         raise ValueError("Retrieval roundtrip changed expected chunk ID")
+    mark("retrieval_checked")
     retrieval_seconds = time.perf_counter() - retrieval_started
     passages = [Passage("synthetic-chunk", tuple(SENTENCES))]
     pipeline = RAGPipeline(lambda query: passages, lambda prompt: prompt, "{query}\n{context}")
@@ -240,6 +272,7 @@ def smoke_a(backend, output: Path, metadata: dict, identity: str,
             raise ValueError("Checkpoint swap changed a fixed RAG component")
     if SENTENCES[1] in retained["answer"] or SENTENCES[0] in removed["answer"]:
         raise ValueError("Removed text reached the generator")
+    mark("rag_swap_checked")
     np.save(output / "features.npy", features, allow_pickle=False)
     np.save(output / "predictions.npy", predictions, allow_pickle=False)
     source_manifest = source_manifest or {"synthetic_only": True, "files": []}
@@ -276,6 +309,7 @@ def smoke_a(backend, output: Path, metadata: dict, identity: str,
 
         report["peak_gpu_memory_bytes"] = torch.cuda.max_memory_allocated()
     write_json(output / "run_a.json", report)
+    mark("report_written")
     return report
 
 
@@ -284,6 +318,7 @@ def smoke_b(backend, restored: Path, metadata: dict, identity: str) -> dict:
     started = time.perf_counter()
     before = resource_snapshot(restored)
     original = json.loads((restored / "run_a.json").read_text(encoding="utf-8"))
+    mark("run_a_restored_read")
     if original["runtime_identity"] == identity:
         raise ValueError("Run B requires a different fresh runtime")
     if original["execution_kind"] != backend.kind or original["metadata"] != metadata:
@@ -292,7 +327,9 @@ def smoke_b(backend, restored: Path, metadata: dict, identity: str) -> dict:
     expected = np.load(restored / "predictions.npy", allow_pickle=False)
     actual = backend.reload_score(features, restored / "model.pt", original["checkpoint_sha256"])
     check_probabilities(actual)
+    mark("run_b_reload_checked")
     np.testing.assert_allclose(actual, expected, atol=original["atol"], rtol=original["rtol"])
+    mark("run_b_compared")
     return {"run": "B", "execution_kind": backend.kind, "runtime_identity": identity,
             "run_a_sha256": sha256(restored / "run_a.json"), "metadata": metadata,
             "restored_predictions_match": True, "profile_promotion_requires_review": True,

@@ -92,3 +92,25 @@ def test_loaders_are_local_and_execution_denies_network(tmp_path, monkeypatch):
     assert loads[1][1]["use_flash_attn"] is False
     with offline_execution(), pytest.raises(RuntimeError, match="Network"):
         socket.socket().connect_ex(("example.invalid", 443))
+
+def test_encoder_reports_fixed_progress_steps(tmp_path, monkeypatch):
+    calls, download = fake_downloads(tmp_path)
+    bundle = tmp_path / "bundle"
+    prepare_bundle(bundle, WEIGHTS, CODE, allow_network=True, download=download)
+
+    class Auto:
+        @classmethod
+        def from_pretrained(cls, path, **kwargs):
+            return cls()
+
+        def to(self, device):
+            return self
+
+        def eval(self):
+            return self
+
+    steps = []
+    monkeypatch.setitem(sys.modules, "torch", SimpleNamespace(float32="float32"))
+    monkeypatch.setitem(sys.modules, "transformers", SimpleNamespace(AutoModel=Auto, AutoTokenizer=Auto))
+    representation.JinaEncoder(WEIGHTS, CODE, bundle, allow_remote_code=True, progress=steps.append)
+    assert steps == ["model_bundle_ready", "tokenizer_loaded", "model_loaded"]
