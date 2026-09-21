@@ -364,3 +364,34 @@ Historical audit claims are distinguished from checks executed in this session.
   secrets, model/data artefacts, or remote-code execution were accessed.
 - Decision-log proposal is separate and unwritten. This branch requires PR
   review and passing same-commit CI; it must not be merged by the agent.
+
+## 2026-09-21 - Sanitized Phase 1B Stage Diagnostics
+
+- The researcher reported Cell 4 failed at execution commit
+  c1fd5c5a0e34d0befbb92c74fde3badc83a8fa76 with the generic bootstrap subprocess
+  error. The runtime is deleted; reported conservative cumulative usage is
+  1,860 connected seconds and 0.42 compute units, carried forward across retries.
+- Diagnostic branch fix/phase1b-stage-diagnostics starts from verified main
+  4bff790c154d34561f3673d9423ca77ef22a324f. The failed execution's bootstrap hash
+  remains historical: 6f92c1a4b603e525facfbf179c106df5158d0febac4876612cb7bffcab1a845e.
+- The four install/test subprocesses now report only their fixed stage label
+  and exit_code or timed_out. Spawn/other process failures use a fixed failed
+  outcome. Raw commands, paths, URLs, environment, output and exception chains
+  are not included in subprocess failure diagnostics.
+- Audited the notebook and helper path: pre-bootstrap Git calls and later
+  preflight/restore/fetch/smoke/publish subprocess calls needed equivalent
+  sanitized boundaries. Notebook changes are diagnostic-only; successful CLI
+  output is retained, failed output is suppressed. Arguments, command order,
+  timeouts, cleanup, permission/hash/disk/budget guards and scientific behaviour
+  are unchanged. Existing actionable guards and package CLI handling are retained.
+- Local checks: 172 CPU/fake tests passed; Ruff, pip check, editor diagnostics,
+  notebook schema/syntax/output-clearing checks and upstream audit passed.
+  Tests inject fake secrets into failed output, commands and exceptions,
+  including TimeoutExpired, and verify label/exit mapping and no disclosure.
+  One static test's AST traversal order was corrected after its focused failure.
+- This change diagnoses the failing stage, not its underlying cause. No
+  dependency/profile/pin/lock changes, model/data downloads, secret access,
+  Colab/GPU/Drive use, live notebook execution, or decision entries occurred.
+- The updated thin runner must be used from the eventual reviewed merge SHA
+  with its newly verified bootstrap hash and fresh execution authorisation.
+  Existing historical hashes are not rewritten; no automatic retry or merge.

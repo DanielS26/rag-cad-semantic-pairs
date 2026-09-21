@@ -16,6 +16,12 @@ import time
 from pathlib import Path
 
 CAD_COMMIT = "26e38a67f0a9e1de4cb3a876e4b021900a5d1c27"
+STAGES = frozenset({
+    "git_clone", "git_checkout", "checkout_verification",
+    "locked_dependency_install", "editable_project_install", "pip_check", "cpu_tests",
+    "environment_preflight", "artefact_restore", "upstream_fetch",
+    "smoke_run_a", "smoke_run_b", "artefact_publish",
+})
 
 
 def validate_request(repo_url: str, commit: str) -> None:
@@ -25,11 +31,29 @@ def validate_request(repo_url: str, commit: str) -> None:
         raise ValueError("An exact reviewed commit is required")
 
 
-def _run(command: list[str], *, cwd=None, env=None, timeout=120) -> str:
-    result = subprocess.run(command, cwd=cwd, env=env, capture_output=True, text=True, check=False, timeout=timeout)
-    if result.returncode:
-        raise RuntimeError("Bootstrap subprocess failed; credentials and raw output suppressed")
+def _run(command: list[str], *, stage="checkout_verification", cwd=None, env=None, timeout=120) -> str:
+    if stage not in STAGES:
+        raise ValueError("Invalid subprocess stage")
+    failure = None
+    try:
+        result = subprocess.run(command, cwd=cwd, env=env, capture_output=True, text=True, check=False, timeout=timeout)
+        if result.returncode:
+            failure = f"exit_code={result.returncode}" if type(result.returncode) is int else "failed"
+    except subprocess.TimeoutExpired:
+        failure = "timed_out"
+    except subprocess.CalledProcessError as error:
+        failure = f"exit_code={error.returncode}" if type(error.returncode) is int else "failed"
+    except Exception:
+        failure = "failed"
+    if failure is not None:
+        raise RuntimeError(f"{stage}: {failure}") from None
     return result.stdout.strip()
+
+
+def run_stage(command: list[str], *, stage: str, cwd=None, timeout=120) -> None:
+    output = _run(command, stage=stage, cwd=cwd, timeout=timeout)
+    if output:
+        print(output)
 
 
 def verify_checkout(checkout: Path, repo_url: str, commit: str) -> None:
@@ -68,12 +92,12 @@ def clone_exact(repo_url: str, commit: str, checkout: Path, token: str | None = 
             if token:
                 environment["GH_READ_TOKEN"] = token
             _run(["git", "-c", "credential.helper=", "clone", "--no-checkout",
-                  repo_url, str(checkout)], env=environment)
+                repo_url, str(checkout)], stage="git_clone", env=environment)
     finally:
         environment.pop("GH_READ_TOKEN", None)
         environment.pop("GIT_ASKPASS", None)
         token = None
-    _run(["git", "checkout", "--detach", commit], cwd=checkout)
+    _run(["git", "checkout", "--detach", commit], stage="git_checkout", cwd=checkout)
     verify_checkout(checkout, repo_url, commit)
 
 
@@ -92,16 +116,16 @@ def install_and_test(checkout: Path, repo_url: str, commit: str, lock_relative: 
         raise ValueError("Insufficient disk for locked installation and smoke working space")
     deadline = time.monotonic() + min(timeout, 10800)
     commands = [
-        [sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", str(lock)],
-        [sys.executable, "-m", "pip", "install", "-e", ".", "--no-deps", "--no-build-isolation"],
-        [sys.executable, "-m", "pip", "check"],
-        [sys.executable, "-m", "pytest", "-m", "not gpu and not integration", "-q"],
+        ("locked_dependency_install", [sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", str(lock)]),
+        ("editable_project_install", [sys.executable, "-m", "pip", "install", "-e", ".", "--no-deps", "--no-build-isolation"]),
+        ("pip_check", [sys.executable, "-m", "pip", "check"]),
+        ("cpu_tests", [sys.executable, "-m", "pytest", "-m", "not gpu and not integration", "-q"]),
     ]
-    for command in commands:
+    for stage, command in commands:
         remaining = deadline - time.monotonic()
         if remaining <= 0:
             raise ValueError("Installation/test budget exhausted; disconnect runtime")
-        _run(command, cwd=checkout, timeout=remaining)
+        _run(command, stage=stage, cwd=checkout, timeout=remaining)
     verify_checkout(checkout, repo_url, commit)
 
 
