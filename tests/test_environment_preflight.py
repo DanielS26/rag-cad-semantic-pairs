@@ -70,6 +70,45 @@ def test_small_gpu_and_missing_fingerprint_fail(profile):
         validate_profile(profile, "smoke", profile["expected"])
 
 
+def test_candidate_discovers_only_runtime_fields_without_mutation(profile):
+    from rag_cad.config import DISCOVERABLE_FIELDS
+
+    actual = deepcopy(profile["expected"])
+    for key in DISCOVERABLE_FIELDS:
+        profile["expected"][key] = None
+    before = deepcopy(profile)
+    validate_profile(profile, "smoke")
+    validate_profile(profile, "smoke", actual)
+    assert profile == before
+    for stage in ("features", "train", "evaluate"):
+        with pytest.raises(ValueError, match="tested profile"):
+            validate_profile(profile, stage, actual)
+    profile["expected"]["encoder_revision"] = None
+    with pytest.raises(ValueError, match="Unresolved"):
+        validate_profile(profile, "smoke", actual)
+
+
+@pytest.mark.parametrize("field,value", [("gpu_memory_bytes", 8 * 1024**3),
+    ("gpu_memory_bytes", 0), ("gpu_memory_bytes", True), ("driver", None),
+    ("cuda", ""), ("gpu_name", ""), ("python", "3.13.0")])
+def test_bad_discovered_runtime_fails(profile, field, value):
+    from rag_cad.config import DISCOVERABLE_FIELDS
+
+    actual = deepcopy(profile["expected"])
+    for key in DISCOVERABLE_FIELDS:
+        profile["expected"][key] = None
+    actual[field] = value
+    with pytest.raises(ValueError):
+        validate_profile(profile, "smoke", actual)
+
+
+def test_measured_dependencies_cannot_be_discovered_away(profile):
+    actual = deepcopy(profile["expected"])
+    actual["packages"] = {"fake": "2.0"}
+    with pytest.raises(ValueError, match="exactly match"):
+        validate_profile(profile, "smoke", actual)
+
+
 def test_preflight_checks_commit_cleanliness_and_lock_before_hardware(profile, tmp_path, monkeypatch):
     import importlib
 

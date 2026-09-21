@@ -21,20 +21,21 @@ PACKAGES = ("torch", "transformers", "numpy", "nltk", "scikit-learn", "faiss-cpu
             "huggingface-hub", "einops", "sentencepiece")
 
 
+class PreflightError(ValueError):
+    def __init__(self, message: str, report: dict):
+        super().__init__(message)
+        self.report = report | {"passed": False, "failure": message}
+
+
 def observe_environment(profile: dict, lock: Path) -> dict:
     import torch
 
     if not torch.cuda.is_available():
         raise ValueError("GPU stage requires CUDA; stop before loading Jina")
     properties = torch.cuda.get_device_properties(0)
-    if properties.total_memory <= 8 * 1024**3:
-        raise ValueError("GPU memory must exceed 8 GiB")
-    allocation = torch.ones(1, device="cuda") + 1
-    if allocation.item() != 2:
-        raise ValueError("GPU allocation/operation failed")
     driver = subprocess.run(
-        ["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader"],
-        check=True, capture_output=True, text=True,
+        ["nvidia-smi", "--id=0", "--query-gpu=driver_version", "--format=csv,noheader"],
+        check=True, capture_output=True, text=True, timeout=15,
     ).stdout.splitlines()[0].strip()
     return {
         "python": platform.python_version(),
@@ -53,7 +54,7 @@ def preflight(repo: Path, commit: str, profile: dict, stage: str, lock: Path,
               workspace: Path, observed: dict | None = None) -> dict:
     require_sha(commit)
     reject_secrets(profile)
-    validate_profile(profile, stage, profile.get("expected", {}))
+    validate_profile(profile, stage)
     if git_output(repo, "rev-parse", "HEAD") != commit:
         raise ValueError("Checked-out commit differs from requested exact commit")
     if git_output(repo, "status", "--porcelain", "--untracked-files=all"):
@@ -74,11 +75,22 @@ def preflight(repo: Path, commit: str, profile: dict, stage: str, lock: Path,
         raise ValueError("Insufficient temporary disk")
     if sha256(lock) != profile["expected"]["lock_sha256"]:
         raise ValueError("Dependency lock hash mismatch")
-    actual = observed if observed is not None else observe_environment(profile, lock)
-    validate_profile(profile, stage, actual)
-    subprocess.run([sys.executable, "-m", "pip", "check"], check=True,
-                   capture_output=True, text=True)
-    return {"commit": commit, "dirty": False, "stage": stage, "upstream": upstream,
+    report = {"commit": commit, "dirty": False, "stage": stage, "upstream": upstream,
             "operator": profile.get("operator"),
-            "profile_hash": digest(profile), "environment": actual,
-            "environment_id": digest({"commit": commit, "fingerprint": actual})}
+            "profile_hash": digest(profile)}
+    try:
+        actual = observed if observed is not None else observe_environment(profile, lock)
+        report["environment"] = actual
+        validate_profile(profile, stage, actual)
+        if observed is None:
+            import torch
+
+            if (torch.ones(1, device="cuda") + 1).item() != 2:
+                raise ValueError("GPU allocation/operation failed")
+        subprocess.run([sys.executable, "-m", "pip", "check"], check=True,
+                       capture_output=True, text=True, timeout=120)
+    except (ValueError, OSError, RuntimeError, subprocess.SubprocessError) as error:
+        message = str(error) if type(error) is ValueError else f"Runtime measurement/check failed: {type(error).__name__}"
+        raise PreflightError(message, report) from None
+    return report | {"passed": True,
+                     "environment_id": digest({"commit": commit, "fingerprint": actual})}

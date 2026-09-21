@@ -10,7 +10,7 @@ from pathlib import Path
 from rag_cad.config import load_config
 from rag_cad.operations import artefacts
 from rag_cad.operations.paths import execution_paths, local_path
-from rag_cad.operations.preflight import preflight
+from rag_cad.operations.preflight import PreflightError, preflight
 from rag_cad.operations.provenance import canonical_json, sha256, verify_upstream, write_json
 from rag_cad.operations.smoke import FakeBackend, RealBackend, runtime_identity, smoke_a, smoke_b
 from rag_cad.operations.upstream import fetch_release, prepare_resources, validate_release
@@ -116,7 +116,12 @@ def execute(args) -> dict:
         local_path(args.output)
         return smoke_a(FakeBackend(), args.output, {"synthetic_only": True}, "fake-local",
                        atol=1e-6, rtol=1e-6)
-    profile, evidence = _gate(args)
+    try:
+        profile, evidence = _gate(args)
+    except PreflightError as error:
+        if args.command == "environment":
+            write_json(args.output, error.report)
+        raise
     if args.command == "environment":
         write_json(args.output, evidence)
         return evidence
