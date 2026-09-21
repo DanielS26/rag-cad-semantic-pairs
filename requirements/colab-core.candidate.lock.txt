@@ -56,7 +56,7 @@ ruff==0.11.13
 safetensors==0.8.0
 scikit-learn==1.6.1
 scipy==1.18.1
-sentencepiece==0.2.0
+sentencepiece==0.2.1
 sympy==1.14.0
 threadpoolctl==3.7.0
 tokenizers==0.22.2

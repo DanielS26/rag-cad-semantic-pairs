@@ -109,8 +109,10 @@ def test_install_verifies_lock_space_and_total_timeout(tmp_path, monkeypatch):
     assert python == BOOTSTRAP["environment_python"](environment.resolve())
     stages = [(command, kwargs) for command, kwargs in calls if command[0] != "git"]
     assert [item["timeout"] for command, item in stages] == [49.0, 48.0, 47.0, 46.0, 45.0]
-    assert stages[0][0] == [BOOTSTRAP["sys"].executable, "-m", "venv", str(environment.resolve())]
-    assert all(command[0] == str(python) for command, item in stages[1:])
+    system = BOOTSTRAP["sys"].executable
+    assert stages[0][0] == [system, "-m", "venv", "--without-pip", str(environment.resolve())]
+    assert stages[1][0][:5] == [system, "-m", "pip", "--python", str(python)]
+    assert all(command[0] == str(python) for command, item in stages[2:])
     monkeypatch.setattr(BOOTSTRAP["shutil"], "disk_usage", lambda path: SimpleNamespace(free=0))
     with pytest.raises(ValueError, match="disk"):
         BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True)
@@ -246,8 +248,9 @@ def test_install_failure_identifies_exact_stage_without_disclosure(
     assert len(commands) == failed_index + 1
     python = str(BOOTSTRAP["environment_python"](environment))
     expected_commands = [
-        [BOOTSTRAP["sys"].executable, "-m", "venv", str(environment)],
-        [python, "-m", "pip", "install", "--no-cache-dir", "-r", str(lock)],
+        [BOOTSTRAP["sys"].executable, "-m", "venv", "--without-pip", str(environment)],
+        [BOOTSTRAP["sys"].executable, "-m", "pip", "--python", python, "install",
+         "--no-cache-dir", "-r", str(lock)],
         [python, "-m", "pip", "install", "-e", ".", "--no-deps", "--no-build-isolation"],
         [python, "-m", "pip", "check"],
         [python, "-m", "pytest", "-m", "not gpu and not integration", "-q"],

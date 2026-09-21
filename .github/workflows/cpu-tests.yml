@@ -45,7 +45,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12.14'
+          python-version: '3.13.15'
       - name: Prepare disposable CPU runner space
         run: |
           test "$RUNNER_ENVIRONMENT" = github-hosted

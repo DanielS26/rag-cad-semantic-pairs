@@ -27,8 +27,8 @@ expected:
     faiss-cpu: '1.10.0'
     huggingface-hub: '0.34.4'
     einops: '0.8.1'
-    sentencepiece: '0.2.0'
-  lock_sha256: 4d4624e4d23591ca6471818686bdcddbb59d80c53807e622423deb9a91939f43
+    sentencepiece: '0.2.1'
+  lock_sha256: 1b270c043e4cbe273dd7c5e67b6f720bd9ec18a2b105ffcc83a7900d746f11e9
   gpu_name: null
   gpu_memory_bytes: null
   cuda: null

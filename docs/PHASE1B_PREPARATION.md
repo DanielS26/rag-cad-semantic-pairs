@@ -11,6 +11,18 @@ execution, research-data generation, decision entry, or merge occurred.
 
 ## Linux Candidate Lock
 
+Superseded on 2026-09-21 by [D-20260921-11](DECISIONS.md#d-20260921-11---re-target-the-phase-1b-candidate-environment-to-python-313):
+Colab now ships Python 3.13.15, so the candidate lock was regenerated on
+Ubuntu x86-64 / Python 3.13.15 by the same workflow
+([run 35596374112](https://github.com/DanielS26/rag-cad-semantic-pairs/actions/runs/35596374112),
+code commit `b542456cc38d3f31e6e21dc950cde3ce033cc2b9`). All 72 pins resolved
+identically except sentencepiece 0.2.0 -> 0.2.1, the first release with a
+Python 3.13 wheel. New lock SHA-256:
+`1b270c043e4cbe273dd7c5e67b6f720bd9ec18a2b105ffcc83a7900d746f11e9`. Storage
+reservations are unchanged (compressed wheels 4,265,602,104 bytes; installed
+7,891,871,567 bytes). The paragraphs below record the historical 3.12.14
+evidence and are retained for audit.
+
 The lock was generated on Ubuntu x86-64 / Python 3.12.14 using pip-tools 7.4.1,
 then installed into a fresh venv on a CPU-only GitHub runner. The full CUDA-capable
 PyTorch package and its library dependencies were installed, not run on a GPU.

@@ -82,5 +82,5 @@ def validate_profile(profile: dict, stage: str, observed: dict | None = None) ->
         raise ValueError("Measured GPU memory must exceed 8 GiB")
     if not isinstance(observed["gpu_name"], str) or not observed["gpu_name"].strip():
         raise ValueError("Missing measured GPU name")
-    if not re.fullmatch(r"3\.12\.\d+", observed["python"]):
-        raise ValueError("Candidate lock requires Python 3.12.x")
+    if not re.fullmatch(r"3\.13\.\d+", observed["python"]):
+        raise ValueError("Candidate lock requires Python 3.13.x")
