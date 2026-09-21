@@ -1161,8 +1161,8 @@ python -m rag_cad.cli compare all --config configs/experiment.yaml
 - [x] Select native Windows + private GitHub + hosted Colab + Google Drive as the working execution profile.
 - [ ] Send/record the remaining author clarification questions about representation, encoder revision, checkpoint provenance, and data metadata.
 - [ ] Decide repo_compatible versus paper_exact representation.
-- [ ] Pin the Jina model revision.
-- [ ] Pass the live Colab GPU/dependency/artefact smoke gate and freeze `colab_tested.yaml`.
+- [x] Pin the Jina model revision. (Frozen for the tested profile at ab036b02/bd55a5ec by D-20260922-12; the authors' original revision remains unconfirmed.)
+- [x] Pass the live Colab GPU/dependency/artefact smoke gate and freeze `colab_tested.yaml`. (Run A/Run B from a822b9a0, D-20260922-12; evidence in docs/PROGRESS.md.)
 - [ ] Confirm the shared Drive root, capacity, permissions, and final-run operator.
 - [ ] Confirm generator provider/model and API budget.
 - [ ] Confirm augmentation size N and split ratios with the tutor.
@@ -1214,13 +1214,13 @@ Acceptance criterion: a fresh clone can install and run the substantive CPU/fake
 
 Checklist:
 
-- [ ] Exact checked-out Git SHA matches the requested SHA.
-- [ ] Secrets do not appear in cell output, Git remotes, files, or manifests.
-- [ ] GPU VRAM is greater than 8 GiB and the allocation is recorded.
-- [ ] Official release revisions, filenames, hashes, archive paths, schemas, and checkpoint tensor shapes match the audited manifest.
-- [ ] `pip check`, CPU tests, Jina 2048-dimensional feature test, released-checkpoint score/filter test, MLP reload, FAISS retrieval, and fake RAG pass.
-- [ ] Drive publish/restart/restore hash round-trip passes.
-- [ ] A fresh runtime recreates the tested environment from committed files.
+- [x] Exact checked-out Git SHA matches the requested SHA.
+- [x] Secrets do not appear in cell output, Git remotes, files, or manifests.
+- [x] GPU VRAM is greater than 8 GiB and the allocation is recorded.
+- [x] Official release revisions, filenames, hashes, archive paths, schemas, and checkpoint tensor shapes match the audited manifest.
+- [x] `pip check`, CPU tests, Jina 2048-dimensional feature test, released-checkpoint score/filter test, MLP reload, FAISS retrieval, and fake RAG pass.
+- [x] Drive publish/restart/restore hash round-trip passes.
+- [x] A fresh runtime recreates the tested environment from committed files.
 - [ ] Estimated full feature job fits the chosen runtime/budget with resumable margins; otherwise the fallback environment is selected now.
 
 Acceptance criterion: the project has evidence that one exact commit can travel from GitHub to a fresh Colab runtime, run the smallest complete pipeline, and restore its verified output after the VM is destroyed.
@@ -1603,11 +1603,11 @@ Recommended defaults:
 - [x] Initial author response received.
 - [ ] Follow-up author clarification received/closed.
 - [ ] Representation mode frozen.
-- [ ] Jina revision frozen.
+- [x] Jina revision frozen.
 - [ ] Private GitHub project repository and collaborator access established.
 - [ ] Shared Drive root/capacity/permissions and final-run operator confirmed.
-- [ ] Fresh-runtime Colab smoke and Drive restart/restore round-trip passed.
-- [ ] Core dependency lock and tested Colab environment profile frozen.
+- [x] Fresh-runtime Colab smoke and Drive restart/restore round-trip passed.
+- [x] Core dependency lock and tested Colab environment profile frozen.
 - [ ] Generator frozen.
 - [ ] Data budget and split proportions approved.
 
@@ -1641,7 +1641,7 @@ Recommended defaults:
 - [ ] Semantic-pair pilot reviewed.
 - [ ] M1-M3 manifests validated.
 - [ ] M0 smoke run complete.
-- [ ] Pinned-Jina real GPU smoke run complete.
+- [x] Pinned-Jina real GPU smoke run complete.
 - [ ] M1-M3 three-seed training complete.
 - [ ] Offline comparison complete.
 - [ ] RAG index/cache frozen.

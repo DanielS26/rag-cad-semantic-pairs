@@ -50,3 +50,31 @@ def test_committed_smoke_approval_still_blocks_final_stages(stage):
     profile = load_config(ROOT / "configs/environments/colab_candidate.yaml")
     with pytest.raises(ValueError, match="Final stages require a tested profile"):
         validate_profile(profile, stage)
+
+def test_committed_tested_profile_is_frozen_from_both_runs():
+    import hashlib
+
+    profile = load_config(ROOT / "configs/environments/colab_tested.yaml")
+    candidate = load_config(ROOT / "configs/environments/colab_candidate.yaml")
+    tested_lock = (ROOT / "requirements/colab-core.lock.txt").read_bytes()
+    assert tested_lock == (ROOT / "requirements/colab-core.candidate.lock.txt").read_bytes()
+    assert b"\r" not in tested_lock
+    digest = hashlib.sha256(tested_lock).hexdigest()
+    assert digest == profile["expected"]["lock_sha256"] == profile["evidence"]["lock_sha256"]
+    assert profile["status"] == "tested" and profile["compute_budget_approved"] is False
+    assert profile["evidence"]["reviewed_commit"] == "a822b9a032fc3d6c27261b25c62363fc3bc88142"
+    assert all(value not in (None, "", {}) for value in profile["expected"].values())
+    assert profile["expected"]["packages"] == candidate["expected"]["packages"]
+    for key in ("encoder_revision", "encoder_code_revision", "attention", "representation",
+                "dtype", "segmenter"):
+        assert profile["expected"][key] == candidate["expected"][key]
+    assert profile["segmenter_resource"] == candidate["segmenter_resource"]
+    assert profile["tolerance"] == candidate["tolerance"]
+    for stage in ("smoke", "features", "train", "evaluate"):
+        validate_profile(profile, stage, dict(profile["expected"]))
+    drifted = dict(profile["expected"]) | {"python": "3.12.14"}
+    with pytest.raises(ValueError, match="exactly match"):
+        validate_profile(profile, "features", drifted)
+    unknown = dict(profile["expected"]) | {"gpu_name": None}
+    with pytest.raises(ValueError):
+        validate_profile(profile, "features", unknown)

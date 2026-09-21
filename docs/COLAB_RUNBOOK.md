@@ -2,15 +2,21 @@
 
 ## Current Gate
 
-The Phase 1B candidate was approved for bounded smoke testing through
-[PR #5](https://github.com/DanielS26/rag-cad-semantic-pairs/pull/5) and
-[decision D-20260921-09](DECISIONS.md#d-20260921-09---approve-bounded-phase-1b-smoke-candidate).
-It remains a candidate, not a tested/final profile. Final feature generation,
-training and evaluation remain blocked until their tested-profile gates pass.
-The notebook is source, not permission to execute it: live execution still
-requires the exact reviewed commit and separate Run A/Run B authorisation under
-D-20260921-02. Do not download Jina/CAD binaries, mount Drive, or execute smoke
-outside that authorisation. No code changes may be made or pushed from Colab.
+The Phase 1B live smoke gate passed: Run A and Run B from commit a822b9a0
+completed in two fresh NVIDIA L4 runtimes and the resulting environment is
+frozen as `configs/environments/colab_tested.yaml` with
+`requirements/colab-core.lock.txt` under
+[decision D-20260922-12](DECISIONS.md#d-20260922-12---freeze-the-tested-colab-environment-profile-from-run-a-and-run-b).
+Final feature generation, training and evaluation must use that tested profile
+and remain blocked until a bounded final-stage compute budget is approved
+(`compute_budget_approved` is false), the primary representation is chosen
+under D-20260921-05, and the data gates are complete. Any change to
+`src/rag_cad` or `scripts/bootstrap_colab.py` after a822b9a0 invalidates the
+tested profile until the gate is rerun. For the smoke gate, the standing
+instruction applies: Daniel Song setting the two flags and running the runner
+from a named commit is the authorisation for that commit. No code changes may
+be made or pushed from Colab. The candidate profile remains for further
+bounded smoke or conformance work.
 
 ## Before Phase 1B
 
