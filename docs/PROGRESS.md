@@ -395,3 +395,8 @@ Historical audit claims are distinguished from checks executed in this session.
 - The updated thin runner must be used from the eventual reviewed merge SHA
   with its newly verified bootstrap hash and fresh execution authorisation.
   Existing historical hashes are not rewritten; no automatic retry or merge.
+- Initial Windows CI run 35571731165 failed an existing timeout-bound assertion
+  that used the live runner clock (171 other tests passed). Replaced that test's
+  clock with deterministic readings and asserted the exact remaining timeout
+  sequence. Production timeouts and budget code are unchanged; CI is rerun on
+  the test-only correction. This is not a fix for the failed Colab execution.

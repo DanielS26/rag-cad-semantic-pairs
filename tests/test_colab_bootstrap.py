@@ -101,9 +101,11 @@ def test_install_verifies_lock_space_and_total_timeout(tmp_path, monkeypatch):
 
     monkeypatch.setattr(BOOTSTRAP["subprocess"], "run", run)
     monkeypatch.setattr(BOOTSTRAP["shutil"], "disk_usage", lambda path: SimpleNamespace(free=100))
+    clock = iter([100.0, 101.0, 102.0, 103.0, 104.0])
+    monkeypatch.setattr(BOOTSTRAP["time"], "monotonic", lambda: next(clock))
     BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True, timeout=50)
     installers = [kwargs for command, kwargs in calls if "pip" in command or "pytest" in command]
-    assert len(installers) == 4 and all(0 < item["timeout"] <= 50 for item in installers)
+    assert [item["timeout"] for item in installers] == [49.0, 48.0, 47.0, 46.0]
     monkeypatch.setattr(BOOTSTRAP["shutil"], "disk_usage", lambda path: SimpleNamespace(free=0))
     with pytest.raises(ValueError, match="disk"):
         BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True)
