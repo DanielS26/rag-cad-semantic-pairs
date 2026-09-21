@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 
-from rag_cad.cad.model_bundle import offline_execution, prepare_bundle
+from rag_cad.cad.model_bundle import offline_execution, prepare_bundle, stage_remote_code
 
 
 @dataclass
@@ -69,6 +69,8 @@ class JinaEncoder:
 
         self.torch = torch
         self.max_token_length = 0
+        stage_remote_code(bundle, weights_revision, code_revision)
+        progress("remote_code_staged")
         with offline_execution():
             self.tokenizer = AutoTokenizer.from_pretrained(
                 str(bundle.resolve()), local_files_only=True, trust_remote_code=False,

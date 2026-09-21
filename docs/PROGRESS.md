@@ -587,3 +587,45 @@ Historical audit claims are distinguished from checks executed in this session.
   --check passed. No Colab, GPU, Drive, secret, model/data download or notebook
   execution occurred in this pass. Execution from the resulting merge requires
   its bootstrap hash and fresh authorisation.
+
+## 2026-09-22 - Run A Attempt From 39d1bab9 Located The Failure; Remote-Code Staging
+
+- Standing instruction recorded: for the bounded smoke gate (Run A and Run B),
+  Daniel Song setting PHASE1B_AUTHORISED and ALLOW_NETWORK to true and running
+  the runner from a named commit is the execution authorisation for that
+  commit. Explicit written authorisation remains required for final feature,
+  training and RAG stages. Reported usage for the 44dce5f3 and 75ed9c00
+  attempts together: 10 minutes and 0.3 units, recorded as 600 seconds and 0.3
+  units; the carry-forward before the 39d1bab9 attempt was 2,820 seconds and
+  0.92 units.
+- Run A from 39d1bab91a5e4e613a723c3c77f4dad900a93532 (bootstrap hash
+  59f196ff...) on an NVIDIA L4 passed install, preflight and live CAD release
+  validation again. The new diagnostics reported progress
+  `["resources_validated", "segmenter_checked", "model_bundle_ready",
+  "tokenizer_loaded"]` and failure `{"command": "smoke", "action": "run-a",
+  "exception_type": "FileNotFoundError"}`: the Jina bundle downloaded and
+  verified, the project tokenizer loaded, and AutoModel.from_pretrained on the
+  local bundle failed. Usage for this attempt is to be added when reported.
+- Cause, confirmed from transformers 4.57.1 source
+  (dynamic_module_utils.get_cached_module_file and get_class_in_module): for a
+  local directory, transformers copies a remote-code file plus only its direct
+  relative imports into its module cache, then hashes every recursive relative
+  import there. The pinned code has two levels (modeling_lora imports
+  modeling_xlm_roberta, which imports rotary, block, embedding, mha, mlp and
+  xlm_padding), so the second level is absent and the hash step opens a missing
+  file. Hub loading recurses and is unaffected, which is why upstream CAD's
+  moving-revision load never met this.
+- Branch fix/phase1b-remote-code-staging from 39d1bab9 adds
+  stage_remote_code: after the bundle's revision and file-hash manifest are
+  re-verified, the ten named code files are copied into transformers' own
+  dynamic-module cache directory for the bundle (using the library's cache
+  location, module namespace and name sanitisation) before loading. A new
+  progress step `remote_code_staged` precedes `tokenizer_loaded`. No pin,
+  lock, profile, notebook, bootstrap, argument or scientific setting changed.
+- Local checks from the rag-cad-smoke-approval worktree with the Windows Python
+  3.12.10 dev interpreter and this worktree's source: 184 CPU/fake tests passed
+  (new: every verified code file staged into a fake dynamic-module cache with
+  the library's hyphen sanitisation, tampered or wrong-revision bundles refused
+  before staging, encoder progress order); Ruff, pip check, upstream audit and
+  git diff --check passed. No Colab, GPU, Drive, secret, model/data download or
+  notebook execution occurred in this pass.
