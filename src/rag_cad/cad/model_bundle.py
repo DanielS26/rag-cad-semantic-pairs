@@ -77,6 +77,28 @@ def _check_bundle(root: Path, weights_revision: str, code_revision: str) -> dict
     return manifest
 
 
+def stage_remote_code(root: Path, weights_revision: str, code_revision: str) -> Path:
+    """Copy every verified code file into transformers' dynamic-module cache for this bundle.
+
+    From a local directory, transformers copies a remote-code file plus only its direct
+    relative imports, then hashes all recursive relative imports; the pinned code has
+    two levels of relative imports, so loading fails with FileNotFoundError unless every
+    file is already present. Only the hash-verified bundle code files are staged.
+    """
+    import importlib
+
+    _check_bundle(local_path(root), weights_revision, code_revision)
+    dynamic = importlib.import_module("transformers.dynamic_module_utils")
+    sanitize = getattr(dynamic, "_sanitize_module_name", lambda name: name)
+    relative = Path(dynamic.TRANSFORMERS_DYNAMIC_MODULE_NAME) / sanitize(root.name)
+    dynamic.create_dynamic_module(relative)
+    target = local_path(Path(dynamic.HF_MODULES_CACHE) / relative)
+    for name in CODE_FILES:
+        shutil.copyfile(root / name, target / name)
+    importlib.invalidate_caches()
+    return target
+
+
 def prepare_bundle(root: Path, weights_revision: str, code_revision: str, *,
                    allow_network: bool = False, download=None) -> dict:
     local_path(root)

@@ -102,7 +102,11 @@ there is no full-snapshot download. Existing bundles must verify their revision
 and file-hash manifest. Without network permission, a missing bundle fails closed.
 The original configs are retained; derived configs remove remote repository
 prefixes from `auto_map` and remove `_name_or_path`. Model and internal tokenizer
-lookups therefore use the same verified local directory. Loading/inference uses
+lookups therefore use the same verified local directory. Before loading, the ten
+verified code files are also staged into transformers' dynamic-module cache
+directory for the bundle, because transformers copies only one level of relative
+imports from a local directory and the pinned code has two; without staging the
+load fails with FileNotFoundError at the model-loading step. Loading/inference uses
 local-only settings and a network-denial context, with native attention and
 float32 fixed explicitly. This is defence in depth, not a sandbox: the exact code
 still requires review and explicit remote-code permission before execution.

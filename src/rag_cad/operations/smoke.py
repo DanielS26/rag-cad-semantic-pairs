@@ -23,8 +23,8 @@ SENTENCES = ["Synthetic context.", "A synthetic target.", "Synthetic conclusion.
 # Fixed-vocabulary progress steps written to PROGRESS_PATH so a sanitized failure can be
 # located without exposing command output, paths, or exception text.
 STEPS = (
-    "resources_validated", "segmenter_checked", "model_bundle_ready", "tokenizer_loaded",
-    "model_loaded", "reference_checkpoint_loaded", "output_created", "features_encoded",
+    "resources_validated", "segmenter_checked", "model_bundle_ready", "remote_code_staged",
+    "tokenizer_loaded", "model_loaded", "reference_checkpoint_loaded", "output_created", "features_encoded",
     "features_repeated", "determinism_checked", "reference_scored", "trained_saved",
     "reload_checked", "retrieval_checked", "rag_swap_checked", "report_written",
     "run_a_restored_read", "run_b_reload_checked", "run_b_compared",
