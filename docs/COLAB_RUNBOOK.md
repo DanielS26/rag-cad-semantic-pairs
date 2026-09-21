@@ -2,12 +2,15 @@
 
 ## Current Gate
 
-Phase 1A and its correction were merged through 45265a3b025aca50b1f13311efbd68aea9580d08. The bounded
-CPU-only corrective pass is documented in [the corrective review](PHASE1A_CORRECTIVE_REVIEW.md).
-The notebook is source, not permission to execute
-it. The candidate template is intentionally unapproved and unresolved. Do not
-download Jina/CAD binaries, mount Drive, or execute a real smoke until separately
-authorised under D-20260921-02. No code changes may be made or pushed from Colab.
+The Phase 1B candidate was approved for bounded smoke testing through
+[PR #5](https://github.com/DanielS26/rag-cad-semantic-pairs/pull/5) and
+[decision D-20260921-09](DECISIONS.md#d-20260921-09---approve-bounded-phase-1b-smoke-candidate).
+It remains a candidate, not a tested/final profile. Final feature generation,
+training and evaluation remain blocked until their tested-profile gates pass.
+The notebook is source, not permission to execute it: live execution still
+requires the exact reviewed commit and separate Run A/Run B authorisation under
+D-20260921-02. Do not download Jina/CAD binaries, mount Drive, or execute smoke
+outside that authorisation. No code changes may be made or pushed from Colab.
 
 ## Before Phase 1B
 
@@ -146,13 +149,37 @@ lowest displayed-rate available NVIDIA GPU satisfying the gate, preferring T4
 when cheapest. Pro does not guarantee a GPU type. No premium allocation or retry
 is implied by the subscription.
 
-Enter actual cumulative time/units already consumed across both runs (including
-time connected before the input cell) and Colab's displayed units/hour. The
-launcher calculates conservative remaining command time and rejects exhausted
-or invalid values. Recheck actual usage between stages and before Run B; update
-the observations if rates change. Command timeouts cannot stop billing:
-**the operator must disconnect and delete the runtime on completion, failure,
-or reaching either cap**. No cloud execution is authorised by this preparation.
+Use this operator cadence; ordinary notebook cells do not require repeated manual
+budget checks:
+
+1. Prepare and verify the entire input cell before connecting Colab. Leave live
+   budget values ready to fill from the starting snapshot; do not invent them.
+2. Connect a fresh runtime only when ready to execute the authorised run.
+3. Take one starting snapshot immediately before execution: cumulative connected
+   time from earlier Phase 1B sessions, cumulative compute units consumed, and
+   the current displayed units/hour. Include any time/units already consumed in
+   the fresh runtime before execution, so connected time is not omitted.
+4. Insert those values and run the input and checkout cells back-to-back.
+5. Once the checkout cell sets `STARTED = time.monotonic()`, rely on the
+   notebook's automatic remaining-budget calculation. It continues to account
+   for elapsed connected time between cells and rejects exhausted/invalid
+   budgets. Do not reset `STARTED` or repeatedly replace the starting cumulative
+   values with totals that already include that elapsed time.
+6. Take another manual reading only after success, immediately after a failure,
+   before fresh-runtime Run B, if Colab's displayed rate changes, or if either
+   cap is genuinely close. Reconcile actual usage at those events; a changed
+   rate must not be ignored or silently treated as the old rate. Stop before
+   further work if the remaining allowance cannot be established conservatively.
+7. Disconnect and delete the runtime immediately after completion or failure,
+   or on reaching either cap. Command timeouts cannot stop Colab billing.
+8. Never leave a paid GPU runtime connected while waiting for agent discussion.
+9. Prefer Colab's actual balance difference where available; conservative rounding
+   is sufficient when estimating usage. Do not interpret "between stages" as
+   requiring minute-by-minute or cell-by-cell stopwatch updates.
+
+The shared hard limits remain enforced by the existing budget calculation and
+operator disconnect obligations; this cadence does not reset, extend, or weaken
+either cap. It does not authorise execution, automatic retries, or Run B.
 
 Runtime/Drive reservations are calculated from Ubuntu package evidence and
 named-file sizes, without downloading Jina weights. Jina weights remain local

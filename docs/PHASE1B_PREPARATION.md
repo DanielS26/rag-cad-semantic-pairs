@@ -90,6 +90,11 @@ unmounted during model loading/inference. Jina weight publication is refused.
 
 ## Approvals And Manual Actions
 
+Operational clarification: this document preserves historical preparation
+evidence. The current live operator cadence is governed by
+[Shared Budget And Storage in the Colab runbook](COLAB_RUNBOOK.md#shared-budget-and-storage),
+not the historical "between stages" wording below; the shared hard caps are unchanged.
+
 The researcher approved later-smoke noncommercial academic use with attribution
 and no Jina-weight redistribution; model revision
 `ab036b023d30b4d1138c4c3bfa9f0c445ab455d6`; code revision
