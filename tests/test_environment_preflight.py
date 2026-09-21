@@ -163,6 +163,7 @@ def discovery_gate(profile, tmp_path, monkeypatch):
     monkeypatch.setattr(operations, "git_output", lambda repo, *args: "a" * 40 if args[0] == "rev-parse" else "")
     monkeypatch.setattr(operations, "verify_upstream", lambda repo: {"source_unchanged": True})
     monkeypatch.setattr(operations, "observe_environment", lambda *args: actual)
+    monkeypatch.setattr(operations, "verify_lock_packages", lambda lock: {"fake": "1.0"})
     monkeypatch.setattr(operations.subprocess, "run", lambda *args, **kwargs: None)
 
     class Tensor:
@@ -228,3 +229,68 @@ def test_tested_profiles_never_discover_unknowns(profile):
     for stage in ("smoke", "features", "train", "evaluate"):
         with pytest.raises(ValueError, match="Unresolved"):
             validate_profile(profile, stage, actual)
+
+
+def test_observer_records_device_zero_and_rejects_no_cuda_or_driver(profile, tmp_path, monkeypatch):
+    import importlib
+    import sys
+    from types import SimpleNamespace
+
+    operations = importlib.import_module("rag_cad.operations.preflight")
+    lock = tmp_path / "lock"
+    lock.write_text("fake==1", encoding="utf-8")
+    cuda = SimpleNamespace(is_available=lambda: True,
+                           get_device_properties=lambda index: SimpleNamespace(name="NVIDIA synthetic", total_memory=16 * 1024**3))
+    monkeypatch.setitem(sys.modules, "torch", SimpleNamespace(cuda=cuda, version=SimpleNamespace(cuda="12.8")))
+    monkeypatch.setattr(operations.importlib.metadata, "version", lambda name: "synthetic-version")
+    calls = []
+
+    def command(args, **kwargs):
+        calls.append(args)
+        return SimpleNamespace(stdout="synthetic-driver\n")
+
+    monkeypatch.setattr(operations.subprocess, "run", command)
+    observed = operations.observe_environment(profile, lock)
+    assert observed["gpu_memory_bytes"] == 16 * 1024**3 and observed["cuda"] == "12.8"
+    assert "--id=0" in calls[0]
+    monkeypatch.setattr(operations.subprocess, "run", lambda *args, **kwargs: SimpleNamespace(stdout=""))
+    with pytest.raises(ValueError, match="driver"):
+        operations.observe_environment(profile, lock)
+    cuda.is_available = lambda: False
+    with pytest.raises(ValueError, match="CUDA"):
+        operations.observe_environment(profile, lock)
+
+
+def test_complete_lock_versions_checked(tmp_path, monkeypatch):
+    import importlib
+
+    operations = importlib.import_module("rag_cad.operations.preflight")
+    lock = tmp_path / "candidate.lock.txt"
+    lock.write_text("fake==1.0\n", encoding="utf-8")
+    monkeypatch.setattr(operations.importlib.metadata, "version", lambda name: "1.0")
+    assert operations.verify_lock_packages(lock) == {"fake": "1.0"}
+    monkeypatch.setattr(operations.importlib.metadata, "version", lambda name: "2.0")
+    with pytest.raises(ValueError, match="differs"):
+        operations.verify_lock_packages(lock)
+    for text in ("fake>=1.0", "", "fake==1.0\nfake==1.0\n"):
+        lock.write_text(text, encoding="utf-8")
+        with pytest.raises(ValueError):
+            operations.verify_lock_packages(lock)
+
+
+def test_missing_locked_package_and_insufficient_disk_fail(discovery_gate, monkeypatch):
+    import importlib.metadata
+    from types import SimpleNamespace
+
+    operations, profile, actual, lock, work = discovery_gate
+
+    def missing(path):
+        raise importlib.metadata.PackageNotFoundError("synthetic")
+
+    monkeypatch.setattr(operations, "verify_lock_packages", missing)
+    with pytest.raises(operations.PreflightError) as error:
+        operations.preflight(work, "a" * 40, profile, "smoke", lock, work)
+    assert error.value.report["environment"] == actual
+    monkeypatch.setattr(operations.shutil, "disk_usage", lambda path: SimpleNamespace(free=0))
+    with pytest.raises(ValueError, match="disk"):
+        operations.preflight(work, "a" * 40, profile, "smoke", lock, work)

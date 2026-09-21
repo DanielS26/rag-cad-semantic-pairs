@@ -2,7 +2,7 @@
 
 ## Current Gate
 
-Phase 1A was merged at 7848aff703ed0af5fc4a851a86d18f32dff525e9. The bounded
+Phase 1A and its correction were merged through 45265a3b025aca50b1f13311efbd68aea9580d08. The bounded
 CPU-only corrective pass is documented in [the corrective review](PHASE1A_CORRECTIVE_REVIEW.md).
 The notebook is source, not permission to execute
 it. The candidate template is intentionally unapproved and unresolved. Do not
@@ -19,12 +19,18 @@ authorised under D-20260921-02. No code changes may be made or pushed from Colab
    segmenter resource revision/hash, and numeric tolerances. The provisional
    `requirements/colab-core.in` is not an approved lock. Its generator is absent
    intentionally because Phase 1B uses a fake generator.
-3. Produce and review `requirements/colab-core.candidate.lock.txt` in a separately
-   authorised environment-preparation step. Do not relabel a Windows dev lock as
-   a Colab lock. If local CPU implementation is missing, request bounded
-   corrective authorisation before proceeding, as D-20260921-02 requires.
-4. Populate and explicitly approve the candidate profile. Its `expected` mapping
-   must match the runtime exactly; `lock_sha256` identifies the committed lock.
+3. Review the Ubuntu-generated `requirements/colab-core.candidate.lock.txt` and
+   its CPU install/test and storage evidence. This is not a Windows dev lock or
+   evidence that Colab/real-model execution has passed.
+4. Explicitly approve the overall candidate before execution. Smoke/conformance
+   may discover null Python patch, GPU name/VRAM, CUDA, and driver fields.
+   Measurements must be complete; CUDA must be available, VRAM strictly greater
+   than 8 GiB, and Python must be 3.12.x. Non-null expectations must match.
+   Packages, lock, model/code pins, dtype, attention and segmenter are never
+   inferred or relaxed. Failed measurement validation records failure and stops
+   before models. Success records the measured fingerprint without editing the
+   candidate. Final stages require tested status, no unknowns, and exact match.
+   `lock_sha256` identifies the committed lock.
    `proposal_only` must cease to be true only after explicit approval. Network,
    remote-code execution, licence use, and compute budget need their own review;
    changing one approval flag does not grant the others. `segmenter` is the
@@ -46,15 +52,21 @@ authorised under D-20260921-02. No code changes may be made or pushed from Colab
 ## Notebook Sequence
 
 The output-cleared runner accepts an exact commit, bootstrap hash, approved
-profile/lock paths, run ID, stage, and optional input manifests. It verifies the
-downloaded bootstrap bytes before executing them. The helper uses temporary
-askpass credentials, clones, detaches at the exact commit, checks upstream
-ancestry, and removes the token from its child environment.
+profile/lock paths, run ID, stage, and optional input manifests. The clone cell
+uses the token only for git clone, never an API download of the bootstrap.
+It clears the temporary environment and removes askpass before verifying the
+exact checkout and clean remote. It then hashes and executes the local helper.
 
 Installation, CPU tests, and preflight run before the explicit Drive mount cell.
 Scientific commands always run in new Python subprocesses, so the notebook
 kernel never holds imported ML binaries across installation. A preflight failure
 blocks mounting and execution. Work happens under the temporary workspace.
+
+Drive mounts only for required input restoration, then unmounts in finally before
+model loading. Run B uses a local verified input directory and separate receipt
+(`--destination` and `--receipt`), never an active Drive input. The model cell
+refuses execution while Drive is mounted. Publication remounts only for copying
+and verification and unmounts in finally. Jina weight files cannot be published.
 
 For first acquisition, explicitly approve network use. Only four named CAD files
 are downloaded at immutable revisions and verified before parsing/loading.
@@ -105,6 +117,8 @@ can demonstrate that action.
 Start Run B in a fresh hosted runtime with the same reviewed commit/environment.
 Restore the verified Run A bundle and compare its saved checkpoint predictions.
 The command rejects the same runtime identity and mismatched provenance.
+Run B must reproduce Run A's observed environment, even when both began with
+unknown candidate runtime fields.
 Publish Run B evidence under a new run ID. Neither command automatically changes
 a candidate to tested. Only after all Run A/B checks, researcher review, and a
 committed resulting lock/profile may `status: tested` be used.
@@ -123,3 +137,24 @@ Use `python -m rag_cad.cli --help` and the subcommand's `--help`. Commands are
 relative to the repository working directory. All real smoke commands require
 explicit execution flags and approved inputs; no final-training CLI is offered
 in Phase 1A.
+
+## Shared Budget And Storage
+
+The researcher approved at most **20 compute units or 10,800 connected seconds
+across Run A plus Run B**, whichever occurs first, not per run. Select the
+lowest displayed-rate available NVIDIA GPU satisfying the gate, preferring T4
+when cheapest. Pro does not guarantee a GPU type. No premium allocation or retry
+is implied by the subscription.
+
+Enter actual cumulative time/units already consumed across both runs (including
+time connected before the input cell) and Colab's displayed units/hour. The
+launcher calculates conservative remaining command time and rejects exhausted
+or invalid values. Recheck actual usage between stages and before Run B; update
+the observations if rates change. Command timeouts cannot stop billing:
+**the operator must disconnect and delete the runtime on completion, failure,
+or reaching either cap**. No cloud execution is authorised by this preparation.
+
+Runtime/Drive reservations are calculated from Ubuntu package evidence and
+named-file sizes, without downloading Jina weights. Jina weights remain local
+and are not redistributed. See the preparation evidence for byte counts and
+safety margins. Drive capacity/access must still be confirmed manually.

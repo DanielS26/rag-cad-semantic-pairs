@@ -2,6 +2,7 @@
 
 import importlib.metadata
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -27,16 +28,36 @@ class PreflightError(ValueError):
         self.report = report | {"passed": False, "failure": message}
 
 
+def verify_lock_packages(lock: Path) -> dict:
+    versions = {}
+    for line in lock.read_text(encoding="utf-8").splitlines():
+        if not line.strip() or line.startswith("#"):
+            continue
+        match = re.fullmatch(r"([A-Za-z0-9_.-]+)==([A-Za-z0-9_.+!-]+)", line)
+        if not match or match[1] in versions:
+            raise ValueError("Candidate lock must contain unique exact package pins")
+        actual = importlib.metadata.version(match[1])
+        if actual != match[2]:
+            raise ValueError(f"Installed package differs from candidate lock: {match[1]}")
+        versions[match[1]] = actual
+    if not versions:
+        raise ValueError("Empty candidate dependency lock")
+    return versions
+
+
 def observe_environment(profile: dict, lock: Path) -> dict:
     import torch
 
     if not torch.cuda.is_available():
         raise ValueError("GPU stage requires CUDA; stop before loading Jina")
     properties = torch.cuda.get_device_properties(0)
-    driver = subprocess.run(
+    driver_lines = subprocess.run(
         ["nvidia-smi", "--id=0", "--query-gpu=driver_version", "--format=csv,noheader"],
         check=True, capture_output=True, text=True, timeout=15,
-    ).stdout.splitlines()[0].strip()
+    ).stdout.splitlines()
+    if not driver_lines or not driver_lines[0].strip():
+        raise ValueError("Missing measured NVIDIA driver")
+    driver = driver_lines[0].strip()
     return {
         "python": platform.python_version(),
         "packages": {name: importlib.metadata.version(name) for name in PACKAGES},
@@ -83,13 +104,15 @@ def preflight(repo: Path, commit: str, profile: dict, stage: str, lock: Path,
         report["environment"] = actual
         validate_profile(profile, stage, actual)
         if observed is None:
+            report["locked_packages"] = verify_lock_packages(lock)
             import torch
 
             if (torch.ones(1, device="cuda") + 1).item() != 2:
                 raise ValueError("GPU allocation/operation failed")
         subprocess.run([sys.executable, "-m", "pip", "check"], check=True,
                        capture_output=True, text=True, timeout=120)
-    except (ValueError, OSError, RuntimeError, subprocess.SubprocessError) as error:
+    except (ValueError, OSError, RuntimeError, importlib.metadata.PackageNotFoundError,
+            subprocess.SubprocessError) as error:
         message = str(error) if type(error) is ValueError else f"Runtime measurement/check failed: {type(error).__name__}"
         raise PreflightError(message, report) from None
     return report | {"passed": True,

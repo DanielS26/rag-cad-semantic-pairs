@@ -1,14 +1,23 @@
 status: candidate
 approved: false
 approved_by: null
-network_approved: false
-remote_code_approved: false
+network_approved: true
+remote_code_approved: true
 proposal_only: true
 operator: Daniel Song
-compute_budget_approved: false
-minimum_free_bytes: 21474836480
+compute_budget_approved: true
+licence_scope: noncommercial_academic_with_attribution_no_jina_weight_redistribution
+smoke_budget:
+  maximum_compute_units_total: 20
+  maximum_connected_seconds_total: 10800
+  scope: combined_run_a_and_run_b
+  gpu_selection: lowest_displayed_cost_available_nvidia_gpu_above_8_gib
+  operator_disconnect_required: true
+minimum_free_bytes: 7516192768
+minimum_free_before_install_bytes: 24696061952
+minimum_drive_free_bytes: 134217728
 expected:
-  python: '3.12.14'
+  python: null
   packages:
     torch: '2.10.0'
     transformers: '4.57.1'
@@ -19,7 +28,7 @@ expected:
     huggingface-hub: '0.34.4'
     einops: '0.8.1'
     sentencepiece: '0.2.0'
-  lock_sha256: null
+  lock_sha256: 4d4624e4d23591ca6471818686bdcddbb59d80c53807e622423deb9a91939f43
   gpu_name: null
   gpu_memory_bytes: null
   cuda: null
@@ -29,7 +38,7 @@ expected:
   attention: native
   representation: repo_compatible
   dtype: float32
-  segmenter: null
+  segmenter: 806d4d514c86ff1fed04055fb1dc030208a262a2d9952cbdafe1ce1344adcd3a
 segmenter_resource:
   revision: 550b6625bcef1f2abff2ff770a5a0d272c9c6b2a
   sha256: e57f64187974277726a3417ca6f181ec5403676c717672eef6a748a7b20e0106

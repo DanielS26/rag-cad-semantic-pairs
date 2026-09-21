@@ -4,8 +4,11 @@ The notebook verifies this file's SHA-256 against the operator's reviewed value.
 No scientific logic or persistent credentials belong in this helper.
 """
 
+import hashlib
+import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -82,6 +85,11 @@ def install_and_test(checkout: Path, repo_url: str, commit: str, lock_relative: 
     lock = (checkout / lock_relative).resolve()
     if not lock.is_relative_to(checkout.resolve()) or not lock.name.endswith(".lock.txt") or not lock.is_file():
         raise ValueError("A reviewed committed dependency lock is required")
+    evidence = json.loads((checkout / "configs/environments/colab_candidate_cpu_evidence.json").read_text(encoding="utf-8"))
+    if hashlib.sha256(lock.read_bytes()).hexdigest() != evidence["lock_sha256"]:
+        raise ValueError("Candidate lock differs from Ubuntu CPU evidence")
+    if shutil.disk_usage(checkout).free < evidence["storage"]["runtime_free_before_install_bytes"]:
+        raise ValueError("Insufficient disk for locked installation and smoke working space")
     deadline = time.monotonic() + min(timeout, 10800)
     commands = [
         [sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", str(lock)],

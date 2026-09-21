@@ -79,3 +79,34 @@ def test_combined_budget_uses_first_limit_and_rejects_invalid_values(monkeypatch
                  (100, -1, 0, 1), (100, 0, float("nan"), 1)):
         with pytest.raises(ValueError):
             remaining(*args)
+
+
+def test_install_verifies_lock_space_and_total_timeout(tmp_path, monkeypatch):
+    import hashlib
+    import json
+
+    url, commit = "https://github.com/team/repo.git", "a" * 40
+    lock = tmp_path / "candidate.lock.txt"
+    lock.write_text("synthetic==1.0\n", encoding="utf-8")
+    evidence_path = tmp_path / "configs/environments/colab_candidate_cpu_evidence.json"
+    evidence_path.parent.mkdir(parents=True)
+    evidence_path.write_text(json.dumps({"lock_sha256": hashlib.sha256(lock.read_bytes()).hexdigest(),
+                                          "storage": {"runtime_free_before_install_bytes": 10}}))
+    calls = []
+
+    def run(command, **kwargs):
+        calls.append((command, kwargs))
+        output = commit if "rev-parse" in command else url if "remote" in command else ""
+        return SimpleNamespace(returncode=0, stdout=output, stderr="")
+
+    monkeypatch.setattr(BOOTSTRAP["subprocess"], "run", run)
+    monkeypatch.setattr(BOOTSTRAP["shutil"], "disk_usage", lambda path: SimpleNamespace(free=100))
+    BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True, timeout=50)
+    installers = [kwargs for command, kwargs in calls if "pip" in command or "pytest" in command]
+    assert len(installers) == 4 and all(0 < item["timeout"] <= 50 for item in installers)
+    monkeypatch.setattr(BOOTSTRAP["shutil"], "disk_usage", lambda path: SimpleNamespace(free=0))
+    with pytest.raises(ValueError, match="disk"):
+        BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True)
+    lock.write_text("tampered")
+    with pytest.raises(ValueError, match="differs"):
+        BOOTSTRAP["install_and_test"](tmp_path, url, commit, lock.name, allow_network=True)

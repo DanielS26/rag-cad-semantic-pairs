@@ -274,3 +274,74 @@ Historical audit claims are distinguished from checks executed in this session.
   merge only after review and same-commit CI. NO-GO for Phase 1B execution until
   candidate lock, observed runtime fingerprint, separate approvals, Drive access/
   capacity confirmation, and bounded execution authorisation are complete.
+
+## 2026-09-21 - CPU-Only Phase 1B Preparation
+
+- PR #3 merged at 45265a3b025aca50b1f13311efbd68aea9580d08. Fetched origin and
+  verified that exact commit and CAD ancestry. Created phase1b-preparation from
+  a clean linked worktree at that commit, under ../rag-cad-phase1b-prep.
+- The original working notebook differs only in top-level kernel metadata:
+  kernelspec replaced language_info. Cells are unchanged. The original notebook
+  and branch were left untouched; no reset, stash, recreation, or overwrite.
+- The researcher authorised Ubuntu CPU dependency resolution/install/testing and
+  Windows/Ubuntu CI, a discovery-gate correction, secure ordering, storage
+  estimation, and a PR, but not Phase 1B execution or merge.
+- Later-smoke permissions were explicitly supplied for the two named Jina pins,
+  noncommercial academic use with attribution and no weight redistribution,
+  named downloads, and a combined cap of 20 compute units or 10,800 connected
+  seconds, whichever is reached first. Recorded these limits in candidate config;
+  overall profile approval and notebook PHASE1B_AUTHORISED remain false.
+  No decision entries were written.
+- Initial preparation passed 87 CPU tests and Ruff and was published as 9195339
+  in draft [PR #4](https://github.com/DanielS26/rag-cad-semantic-pairs/pull/4).
+- First Ubuntu lock job 35552532635 resolved dependencies but ran out of disk
+  while installing PyTorch's CUDA library wheels on a CPU runner. No GPU was
+  used and no model/data artefact was downloaded. The next job frees unused
+  Android/.NET/GHC tools only on the disposable GitHub-hosted runner and purges
+  the resolver cache. Candidate ML versions are unchanged.
+- Commit 98d64db adds secure clone-only token handling, post-transfer Drive
+  unmounts, local restored-input receipts, and shared-budget timeouts. 100 local
+  CPU tests and Ruff passed before publication. These are fake tests, not live
+  Colab evidence. Candidate-lock installation verification remains in progress.
+
+### Candidate Linux Lock Verified
+
+- Ubuntu CPU generation/install/test run
+  https://github.com/DanielS26/rag-cad-semantic-pairs/actions/runs/35552867275
+  succeeded at commit 98d64db763b3920f9686776c3a27b2a1c46cca82.
+- Retrieved only the generated lock, package install report, and JSON evidence.
+  The lock SHA-256 is
+  4d4624e4d23591ca6471818686bdcddbb59d80c53807e622423deb9a91939f43.
+  The committed lock exactly matches those bytes; .gitattributes enforces LF.
+- Measured dependencies: 4,263,907,370 compressed wheel bytes and 7,893,686,879
+  installed bytes. Calculated reservations: 23 GiB free before installation,
+  7 GiB afterward, and 128 MiB Drive quota for both smoke outputs/partial copies.
+  No model weights were downloaded to obtain these estimates.
+- Candidate config now binds the lock hash and segmenter fingerprint. Only
+  runtime-discovery fields remain unknown; full profile execution stays blocked
+  pending overall approval. No tested profile was created or decision entry added.
+- The original notebook kernel metadata edit remains untouched in the original
+  checkout. The preparation runner is independently edited and output-cleared.
+- See [Phase 1B preparation evidence](PHASE1B_PREPARATION.md) for storage arithmetic,
+  approval boundaries, CI provenance, and operator actions. Final same-commit
+  Windows/Ubuntu and full Linux candidate CPU CI are required before review close-out.
+
+### Local Preparation Acceptance
+
+- Final preparation suite: `python -m pytest tests -m "not gpu and not integration" -q`
+  passed **105 tests** using the existing Windows Python 3.12.10 dev interpreter
+  with this worktree's source path. This includes runtime-discovery success,
+  <=8 GiB, absent CUDA/driver, failed allocation, package drift/missing pins,
+  dependency check failure, disk shortage, unapproved/final profiles, restore
+  receipt tampering, no weight publication, token cleanup, and combined budgets.
+- `python -m ruff check .`: all checks passed.
+- `python -m pip check`: no broken requirements found.
+- `python -m rag_cad.cli audit upstream`: pinned CAD ancestor and
+  source_unchanged true. No upstream detector or vendored benchmark edits.
+- Notebook schema, all code-cell syntax, language/identity metadata and cleared
+  outputs pass static tests. No cell, Colab runtime, GPU or remote code executed.
+- `git diff --check` and documentation links pass. docs/DECISIONS.md is unchanged
+  against the authorised base; no decision entries were written.
+- Final review/merge and separate Phase 1B execution remain pending. Same-commit
+  Windows/Ubuntu/full-candidate CI outcome will be reported on PR #4 and in the
+  session close-out. Candidate CPU success does not freeze a tested environment.
