@@ -44,3 +44,35 @@ def test_notebook_permission_guards_stop_without_secret_access():
     with pytest.raises(RuntimeError, match="network permission|bootstrap-network"):
         exec(compile(code[1], "<guard-only-test>", "exec"),
              {"PHASE1B_AUTHORISED": True, "RUN_ID": "synthetic", "ALLOW_NETWORK": False})
+
+
+def test_notebook_process_boundaries_use_fixed_sanitized_stages():
+    root = Path(__file__).resolve().parents[1]
+    book = nbformat.read(root / "notebooks/COMPSCI764_Colab_Runner.ipynb", as_version=4)
+    code = [cell.source for cell in book.cells if cell.cell_type == "code"]
+    stages = []
+    for source in code[2:]:
+        tree = ast.parse(source)
+        calls = sorted((node for node in ast.walk(tree) if isinstance(node, ast.Call)),
+                       key=lambda node: (node.lineno, node.col_offset))
+        for node in calls:
+            assert not (isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name)
+                        and node.func.value.id == "subprocess")
+            if isinstance(node.func, ast.Subscript) and isinstance(node.func.slice, ast.Constant):
+                if node.func.slice.value == "run_stage":
+                    stage = next(keyword.value for keyword in node.keywords if keyword.arg == "stage")
+                    if isinstance(stage, ast.Constant):
+                        stages.append(stage.value)
+                    else:
+                        assert isinstance(stage, ast.IfExp)
+                        assert (stage.body.value, stage.orelse.value) == ("smoke_run_a", "smoke_run_b")
+                        stages.extend([stage.body.value, stage.orelse.value])
+                    assert any(keyword.arg == "timeout" for keyword in node.keywords)
+    assert stages == ["environment_preflight", "artefact_restore", "artefact_restore",
+                      "upstream_fetch", "smoke_run_a", "smoke_run_b", "artefact_publish"]
+    checkout = ast.parse(code[1])
+    handlers = [node for node in ast.walk(checkout) if isinstance(node, ast.ExceptHandler)]
+    assert sum(ast.unparse(node.type) == "subprocess.TimeoutExpired" for node in handlers) == 2
+    assert sum(ast.unparse(node.type) == "subprocess.CalledProcessError" for node in handlers) == 2
+    assert not any(isinstance(child, ast.Raise) for node in handlers for child in ast.walk(node))
+    assert code[1].index("clone_env.clear()") < code[1].index('raise RuntimeError(f"git_clone:')
