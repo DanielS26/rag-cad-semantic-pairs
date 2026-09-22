@@ -910,3 +910,7 @@ Historical audit claims are distinguished from checks executed in this session.
 - Not run: no Colab execution. A ten-record pilot needs explicit
   authorisation; the full 389-record run needs a budget approved from the
   pilot's measured cost.
+- Convention adopted at Daniel Song's request: pull request titles start with
+  the handoff phase the work belongs to, in exactly the form "Phase N: ", from
+  PR #16 onwards; earlier titles are unchanged. Recorded in handoff Section 1
+  (item 13) and in the repository's CLAUDE.md.
