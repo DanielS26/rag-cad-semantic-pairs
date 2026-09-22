@@ -814,3 +814,53 @@ Historical audit claims are distinguished from checks executed in this session.
   features.pt (no pickle; loads straight into torch tensors); the
   representation_id definition; the default shard size of 256 records; keeping
   the mode comparison inside Run A rather than a separate conformance command.
+
+## 2026-09-22 - PR #14 Merged; Run A And Run B Passed From 0cc9ad77 With Representation-Mode Evidence
+
+- PR #14 merged as 0cc9ad7754df6b3875758bbef8216c1d728126f1 (parents 89f0f987
+  and 14743c4d, tree identical to the PR head, CAD ancestor retained, CPU tests
+  workflow green on the merge commit). Local main fast-forwarded. The runner
+  notebook (49b3a2e5...) and bootstrap (59f196ff...) are byte-identical to the
+  a822b9a0 versions.
+- Purpose of the rerun: the tested profile's code identity no longer matched
+  HEAD after Phases 2 and 3, Run A's own script had changed, and D-20260921-05
+  needed real-encoder evidence for both modes. The standing smoke instruction
+  applied. Disposable prefilled notebooks were generated outside Git for
+  commit 0cc9ad77 with the candidate profile and candidate lock.
+- Run A (run ID 20260922T143040Z_0cc9ad77_smoke_5bd0f99b) on a fresh NVIDIA L4
+  (23,659,151,360 bytes), CUDA 12.8, driver 580.82.07, Python 3.13.15, lock
+  1b270c04...: preflight passed with the same fingerprint as on 21 September
+  and environment ID
+  25f3118172ded3c2918236aa7e93029d8cbe1716441aa6c56da360e475b22991 (differs
+  from aed3f423... only through the commit); all eighteen progress steps
+  completed, including the new modes_compared; features [3, 2048] and
+  deterministic; backend load 26.1 s; feature time 0.43 s; maximum token
+  length 26; peak GPU memory 2,302,938,624 bytes; released-checkpoint
+  probabilities 3.0e-11, 0.437 and 7.0e-08, identical to the a822b9a0 run;
+  one-epoch MLP saved (SHA-256 20698594...), reloaded and matched; FAISS round
+  trip and checkpoint-swap invariants held, with retained and removed text now
+  in the evidence. Published and verified; manifest SHA-256
+  8d68633803262f0f0490d96bbaf53cb7125ad99e3c638cc2d617b3ab0f247140 as recorded
+  by Run B. Usage: 9 minutes and 0.13 units.
+- Representation modes (Run A key representation_modes): both modes finite and
+  deterministic at [3, 2048], 0.265 s and 0.264 s; isolated blocks identical;
+  largest contextual difference 0.111; the released checkpoint gives 0.437
+  (repo_compatible) against 0.569 (paper_exact) for the synthetic target
+  sentence, so removal decisions differ at 0.5 while both modes agree on the
+  two benign sentences. No mode selected. Measurements and decision options are
+  in [REPRESENTATION_MODES.md](REPRESENTATION_MODES.md).
+- Run B (run ID 20260922T143040Z_0cc9ad77_smoke-run-b_5bd0f99b) in a fresh L4
+  runtime (different runtime identity) restored the Run A artefact from Drive
+  with hashes verified, re-downloaded the named CAD, NLTK and Jina files,
+  reproduced the identical fingerprint and environment ID, reloaded the saved
+  checkpoint and matched the saved predictions; published and verified. Its
+  manifest SHA-256 has not been read from the Drive _SUCCESS marker; it is
+  needed only if a profile is frozen from this pass. Usage: 9 minutes and
+  0.10 units.
+- Cumulative smoke usage: 5,160 connected seconds and 1.65 compute units of the
+  10,800-second / 20-unit cap. Both runtimes were deleted after publication.
+- No new tested profile was frozen from this pass: it would be invalidated by
+  the next code change, and if the other mode is chosen D-20260922-12 requires
+  the gate in that mode anyway. The a822b9a0 tested profile stays committed;
+  final stages remain blocked by code identity, the null representation and
+  compute_budget_approved false.
