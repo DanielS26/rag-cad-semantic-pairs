@@ -16,7 +16,11 @@ tested profile until the gate is rerun. For the smoke gate, the standing
 instruction applies: Daniel Song setting the two flags and running the runner
 from a named commit is the authorisation for that commit. No code changes may
 be made or pushed from Colab. The candidate profile remains for further
-bounded smoke or conformance work.
+bounded smoke or conformance work. A second full pass (Run A and Run B from
+commit 0cc9ad77 on 22 September 2026) re-proved the Colab path after Phases 2
+and 3 and produced the representation-mode evidence recorded in
+[REPRESENTATION_MODES.md](REPRESENTATION_MODES.md); no new profile was frozen
+from it.
 
 ## Before Phase 1B
 
