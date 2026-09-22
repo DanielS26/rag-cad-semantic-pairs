@@ -910,7 +910,12 @@ Historical audit claims are distinguished from checks executed in this session.
 - Not run: no Colab execution. A ten-record pilot needs explicit
   authorisation; the full 389-record run needs a budget approved from the
   pilot's measured cost.
-- Convention adopted at Daniel Song's request: pull request titles start with
-  the handoff phase the work belongs to, in exactly the form "Phase N: ", from
-  PR #16 onwards; earlier titles are unchanged. Recorded in handoff Section 1
-  (item 13) and in the repository's CLAUDE.md.
+- Convention adopted at Daniel Song's request: every pull request title starts
+  with the handoff phase code the work belongs to, in exactly the form
+  "Phase N: <What the pull request does>", and carries the matching lower-case
+  GitHub label (phase-0 to phase-4a created on 23 September; PRs #1 to #16
+  retitled and labelled). Fix-up and documentation-only pull requests take the
+  phase they serve. Recorded in handoff Section 1 (item 13) and in the
+  repository's CLAUDE.md. Phase 4A (released-test conformance and the
+  representation decision) is now described in handoff Section 10 so the code
+  matches the label; PR #16 belongs to it.
