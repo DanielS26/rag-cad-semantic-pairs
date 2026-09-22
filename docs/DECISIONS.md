@@ -201,3 +201,18 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song, "ok go with option A" after the recommendation and proposed entry in the coding session on 2026-09-21.
 - Related files, commands, results, correspondence, or commit: [Candidate lock workflow](../.github/workflows/candidate-lock.yml), [CPU tests workflow](../.github/workflows/cpu-tests.yml), [profile validation](../src/rag_cad/config.py), [candidate lock](../requirements/colab-core.candidate.lock.txt), [CPU evidence](../configs/environments/colab_candidate_cpu_evidence.json), [candidate profile](../configs/environments/colab_candidate.yaml), [bootstrap helper](../scripts/bootstrap_colab.py), [PROGRESS.md](PROGRESS.md); D-20260921-09; D-20260921-10.
 - Supersedes / superseded by: Supersedes the Python 3.12.x candidate constraint recorded with D-20260921-09; the smoke approval itself remains in force.
+
+## D-20260922-12 - Freeze the tested Colab environment profile from Run A and Run B
+
+- Status: Confirmed
+- Date: 2026-09-22
+- Project phase: Phase 1B freeze after the live smoke gate
+- Category: Implementation
+- Decision or important note: The candidate environment is promoted to tested as configs/environments/colab_tested.yaml with lock requirements/colab-core.lock.txt (SHA-256 1b270c043e4cbe273dd7c5e67b6f720bd9ec18a2b105ffcc83a7900d746f11e9), reviewed commit a822b9a032fc3d6c27261b25c62363fc3bc88142, Run A manifest 901cee9ae56cf91d89d1df50abb5ac29f481c20f893edc4bc8423dd608cdad2b and Run B manifest 05d322135aa734960d48d2a496f9a21f9b0b14d21d885836a96448433c9cb621. Final feature, training and evaluation stages may use only this profile, and only after a separate compute-budget approval.
+- Context and reason: Run A completed every Phase 1B check in one fresh NVIDIA L4 runtime (Python 3.13.15, CUDA 12.8, driver 580.82.07) and published a verified artefact; Run B restored it in a second fresh runtime with an identical environment fingerprint (environment ID aed3f42347ddf55ec9c0b310865300b9b7dc90f99b151b71124ea0d1716296c1) and matching predictions.
+- Evidence: Run A report and Run B report published on Drive under run IDs 20260921T231238Z_a822b9a0_smoke_5bd0f99b and 20260921T232747Z_a822b9a0_smoke-run-b_5bd0f99b; the Run A manifest hash is the value Run B recorded as its parent; the Run B manifest hash is the `_SUCCESS` content read from Drive by Daniel Song; progress entries for both runs; post-merge CI on a822b9a0.
+- Alternatives considered: Keep the profile as candidate and repeat the gate before every stage (wasteful); promote without Run B (violates D-20260921-02).
+- Consequences for implementation/evaluation/report: Any change to src/rag_cad or scripts/bootstrap_colab.py after a822b9a0 invalidates the profile for final stages until the gate is rerun. The representation value is the smoke value; a different primary representation under D-20260921-05 requires rerunning the gate in that mode. Python 3.13 and sentencepiece 0.2.1 remain recorded deviations from the paper's environment. compute_budget_approved is false until a bounded final-stage budget is approved separately.
+- Approved by: Daniel Song, "I approved the decision log" after the proposed entry in the coding session on 2026-09-22.
+- Related files, commands, results, correspondence, or commit: [Tested profile](../configs/environments/colab_tested.yaml), [tested lock](../requirements/colab-core.lock.txt), [candidate profile](../configs/environments/colab_candidate.yaml), [tests](../tests/test_candidate_preparation.py), [PROGRESS.md](PROGRESS.md); D-20260921-02; D-20260921-05; D-20260921-09; D-20260921-10; D-20260921-11.
+- Supersedes / superseded by: None. Completes the candidate-to-tested transition defined in D-20260921-02.

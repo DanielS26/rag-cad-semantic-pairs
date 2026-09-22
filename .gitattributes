@@ -1,2 +1,3 @@
 requirements/colab-core.candidate.lock.txt text eol=lf
+requirements/colab-core.lock.txt text eol=lf
 configs/environments/colab_candidate_cpu_evidence.json text eol=lf

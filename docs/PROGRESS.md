@@ -629,3 +629,48 @@ Historical audit claims are distinguished from checks executed in this session.
   before staging, encoder progress order); Ruff, pip check, upstream audit and
   git diff --check passed. No Colab, GPU, Drive, secret, model/data download or
   notebook execution occurred in this pass.
+
+## 2026-09-22 - Phase 1B Run A And Run B Passed; Tested Profile Frozen
+
+- Usage for the 39d1bab9 attempt: 5 minutes and 0.15 units. Carry-forward before
+  Run A: 3,120 seconds and 1.07 units.
+- Run A from a822b9a032fc3d6c27261b25c62363fc3bc88142 (bootstrap hash
+  59f196ff..., runner hash 49b3a2e5...) on an NVIDIA L4 (23,659,151,360 bytes),
+  CUDA 12.8, driver 580.82.07, Python 3.13.15 completed all seventeen progress
+  steps. Real Jina features: shape [3, 2048], float32, finite, identical across
+  two encodes within atol 1e-6 / rtol 1e-5; feature time 0.43 s for three rows
+  (6.9 rows/s including per-row context encodes); maximum token length 26;
+  backend load 26.5 s; peak GPU memory 2,302,938,624 bytes. The released
+  checkpoint produced finite non-constant probabilities (p_malicious about
+  3e-11, 0.437 and 7e-08) and retained all three synthetic sentences at 0.5.
+  One-epoch MLP trained, saved (SHA-256 e142ba93...), reloaded with matching
+  predictions; FAISS round trip returned chunk 1 before and after; the
+  fake-generator RAG pass kept retrieval, prompt-template and threshold hashes
+  identical across no-defence and two synthetic checkpoints while only scores
+  and retained text changed. Published and verified as run ID
+  20260921T231238Z_a822b9a0_smoke_5bd0f99b; manifest SHA-256
+  901cee9ae56cf91d89d1df50abb5ac29f481c20f893edc4bc8423dd608cdad2b as recorded
+  by Run B. Usage: 8 minutes and 0.2 units.
+- Run B from the same commit in a fresh L4 runtime (different runtime
+  identity) restored the Run A artefact from Drive with all ten member hashes
+  verified, re-downloaded the named CAD, NLTK and Jina files, reproduced the
+  identical environment fingerprint and environment ID
+  aed3f42347ddf55ec9c0b310865300b9b7dc90f99b151b71124ea0d1716296c1, reloaded the
+  saved checkpoint and matched the saved predictions. Published and verified
+  as run ID 20260921T232747Z_a822b9a0_smoke-run-b_5bd0f99b; manifest SHA-256
+  05d322135aa734960d48d2a496f9a21f9b0b14d21d885836a96448433c9cb621 read from
+  its `_SUCCESS` marker on Drive. Usage: 8 minutes and 0.15 units.
+- Cumulative smoke usage: 4,080 connected seconds and 1.42 compute units of the
+  10,800-second / 20-unit cap. Both runtimes were deleted after publication.
+- Daniel Song approved D-20260922-12. Branch phase1b-tested-profile from
+  a822b9a0 adds configs/environments/colab_tested.yaml with every measured
+  value and both manifest hashes, requirements/colab-core.lock.txt as a
+  byte-identical copy of the candidate lock, a regression test that the
+  committed tested profile validates for smoke and final stages, keeps
+  compute_budget_approved false, and rejects drifted or unknown runtime values.
+  The candidate profile is unchanged. No src or bootstrap change, so the tested
+  profile's code-identity check against a822b9a0 holds.
+- Not yet established: the full feature-job estimate against the runtime and
+  budget (the handoff checklist item stays open), the primary representation
+  (D-20260921-05), the final-stage compute budget, and Drive sharing with the
+  second researcher.
