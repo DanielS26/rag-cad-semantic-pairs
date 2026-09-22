@@ -27,8 +27,9 @@ out of Git.
 
 The CLI supports upstream auditing, guarded release fetch/validation,
 environment preflight, immutable artefact publish/verify/restore, bounded
-smoke Run A/Run B, and CPU-only `data validate|split|check-leakage|compare-budgets`
-checks over project JSONL records. `smoke fake --output <new-directory>` tests
+smoke Run A/Run B, CPU-only `data validate|split|check-leakage|compare-budgets`
+checks over project JSONL records, and gated `features build` with a CPU
+`features fake-build` counterpart. `smoke fake --output <new-directory>` tests
 local plumbing only.
 Real commands require `--execute`, an exact clean commit, a reviewed lock, and an
 explicitly approved profile. Consult `python -m rag_cad.cli --help` and

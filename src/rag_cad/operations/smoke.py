@@ -9,7 +9,8 @@ from pathlib import Path
 
 import numpy as np
 
-from rag_cad.cad.representation import Encoding, JinaEncoder, build_features
+from rag_cad.cad.fake_encoder import FakeEncoder
+from rag_cad.cad.representation import MODES, JinaEncoder, build_features
 from rag_cad.cad.scorer import CADScorer, synthetic_checkpoint
 from rag_cad.cad.upstream_adapter import classifier, load_checkpoint, split_units
 from rag_cad.operations.paths import local_path
@@ -25,7 +26,7 @@ SENTENCES = ["Synthetic context.", "A synthetic target.", "Synthetic conclusion.
 STEPS = (
     "resources_validated", "segmenter_checked", "model_bundle_ready", "remote_code_staged",
     "tokenizer_loaded", "model_loaded", "reference_checkpoint_loaded", "output_created", "features_encoded",
-    "features_repeated", "determinism_checked", "reference_scored", "trained_saved",
+    "features_repeated", "determinism_checked", "reference_scored", "modes_compared", "trained_saved",
     "reload_checked", "retrieval_checked", "rag_swap_checked", "report_written",
     "run_a_restored_read", "run_b_reload_checked", "run_b_compared",
 )
@@ -77,18 +78,17 @@ def runtime_identity() -> str:
 
 class FakeBackend:
     kind = "fake"
-    max_token_length = 0
     load_seconds = 0.0
 
-    def encode(self, query, sentences):
-        def encoder(text):
-            self.max_token_length = max(self.max_token_length, len(text))
-            values = np.array([ord(character) / 128 for character in text], dtype=np.float32)
-            hidden = np.repeat(values[:, None], 1024, axis=1)
-            hidden += values.mean() / 10
-            return Encoding(hidden, np.ones(len(text)), [(index, index + 1) for index in range(len(text))])
+    def __init__(self):
+        self.encoder = FakeEncoder()
 
-        return build_features(query, sentences, encoder, "repo_compatible")
+    @property
+    def max_token_length(self):
+        return self.encoder.max_token_length
+
+    def encode(self, query, sentences):
+        return build_features(query, sentences, self.encoder, "repo_compatible")
 
     def reference_score(self, features):
         positive = np.linspace(0.1, 0.9, len(features), dtype=np.float32)
@@ -209,6 +209,32 @@ def check_probabilities(values: np.ndarray) -> None:
         raise ValueError("Invalid two-class probabilities")
 
 
+def compare_modes(encoder, reference_score, query: str, sentences: list[str], *,
+                  atol: float, rtol: float) -> dict:
+    """Evidence for D-20260921-05: both representation modes on one tiny sample, no mode selected."""
+    modes = {}
+    features = {}
+    for mode in MODES:
+        started = time.perf_counter()
+        values = build_features(query, sentences, encoder, mode)
+        seconds = time.perf_counter() - started
+        repeated = build_features(query, sentences, encoder, mode)
+        probabilities = np.asarray(reference_score(values))
+        check_probabilities(probabilities)
+        features[mode] = values
+        modes[mode] = {"shape": list(values.shape), "finite": bool(np.isfinite(values).all()),
+                       "deterministic": bool(np.allclose(values, repeated, atol=atol, rtol=rtol)),
+                       "seconds": seconds, "reference_probabilities": probabilities[:, 1].tolist(),
+                       "reference_removed_ids": np.flatnonzero(probabilities[:, 1] > 0.5).tolist()}
+    first, second = (features[mode] for mode in MODES)
+    return {"modes": modes, "query": query, "sentences": sentences, "atol": atol, "rtol": rtol,
+            "isolated_block_identical": bool(np.array_equal(first[:, :1024], second[:, :1024])),
+            "contextual_max_abs_difference": float(np.abs(first[:, 1024:] - second[:, 1024:]).max()),
+            "reference_decisions_agree": modes[MODES[0]]["reference_removed_ids"]
+            == modes[MODES[1]]["reference_removed_ids"],
+            "primary_mode_selected": False}
+
+
 def smoke_a(backend, output: Path, metadata: dict, identity: str,
             *, atol: float, rtol: float, source_manifest: dict | None = None,
             validation_seconds: float = 0.0) -> dict:
@@ -235,6 +261,8 @@ def smoke_a(backend, output: Path, metadata: dict, identity: str,
     if np.ptp(reference[:, 1]) == 0:
         raise ValueError("Reference returned constant probabilities")
     mark("reference_scored")
+    modes = compare_modes(backend.encoder, backend.reference_score, QUERY, SENTENCES, atol=atol, rtol=rtol)
+    mark("modes_compared")
     training_started = time.perf_counter()
     predictions = backend.train_save(features, np.array([0, 1, 0], dtype=np.int64), output / "model.pt")
     check_probabilities(predictions)
@@ -301,6 +329,7 @@ def smoke_a(backend, output: Path, metadata: dict, identity: str,
               "reference_probabilities": reference.tolist(),
               "reference_retained_ids": np.flatnonzero(reference[:, 1] <= 0.5).tolist(),
               "reference_removed_ids": np.flatnonzero(reference[:, 1] > 0.5).tolist(),
+              "representation_modes": modes,
               "output_bytes_before_report": sum(path.stat().st_size for path in output.iterdir()),
               "rag": [no_defence, retained, removed], "duration_seconds": time.perf_counter() - started,
               "live_phase1b_passed": False}

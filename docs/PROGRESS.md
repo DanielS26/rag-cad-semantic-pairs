@@ -750,3 +750,67 @@ Historical audit claims are distinguished from checks executed in this session.
   3-shingle Jaccard) and its threshold; benign context overlap reported rather
   than refused; split ratios and the D0 holdout policy (handoff Section 14 item
   4); the benign length tolerance.
+
+## 2026-09-22 - PR #13 Merged; Phase 3 Representation Contract, Feature Builder And Generic Scorer (CPU Part)
+
+- PR #13 merged as 89f0f987e07d78bb54afc8f8b39dc300000c7a74 (parents 794e2b45
+  and 50d0a363, tree identical to the PR head, CAD ancestor retained, CPU tests
+  workflow green on the merge commit). Local main fast-forwarded.
+- Phase 3 (handoff Section 10) CPU-only part on branch
+  phase3-representation-scorer from 89f0f987, with no Colab or budget use:
+  - RepresentationConfig in src/rag_cad/cad/representation.py binds the mode,
+    encoder and code revisions, segmenter fingerprint, dtype and attention
+    into one representation_id; from_profile reads the tested profile; build()
+    is the single feature implementation used by training-time builds and
+    runtime scoring.
+  - src/rag_cad/cad/fake_encoder.py holds the deterministic CPU stand-in
+    encoder (moved out of the smoke fake backend) with a synthetic
+    representation identity.
+  - src/rag_cad/cad/feature_store.py writes and verifies feature sets:
+    features.npz (X float32 [N, 2048], y int64 [N], loaded with allow_pickle
+    false), rows.jsonl with the fifteen Section 7.2 metadata fields plus
+    condition_source, and manifest.json with identity, counts, ordered record
+    hashes, a row digest and file hashes. Reads verify every hash and the
+    len(X) == len(y) == rows contract.
+  - src/rag_cad/cad/feature_builder.py encodes validated, split-assigned
+    records into content-addressed shards per pool (base, shared_malicious,
+    random_benign, keyword_benign, semantic_benign, common_validation,
+    common_test), reuses an existing shard only after verifying identical
+    identity and ordered record hashes, refuses a root claimed by another
+    identity, and assembles conditions by stable (record_id, sentence_id) row
+    identity so M1-M3 share byte-identical D0 and malicious rows. Training
+    pools are selected only through training_records.
+  - CADScorer gains a fixed 0.5 threshold, representation_id,
+    from_representation() and score_passage(), which returns a ScoredPassage
+    (Section 7.5: sentences, probabilities, decisions, retained and removed ids
+    and text, threshold, checkpoint and representation ids, segmentation and
+    scoring latency). RAGPipeline evidence now logs retained and removed text
+    and refuses a scorer whose threshold is not the contract value.
+  - Run A now compares both representation modes on its three-sentence sample
+    (shape, finiteness, determinism, runtime, released-checkpoint
+    probabilities and decisions, identical isolated block, contextual
+    difference) under a new progress step, modes_compared, and records the
+    result as representation_modes in run_a.json. This stands in for a
+    separate cad conformance command and notebook stage: the next gate rerun
+    produces the D-20260921-05 evidence at no extra budget, and the report
+    selects no mode.
+  - CLI: features fake-build (CPU plumbing) and features build (a final stage:
+    tested profile, approved budget, experiment representation resolved and
+    equal to the tested profile's mode, verified segmenter resources and the
+    Jina bundle). experiment.yaml representation stays null, so the real build
+    refuses until D-20260921-05 is resolved.
+  - Tests: test_feature_metadata_alignment.py, test_rag_filter.py,
+    test_features_cli.py and additions to test_cad_conformance.py and
+    test_smoke.py (14 new). Full suite: 251 passed; ruff clean.
+- Handoff checklist items ticked: six Phase 3 items (both modes return 2048-d
+  vectors, one implementation for training and runtime, tensor and metadata
+  alignment, clear checkpoint-incompatibility errors, three-sentence passage
+  scoring, no AgentDojo dependency) and the Section 15 feature-builder and
+  generic-scorer items. Still open: "the selected mode is deterministic in
+  eval mode" and the real-encoder conformance record with its environment ID,
+  both waiting on the primary-mode decision and the next Colab gate; the
+  trainer and registry belong to Phase 6.
+- Not decided (candidates only): feature storage as features.npz rather than
+  features.pt (no pickle; loads straight into torch tensors); the
+  representation_id definition; the default shard size of 256 records; keeping
+  the mode comparison inside Run A rather than a separate conformance command.

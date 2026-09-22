@@ -11,6 +11,7 @@ from rag_cad.config import load_config
 from rag_cad.data import commands as data_commands
 from rag_cad.data.conditions import PRIMARY
 from rag_cad.operations import artefacts
+from rag_cad.operations import features as feature_operations
 from rag_cad.operations import smoke as smoke_operations
 from rag_cad.operations.paths import execution_paths, local_path
 from rag_cad.operations.preflight import PreflightError, preflight
@@ -76,6 +77,22 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--roundtrip", action="store_true")
             command.add_argument("--profile", type=Path)
             command.add_argument("--resources", type=Path)
+    features = commands.add_parser("features").add_subparsers(dest="action", required=True)
+    for name in ("fake-build", "build"):
+        command = features.add_parser(name)
+        command.add_argument("--condition", required=True)
+        command.add_argument("--split", choices=["train", "validation", "test"], required=True)
+        command.add_argument("--input", type=Path, required=True)
+        command.add_argument("--manifest", type=Path, required=True)
+        command.add_argument("--output", type=Path, required=True)
+        command.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
+        command.add_argument("--shard-records", type=int, default=256)
+        command.add_argument("--resume", action="store_true")
+        if name == "build":
+            execution_options(command)
+            command.add_argument("--resources", type=Path, required=True)
+            command.add_argument("--model-bundle", type=Path, required=True)
+            command.add_argument("--allow-network", action="store_true")
     smoke = commands.add_parser("smoke").add_subparsers(dest="action", required=True)
     fake = smoke.add_parser("fake")
     fake.add_argument("--output", type=Path, required=True)
@@ -110,7 +127,7 @@ def _gate(args):
         if any(type(tolerance.get(key)) not in (float, int) or not 0 <= tolerance[key] <= 0.001
                for key in ("atol", "rtol")):
             raise ValueError("Explicit bounded smoke tolerances are required")
-    stage = args.stage if args.command == "environment" else "smoke"
+    stage = {"environment": getattr(args, "stage", None), "features": "features"}.get(args.command, "smoke")
     evidence = preflight(args.repo, args.commit, profile, stage, args.lock, args.workspace)
     return profile, evidence
 
@@ -148,6 +165,8 @@ def execute(args) -> dict:
         local_path(args.output)
         return smoke_a(FakeBackend(), args.output, {"synthetic_only": True}, "fake-local",
                        atol=1e-6, rtol=1e-6)
+    if args.command == "features" and args.action == "fake-build":
+        return feature_operations.fake_build(args)
     try:
         profile, evidence = _gate(args)
     except PreflightError as error:
@@ -157,6 +176,8 @@ def execute(args) -> dict:
     if args.command == "environment":
         write_json(args.output, evidence)
         return evidence
+    if args.command == "features":
+        return feature_operations.build(args, profile, evidence)
     spec = load_config(args.release)
     if args.command == "upstream":
         if args.action == "fetch-cad":

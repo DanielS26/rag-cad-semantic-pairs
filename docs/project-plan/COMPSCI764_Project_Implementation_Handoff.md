@@ -1260,13 +1260,13 @@ Acceptance criterion: validators catch intentionally introduced schema, leakage,
 
 Checklist:
 
-- [ ] Both modes return one 2048-dimensional vector per sentence.
+- [x] Both modes return one 2048-dimensional vector per sentence.
 - [ ] The selected mode is deterministic in eval mode.
-- [ ] Training and runtime call the same selected implementation.
-- [ ] Tensor rows and metadata rows align exactly.
-- [ ] Checkpoint incompatibility raises a clear error.
-- [ ] A three-sentence smoke passage produces three scores and retained/removed text.
-- [ ] Primary imports and tests succeed without installing the optional AgentDojo lock.
+- [x] Training and runtime call the same selected implementation.
+- [x] Tensor rows and metadata rows align exactly.
+- [x] Checkpoint incompatibility raises a clear error.
+- [x] A three-sentence smoke passage produces three scores and retained/removed text.
+- [x] Primary imports and tests succeed without installing the optional AgentDojo lock.
 
 Acceptance criterion: test_cad_conformance.py, test_feature_metadata_alignment.py, and test_rag_filter.py pass.
 
@@ -1624,8 +1624,8 @@ Recommended defaults:
 - [x] Data schema/validator implemented.
 - [x] Leakage tests implemented.
 - [x] Equal-budget tests implemented.
-- [ ] Feature builder implemented.
-- [ ] Generic CADScorer implemented.
+- [x] Feature builder implemented.
+- [x] Generic CADScorer implemented.
 - [ ] Trainer/registry implemented.
 - [ ] Offline evaluator implemented.
 - [ ] RAG ingestion/index/retrieval implemented.

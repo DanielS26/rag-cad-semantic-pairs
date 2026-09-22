@@ -15,6 +15,10 @@ def test_fake_smoke_and_restart_contract(tmp_path):
     assert report["checkpoint_inspection"]["swap_heads"][0]["parameter_count"] == 557698
     assert report["rag"][1]["checkpoint_id"] != report["rag"][2]["checkpoint_id"]
     assert report["live_phase1b_passed"] is False
+    modes = report["representation_modes"]
+    assert set(modes["modes"]) == {"repo_compatible", "paper_exact"}
+    assert all(entry["shape"] == [3, 2048] and entry["deterministic"] for entry in modes["modes"].values())
+    assert modes["isolated_block_identical"] and modes["primary_mode_selected"] is False
     bundle = publish(tmp_path / "run-a", tmp_path / "store", "smoke", "fake-a", metadata)
     restore(bundle / "manifest.json", tmp_path / "restored")
     result = smoke_b(backend, tmp_path / "restored", metadata, "fake-runtime-b")
@@ -79,8 +83,8 @@ def test_progress_steps_are_fixed_vocabulary_and_ordered(tmp_path, monkeypatch):
     smoke_a(FakeBackend(), tmp_path / "run-a", metadata, "fake-runtime-a", atol=1e-6, rtol=1e-6)
     steps = json.loads((tmp_path / "smoke_progress.json").read_text(encoding="utf-8"))
     assert steps == ["output_created", "features_encoded", "features_repeated", "determinism_checked",
-                     "reference_scored", "trained_saved", "reload_checked", "retrieval_checked",
-                     "rag_swap_checked", "report_written"]
+                     "reference_scored", "modes_compared", "trained_saved", "reload_checked",
+                     "retrieval_checked", "rag_swap_checked", "report_written"]
     assert all(step in smoke.STEPS for step in steps)
     monkeypatch.setattr(smoke, "PROGRESS_PATH", tmp_path / "unstable_progress.json")
 
