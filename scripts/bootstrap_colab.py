@@ -20,7 +20,7 @@ STAGES = frozenset({
     "git_clone", "git_checkout", "checkout_verification", "virtual_environment_create",
     "locked_dependency_install", "editable_project_install", "pip_check", "cpu_tests",
     "environment_preflight", "artefact_restore", "upstream_fetch",
-    "smoke_run_a", "smoke_run_b", "artefact_publish",
+    "smoke_run_a", "smoke_run_b", "conformance_released_test", "artefact_publish",
 })
 
 

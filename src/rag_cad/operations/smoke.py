@@ -29,6 +29,8 @@ STEPS = (
     "features_repeated", "determinism_checked", "reference_scored", "modes_compared", "trained_saved",
     "reload_checked", "retrieval_checked", "rag_swap_checked", "report_written",
     "run_a_restored_read", "run_b_reload_checked", "run_b_compared",
+    "released_test_extracted", "released_test_encoded", "released_test_scored",
+    "released_test_report_written",
 )
 PROGRESS_PATH: Path | None = None
 
