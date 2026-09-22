@@ -70,12 +70,22 @@ def test_notebook_process_boundaries_use_fixed_sanitized_stages():
                     if isinstance(stage, ast.Constant):
                         stages.append(stage.value)
                     else:
-                        assert isinstance(stage, ast.IfExp)
-                        assert (stage.body.value, stage.orelse.value) == ("smoke_run_a", "smoke_run_b")
-                        stages.extend([stage.body.value, stage.orelse.value])
+                        # The stage label must come from a literal dict of fixed labels keyed by STAGE.
+                        assert isinstance(stage, ast.Name) and stage.id == "STAGE_LABEL"
+                        assignment = next(item for item in ast.walk(tree) if isinstance(item, ast.Assign)
+                                          and any(isinstance(target, ast.Name) and target.id == "STAGE_LABEL"
+                                                  for target in item.targets))
+                        lookup = assignment.value
+                        assert isinstance(lookup, ast.Subscript) and isinstance(lookup.value, ast.Dict)
+                        assert isinstance(lookup.slice, ast.Name) and lookup.slice.id == "STAGE"
+                        labels = [value.value for value in lookup.value.values]
+                        assert all(isinstance(value, ast.Constant) for value in lookup.value.values)
+                        assert labels == ["smoke_run_a", "smoke_run_b", "conformance_released_test"]
+                        stages.extend(labels)
                     assert any(keyword.arg == "timeout" for keyword in node.keywords)
     assert stages == ["environment_preflight", "artefact_restore", "artefact_restore",
-                      "upstream_fetch", "smoke_run_a", "smoke_run_b", "artefact_publish"]
+                      "upstream_fetch", "smoke_run_a", "smoke_run_b", "conformance_released_test",
+                      "artefact_publish"]
     checkout = ast.parse(code[1])
     handlers = [node for node in ast.walk(checkout) if isinstance(node, ast.ExceptHandler)]
     assert sum(ast.unparse(node.type) == "subprocess.TimeoutExpired" for node in handlers) == 2

@@ -16,6 +16,7 @@ from rag_cad.operations import smoke as smoke_operations
 from rag_cad.operations.paths import execution_paths, local_path
 from rag_cad.operations.preflight import PreflightError, preflight
 from rag_cad.operations.provenance import canonical_json, sha256, verify_upstream, write_json
+from rag_cad.operations.released_test import ARCHIVE, evaluate_released_test
 from rag_cad.operations.smoke import FakeBackend, RealBackend, runtime_identity, smoke_a, smoke_b
 from rag_cad.operations.upstream import fetch_release, prepare_resources, validate_release
 
@@ -93,6 +94,21 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--resources", type=Path, required=True)
             command.add_argument("--model-bundle", type=Path, required=True)
             command.add_argument("--allow-network", action="store_true")
+    conformance = commands.add_parser("conformance").add_subparsers(dest="action", required=True)
+    fake_test = conformance.add_parser("fake-released-test")
+    fake_test.add_argument("--archive", type=Path, required=True)
+    fake_test.add_argument("--output", type=Path, required=True)
+    fake_test.add_argument("--records", type=int, default=0)
+    released = conformance.add_parser("released-test")
+    execution_options(released)
+    released.add_argument("--release", type=Path, default=Path("configs/upstream/cad_release.yaml"))
+    released.add_argument("--source", type=Path, required=True)
+    released.add_argument("--resources", type=Path, required=True)
+    released.add_argument("--model-bundle", type=Path, required=True)
+    released.add_argument("--output", type=Path, required=True)
+    released.add_argument("--allow-network", action="store_true")
+    released.add_argument("--records", type=int, default=0)
+    released.add_argument("--domains", nargs="*", default=[])
     smoke = commands.add_parser("smoke").add_subparsers(dest="action", required=True)
     fake = smoke.add_parser("fake")
     fake.add_argument("--output", type=Path, required=True)
@@ -120,14 +136,15 @@ def _gate(args):
         raise ValueError("Real execution requires a separately approved bounded compute budget")
     if getattr(args, "allow_network", False) and profile.get("network_approved") is not True:
         raise ValueError("Downloads require reviewed profile permission as well as --allow-network")
-    if args.command == "smoke":
+    if args.command in ("smoke", "conformance"):
         if profile.get("remote_code_approved") is not True:
             raise ValueError("Remote-code execution requires explicit profile approval")
         tolerance = profile.get("tolerance", {})
         if any(type(tolerance.get(key)) not in (float, int) or not 0 <= tolerance[key] <= 0.001
                for key in ("atol", "rtol")):
             raise ValueError("Explicit bounded smoke tolerances are required")
-    stage = {"environment": getattr(args, "stage", None), "features": "features"}.get(args.command, "smoke")
+    stage = {"environment": getattr(args, "stage", None), "features": "features",
+             "conformance": "conformance"}.get(args.command, "smoke")
     evidence = preflight(args.repo, args.commit, profile, stage, args.lock, args.workspace)
     return profile, evidence
 
@@ -167,6 +184,11 @@ def execute(args) -> dict:
                        atol=1e-6, rtol=1e-6)
     if args.command == "features" and args.action == "fake-build":
         return feature_operations.fake_build(args)
+    if args.command == "conformance" and args.action == "fake-released-test":
+        local_path(args.archive)
+        local_path(args.output)
+        return evaluate_released_test(FakeBackend(), args.archive, args.output, {"synthetic_only": True},
+                                      "fake-local", records=args.records)
     try:
         profile, evidence = _gate(args)
     except PreflightError as error:
@@ -198,6 +220,13 @@ def execute(args) -> dict:
     smoke_operations.PROGRESS_PATH.unlink(missing_ok=True)
     backend = RealBackend(profile, args.source, spec, args.resources, evidence,
                           model_bundle=args.model_bundle, allow_network=args.allow_network)
+    if args.command == "conformance":
+        result = evaluate_released_test(backend, args.source / ARCHIVE, args.output, evidence,
+                                        runtime_identity(), records=args.records,
+                                        domains=tuple(args.domains))
+        result["validation_seconds"] = validation_seconds
+        write_json(args.output / "source_manifest.json", source_manifest)
+        return result
     if args.action == "run-a":
         tolerance = profile.get("tolerance", {})
         if tolerance.get("atol") is None or tolerance.get("rtol") is None:

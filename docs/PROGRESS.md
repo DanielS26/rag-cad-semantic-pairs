@@ -864,3 +864,49 @@ Historical audit claims are distinguished from checks executed in this session.
   the gate in that mode anyway. The a822b9a0 tested profile stays committed;
   final stages remain blocked by code identity, the null representation and
   compute_budget_approved false.
+
+## 2026-09-23 - Released Test-Set Evaluation Stage For The Representation Decision
+
+- Oracle search: the paper (arXiv 2608.05430v1), the CAD-models model card and
+  the CAD-data dataset card report no sentence-level detector metric for the
+  base classifier (the paper reports agent-level clean utility, utility under
+  attack and attack success rate on AgentDojo and AgentDyn with seed
+  statistics; the cards give descriptions and counts). The pinned upstream
+  evaluator computes AUPRC, ROC-AUC and TPR/FPR at 0.5 on boundary-masked rows
+  without published expected values. "Reproduce the paper's number" is not
+  available; recorded in REPRESENTATION_MODES.md with the revised test.
+- Upstream fidelity check: detector/defense.py joins the query and sentences
+  with single spaces, pools the mean over tokens that are kept and attended
+  with a plain-mean fallback, and truncates at 8,192 tokens. The project's
+  repo_compatible mode matches, except that over-length inputs are refused and
+  listed rather than truncated.
+- Branch phase4a-released-test-evaluation (on top of the PR #15 docs branch),
+  CPU-only, no Colab use:
+  - src/rag_cad/evaluation/detector_metrics.py: NumPy average precision
+    (step-wise over distinct thresholds), rank-based ROC-AUC with tie
+    averaging, confusion counts and rates at a threshold under the upstream
+    ">=" rule and the deployed ">" rule, the upstream boundary mask, and a
+    summarise helper; verified against reference values and hand-computed
+    masks.
+  - src/rag_cad/operations/released_test.py: loads testing_data_original in
+    the upstream sorted-path order with the domain taken from the first path
+    component, scores each record under both modes with the reference
+    checkpoint, and writes predictions.jsonl and released_test_evaluation.json
+    (all-row, masked and per-domain metrics per mode, decision agreement,
+    higher masked AUPRC, timings, token lengths, skipped over-length records,
+    resource snapshots, peak GPU memory). It selects no mode. Four new progress
+    steps.
+  - CLI: conformance fake-released-test (CPU) and conformance released-test,
+    gated at the conformance stage (candidate profile allowed, remote-code
+    approval and tolerances required, no ML import before the gate), with
+    --records and --domains.
+  - Runner notebook: STAGE "released-test", input RELEASED_TEST_RECORDS, stage
+    label conformance_released_test added to the bootstrap STAGES (bootstrap
+    SHA-256 now a9560056cba18e6d83da0326dd584afff81028333769ddb73222e0efb8e57e6c),
+    publish stage "conformance". The contract test now requires a literal
+    stage-label map keyed by STAGE.
+  - Tests: test_detector_metrics.py, test_released_test.py and
+    test_conformance_cli.py (15 new). Full suite: 266 passed; ruff clean.
+- Not run: no Colab execution. A ten-record pilot needs explicit
+  authorisation; the full 389-record run needs a budget approved from the
+  pilot's measured cost.

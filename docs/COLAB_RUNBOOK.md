@@ -164,6 +164,24 @@ Publish Run B evidence under a new run ID. Neither command automatically changes
 a candidate to tested. Only after all Run A/B checks, researcher review, and a
 committed resulting lock/profile may `status: tested` be used.
 
+The `released-test` stage (`STAGE = "released-test"`) runs
+`conformance released-test` from the same runner. It validates the release,
+prepares the segmenter resource and the Jina bundle exactly as Run A does,
+scores `testing_data_original` with the released checkpoint under both
+representation modes, and writes `released_test_evaluation.json`,
+`predictions.jsonl`, `preflight.json` and `source_manifest.json` into the
+stage output, which Cell 7 publishes under the `conformance` stage on Drive.
+`RELEASED_TEST_RECORDS` in the input cell limits the run to the first N records
+in the upstream sorted-path order (0 means every record). Run a ten-record
+pilot first and treat its timings as the estimate for the full job. The stage
+uses the candidate profile, but the standing smoke instruction does not cover
+it: each released-test run needs its own explicit authorisation and, for the
+full run, an approved budget. Over-length records (more than 8,192 tokens) are
+skipped and listed rather than silently truncated as the upstream builder
+would. Its progress steps are released_test_extracted, released_test_encoded,
+released_test_scored and released_test_report_written. The report selects no
+representation mode; see [REPRESENTATION_MODES.md](REPRESENTATION_MODES.md).
+
 Final stages reject candidate/unknown profiles. A tested profile requires Run A
 and Run B manifest hashes, the reviewed commit and lock hash, matching runtime
 values, and unchanged tested project code. A subsequent code fix requires review
@@ -175,9 +193,10 @@ Use `python -m rag_cad.cli --help` and the subcommand's `--help`. Commands are
 `audit upstream`, `environment preflight`, `upstream fetch-cad`,
 `upstream validate-cad`, `artefact publish`, `artefact restore`, `artefact verify`,
 `smoke fake`, `smoke run-a`, `smoke run-b`, `data validate`, `data split`,
-`data check-leakage`, `data compare-budgets`, `features fake-build`, and
-`features build`. The default config paths are relative to the repository
-working directory. All real smoke commands require explicit execution flags and
+`data check-leakage`, `data compare-budgets`, `features fake-build`,
+`features build`, `conformance fake-released-test`, and
+`conformance released-test`. The default config paths are relative to the
+repository working directory. All real smoke commands require explicit execution flags and
 approved inputs; no training CLI is offered yet. `features build` is a final
 stage: it requires the tested profile, an approved compute budget, a resolved
 `representation` in `configs/experiment.yaml` equal to the tested profile's

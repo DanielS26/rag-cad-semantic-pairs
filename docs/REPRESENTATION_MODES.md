@@ -49,17 +49,50 @@ the contextual block: 0.111. Released-checkpoint removal decisions agree: no.
   not identify which mode trained the released checkpoint. The Run A from
   a822b9a0 on 21 September (repo_compatible only) gave the same 0.437.
 
+## No published sentence-level oracle (checked 23 September 2026)
+
+The paper (arXiv 2608.05430v1), the CAD-models model card and the CAD-data
+dataset card were searched for any sentence-level detector metric for the base
+CAD classifier. None exists. The paper reports agent-level clean utility,
+utility under attack and attack success rate on AgentDojo and AgentDyn, with
+seed statistics in its appendix; the cards give file descriptions and counts
+only. The pinned upstream evaluator (`src/detector/train_and_eval.py`)
+computes AUPRC, ROC-AUC and TPR/FPR at threshold 0.5 on boundary-masked test
+rows (an injection row is dropped unless it lies within [start + 3, end - 5]),
+but no expected values were published. "Reproduce the paper's number" is
+therefore not an available decision method.
+
+Fidelity check of the upstream code (`src/detector/defense.py`,
+`src/detector/variants.py`): the authors' embedder joins the query and the
+sentences with single spaces, pools the mean over tokens that are both kept
+and attended (falling back to the plain mean), and truncates inputs at 8,192
+tokens. The project's `repo_compatible` mode matches it exactly, except that
+over-length inputs are refused and reported rather than silently truncated.
+
+## Revised empirical test: which mode does the released checkpoint fit?
+
+The released checkpoint was trained on features from one recipe, so its
+quality on the released test set should be clearly better under that recipe.
+The `released-test` conformance stage scores every sentence of
+`testing_data_original` (389 records, 9,776 rows) with the released checkpoint
+under both modes and reports, per mode: AUPRC, ROC-AUC, TPR, FPR, precision,
+recall and F1 at 0.5 under both the upstream ">=" rule and the deployed ">"
+rule, on all rows, on the upstream-masked rows and per domain; plus the
+decision agreement rate between modes and which mode has the higher masked
+AUPRC. It records timings, token lengths, skipped over-length records and peak
+GPU memory, publishes per-row predictions, and selects no mode. A large gap
+identifies the training recipe. A small gap means the checkpoint is
+insensitive to the choice, and the decision can then rest on option 3 below.
+The stage runs under the candidate profile (conformance is a smoke-class
+stage). A ten-record pilot precedes any full run so that the cost is measured
+rather than guessed, and each run needs its own explicit authorisation.
+
 ## Options for deciding
 
 1. Author answer. Ask which computation produced the paper's results (handoff
-   Section 14, item 1; the question is already on the list for the authors).
-2. Empirical reproduction. Score the released test set (389 records, 9,776
-   sentence rows) with the released checkpoint under both modes and compare
-   with the paper's reported base-CAD metrics; the mode that reproduces them
-   is the mode the checkpoint was trained with. This is a bounded Colab job
-   under the conformance stage of the candidate profile. Its cost must be
-   estimated and approved separately; the full feature-job estimate is still
-   an open checklist item.
+   Section 14, item 1; the question is on the list sent to the authors).
+2. Empirical fit test, as described above: a ten-record pilot, then the full
+   389-record run once its measured cost is approved.
 3. Choice by argument. `repo_compatible` matches the released code and the
    checkpoint's origin; `paper_exact` matches the published description. The
    handoff notes that the released checkpoint makes `repo_compatible` the
