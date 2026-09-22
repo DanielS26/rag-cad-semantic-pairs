@@ -1237,11 +1237,11 @@ Acceptance criterion: the project has evidence that one exact commit can travel 
 
 Checklist:
 
-- [ ] Invalid labels or missing provenance fail validation.
-- [ ] A deliberately leaked family makes test_family_leakage.py fail.
-- [ ] A count mismatch makes test_equal_budget.py fail.
-- [ ] Joining and re-segmenting every accepted record preserves the canonical sentence list.
-- [ ] Split creation is deterministic for seed 764.
+- [x] Invalid labels or missing provenance fail validation.
+- [x] A deliberately leaked family makes test_family_leakage.py fail.
+- [x] A count mismatch makes test_equal_budget.py fail.
+- [x] Joining and re-segmenting every accepted record preserves the canonical sentence list.
+- [x] Split creation is deterministic for seed 764.
 - [ ] No test record is loaded by the training command.
 
 Acceptance criterion: validators catch intentionally introduced schema, leakage, and budget errors.
@@ -1621,9 +1621,9 @@ Recommended defaults:
 - [x] Immutable artefact publish/restore/verify commands implemented and locally tested; Drive gate remains pending.
 - [x] Project package scaffolded.
 - [x] Confirmed decision log created from the approved template.
-- [ ] Data schema/validator implemented.
-- [ ] Leakage tests implemented.
-- [ ] Equal-budget tests implemented.
+- [x] Data schema/validator implemented.
+- [x] Leakage tests implemented.
+- [x] Equal-budget tests implemented.
 - [ ] Feature builder implemented.
 - [ ] Generic CADScorer implemented.
 - [ ] Trainer/registry implemented.

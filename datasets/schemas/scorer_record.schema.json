@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/DanielS26/rag-cad-semantic-pairs/datasets/schemas/scorer_record.schema.json",
+  "title": "Scorer record",
+  "description": "One document/context record per JSONL line (handoff Section 7.1). Dataset strings are inert untrusted data. Cross-field rules (pair and family consistency, label and target consistency, the licence registry, fixed splits for test_only and released CAD test records) are enforced by rag_cad.data.schema.validate_record; this schema states the structure.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["record_id", "group_id", "family_id", "split", "condition_source", "query", "domain", "attack_goal", "pair_member", "sentences", "provenance"],
+  "properties": {
+    "record_id": {"$ref": "#/$defs/identifier", "description": "Unique record key."},
+    "group_id": {"$ref": "#/$defs/identifier", "description": "Leakage-control unit; splitting happens on this field."},
+    "family_id": {"oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}], "description": "Semantic-pair family key, or null for unpaired records."},
+    "split": {"enum": ["train", "validation", "test", null], "description": "Null only in raw inputs that the split manifest has not yet assigned."},
+    "condition_source": {"enum": ["base", "shared_malicious", "random_benign", "keyword_benign", "semantic_benign", "test_only"]},
+    "query": {"type": "string", "minLength": 1, "maxLength": 20000},
+    "domain": {"$ref": "#/$defs/token"},
+    "attack_goal": {"oneOf": [{"$ref": "#/$defs/token"}, {"type": "null"}]},
+    "pair_member": {"enum": ["benign", "malicious", "unpaired"]},
+    "sentences": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/sentence"}, "description": "Ordered canonical sentence units; joining with newlines must re-segment to this list."},
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,199}$"},
+    "token": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+    "sentence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sentence_id", "text", "label", "semantic_role", "is_target"],
+      "properties": {
+        "sentence_id": {"type": "integer", "minimum": 0, "description": "Sequential from zero."},
+        "text": {"type": "string", "minLength": 1, "maxLength": 20000, "pattern": "^[^\\n\\r]*$"},
+        "label": {"enum": [0, 1], "description": "1 = malicious instruction; 0 = benign."},
+        "semantic_role": {"oneOf": [{"$ref": "#/$defs/token"}, {"type": "null"}], "description": "Required for target sentences."},
+        "is_target": {"type": "boolean", "description": "True for the shared pair wording; every malicious sentence is a target."}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_dataset", "source_record_id", "generator_model", "generator_prompt_hash", "licence", "review_status"],
+      "properties": {
+        "source_dataset": {"enum": ["team_authored", "cad_original_train", "cad_original_test", "cad_paraphrased_train"]},
+        "source_record_id": {"oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}], "description": "Required for upstream-derived records."},
+        "generator_model": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "generator_prompt_hash": {"oneOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}], "description": "Set exactly when generator_model is set."},
+        "licence": {"enum": ["team-owned", "CC-BY-4.0"], "description": "Must equal the registry value for source_dataset."},
+        "review_status": {"enum": ["unreviewed", "single_reviewed", "double_reviewed", "excluded"]}
+      }
+    }
+  }
+}
