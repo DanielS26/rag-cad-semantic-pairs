@@ -163,10 +163,18 @@ and rerunning the affected full gate; it is not a Colab-side patch.
 Use `python -m rag_cad.cli --help` and the subcommand's `--help`. Commands are
 `audit upstream`, `environment preflight`, `upstream fetch-cad`,
 `upstream validate-cad`, `artefact publish`, `artefact restore`, `artefact verify`,
-`smoke fake`, `smoke run-a`, and `smoke run-b`. The default config paths are
+`smoke fake`, `smoke run-a`, `smoke run-b`, `data validate`, `data split`,
+`data check-leakage`, and `data compare-budgets`. The default config paths are
 relative to the repository working directory. All real smoke commands require
 explicit execution flags and approved inputs; no final-training CLI is offered
-in Phase 1A.
+yet. The `data` commands are CPU-only checks over project JSONL records and
+need no `--execute` or profile, with one exception: `data validate --roundtrip`
+requires the approved profile and the hash-verified segmenter resources so the
+join-and-resegment check uses the frozen NLTK segmenter rather than a default.
+`data split`, `data check-leakage` and `data compare-budgets` refuse to run
+while `split_ratios`, `near_duplicate_threshold` or `benign_length_tolerance`
+are null in `configs/experiment.yaml`, and a failed leakage or budget check
+still writes its report before exiting with status 2.
 
 ## Shared Budget And Storage
 

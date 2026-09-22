@@ -674,3 +674,79 @@ Historical audit claims are distinguished from checks executed in this session.
   budget (the handoff checklist item stays open), the primary representation
   (D-20260921-05), the final-stage compute budget, and Drive sharing with the
   second researcher.
+
+## 2026-09-22 - PR #12 Merged; Local Consolidation; Phase 2 Data Contracts And Leakage Controls
+
+- PR #12 merged as 794e2b451eb0ebb56647835ea18e0aa259557de0 (parents a822b9a0
+  and 681bf844, tree identical to the PR head, CAD ancestor 26e38a67 retained,
+  CPU tests workflow green on the merge commit). Local main fast-forwarded.
+- Local housekeeping approved by Daniel Song: the two linked worktrees
+  (rag-cad-phase1b-prep, rag-cad-smoke-approval) were removed after confirming
+  their only uncommitted differences were line endings and saved notebook
+  outputs, so rag-cad-semantic-pairs is the single checkout, on main. Merged
+  local branches were kept. The superseded downloaded runner under
+  D:\COMPSCI764_RAG_CAD_Runs and the two prefilled Run A/Run B notebooks were
+  moved to the Recycle Bin after confirming they held no secrets or outputs.
+  The full CPU suite passed (185 tests) in the consolidated checkout on main.
+- Phase 2 (handoff Section 10) implemented on branch phase2-data-contracts from
+  794e2b45, CPU-only, with no Colab or budget use:
+  - src/rag_cad/data/schema.py enforces the Section 7.1 record contract with
+    frozen dataclasses and a strict validator: exact field sets, sequential
+    sentence ids, integer 0/1 labels, malicious implies target, targets carry a
+    semantic role, benign targets only in benign pair members, family_id
+    exactly for paired members, condition_source and pair_member consistency,
+    the licence registry, generator fields set together, and released CAD test
+    or test_only records fixed to the test split.
+    datasets/schemas/scorer_record.schema.json states the structure as JSON
+    Schema.
+  - src/rag_cad/data/jsonl.py: strict JSONL read and write (canonical lines, no
+    overwrite, secret rejection, duplicate record_id refusal, file inventory
+    hashes).
+  - src/rag_cad/data/similarity.py: normalised word-shingle exact and Jaccard
+    near-duplicate detection computed exactly over candidate pairs, with no
+    probabilistic hashing.
+  - src/rag_cad/data/validate.py: every family inside one group and holding a
+    benign and a malicious member, differing-target diagnostics, the
+    join-and-resegment round trip through split_units, exact duplicate records
+    refused, cross-group duplicate diagnostics, and a dataset content digest.
+  - src/rag_cad/data/split.py: group-level assignment (pinned and
+    contract-fixed groups first, then seeded-hash order filled by ratio
+    deficit; deterministic and independent of input order), a split manifest
+    bound to the dataset content digest, apply_manifest, check_leakage (groups
+    or families across splits, test families seen in training, exact or near
+    duplicate records and target wording across splits are errors; benign
+    context overlap is reported only) and training_records, the sanctioned
+    training selector that refuses held-out records.
+  - src/rag_cad/data/conditions.py: condition composition for M0-M3, document
+    and sentence-level summaries, and compare_budgets (exact record, row and
+    class equality across primary conditions, identical shared pools, complete
+    augmentation units with equal benign sentence counts, optional
+    character-ratio tolerance).
+  - CLI: data validate, data split, data check-leakage and data
+    compare-budgets. configs/experiment.yaml gains near_duplicate_threshold and
+    benign_length_tolerance as unresolved null values; null split_ratios,
+    threshold or tolerance refuse execution; a failed leakage or budget check
+    writes its report and exits 2. data validate --roundtrip requires the
+    approved profile and hash-verified segmenter resources.
+  - tests/fixtures/phase2_families.jsonl: ten hand-written synthetic families
+    (40 records) with equal per-unit sentence counts and character ratios of at
+    most 1.18. New tests: test_data_schema.py, test_segmentation_roundtrip.py,
+    test_family_leakage.py, test_equal_budget.py and test_data_cli.py (52
+    tests). Full suite: 237 passed; ruff clean. Verified refusals: invalid
+    labels or missing provenance, a deliberately leaked family, a count
+    mismatch, a missing control variant, target wording crossing splits even
+    as benign context, duplicate records across splits, and unresolved
+    experiment values.
+- Handoff checklist items ticked: five Phase 2 items plus the Section 15
+  schema/validator, leakage-test and equal-budget items. "No test record is
+  loaded by the training command" stays open until the Phase 6 trainer exists;
+  that trainer must select rows only through training_records.
+- Consequence for the tested profile: this branch changes src/rag_cad, so the
+  tested profile's code-identity check against a822b9a0 no longer matches HEAD.
+  Under D-20260922-12 the smoke gate must be rerun on the commit used for any
+  final stage; no Colab run was made now.
+- Not decided (candidates only, nothing written to DECISIONS.md): raw records
+  carrying split null until assigned; the near-duplicate definition (word
+  3-shingle Jaccard) and its threshold; benign context overlap reported rather
+  than refused; split ratios and the D0 holdout policy (handoff Section 14 item
+  4); the benign length tolerance.

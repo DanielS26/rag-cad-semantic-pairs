@@ -8,6 +8,8 @@ import time
 from pathlib import Path
 
 from rag_cad.config import load_config
+from rag_cad.data import commands as data_commands
+from rag_cad.data.conditions import PRIMARY
 from rag_cad.operations import artefacts
 from rag_cad.operations import smoke as smoke_operations
 from rag_cad.operations.paths import execution_paths, local_path
@@ -60,6 +62,20 @@ def parser() -> argparse.ArgumentParser:
         if name == "restore":
             command.add_argument("--destination", type=Path, required=True)
             command.add_argument("--receipt", type=Path)
+    data = commands.add_parser("data").add_subparsers(dest="action", required=True)
+    for name in ("validate", "split", "check-leakage", "compare-budgets"):
+        command = data.add_parser(name)
+        command.add_argument("--input", type=Path, required=True)
+        command.add_argument("--output", type=Path, required=True)
+        command.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
+        if name in ("check-leakage", "compare-budgets"):
+            command.add_argument("--manifest", type=Path, required=True)
+        if name == "compare-budgets":
+            command.add_argument("--conditions", nargs="+", default=list(PRIMARY))
+        if name == "validate":
+            command.add_argument("--roundtrip", action="store_true")
+            command.add_argument("--profile", type=Path)
+            command.add_argument("--resources", type=Path)
     smoke = commands.add_parser("smoke").add_subparsers(dest="action", required=True)
     fake = smoke.add_parser("fake")
     fake.add_argument("--output", type=Path, required=True)
@@ -102,6 +118,8 @@ def _gate(args):
 def execute(args) -> dict:
     if args.command == "audit":
         return verify_upstream(args.repo)
+    if args.command == "data":
+        return data_commands.run(args)
     if args.command == "artefact":
         if args.action == "verify":
             return artefacts.verify(args.manifest)

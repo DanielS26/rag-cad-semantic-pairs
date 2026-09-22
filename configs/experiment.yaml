@@ -21,5 +21,7 @@ filter: remove_sentences_strictly_above_threshold
 augmentation_budget_sentence_rows: null
 split_ratios: null
 split_seed: 764
+near_duplicate_threshold: null
+benign_length_tolerance: null
 d0_holdout_policy: null
 shared_malicious_tutor_approval: null
