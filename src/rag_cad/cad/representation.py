@@ -3,12 +3,16 @@
 Upstream source and MIT licence are retained. No primary interpretation is selected.
 """
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import numpy as np
 
 from rag_cad.cad.model_bundle import offline_execution, prepare_bundle, stage_remote_code
+from rag_cad.config import require_sha
+from rag_cad.operations.provenance import digest
+
+MODES = ("repo_compatible", "paper_exact")
 
 
 @dataclass
@@ -16,6 +20,49 @@ class Encoding:
     hidden: np.ndarray
     attention: np.ndarray
     offsets: list[tuple[int, int]]
+
+
+@dataclass(frozen=True)
+class RepresentationConfig:
+    """Everything that determines a feature vector's meaning, hashed into one representation_id.
+
+    Training-time feature builds and runtime scoring must construct features through the
+    same instance so both call the identical selected implementation.
+    """
+
+    mode: str
+    encoder_revision: str
+    encoder_code_revision: str
+    segmenter: str
+    dtype: str = "float32"
+    attention: str = "native"
+
+    def __post_init__(self):
+        if self.mode not in MODES:
+            raise ValueError("Representation mode must be explicit")
+        require_sha(self.encoder_revision)
+        require_sha(self.encoder_code_revision)
+        require_sha(self.segmenter, 64)
+        if self.dtype != "float32" or self.attention != "native":
+            raise ValueError("Only the contracted float32 native-attention representation is supported")
+
+    @classmethod
+    def from_profile(cls, profile: dict, *, mode: str | None = None) -> "RepresentationConfig":
+        expected = profile["expected"]
+        return cls(mode=expected["representation"] if mode is None else mode,
+                   encoder_revision=expected["encoder_revision"],
+                   encoder_code_revision=expected["encoder_code_revision"],
+                   segmenter=expected["segmenter"], dtype=expected["dtype"], attention=expected["attention"])
+
+    @property
+    def representation_id(self) -> str:
+        return digest(asdict(self))
+
+    def as_dict(self) -> dict:
+        return asdict(self) | {"representation_id": self.representation_id}
+
+    def build(self, query: str, sentences: list[str], encode) -> np.ndarray:
+        return build_features(query, sentences, encode, self.mode)
 
 
 def pool(encoding: Encoding, keep: list[bool]) -> np.ndarray:

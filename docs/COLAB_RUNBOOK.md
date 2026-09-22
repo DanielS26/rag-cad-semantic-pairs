@@ -127,6 +127,13 @@ Run A checks deterministic three-row features, released-checkpoint probabilities
 one synthetic-label MLP epoch/save/reload, tiny CPU FAISS serialization/retrieval,
 and fake-generator checkpoint-swap invariants using two tiny, explicitly synthetic
 checkpoint-backed CADScorer instances. The smoke MLP is not a primary condition.
+Run A also encodes the same three sentences in both representation modes
+(`repo_compatible` and `paper_exact`) and records, as `representation_modes`,
+each mode's shape, finiteness, determinism, runtime, released-checkpoint
+probabilities and removal decisions, whether the isolated blocks are identical
+and the largest contextual difference. This is the evidence for the
+D-20260921-05 representation decision; the report selects no mode, and the
+progress step `modes_compared` marks it.
 Reports include provenance, tolerances, checkpoint metadata/tensor inspection,
 maximum token length, RAM and disk snapshots, stage timings, output bytes, and
 peak GPU memory. RAM/disk snapshots are not peak-memory or peak-disk claims.
@@ -164,10 +171,19 @@ Use `python -m rag_cad.cli --help` and the subcommand's `--help`. Commands are
 `audit upstream`, `environment preflight`, `upstream fetch-cad`,
 `upstream validate-cad`, `artefact publish`, `artefact restore`, `artefact verify`,
 `smoke fake`, `smoke run-a`, `smoke run-b`, `data validate`, `data split`,
-`data check-leakage`, and `data compare-budgets`. The default config paths are
-relative to the repository working directory. All real smoke commands require
-explicit execution flags and approved inputs; no final-training CLI is offered
-yet. The `data` commands are CPU-only checks over project JSONL records and
+`data check-leakage`, `data compare-budgets`, `features fake-build`, and
+`features build`. The default config paths are relative to the repository
+working directory. All real smoke commands require explicit execution flags and
+approved inputs; no training CLI is offered yet. `features build` is a final
+stage: it requires the tested profile, an approved compute budget, a resolved
+`representation` in `configs/experiment.yaml` equal to the tested profile's
+mode, the verified segmenter resources and the Jina bundle. It writes
+content-addressed shards per pool and assembled condition sets
+(`features.npz`, `rows.jsonl`, `manifest.json`) under one identity-claimed
+output root, reusing a shard only after its identity and ordered record hashes
+verify; `--resume` is required to reuse. `features fake-build` exercises the
+same plumbing with the synthetic encoder on CPU and has no scientific meaning.
+The `data` commands are CPU-only checks over project JSONL records and
 need no `--execute` or profile, with one exception: `data validate --roundtrip`
 requires the approved profile and the hash-verified segmenter resources so the
 join-and-resegment check uses the frozen NLTK segmenter rather than a default.
