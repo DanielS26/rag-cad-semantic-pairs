@@ -1,6 +1,6 @@
-# Data Card: Phase 1A
+# Data Card
 
-No research dataset has been generated, labelled, or adapted in this phase.
+No research dataset has been generated, labelled, or adapted yet.
 Fixtures inside tests are tiny synthetic examples for validation and plumbing.
 Their labels and fake probabilities have no scientific evaluation meaning.
 
