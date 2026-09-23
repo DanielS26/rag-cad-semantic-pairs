@@ -29,6 +29,26 @@ def test_hand_computed_representations_and_alignment():
         build_features("Q", ["A"], hand_encoder, "unselected")
 
 
+def test_both_modes_share_one_set_of_encoder_passes():
+    from rag_cad.cad.representation import build_mode_features
+
+    calls = []
+
+    def counting(text):
+        calls.append(text)
+        return hand_encoder(text)
+
+    both = build_mode_features("Q", ["A", "B"], counting)
+    assert len(calls) == 1 + 2 * 2 and set(both) == {"repo_compatible", "paper_exact"}
+    np.testing.assert_array_equal(both["repo_compatible"],
+                                  build_features("Q", ["A", "B"], hand_encoder, "repo_compatible"))
+    np.testing.assert_array_equal(both["paper_exact"],
+                                  build_features("Q", ["A", "B"], hand_encoder, "paper_exact"))
+    assert build_mode_features("Q", [], hand_encoder)["paper_exact"].shape == (0, 2048)
+    with pytest.raises(ValueError, match="nonempty"):
+        build_mode_features("Q", ["A", " "], hand_encoder)
+
+
 def test_newline_roundtrip_and_literal_newlines():
     def tokenize(text):
         return [text]

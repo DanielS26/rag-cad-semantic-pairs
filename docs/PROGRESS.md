@@ -927,3 +927,59 @@ Historical audit claims are distinguished from checks executed in this session.
   section and its Phase 1A verification snapshot dropped because every item is
   recorded here by date; the literature guide left in place; the handoff's
   Section 6 tree and CLAUDE.md updated.
+
+## 2026-09-23 - PR #17 Merged; Released-Test Pilot Passed From f4181bc8; Shared Encoder Passes
+
+- PR #17 merged as f4181bc807d1161633cef671db8c69dfcdfa73ab (parents d3bfc779
+  and 406651f8, tree identical to the PR head, CAD ancestor retained). Local
+  main fast-forwarded. The runner notebook (8bbd19dc...) and the bootstrap
+  (a9560056...) are unchanged since PR #16.
+- Ten-record pilot of the released-test stage, authorised by Daniel Song on
+  23 September. A disposable prefilled notebook was generated outside Git for
+  commit f4181bc8 (STAGE released-test, RELEASED_TEST_RECORDS 10, candidate
+  profile and lock, carry-forward 5,160 s and 1.65 units).
+- Pilot run (run ID 20260923T060056Z_f4181bc8_released-test-pilot_5bd0f99b)
+  on a fresh NVIDIA L4, CUDA 12.8, driver 580.82.07, Python 3.13.15, lock
+  1b270c04..., environment ID 656a7c4a... (the smoke fingerprint at this
+  commit): release validated with all four file hashes matched and the
+  checkpoint safely loaded; eleven progress steps completed through
+  released_test_report_written; no over-length records; 10 records, 180 rows,
+  99 malicious and 81 benign, 80 malicious rows masked out by the upstream
+  boundary rule; maximum token length 338; backend load 27.1 s; encoding
+  14.57 s (paper_exact) and 14.67 s (repo_compatible), 6.16 rows/s over both
+  modes; stage total 29.3 s; peak GPU memory 2,328,180,736 bytes. Published
+  under artefacts/conformance/ with the run ID and verified; predictions
+  SHA-256 4f205ec6.... Usage: 9 minutes and 0.07 units. Cumulative usage
+  against the shared cap: 5,700 connected seconds and 1.72 compute units of
+  10,800 s / 20 units. The runtime was deleted after publication.
+- Pilot metrics (released checkpoint, threshold 0.5, identical under the ">="
+  and ">" rules): all 180 rows, AUPRC 0.8910 (paper_exact) against 0.8908
+  (repo_compatible), ROC-AUC 0.8666 against 0.8662, TPR 0.394 and FPR 0.0 in
+  both modes; upstream-masked 100 rows (19 positives), AUPRC 1.0, ROC-AUC 1.0,
+  TPR 1.0 and FPR 0.0 in both modes; decision agreement between modes 1.0;
+  neither mode has the higher masked AUPRC. No mode selected. On this subset
+  the fit test does not separate the modes; recorded in
+  [REPRESENTATION_MODES.md](REPRESENTATION_MODES.md).
+- Defect found by the pilot: every row was attributed to the domain
+  "testing_data_original" because the archive's root folder was taken as the
+  first path component. The pinned upstream evaluator (detector/
+  train_and_eval.py, build_eval_mask) defines the domain as the first
+  directory under the extracted test folder (banking, slack, travel). Fixed on
+  branch phase4a-pilot-record: record_domain strips the archive folder and
+  mirrors the upstream rule; the test fixture now carries the real layout.
+- Cost reduction before the full run: the two modes share every encoder pass
+  (the full passage, each sentence alone, the passage without each sentence)
+  and differ only in which tokens of the first contextual term are pooled.
+  The stage now builds both modes from one set of passes (build_mode_features;
+  the single-mode build_features delegates to it with unchanged output), so
+  encoder work per record falls from 2 + 4n to 1 + 2n forward passes. The
+  report records encoder_passes and one encode_both_modes timing. Tests:
+  shared-pass count and equality with the per-mode builder, suite derivation,
+  report fields. Full suite: 268 passed; ruff clean.
+- Full-run estimate from the pilot: 740 encoder passes took 29.2 s (39.5 ms
+  per pass). The full set needs 389 + 2 x 9,776 = 19,941 passes, about 13
+  minutes at pilot passage lengths and up to about 26 minutes if longer
+  passages double the per-pass time, plus about 9 minutes of clone, install,
+  downloads and model load: 22 to 35 minutes connected and 0.2 to 1.1 units.
+  The remaining shared cap is 5,100 s (85 minutes) and 18.28 units. The full
+  run awaits its own authorisation and budget.

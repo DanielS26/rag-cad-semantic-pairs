@@ -70,34 +70,48 @@ def pool(encoding: Encoding, keep: list[bool]) -> np.ndarray:
     return encoding.hidden[mask].mean(axis=0) if mask.any() else encoding.hidden.mean(axis=0)
 
 
-def build_features(query: str, sentences: list[str], encode, mode: str) -> np.ndarray:
-    if mode not in {"repo_compatible", "paper_exact"}:
-        raise ValueError("Representation mode must be explicit")
+def build_mode_features(query: str, sentences: list[str], encode) -> dict[str, np.ndarray]:
+    """Both representation modes from one set of encoder passes.
+
+    The modes share every encoder call (the full passage, each sentence alone and the passage
+    with each sentence removed) and differ only in which tokens of the full passage are pooled
+    for the first contextual term, so computing both costs one mode's encoder time.
+    """
     if not sentences:
-        return np.empty((0, 2048), dtype=np.float32)
+        return {mode: np.empty((0, 2048), dtype=np.float32) for mode in MODES}
     if any(not isinstance(text, str) or not text.strip() for text in sentences):
         raise ValueError("Sentence units must be nonempty strings")
     prefix = query.strip() + " " if query.strip() else ""
     full = prefix + " ".join(sentences)
     full_encoding = encode(full)
+    everything = [True] * len(full_encoding.hidden)
     position = len(prefix)
-    features = []
+    features = {mode: [] for mode in MODES}
     for index, sentence in enumerate(sentences):
         start, end = position, position + len(sentence)
         position = end + 1
         standalone = encode(sentence)
         isolated = pool(standalone, [True] * len(standalone.hidden))
-        keep = ([not (left < end and right > start) for left, right in full_encoding.offsets]
-                if mode == "repo_compatible" else [True] * len(full_encoding.hidden))
-        with_target = pool(full_encoding, keep)
+        outside = [not (left < end and right > start) for left, right in full_encoding.offsets]
         rest = prefix + " ".join(sentences[:index] + sentences[index + 1:])
         removed = encode(rest if rest.strip() else " ")
         without_target = pool(removed, [True] * len(removed.hidden))
-        features.append(np.concatenate([isolated, with_target - without_target]))
-    result = np.asarray(features, dtype=np.float32)
-    if result.shape != (len(sentences), 2048) or not np.isfinite(result).all():
-        raise ValueError("Invalid CAD feature shape or nonfinite values")
+        for mode, keep in (("repo_compatible", outside), ("paper_exact", everything)):
+            contextual = pool(full_encoding, keep) - without_target
+            features[mode].append(np.concatenate([isolated, contextual]))
+    result = {}
+    for mode in MODES:
+        values = np.asarray(features[mode], dtype=np.float32)
+        if values.shape != (len(sentences), 2048) or not np.isfinite(values).all():
+            raise ValueError("Invalid CAD feature shape or nonfinite values")
+        result[mode] = values
     return result
+
+
+def build_features(query: str, sentences: list[str], encode, mode: str) -> np.ndarray:
+    if mode not in MODES:
+        raise ValueError("Representation mode must be explicit")
+    return build_mode_features(query, sentences, encode)[mode]
 
 
 class JinaEncoder:

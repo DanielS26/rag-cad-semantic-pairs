@@ -172,8 +172,12 @@ representation modes, and writes `released_test_evaluation.json`,
 `predictions.jsonl`, `preflight.json` and `source_manifest.json` into the
 stage output, which Cell 7 publishes under the `conformance` stage on Drive.
 `RELEASED_TEST_RECORDS` in the input cell limits the run to the first N records
-in the upstream sorted-path order (0 means every record). Run a ten-record
-pilot first and treat its timings as the estimate for the full job. The stage
+in the upstream sorted-path order (0 means every record). Both modes are built
+from one set of encoder passes, and per-domain metrics use the upstream
+definition of a domain: the first directory under the extracted test folder
+(banking, slack, travel). The ten-record pilot of 23 September 2026 took
+9 minutes and 0.07 units (39.5 ms per encoder pass); its timings are the
+estimate for the full job, recorded in [PROGRESS.md](PROGRESS.md). The stage
 uses the candidate profile, but the standing smoke instruction does not cover
 it: each released-test run needs its own explicit authorisation and, for the
 full run, an approved budget. Over-length records (more than 8,192 tokens) are
