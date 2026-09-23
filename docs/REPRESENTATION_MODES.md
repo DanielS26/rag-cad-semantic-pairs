@@ -146,7 +146,9 @@ Decision agreement between the modes: 0.99969, three rows of 9,776. The
 report names paper_exact as the higher masked AUPRC, by 0.0003, one row's
 worth. Cost: 19,941 encoder passes in 823.6 s (41.3 ms per pass, 11.9 rows/s
 over both modes); maximum token length 529; no over-length records; peak GPU
-memory 2.35 GB; 13.7 minutes for the stage plus the usual setup.
+memory 2.35 GB; 13.7 minutes for the stage, and about 25 minutes and 0.12
+units for the notebook in total as reported, including a first attempt that
+failed at the environment preflight.
 
 What this shows. The released checkpoint fits both recipes equally: one
 detection and three decisions differ over the whole released test set. This

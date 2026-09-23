@@ -1016,8 +1016,11 @@ Historical audit claims are distinguished from checks executed in this session.
   encoding 823.6 s for both modes (41.3 ms per pass, 11.9 rows/s); stage
   total 824.4 s; backend load 25.0 s; peak GPU memory 2,354,481,152 bytes.
   Published under artefacts/conformance/ with the run ID and verified;
-  predictions SHA-256 3a727361.... Usage of the failed attempt and of the
-  run: not yet reported; to be added here with the cumulative figures.
+  predictions SHA-256 3a727361.... Usage reported by Daniel Song for the
+  notebook's two attempts together: about 25 minutes connected and 0.12
+  units. Cumulative usage against the shared cap, counting released-test
+  runs with the smoke attempts: 7,200 connected seconds and 1.84 compute
+  units of 10,800 s / 20 units, leaving 3,600 s and 18.16 units.
 - Metrics (released checkpoint, threshold 0.5, identical under the ">=" and
   ">" rules), paper_exact against repo_compatible: upstream-masked AUPRC
   0.98161 against 0.98131, ROC-AUC 0.99907 against 0.99906, TP 606 against
