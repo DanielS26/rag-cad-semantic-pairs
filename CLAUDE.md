@@ -26,6 +26,9 @@ apply to every change.
 - **Decisions**: consequential choices are proposed first and written to `docs/DECISIONS.md`
   only after the researcher confirms them. Commands, results and blockers go to
   `docs/PROGRESS.md`.
+- **Documents**: `docs/README.md` maps every document, its job and whether it is living or
+  frozen. Add new documents to that table; keep frozen documents at their paths because
+  decision entries link to them.
 - **Colab**: nothing runs in Colab without an exact reviewed commit and explicit
   authorisation; the bounded smoke gate has its own standing instruction recorded in
   `docs/COLAB_RUNBOOK.md`. Code is never edited or pushed from Colab.

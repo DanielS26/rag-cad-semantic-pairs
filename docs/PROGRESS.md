@@ -264,7 +264,7 @@ Historical audit claims are distinguished from checks executed in this session.
   fakes and synthetic fixtures with network connections denied. Real-runtime
   compatibility remains unverified; the earlier merged-main CI does not certify
   these new, uncommitted corrective changes.
-- The [corrective review](PHASE1A_CORRECTIVE_REVIEW.md) contains the exact candidate
+- The [corrective review](archive/PHASE1A_CORRECTIVE_REVIEW.md) contains the exact candidate
   approval sheet, remaining blockers, and proposed decision-log entries. No
   changes were made to docs/DECISIONS.md. The two candidate entries remain unwritten.
 - Full tracked and new-file diff is provided as generated review material under
@@ -919,3 +919,11 @@ Historical audit claims are distinguished from checks executed in this session.
   repository's CLAUDE.md. Phase 4A (released-test conformance and the
   representation decision) is now described in handoff Section 10 so the code
   matches the label; PR #16 belongs to it.
+- Documentation tidy-up approved by Daniel Song: docs/README.md added as the
+  document map (each file, its job, living or frozen); the data card retitled
+  "Data Card"; PHASE1A_CORRECTIVE_REVIEW.md moved to docs/archive with history
+  preserved; EVIDENCE.md removed, its standing upstream-boundary paragraph
+  folded into the root README's new "Upstream Code, Project Code And Records"
+  section and its Phase 1A verification snapshot dropped because every item is
+  recorded here by date; the literature guide left in place; the handoff's
+  Section 6 tree and CLAUDE.md updated.

@@ -35,22 +35,36 @@ Real commands require `--execute`, an exact clean commit, a reviewed lock, and a
 explicitly approved profile. Consult `python -m rag_cad.cli --help` and
 [the operator runbook](docs/COLAB_RUNBOOK.md).
 
+## Upstream Code, Project Code And Records
+
+CAD commit `26e38a67f0a9e1de4cb3a876e4b021900a5d1c27` is a preserved ancestor of
+`main`, integrated under D-20260921-08. Its detector, evaluation, benchmark,
+original dependency input, benchmark scripts and licence are unchanged, and
+`python -m rag_cad.cli audit upstream` verifies the ancestry and the preserved
+paths on every CI run. Only this README and the root ignore file carry
+integration edits. The project adds `src/rag_cad`, `tests`, `configs`,
+`scripts`, `notebooks` and `docs`. Project code never imports the upstream
+modules, which pull in AgentDojo and download NLTK data at import time; the
+project's equivalents are lazy and credit the preserved MIT-licensed source.
+
 ## Review And Gates
 
-- [Approved decisions](docs/DECISIONS.md) override conflicting older plan wording.
-- [Progress](docs/PROGRESS.md), [evidence](docs/EVIDENCE.md), and
-  [data card](docs/DATA_CARD.md) distinguish executed CPU tests from unverified
-  real-model, Linux dependency, and Drive behaviour.
-- Scientific choices remain null in configs. No tested Colab profile or tested
-  core lock is fabricated. The Colab input file is provisional, not a lock.
-- Missing smoke prerequisites after review require a bounded CPU-only correction
-  authorisation. No project code may be edited or pushed from Colab.
-- Merge the Phase 1A integration PR with **Create a merge commit**, not squash or
-  rebase, so pinned CAD remains an ancestor. Future upstream changes require a
-  new approved audit. Main protections remain enabled.
-
-The final feature store, dataset splitting/budget validators, primary trainer,
-full RAG retriever/generator, and scientific evaluators belong to later phases.
+- [Approved decisions](docs/DECISIONS.md) override conflicting older plan
+  wording. [Progress](docs/PROGRESS.md) records every executed command, result
+  and usage figure. [The document map](docs/README.md) says what each document
+  is for and which ones are frozen.
+- Scientific choices stay null in `configs/experiment.yaml` until decided. A
+  tested Colab profile exists only after a fresh-runtime Run A and Run B pass on
+  the reviewed commit and the resulting lock and profile are committed
+  (D-20260921-02, D-20260922-12); project code changes after that commit
+  invalidate it for final stages until the gate is rerun.
+- CPU tests use synthetic records, fake encoders, NumPy checkpoints and fake
+  transports with the network refused. They never promote a profile and do not
+  stand in for real-model, Linux dependency or Drive behaviour.
+- No project code may be edited or pushed from Colab. Merge every pull request
+  with **Create a merge commit**, never squash or rebase, so the pinned CAD
+  commit remains an ancestor. Future upstream changes require a new approved
+  audit. Main protections remain enabled.
 
 ---
 

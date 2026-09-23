@@ -570,11 +570,13 @@ rag-cad-semantic-pairs/
 │   ├── test_environment_preflight.py
 │   └── test_artefact_roundtrip.py
 ├── docs/
+│   ├── README.md                    # document map: living versus frozen documents
 │   ├── DECISIONS.md
-│   ├── EVIDENCE.md
 │   ├── PROGRESS.md
 │   ├── DATA_CARD.md
-│   └── COLAB_RUNBOOK.md
+│   ├── COLAB_RUNBOOK.md
+│   ├── REPRESENTATION_MODES.md      # until D-20260921-05 is decided
+│   └── archive/                     # frozen review sheets
 ├── evaluation/                      # upstream CAD benchmark files
 ├── third_party/AutoDojo/            # upstream vendored benchmark
 └── scripts/
