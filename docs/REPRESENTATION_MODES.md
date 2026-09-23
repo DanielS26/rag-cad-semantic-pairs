@@ -87,6 +87,42 @@ The stage runs under the candidate profile (conformance is a smoke-class
 stage). A ten-record pilot precedes any full run so that the cost is measured
 rather than guessed, and each run needs its own explicit authorisation.
 
+## Ten-record pilot (23 September 2026, commit f4181bc8)
+
+Run ID 20260923T060056Z_f4181bc8_released-test-pilot_5bd0f99b: the released
+checkpoint on the first ten records in the upstream sorted-path order (which
+puts the banking suite first), 180 rows, 99 malicious, 80 of them masked out
+by the upstream boundary rule, threshold 0.5.
+
+| Rows | Metric | repo_compatible | paper_exact |
+|---|---|---:|---:|
+| all 180 | AUPRC | 0.8908 | 0.8910 |
+| all 180 | ROC-AUC | 0.8662 | 0.8666 |
+| all 180 | TPR / FPR at 0.5 | 0.394 / 0.0 | 0.394 / 0.0 |
+| masked 100 | AUPRC | 1.0 | 1.0 |
+| masked 100 | ROC-AUC | 1.0 | 1.0 |
+| masked 100 | TPR / FPR at 0.5 | 1.0 / 0.0 | 1.0 / 0.0 |
+
+Decision agreement between the modes: 1.0 on all 180 rows. Neither mode has
+the higher masked AUPRC. Encoding took 14.6 s per mode (6.2 rows/s over both
+modes, 39.5 ms per encoder pass); maximum token length 338; no over-length
+records; peak GPU memory 2.33 GB; 9 minutes and 0.07 units in total.
+
+What this shows: on these ten records the released checkpoint is equally good
+under both recipes, and both detect every masked malicious sentence. The
+all-row differences are in the fourth decimal place. The pilot therefore
+predicts that the full run will land in the "small gap" case above, where the
+decision rests on the argument from provenance (option 3) and any author
+answer. The full run is still worth its measured cost (22 to 35 minutes)
+because it gives the reference numbers on the whole released test set, per
+suite, and the decision agreement rate over all 9,776 rows.
+
+Two corrections came out of the pilot. The domain of every row had been
+recorded as the archive folder name; it is now the first directory under that
+folder, as the upstream evaluator defines it. And because the two modes share
+every encoder pass, the stage now computes both from one set of passes, which
+halves the encoder cost of the full run.
+
 ## Options for deciding
 
 1. Author answer. Ask which computation produced the paper's results (handoff

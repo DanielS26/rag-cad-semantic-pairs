@@ -13,7 +13,7 @@ from pathlib import Path, PurePosixPath
 
 import numpy as np
 
-from rag_cad.cad.representation import MODES, build_features
+from rag_cad.cad.representation import MODES, build_mode_features
 from rag_cad.data.cad_release_adapter import adapt_record
 from rag_cad.data.jsonl import write_jsonl
 from rag_cad.evaluation.detector_metrics import THRESHOLD, summarise, upstream_boundary_mask
@@ -25,6 +25,20 @@ from rag_cad.operations.smoke import mark, resource_snapshot
 ARCHIVE = "testing_data_original.tar.gz"
 REPORT = "released_test_evaluation.json"
 PREDICTIONS = "predictions.jsonl"
+ARCHIVE_ROOT = ARCHIVE[: -len(".tar.gz")]
+
+
+def record_domain(path: str) -> str:
+    """The upstream domain of a test file: the first directory under the extracted test folder.
+
+    Mirrors build_eval_mask in the pinned detector/train_and_eval.py, which takes the first
+    component of each JSON path relative to the test directory (banking, slack or travel).
+    Archive members carry that folder as their own first component, so it is stripped first.
+    """
+    parts = PurePosixPath(path).parts
+    if parts and parts[0] == ARCHIVE_ROOT:
+        parts = parts[1:]
+    return parts[0] if len(parts) > 1 else "unknown"
 
 
 def load_released_test(archive: Path) -> list[dict]:
@@ -43,8 +57,7 @@ def load_released_test(archive: Path) -> list[dict]:
     for path, raw in items:
         adapted = adapt_record(raw, "original_test")
         span = raw["injection_span_unit"]
-        parts = PurePosixPath(path).parts
-        records.append({"source_file": path, "domain": parts[0] if len(parts) > 1 else "unknown",
+        records.append({"source_file": path, "domain": record_domain(path),
                         "query": adapted["query"], "sentences": adapted["sentences"],
                         "labels": adapted["labels"], "span": [span["start"], span["end"]],
                         "upstream_mask": upstream_boundary_mask(len(adapted["sentences"]),
@@ -69,15 +82,16 @@ def evaluate_released_test(backend, archive: Path, output: Path, metadata: dict,
     mark("released_test_extracted")
     before = resource_snapshot(output)
     rows, skipped = [], []
-    encode_seconds = dict.fromkeys(MODES, 0.0)
+    encode_seconds, passes = 0.0, 0
     for record in selected:
         probabilities = {}
         try:
+            encode_started = time.perf_counter()
+            features = build_mode_features(record["query"], record["sentences"], backend.encoder)
+            encode_seconds += time.perf_counter() - encode_started
+            passes += 1 + 2 * len(record["sentences"])
             for mode in MODES:
-                mode_started = time.perf_counter()
-                features = build_features(record["query"], record["sentences"], backend.encoder, mode)
-                encode_seconds[mode] += time.perf_counter() - mode_started
-                scored = np.asarray(backend.reference_score(features))
+                scored = np.asarray(backend.reference_score(features[mode]))
                 if scored.shape != (len(record["sentences"]), 2) or not np.isfinite(scored).all():
                     raise ValueError("Reference checkpoint returned invalid probabilities")
                 probabilities[mode] = scored[:, 1]
@@ -101,8 +115,7 @@ def evaluate_released_test(backend, archive: Path, output: Path, metadata: dict,
     metrics = {mode: {"all_rows": summarise(labels, scores[mode]),
                       "upstream_masked": summarise(labels, scores[mode], mask=mask),
                       "by_domain_masked": {domain: summarise(labels, scores[mode], mask=mask & (domain_of == domain))
-                                           for domain in sorted(set(domain_of))},
-                      "encode_seconds": encode_seconds[mode]} for mode in MODES}
+                                           for domain in sorted(set(domain_of))}} for mode in MODES}
     first, second = MODES
     masked_ap = {mode: metrics[mode]["upstream_masked"]["average_precision"] for mode in MODES}
     masked_auc = {mode: metrics[mode]["upstream_masked"]["roc_auc"] for mode in MODES}
@@ -123,8 +136,10 @@ def evaluate_released_test(backend, archive: Path, output: Path, metadata: dict,
               "domains": {domain: int((domain_of == domain).sum()) for domain in sorted(set(domain_of))},
               "metrics": metrics, "comparison": comparison,
               "maximum_token_length": backend.max_token_length,
-              "timings_seconds": {"total": total, "encode": encode_seconds, "backend_load": backend.load_seconds},
-              "rows_per_second_both_modes": len(rows) / max(sum(encode_seconds.values()), 1e-9),
+              "encoder_passes": passes,
+              "timings_seconds": {"total": total, "encode_both_modes": encode_seconds,
+                                  "backend_load": backend.load_seconds},
+              "rows_per_second_both_modes": len(rows) / max(encode_seconds, 1e-9),
               "resources_before": before, "resources_after": resource_snapshot(output),
               "predictions_sha256": sha256(output / PREDICTIONS),
               "oracle": "none published; discriminator is which mode the released checkpoint fits"}

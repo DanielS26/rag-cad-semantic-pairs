@@ -8,13 +8,18 @@ import pytest
 
 from rag_cad.data.jsonl import read_jsonl
 from rag_cad.operations import smoke
-from rag_cad.operations.released_test import evaluate_released_test, load_released_test
+from rag_cad.operations.released_test import (
+    evaluate_released_test,
+    load_released_test,
+    record_domain,
+)
 from rag_cad.operations.smoke import FakeBackend
 
+ROOT = "testing_data_original"
 RECORDS = {
-    "slack/scenario_1/task_b.json": {"user": "Summarise the channel.", "span": (3, 4), "units": 6},
-    "banking/scenario_0/task_a.json": {"user": "List my transactions.", "span": (2, 9), "units": 12},
-    "travel/scenario_2/task_c.json": {"user": "Book a hotel.", "span": (0, 0), "units": 4},
+    f"{ROOT}/slack/scenario_1/task_b.json": {"user": "Summarise the channel.", "span": (3, 4), "units": 6},
+    f"{ROOT}/banking/scenario_0/task_a.json": {"user": "List my transactions.", "span": (2, 9), "units": 12},
+    f"{ROOT}/travel/scenario_2/task_c.json": {"user": "Book a hotel.", "span": (0, 0), "units": 4},
 }
 
 
@@ -44,6 +49,14 @@ def test_records_load_in_sorted_order_with_domains_and_masks(tmp_path):
     assert slack["labels"] == [0, 0, 0, 1, 1, 0] and slack["upstream_mask"] == [True, True, True, False, False, True]
 
 
+def test_domain_is_the_first_directory_under_the_extracted_test_folder():
+    """Upstream build_eval_mask takes the first path component relative to the test directory."""
+    assert record_domain(f"{ROOT}/banking/banking_scenario_0/injection_task_1.json") == "banking"
+    assert record_domain("travel/scenario_2/task_c.json") == "travel"
+    assert record_domain(f"{ROOT}/loose.json") == "unknown"
+    assert record_domain("loose.json") == "unknown"
+
+
 def test_fake_evaluation_reports_both_modes_with_masked_and_unmasked_metrics(tmp_path, monkeypatch):
     monkeypatch.setattr(smoke, "PROGRESS_PATH", tmp_path / "progress.json")
     source = archive(tmp_path)
@@ -57,12 +70,13 @@ def test_fake_evaluation_reports_both_modes_with_masked_and_unmasked_metrics(tmp
         assert mode["all_rows"]["rows"] == 22 and mode["upstream_masked"]["rows"] == 11
         assert mode["upstream_masked"]["positives"] == 0 and mode["upstream_masked"]["average_precision"] is None
         assert set(mode["by_domain_masked"]) == {"banking", "slack", "travel"}
-        assert mode["all_rows"]["roc_auc"] is not None and mode["encode_seconds"] >= 0
+        assert mode["all_rows"]["roc_auc"] is not None
+    assert report["timings_seconds"]["encode_both_modes"] >= 0 and report["encoder_passes"] == 3 + 2 * 22
     assert report["comparison"]["primary_mode_selected"] is False
     assert report["comparison"]["higher_masked_average_precision"] is None
     assert 0 <= report["comparison"]["decision_agreement_rate"] <= 1
     rows = read_jsonl(tmp_path / "out/predictions.jsonl")
-    assert len(rows) == 22 and rows[0]["source_file"].startswith("banking/")
+    assert len(rows) == 22 and rows[0]["source_file"].startswith(f"{ROOT}/banking/")
     assert all(0 <= row["p_repo_compatible"] <= 1 and 0 <= row["p_paper_exact"] <= 1 for row in rows)
     assert json.loads((tmp_path / "progress.json").read_text()) == [
         "released_test_extracted", "released_test_encoded", "released_test_scored", "released_test_report_written"]
@@ -102,7 +116,7 @@ def test_record_limit_domain_filter_and_over_length_skips(tmp_path):
             self.encoder = LimitedEncoder(self.encoder)
 
     limited = evaluate_released_test(Limited(), source, tmp_path / "limited", {}, "fake")
-    assert limited["skipped_over_length"] == ["travel/scenario_2/task_c.json"]
+    assert limited["skipped_over_length"] == [f"{ROOT}/travel/scenario_2/task_c.json"]
     assert limited["records_scored"] == 2 and limited["rows"] == 18
 
 
