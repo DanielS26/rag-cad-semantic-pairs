@@ -983,3 +983,61 @@ Historical audit claims are distinguished from checks executed in this session.
   downloads and model load: 22 to 35 minutes connected and 0.2 to 1.1 units.
   The remaining shared cap is 5,100 s (85 minutes) and 18.28 units. The full
   run awaits its own authorisation and budget.
+
+## 2026-09-24 - PR #18 Merged; Full Released-Test Run Passed From d0b92eeb; The Fit Test Does Not Separate The Modes
+
+- PR #18 merged as d0b92eebfe7e3084dfa15a2fa57265bfcf729f09 (parents f4181bc8
+  and d6cffbf8, tree identical to the PR head, CAD ancestor retained, CPU
+  tests workflow green on the merge commit). Local main fast-forwarded. The
+  runner notebook (8bbd19dc...) and the bootstrap (a9560056...) are unchanged.
+- Full released-test run authorised by Daniel Song by running the prefilled
+  notebook generated outside Git for commit d0b92eeb (STAGE released-test,
+  RELEASED_TEST_RECORDS 0, candidate profile and lock, carry-forward 5,700 s
+  and 1.72 units, so the notebook cuts off at the remaining 5,100 s of the
+  shared cap).
+- First attempt (24 September local time) failed in Cell 4 at
+  environment_preflight with exit code 2, a refused CLI command: nothing was
+  loaded or published. The preflight code is unchanged since the pilot, so
+  the runtime differed. The cause was not captured, because the retry was
+  made before the runtime type or the failure line in preflight.json was
+  reported; a missing or unallocated GPU is the likely cause. The retry with
+  the same notebook and run ID on an L4 runtime passed. The run ID had not
+  been used on Drive because the first attempt published nothing.
+- Full run (run ID 20260923T080927Z_d0b92eeb_released-test-full_5bd0f99b,
+  stage window 13:42 to 13:56 UTC on 23 September) on a fresh NVIDIA L4,
+  CUDA 12.8, driver 580.82.07, Python 3.13.15, lock 1b270c04..., environment
+  ID 0b72038d... (differs from the pilot's 656a7c4a... only through the
+  commit): release validated with all four file hashes matched and the
+  checkpoint safely loaded; eleven progress steps completed; 389 records and
+  9,776 rows scored, none over length; maximum token length 529; 3,729
+  malicious rows, 3,112 of them masked out by the upstream boundary rule,
+  leaving 6,664 masked rows with 617 positives; domains banking 5,555 rows,
+  slack 1,230, travel 2,991; 19,941 encoder passes, exactly the estimate;
+  encoding 823.6 s for both modes (41.3 ms per pass, 11.9 rows/s); stage
+  total 824.4 s; backend load 25.0 s; peak GPU memory 2,354,481,152 bytes.
+  Published under artefacts/conformance/ with the run ID and verified;
+  predictions SHA-256 3a727361.... Usage of the failed attempt and of the
+  run: not yet reported; to be added here with the cumulative figures.
+- Metrics (released checkpoint, threshold 0.5, identical under the ">=" and
+  ">" rules), paper_exact against repo_compatible: upstream-masked AUPRC
+  0.98161 against 0.98131, ROC-AUC 0.99907 against 0.99906, TP 606 against
+  605 of 617, FP 9 in both (FPR 0.00149); all rows AUPRC 0.8303 against
+  0.8291, ROC-AUC 0.8853 against 0.8842, TP 1,384 against 1,383 of 3,729,
+  FP 9 in both; per domain (masked) banking AUPRC 0.9667 against 0.9664 with
+  272 of 272 detected and 9 false positives in both, slack AUPRC 1.0 in both
+  with 102 against 100 of 105 detected, travel AUPRC 1.0 in both with 232
+  against 233 of 240 detected. Decision agreement between the modes 0.99969:
+  three rows of 9,776 differ. The report's higher_masked_average_precision
+  names paper_exact, by 0.0003, one row's worth. No mode selected.
+- Reading: the released checkpoint fits both recipes equally. The recipes
+  differ only by the sentence's own share of the passage mean in the first
+  contextual term, which is a few per cent for passages averaging 25
+  sentences; the three-sentence smoke sample showed the largest differences
+  for the same reason. The fit test is therefore in its "small gap" case and
+  the decision falls to provenance and any author reply, as anticipated. The
+  full-run numbers and the explanation are recorded in
+  [REPRESENTATION_MODES.md](REPRESENTATION_MODES.md). A decision entry is
+  proposed for the tutor meeting; nothing is written to DECISIONS.md and
+  configs/experiment.yaml keeps representation null until it is approved.
+- Handoff Phase 4A checklist: the full-run item is ticked; the decision item
+  remains open.

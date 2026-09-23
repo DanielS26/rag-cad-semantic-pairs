@@ -176,9 +176,11 @@ in the upstream sorted-path order (0 means every record). Both modes are built
 from one set of encoder passes, and per-domain metrics use the upstream
 definition of a domain: the first directory under the extracted test folder
 (banking, slack, travel). The ten-record pilot of 23 September 2026 took
-9 minutes and 0.07 units (39.5 ms per encoder pass); its timings are the
-estimate for the full job, recorded in [PROGRESS.md](PROGRESS.md). The stage
-uses the candidate profile, but the standing smoke instruction does not cover
+9 minutes and 0.07 units (39.5 ms per encoder pass), and the full run the
+same day (UTC) scored all 389 records with 19,941 encoder passes in 13.7
+minutes of encoding (41.3 ms per pass); both are recorded in
+[PROGRESS.md](PROGRESS.md). The stage uses the candidate profile, but the
+standing smoke instruction does not cover
 it: each released-test run needs its own explicit authorisation and, for the
 full run, an approved budget. Over-length records (more than 8,192 tokens) are
 skipped and listed rather than silently truncated as the upstream builder

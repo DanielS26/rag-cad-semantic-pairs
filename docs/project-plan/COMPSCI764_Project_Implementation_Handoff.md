@@ -1290,7 +1290,7 @@ Checklist:
 - [x] Masked and unmasked evaluators implemented and tested.
 - [x] `released-test` stage implemented with a CPU fake path and gated real path.
 - [x] Ten-record pilot run and its cost recorded.
-- [ ] Full released-test run published and its metrics recorded.
+- [x] Full released-test run published and its metrics recorded.
 - [ ] Primary representation decided and recorded; experiment.yaml updated; smoke gate rerun in that mode.
 
 Acceptance criterion: a recorded decision that names the primary mode, the evidence behind it and the commit whose smoke gate passed in that mode.
