@@ -123,6 +123,51 @@ folder, as the upstream evaluator defines it. And because the two modes share
 every encoder pass, the stage now computes both from one set of passes, which
 halves the encoder cost of the full run.
 
+## Full released-test run (23 September 2026 UTC, commit d0b92eeb)
+
+Run ID 20260923T080927Z_d0b92eeb_released-test-full_5bd0f99b: the released
+checkpoint on all 389 records (9,776 rows, 3,729 malicious, 3,112 of them
+masked out by the upstream boundary rule), threshold 0.5, the ">=" and ">"
+rules identical throughout.
+
+| Rows | Metric | repo_compatible | paper_exact |
+|---|---|---:|---:|
+| masked 6,664 | AUPRC | 0.98131 | 0.98161 |
+| masked 6,664 | ROC-AUC | 0.99906 | 0.99907 |
+| masked 6,664 | TP / FN / FP at 0.5 | 605 / 12 / 9 | 606 / 11 / 9 |
+| all 9,776 | AUPRC | 0.8291 | 0.8303 |
+| all 9,776 | ROC-AUC | 0.8842 | 0.8853 |
+| all 9,776 | TP / FN / FP at 0.5 | 1,383 / 2,346 / 9 | 1,384 / 2,345 / 9 |
+| banking, masked 4,403 | AUPRC; TP of 272; FP | 0.9664; 272; 9 | 0.9667; 272; 9 |
+| slack, masked 390 | AUPRC; TP of 105; FP | 1.0; 100; 0 | 1.0; 102; 0 |
+| travel, masked 1,871 | AUPRC; TP of 240; FP | 1.0; 233; 0 | 1.0; 232; 0 |
+
+Decision agreement between the modes: 0.99969, three rows of 9,776. The
+report names paper_exact as the higher masked AUPRC, by 0.0003, one row's
+worth. Cost: 19,941 encoder passes in 823.6 s (41.3 ms per pass, 11.9 rows/s
+over both modes); maximum token length 529; no over-length records; peak GPU
+memory 2.35 GB; 13.7 minutes for the stage, and about 25 minutes and 0.12
+units for the notebook in total as reported, including a first attempt that
+failed at the environment preflight.
+
+What this shows. The released checkpoint fits both recipes equally: one
+detection and three decisions differ over the whole released test set. This
+is what the arithmetic of the recipes predicts. The first contextual term is
+the mean over the passage's tokens; paper_exact includes the sentence's own
+tokens in that mean and repo_compatible excludes them, so the two differ by
+the sentence's share of the passage times the gap between its tokens and the
+rest. With about 25 sentences per record that share is a few per cent, which
+is why the three-sentence smoke sample showed the largest differences (0.111
+in feature space, a flipped borderline decision) and the full set shows
+almost none. The fit test is in its "small gap" case: it cannot identify the
+training recipe, and it shows that the choice has no measurable effect on
+the released checkpoint's behaviour on the released test set.
+
+These are also the project's reference numbers for the released checkpoint
+on the released test set: masked AUPRC 0.981, ROC-AUC 0.999, TPR 0.98 and
+FPR 0.0015 at 0.5. The paper reports no sentence-level figure to compare
+them with.
+
 ## Options for deciding
 
 1. Author answer. Ask which computation produced the paper's results (handoff
@@ -133,6 +178,15 @@ halves the encoder cost of the full run.
    checkpoint's origin; `paper_exact` matches the published description. The
    handoff notes that the released checkpoint makes `repo_compatible` the
    natural first compatibility test but not an automatic scientific choice.
+
+Status after the full run: option 2 gave no separation. The proposal for the
+tutor meeting is option 3, repo_compatible: it is the computation the
+released code performs, so it is the most likely origin of the released
+checkpoint and of the paper's agent-level results, and the fit test shows
+the released checkpoint behaves the same under either recipe at realistic
+passage lengths. paper_exact stays implemented as a documented secondary
+variant. An author answer (option 1) can confirm or overturn the proposal
+before the decision is recorded.
 
 Whichever mode is chosen, D-20260922-12 requires the smoke gate to be rerun in
 that mode before final feature builds, and the choice must be recorded as a
