@@ -198,7 +198,7 @@ and rerunning the affected full gate; it is not a Colab-side patch.
 Use `python -m rag_cad.cli --help` and the subcommand's `--help`. Commands are
 `audit upstream`, `environment preflight`, `upstream fetch-cad`,
 `upstream validate-cad`, `artefact publish`, `artefact restore`, `artefact verify`,
-`smoke fake`, `smoke run-a`, `smoke run-b`, `data validate`, `data split`,
+`smoke fake`, `smoke run-a`, `smoke run-b`, `data adapt-cad`, `data validate`, `data split`,
 `data check-leakage`, `data compare-budgets`, `features fake-build`,
 `features build`, `conformance fake-released-test`, and
 `conformance released-test`. The default config paths are relative to the
@@ -223,11 +223,20 @@ still writes its report before exiting with status 2.
 
 ## Shared Budget And Storage
 
-The researcher approved at most **20 compute units or 10,800 connected seconds
-across Run A plus Run B**, whichever occurs first, not per run. Select the
-lowest displayed-rate available NVIDIA GPU satisfying the gate, preferring T4
-when cheapest. Pro does not guarantee a GPU type. No premium allocation or retry
-is implied by the subscription.
+From 4 October 2026 the budget is four pools (D-20261004-17), each a hard cap on
+connected time and compute units, whichever is reached first, carried forward
+in the notebook inputs of its stages: pool A, bounded gate and conformance
+runs, 6 hours and 12 units; pool B, Phase 4 final stages, 4 hours and 8 units;
+pool C, Phases 5 and 6, 6 hours and 12 units; pool D, Phases 7 and 8, 8 hours
+and 16 units. An exhausted pool needs a new decision entry, never a quiet
+top-up. Runs before 4 October used 7,200 seconds and 1.84 units under the
+original Phase 1B cap of **20 compute units or 10,800 connected seconds across
+Run A plus Run B** (D-20260921-09); that usage is history and is not charged to
+any pool. Until the runner's cap inputs are added with the Phase 4 stage, the
+committed runner still enforces the original constants, which is tighter than
+pool A. Select the lowest displayed-rate available NVIDIA GPU satisfying the
+gate, preferring T4 when cheapest. Pro does not guarantee a GPU type. No premium
+allocation or retry is implied by the subscription.
 
 Use this operator cadence; ordinary notebook cells do not require repeated manual
 budget checks:

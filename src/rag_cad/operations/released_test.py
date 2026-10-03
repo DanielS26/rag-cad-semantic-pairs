@@ -9,12 +9,12 @@ upstream boundary-masked evaluator. Conformance-stage work; it selects no mode.
 import json
 import tarfile
 import time
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
 import numpy as np
 
 from rag_cad.cad.representation import MODES, build_mode_features
-from rag_cad.data.cad_release_adapter import adapt_record
+from rag_cad.data.cad_release_adapter import adapt_record, member_suite
 from rag_cad.data.jsonl import write_jsonl
 from rag_cad.evaluation.detector_metrics import THRESHOLD, summarise, upstream_boundary_mask
 from rag_cad.operations.artefacts import checked_members, safe_path
@@ -25,20 +25,12 @@ from rag_cad.operations.smoke import mark, resource_snapshot
 ARCHIVE = "testing_data_original.tar.gz"
 REPORT = "released_test_evaluation.json"
 PREDICTIONS = "predictions.jsonl"
-ARCHIVE_ROOT = ARCHIVE[: -len(".tar.gz")]
 
 
 def record_domain(path: str) -> str:
-    """The upstream domain of a test file: the first directory under the extracted test folder.
-
-    Mirrors build_eval_mask in the pinned detector/train_and_eval.py, which takes the first
-    component of each JSON path relative to the test directory (banking, slack or travel).
-    Archive members carry that folder as their own first component, so it is stripped first.
-    """
-    parts = PurePosixPath(path).parts
-    if parts and parts[0] == ARCHIVE_ROOT:
-        parts = parts[1:]
-    return parts[0] if len(parts) > 1 else "unknown"
+    """The upstream domain of a test file: the suite directory under the extracted test folder,
+    as build_eval_mask in the pinned detector/train_and_eval.py defines it."""
+    return member_suite(path)
 
 
 def load_released_test(archive: Path) -> list[dict]:

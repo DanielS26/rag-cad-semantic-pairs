@@ -37,7 +37,20 @@ def frozen_tokenizer(profile_path: Path | None, resources: Path | None):
     return sent_tokenize
 
 
+def adapt(args) -> dict:
+    """Adapt the pinned CAD release archives into scorer records; CPU only, no profile needed."""
+    from rag_cad.data.cad_release_adapter import adapt_release
+    from rag_cad.operations.upstream import validate_release_spec
+
+    spec = load_config(args.release)
+    validate_release_spec(spec)
+    return adapt_release(spec, local_path(args.source), local_path(args.output),
+                         include_paraphrased=not args.skip_paraphrased)
+
+
 def run(args) -> dict:
+    if args.action == "adapt-cad":
+        return adapt(args)
     local_path(args.input)
     local_path(args.output)
     config = load_config(args.experiment)

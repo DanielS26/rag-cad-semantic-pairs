@@ -65,6 +65,11 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--destination", type=Path, required=True)
             command.add_argument("--receipt", type=Path)
     data = commands.add_parser("data").add_subparsers(dest="action", required=True)
+    adapt = data.add_parser("adapt-cad")
+    adapt.add_argument("--release", type=Path, default=Path("configs/upstream/cad_release.yaml"))
+    adapt.add_argument("--source", type=Path, required=True)
+    adapt.add_argument("--output", type=Path, required=True)
+    adapt.add_argument("--skip-paraphrased", action="store_true")
     for name in ("validate", "split", "check-leakage", "compare-budgets"):
         command = data.add_parser(name)
         command.add_argument("--input", type=Path, required=True)
