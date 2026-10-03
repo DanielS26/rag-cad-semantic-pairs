@@ -30,9 +30,11 @@ The scorer record contract from handoff Section 7.1 is enforced by
 conditions always carry an assigned split. The licence registry maps
 `team_authored` records to `team-owned` and the three CAD release kinds to
 `CC-BY-4.0`; released CAD test records and `test_only` records are fixed to the
-test split. Split ratios, the near-duplicate threshold and the benign length
-tolerance are unresolved experiment values (null) that refuse execution until
-approved.
+test split. The split ratios (0.7/0.15/0.15 by family), the near-duplicate
+threshold (0.8) and the benign length tolerance (0.25) are set by
+D-20261004-15; the augmentation budget in sentence rows stays null until the
+family pilot measures rows per family, and the commands that need it refuse
+execution until it is set.
 
 `tests/fixtures/phase2_families.jsonl` holds ten hand-written synthetic
 families, 40 records in all: one malicious record, its benign semantic

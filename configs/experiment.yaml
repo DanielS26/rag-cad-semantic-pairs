@@ -19,9 +19,9 @@ training:
 threshold: 0.5
 filter: remove_sentences_strictly_above_threshold
 augmentation_budget_sentence_rows: null
-split_ratios: null
+split_ratios: {train: 0.7, validation: 0.15, test: 0.15}
 split_seed: 764
-near_duplicate_threshold: null
-benign_length_tolerance: null
-d0_holdout_policy: null
-shared_malicious_tutor_approval: null
+near_duplicate_threshold: 0.8
+benign_length_tolerance: 0.25
+d0_holdout_policy: none
+shared_malicious_additions: true

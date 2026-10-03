@@ -1072,3 +1072,25 @@ Historical audit claims are distinguished from checks executed in this session.
   before it is recorded and enforced.
 - Branch phase4a-representation-decision, stacked on PR #19. Full suite: 268
   passed; ruff clean.
+- Later the same day Daniel Song approved the suggested defaults for the
+  unresolved experiment values: recorded as D-20261004-15. configs/
+  experiment.yaml now sets split_ratios 0.7/0.15/0.15 by family,
+  d0_holdout_policy none, near_duplicate_threshold 0.8,
+  benign_length_tolerance 0.25 and shared_malicious_additions true;
+  augmentation_budget_sentence_rows stays null until the family pilot
+  measures rows per family, and shared_malicious_tutor_approval stays null
+  until the tutor's confirmation is recorded. Handoff Phase 0 checklist and
+  Section 14 questions 3, 4 and 9 annotated; data card updated. Branch
+  phase0-experiment-values, stacked on PR #20. Full suite: 268 passed; ruff
+  clean.
+- Still open: the final-stage compute budget (proposal of 2026-10-04 awaiting
+  approval) and the authors' reply or its absence.
+- Daniel Song clarified that the tutor does not give final approval: decisions
+  are the researchers' own, acceptable when reasonable, explainable and
+  practical, and recorded with reasons. Recorded as D-20261004-16. The
+  shared_malicious_tutor_approval flag is removed from configs/experiment.yaml
+  (shared_malicious_additions true stands); handoff Section 1 gains item 14
+  and the tutor-as-approver wording in Section 14 and in the Phase 0, 4A and
+  5 checklists is replaced; the frozen hybrid runbook and start prompt keep
+  their historical wording; CLAUDE.md states the rule; D-20261004-15 amended
+  before merge.
