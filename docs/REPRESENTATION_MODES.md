@@ -1,6 +1,7 @@
 # Representation Mode Evidence (D-20260921-05)
 
-Status: evidence only. No primary mode has been selected. This page collects
+Status: decided on 4 October 2026 (D-20261004-13): repo_compatible is the
+primary mode and paper_exact a documented secondary variant. This page collects
 the measurements needed for the decision and the options for making it.
 
 ## Why two modes exist
@@ -179,14 +180,14 @@ them with.
    handoff notes that the released checkpoint makes `repo_compatible` the
    natural first compatibility test but not an automatic scientific choice.
 
-Status after the full run: option 2 gave no separation. The proposal for the
-tutor meeting is option 3, repo_compatible: it is the computation the
-released code performs, so it is the most likely origin of the released
-checkpoint and of the paper's agent-level results, and the fit test shows
-the released checkpoint behaves the same under either recipe at realistic
-passage lengths. paper_exact stays implemented as a documented secondary
-variant. An author answer (option 1) can confirm or overturn the proposal
-before the decision is recorded.
+Status after the full run: option 2 gave no separation. The decision,
+recorded as D-20261004-13 on 4 October 2026, is option 3, repo_compatible:
+it is the computation the released code performs, so it is the most likely
+origin of the released checkpoint and of the paper's agent-level results,
+and the fit test shows the released checkpoint behaves the same under either
+recipe at realistic passage lengths. paper_exact stays implemented as a
+documented secondary variant. An author answer (option 1) can still
+supersede the entry.
 
 Whichever mode is chosen, D-20260922-12 requires the smoke gate to be rerun in
 that mode before final feature builds, and the choice must be recorded as a

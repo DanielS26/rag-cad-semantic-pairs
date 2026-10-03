@@ -1,4 +1,4 @@
-representation: null
+representation: repo_compatible
 encoder:
   model: jinaai/jina-embeddings-v3
   revision: null

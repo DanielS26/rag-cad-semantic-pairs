@@ -1,6 +1,7 @@
 """CAD representation interpretations, adapted from pinned detector/defense.py.
 
-Upstream source and MIT licence are retained. No primary interpretation is selected.
+Upstream source and MIT licence are retained. repo_compatible is the primary interpretation
+(D-20261004-13); paper_exact is kept as a documented secondary variant.
 """
 
 from dataclasses import asdict, dataclass
