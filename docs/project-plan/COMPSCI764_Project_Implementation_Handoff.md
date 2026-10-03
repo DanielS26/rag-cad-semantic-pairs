@@ -1163,7 +1163,7 @@ python -m rag_cad.cli compare all --config configs/experiment.yaml
 - [x] Audit the pinned CAD-data and CAD-models revisions, hashes, archive safety, schemas, counts, licences, and checkpoint structure.
 - [x] Select native Windows + private GitHub + hosted Colab + Google Drive as the working execution profile.
 - [ ] Send/record the remaining author clarification questions about representation, encoder revision, checkpoint provenance, and data metadata.
-- [ ] Decide repo_compatible versus paper_exact representation.
+- [x] Decide repo_compatible versus paper_exact representation. (repo_compatible primary and paper_exact secondary by D-20261004-13, after the released-test fit test showed the released checkpoint is insensitive to the choice.)
 - [x] Pin the Jina model revision. (Frozen for the tested profile at ab036b02/bd55a5ec by D-20260922-12; the authors' original revision remains unconfirmed.)
 - [x] Pass the live Colab GPU/dependency/artefact smoke gate and freeze `colab_tested.yaml`. (Run A/Run B from a822b9a0, D-20260922-12; evidence in docs/PROGRESS.md.)
 - [ ] Confirm the shared Drive root, capacity, permissions, and final-run operator.
@@ -1291,7 +1291,8 @@ Checklist:
 - [x] `released-test` stage implemented with a CPU fake path and gated real path.
 - [x] Ten-record pilot run and its cost recorded.
 - [x] Full released-test run published and its metrics recorded.
-- [ ] Primary representation decided and recorded; experiment.yaml updated; smoke gate rerun in that mode.
+- [x] Primary representation decided and recorded; experiment.yaml updated. (D-20261004-13.)
+- [ ] Smoke gate rerun in that mode at the commit from which the first final-stage run is launched, freezing the tested profile for it.
 
 Acceptance criterion: a recorded decision that names the primary mode, the evidence behind it and the commit whose smoke gate passed in that mode.
 
@@ -1579,7 +1580,7 @@ Do not use a mutable Drive path as provenance. The reproducible identity of an i
 
 These are the material open decisions currently known. They do not prevent the reversible Phase 1A scaffold, but each must be resolved at its named gate before the affected data, feature, training, or end-to-end run is frozen.
 
-1. Which representation becomes primary: paper_exact or repo_compatible, after the checkpoint conformance test and author clarification?
+1. Resolved by D-20261004-13: repo_compatible is primary and paper_exact a documented secondary variant, after the released-test fit test showed the released checkpoint is insensitive to the choice; an author clarification can still supersede the entry.
 2. Resolved by D-20260921-03 and D-20260921-04: the team approves official original-training D0 after validation/adaptation and the checkpoint as reference/smoke only. Real execution and adaptation remain gated.
 3. What is the exact augmentation budget N at the sentence-representation level?
 4. What train/validation/test split proportions will be used for the project-created semantic families, and will any official D0 records be held out?

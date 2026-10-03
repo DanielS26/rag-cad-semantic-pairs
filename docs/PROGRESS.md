@@ -1044,3 +1044,31 @@ Historical audit claims are distinguished from checks executed in this session.
   configs/experiment.yaml keeps representation null until it is approved.
 - Handoff Phase 4A checklist: the full-run item is ticked; the decision item
   remains open.
+
+## 2026-10-04 - Representation Decision Recorded; Implementation Choices Batched; Budget Proposal
+
+- Resuming after a break since 24 September: PR #19 still open with CI green
+  and mergeable; main unchanged at d0b92eeb; no other work recorded in the
+  interval.
+- Daniel Song approved the representation proposal ("yes go with that"):
+  recorded as D-20261004-13, repo_compatible primary and paper_exact
+  secondary. configs/experiment.yaml now sets representation:
+  repo_compatible, which the candidate profile already expected. The smoke
+  gate rerun that D-20260922-12 requires is scheduled for the commit from
+  which the first final-stage run is launched, not earlier, because the
+  Phase 4 code that follows would invalidate a profile frozen now.
+- Daniel Song asked for one batched entry for the implementation choices of
+  Phases 2 to 4A that had been listed as decision-log candidates: recorded
+  as D-20261004-14 (thirteen items).
+- Handoff: Phase 0 checklist item "Decide repo_compatible versus paper_exact"
+  ticked; Section 14 question 1 marked resolved; the Phase 4A checklist item
+  split so the recorded decision is ticked and the gate rerun stays open.
+  REPRESENTATION_MODES.md and the representation module docstring state the
+  decision.
+- Open: the unresolved experiment values (split ratios, D0 holdout policy,
+  near-duplicate threshold, benign length tolerance, augmentation budget,
+  shared-malicious approval) stay null pending the tutor; a compute budget
+  for the final stages was proposed to Daniel Song and awaits approval
+  before it is recorded and enforced.
+- Branch phase4a-representation-decision, stacked on PR #19. Full suite: 268
+  passed; ruff clean.

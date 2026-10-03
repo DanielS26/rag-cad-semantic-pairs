@@ -216,3 +216,46 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song, "I approved the decision log" after the proposed entry in the coding session on 2026-09-22.
 - Related files, commands, results, correspondence, or commit: [Tested profile](../configs/environments/colab_tested.yaml), [tested lock](../requirements/colab-core.lock.txt), [candidate profile](../configs/environments/colab_candidate.yaml), [tests](../tests/test_candidate_preparation.py), [PROGRESS.md](PROGRESS.md); D-20260921-02; D-20260921-05; D-20260921-09; D-20260921-10; D-20260921-11.
 - Supersedes / superseded by: None. Completes the candidate-to-tested transition defined in D-20260921-02.
+
+## D-20261004-13 - Select repo_compatible as the primary representation
+
+- Status: Confirmed
+- Date: 2026-10-04
+- Project phase: Phase 4A, representation decision before final feature builds
+- Category: Scientific
+- Decision or important note: repo_compatible is the primary representation for every project feature build and for runtime scoring (M0 to M3, N0 and the RAG filter). paper_exact stays implemented and documented as a secondary variant for a bounded robustness check only; it produces no primary result. configs/experiment.yaml now sets representation: repo_compatible.
+- Context and reason: No sentence-level oracle is published for the base detector, so the training recipe of the released checkpoint cannot be identified by reproducing a number. The released-test fit test on all 389 records shows the released checkpoint behaves the same under both recipes (three of 9,776 decisions, one detection and 0.0003 masked AUPRC apart), which the pooling arithmetic explains: the recipes differ only by a sentence's own share of the passage mean. repo_compatible is the computation the released code performs (detector/defense.py and build_embeddings.py), so it is the most likely origin of the released checkpoint and of the paper's agent-level results, and it keeps the project's features row-for-row comparable with the upstream pipeline. Proposed on 2026-09-24 after the full run; no author clarification had arrived.
+- Evidence: Full-run report and predictions under artefacts/conformance/20260923T080927Z_d0b92eeb_released-test-full_5bd0f99b (predictions SHA-256 3a727361...); pilot report under artefacts/conformance/20260923T060056Z_f4181bc8_released-test-pilot_5bd0f99b; Run A representation_modes evidence from 0cc9ad77; [REPRESENTATION_MODES.md](REPRESENTATION_MODES.md); progress entries of 2026-09-22, 2026-09-23 and 2026-09-24.
+- Alternatives considered: paper_exact (matches the paper's description; higher masked AUPRC by one row; not the released computation). Deferring until the authors reply (blocks Phase 4 indefinitely; a reply can still supersede this entry).
+- Consequences for implementation/evaluation/report: Final feature builds use repo_compatible through RepresentationConfig, whose representation_id binds every shard and checkpoint to it. The smoke gate (Run A and a fresh-runtime Run B) is rerun in this mode at the commit from which the first final-stage run is launched, which freezes the tested profile for it as D-20260922-12 requires; it is not rerun earlier, because any later code change would invalidate the profile again. The report states the choice, the fit-test result and the arithmetic reason, and gives the released checkpoint's reference numbers on the released test set with the no-oracle caveat. If an author reply contradicts the choice, a superseding entry is required and any features built under this one are rebuilt.
+- Approved by: Daniel Song, "yes go with that" to the proposed entry in the coding session on 2026-10-04.
+- Related files, commands, results, correspondence, or commit: [REPRESENTATION_MODES.md](REPRESENTATION_MODES.md), [experiment.yaml](../configs/experiment.yaml), [candidate profile](../configs/environments/colab_candidate.yaml), [representation module](../src/rag_cad/cad/representation.py), [PROGRESS.md](PROGRESS.md); D-20260921-05; D-20260922-12.
+- Supersedes / superseded by: Completes D-20260921-05, which kept both modes and selected none.
+
+## D-20261004-14 - Implementation choices of Phases 2 to 4A, recorded in one entry
+
+- Status: Confirmed
+- Date: 2026-10-04
+- Project phase: Phases 2, 3 and 4A
+- Category: Implementation
+- Decision or important note: The following choices, made while implementing the data contracts, the feature builder, the generic scorer and the released-test stage, are confirmed as they stand:
+  1. Unresolved experiment values refuse execution: a null value in configs/experiment.yaml (split ratios, near-duplicate threshold, benign length tolerance, augmentation budget, D0 holdout policy, shared-malicious approval) stops the command that needs it instead of falling back to a default.
+  2. Raw dataset records carry split null; splits exist only in a deterministic group-level manifest (seeded SHA-256 order over group IDs, deficit fill, released CAD test records pinned to test) bound to the dataset content digest.
+  3. Leakage rule: families, groups, exact duplicate records, and exact or near-duplicate target sentences may not cross splits; benign context overlap across splits is reported but not refused.
+  4. Near-duplicate definition: normalised word 3-shingle Jaccard similarity computed exactly over all candidate pairs; the threshold stays an experiment value.
+  5. Equal-budget rule: conditions must have identical record counts, identical shared pools, complete augmentation units with equal sentence counts, and benign-to-malicious length ratios within the experiment tolerance.
+  6. Feature storage: content-addressed shards of 256 records per pool (base, shared malicious, the three benign pools, common validation and test) holding features.npz (X float32 [N, 2048], y int64), rows.jsonl with the row identity fields, and manifest.json; a shard is reused only after its identity and ordered record hashes verify; a root claimed by another identity is refused; conditions are assembled by (record_id, sentence_id) so M1 to M3 share byte-identical D0 and malicious rows. The shard size may change once before the final feature manifest is frozen.
+  7. representation_id is the digest of mode, encoder weights revision, encoder code revision, segmenter identity, dtype and attention; training features and runtime scoring build through the same RepresentationConfig.
+  8. Scoring contract: the threshold is fixed at 0.5 and the passage filter removes sentences strictly above it; a scorer with any other threshold is refused; evidence records retained and removed text.
+  9. Inputs longer than the encoder's 8,192 tokens are refused and listed, never truncated as the upstream builder does.
+  10. The upstream boundary-masked evaluator (the first three and last five sentences of each injection span dropped, pred = prob >= 0.5) is implemented beside the project's all-rows evaluator (pred = prob > 0.5), and both are reported.
+  11. The released-test fit test on the authors' test set is the method for the representation decision, run as a conformance stage under the candidate profile with a ten-record pilot before the full run; its domain is the first directory under the extracted test folder, as upstream defines it, and both modes are built from one set of encoder passes.
+  12. Bounded released-test (conformance) runs draw on the same connected-time and compute-unit cap as the smoke attempts, carried forward across runs.
+  13. The Run A smoke stage includes a two-mode comparison on its synthetic sample as standing evidence.
+- Context and reason: Each choice keeps the pipeline deterministic, auditable and refusing by default. Each was recorded in docs/PROGRESS.md when made (entries of 2026-09-22, 2026-09-23 and 2026-09-24) and listed as a decision-log candidate; Daniel Song asked for one batched entry rather than one entry per choice.
+- Evidence: The progress entries named above; the tests under tests/ that pin each behaviour (data schema, segmentation round trip, family leakage, equal budget, feature metadata alignment, RAG filter, detector metrics, released test, conformance CLI).
+- Alternatives considered: One entry per choice (more bookkeeping for choices that are already tested and logged); leaving them in the progress log only (harder to find when the report is written).
+- Consequences for implementation/evaluation/report: Changing any of these later needs a superseding entry. The report's methods section can cite this entry for the data, feature and evaluation contracts.
+- Approved by: Daniel Song, "give them a one batched entry" in the coding session on 2026-10-04.
+- Related files, commands, results, correspondence, or commit: [PROGRESS.md](PROGRESS.md), [experiment.yaml](../configs/experiment.yaml), [data package](../src/rag_cad/data/), [feature store](../src/rag_cad/cad/feature_store.py), [feature builder](../src/rag_cad/cad/feature_builder.py), [scorer](../src/rag_cad/cad/scorer.py), [detector metrics](../src/rag_cad/evaluation/detector_metrics.py), [released test](../src/rag_cad/operations/released_test.py); D-20260921-05; D-20260922-12; D-20261004-13.
+- Supersedes / superseded by: None.
