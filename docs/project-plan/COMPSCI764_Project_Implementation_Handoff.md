@@ -1168,7 +1168,7 @@ python -m rag_cad.cli compare all --config configs/experiment.yaml
 - [x] Pass the live Colab GPU/dependency/artefact smoke gate and freeze `colab_tested.yaml`. (Run A/Run B from a822b9a0, D-20260922-12; evidence in docs/PROGRESS.md.)
 - [ ] Confirm the shared Drive root, capacity, permissions, and final-run operator.
 - [ ] Confirm generator provider/model and API budget.
-- [ ] Confirm augmentation size N and split ratios with the tutor.
+- [ ] Confirm augmentation size N and split ratios with the tutor. (Split ratios set to 70/15/15 by family in D-20261004-15; N deferred until the family pilot measures rows per family; the tutor's confirmation of both is still to be recorded.)
 
 Acceptance criterion: configs/experiment.yaml has no unresolved value that changes features or primary training; docs/DECISIONS.md records each choice.
 
@@ -1582,13 +1582,13 @@ These are the material open decisions currently known. They do not prevent the r
 
 1. Resolved by D-20261004-13: repo_compatible is primary and paper_exact a documented secondary variant, after the released-test fit test showed the released checkpoint is insensitive to the choice; an author clarification can still supersede the entry.
 2. Resolved by D-20260921-03 and D-20260921-04: the team approves official original-training D0 after validation/adaptation and the checkpoint as reference/smoke only. Real execution and adaptation remain gated.
-3. What is the exact augmentation budget N at the sentence-representation level?
-4. What train/validation/test split proportions will be used for the project-created semantic families, and will any official D0 records be held out?
+3. What is the exact augmentation budget N at the sentence-representation level? (Deferred by D-20261004-15 until the 30 to 50 family pilot measures rows per family; the value stays null and refuses execution until set.)
+4. Resolved by D-20261004-15: 70/15/15 by whole family, released CAD test records pinned to test, and no official D0 record held out; revisited only if the final family count gives fewer than about 40 test families.
 5. Which live Colab GPU/runtime/dependency profile passes Phase 1B and becomes the final feature environment? The platform choice is fixed; the tested profile is not yet known.
 6. Which researcher owns the shared Drive root and acts as the sole operator for each final run?
 7. Which fixed generator/provider will be used, and what API/compute budget is available?
 8. Which documents/tasks form the held-out RAG evaluation corpus?
-9. Does the tutor approve sharing the same malicious augmentation records across M1-M3 while varying only the benign half?
+9. Does the tutor approve sharing the same malicious augmentation records across M1-M3 while varying only the benign half? (The team's design answer is yes, recorded in D-20261004-15 as shared_malicious_additions true; the tutor's confirmation flag stays null until recorded.)
 
 Recommended defaults:
 
