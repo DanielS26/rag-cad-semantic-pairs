@@ -25,4 +25,3 @@ near_duplicate_threshold: 0.8
 benign_length_tolerance: 0.25
 d0_holdout_policy: none
 shared_malicious_additions: true
-shared_malicious_tutor_approval: null

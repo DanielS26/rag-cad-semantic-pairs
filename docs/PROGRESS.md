@@ -1085,3 +1085,12 @@ Historical audit claims are distinguished from checks executed in this session.
   clean.
 - Still open: the final-stage compute budget (proposal of 2026-10-04 awaiting
   approval) and the authors' reply or its absence.
+- Daniel Song clarified that the tutor does not give final approval: decisions
+  are the researchers' own, acceptable when reasonable, explainable and
+  practical, and recorded with reasons. Recorded as D-20261004-16. The
+  shared_malicious_tutor_approval flag is removed from configs/experiment.yaml
+  (shared_malicious_additions true stands); handoff Section 1 gains item 14
+  and the tutor-as-approver wording in Section 14 and in the Phase 0, 4A and
+  5 checklists is replaced; the frozen hybrid runbook and start prompt keep
+  their historical wording; CLAUDE.md states the rule; D-20261004-15 amended
+  before merge.
