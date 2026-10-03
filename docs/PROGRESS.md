@@ -1094,3 +1094,69 @@ Historical audit claims are distinguished from checks executed in this session.
   5 checklists is replaced; the frozen hybrid runbook and start prompt keep
   their historical wording; CLAUDE.md states the rule; D-20261004-15 amended
   before merge.
+
+## 2026-10-04 - PRs #19 To #21 Merged; Compute Budget Pools; Official D0 Downloaded And Adapted
+
+- PRs #19, #20 and #21 merged in order by Daniel Song (main at
+  6d96560e, tree identical to the PR #21 head, CAD ancestor retained, CPU
+  tests green on main). Local main fast-forwarded.
+- Daniel Song delegated the compute budget ("set one for me that is
+  reasonable with enough buffer"): recorded as D-20261004-17, four pools
+  totalling 24 connected hours and 48 units (A gate and conformance 6 h / 12,
+  B Phase 4 4 h / 8, C Phases 5 and 6 6 h / 12, D Phases 7 and 8 8 h / 16),
+  about four times the estimate from the measured 41 ms per encoder pass.
+  The runbook's budget section states the pools; the committed runner still
+  enforces the original constants until the Phase 4 stage adds cap inputs.
+- Daniel Song authorised the local download of the pinned CAD files. Fetched
+  on 4 October (22:57 UTC on 3 October) with the project's fetch_release
+  into datasets/raw/cad_release (ignored by Git) and verified with
+  validate_release: all four sizes and SHA-256 values matched
+  configs/upstream/cad_release.yaml and the archive counts matched the audit
+  (1,080 / 24,665 / 1,625 / 23,040; 389 / 9,776 / 3,729 / 6,047;
+  3,376 / 86,341 / 10,052 / 76,289 with 1,278 count mismatches). The
+  checkpoint was hash-checked only. Receipt beside the files.
+- Archive layout inspected structurally (no text printed): training and
+  paraphrase archives nest root/agentdojo_<suite>_scenarios/<suite>_scenario_n/
+  user_task_u/injection_task_i.json; the test archive nests
+  root/<suite>/user_task_u/injection_task_i.json plus three YAML files; no
+  unit contains a newline; nine test units contain tabs; the longest unit is
+  369 characters; every member path is a valid identifier.
+- Phase 4 CPU part, branch phase4-d0-adapter: src/rag_cad/data/
+  cad_release_adapter.py gains member_suite (the suite from any of the three
+  path forms; released_test now delegates to it), scorer_record (one
+  schema-valid record plus a text-free note per member), adapt_archive and
+  adapt_release (sorted member order, size and hash check, refusal on any
+  count drift against the release spec, paraphrase-to-original mapping,
+  records and notes files per archive, adaptation manifest with digests).
+  New CLI command `data adapt-cad --source --output [--skip-paraphrased]`
+  needs no profile. Tests: tests/test_cad_d0_adapter.py (six tests over
+  synthetic archives in the real layout, including the CLI). The field
+  mapping is described in [DATA_CARD.md](DATA_CARD.md).
+- Real adaptation (local, CPU): counts reproduced exactly; dataset digests
+  8751dd8e... (train), 79513343... (test), ce6a303b... (paraphrased);
+  records-file SHA-256 cfc3d74a..., eaba5846..., 53844b45...; groups 9, 57
+  and 9; total_units missing 360 (train) and 1,353 (paraphrased); 2,199
+  prefixed paraphrase paths normalised and all 3,376 mapped to 60 original
+  records; no attack-goal fallbacks; three YAML members skipped in the test
+  archive.
+- Validators on the adapted files (`data validate`, threshold 0.8): both
+  accepted. Train: 19 exact benign and 4 exact target sentences shared across
+  scenario groups, 0 near-duplicate records, 2,450 near-duplicate target
+  pairs across groups. Test: 111 exact benign and 34 exact target sentences
+  across groups, 263 near-duplicate records and 754,690 near-duplicate target
+  pairs across its 57 groups, a measure of how repetitive the released
+  injections are. Mean 22.8 and 25.1 units per record.
+- Segmenter round trip with the pinned punkt resource (prepared locally with
+  prepare_resources, hash-verified; nltk 3.9.1 installed into the local venv
+  for this check only, not added to the dev lock): the released test set
+  passes for all 389 records; the training set fails for 620 of 1,080 (all
+  300 slack and 320 of 420 travel; banking passes), in every case because the
+  segmenter splits an upstream unit further, typically at a dot inside a URL
+  or address. Training features are built on the upstream units, so counts
+  and features are unaffected; the finding is recorded in the data card as
+  an inherited train-time versus inference-time segmentation difference, with
+  the handling of upstream-derived records in `data validate --roundtrip`
+  left as a decision candidate.
+- Handoff Phase 4 checklist: hashes, counts, total_units and path variants,
+  licences, and the released-test-never-trains items ticked. Runbook and
+  README name the new command. Full suite: 274 passed; ruff clean.

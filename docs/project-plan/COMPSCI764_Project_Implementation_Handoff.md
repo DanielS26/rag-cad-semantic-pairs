@@ -1315,11 +1315,11 @@ The official artefacts have now arrived and passed the structural release audit.
 
 Checklist:
 
-- [ ] Every source hash and release revision matches the audited manifest.
-- [ ] D0 record, sentence-row, and class counts match the verified official totals.
-- [ ] Missing/stale `total_units` fields and paraphrase source-path variants are handled explicitly and tested.
-- [ ] D0 licences/attribution permit the intended research use and redistribution plan.
-- [ ] No released test row enters training or model selection.
+- [x] Every source hash and release revision matches the audited manifest. (Local download of 4 October 2026 verified by `fetch_release` and `validate_release`; receipt beside the archives.)
+- [x] D0 record, sentence-row, and class counts match the verified official totals. (`data adapt-cad` refuses on drift; 1,080 / 24,665 / 1,625 / 23,040 reproduced; adaptation manifest digests in docs/PROGRESS.md.)
+- [x] Missing/stale `total_units` fields and paraphrase source-path variants are handled explicitly and tested. (360 missing in the original training set, 1,353 missing and 1,278 stale in the paraphrase set, 2,199 prefixed paths normalised, all 3,376 paraphrases mapped to 60 originals.)
+- [x] D0 licences/attribution permit the intended research use and redistribution plan. (Data CC-BY-4.0, checkpoint MIT; the adapted files are derived works kept outside Git and shared only within the team on Drive with the release citation.)
+- [x] No released test row enters training or model selection. (Adapted test records carry `condition_source: test_only` and `source_dataset: cad_original_test`; the schema and `pinned_split` refuse any other split.)
 - [ ] A small real feature build completes under the frozen representation/environment.
 - [ ] The official base checkpoint loads and produces finite non-constant probabilities.
 - [ ] Project M0 trains for one smoke epoch, then for the fixed 30 epochs and declared seeds.
