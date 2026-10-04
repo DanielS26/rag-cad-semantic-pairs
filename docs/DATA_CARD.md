@@ -104,7 +104,12 @@ keeps the released train/test split exactly as published; the project's
 leakage report between the two is recorded in `phase4_report.json` but not
 enforced, because that split is the authors' and the released test set serves
 only as the upstream reference test. That report shows the two sides share
-malicious wording: one injected sentence appears verbatim in 128 released test
-records and 45 training records, with 20 further near-duplicate target pairs
-and 14 shared benign context sentences. The project keeps the released split as
-published and applies its own leakage rules to the families it writes.
+malicious wording. Of the 6,560 target-sentence pairs at or above the 0.8
+near-duplicate threshold across the split, 5,760 are one banking injection
+sentence that appears verbatim in 128 released test records and 45 training
+records, and 800 are one travel injection sentence at similarity 0.81 shared
+by 20 test records and 40 training records; 148 of the 389 released test
+records therefore carry an injected sentence that D0 contains verbatim or
+nearly, and 14 benign context sentences are shared. The report's error lists
+are capped at 20 examples each; the counts are in its error_counts field. The project keeps the released split as published and
+applies its own leakage rules to the families it writes.
