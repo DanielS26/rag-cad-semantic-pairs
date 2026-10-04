@@ -45,6 +45,45 @@ def test_notebook_is_output_cleared_guarded_orchestration():
     assert code[4].index("finally:") < code[4].index("STAGE_COMPLETE = True")
     assert "--receipt" in code[4] and "--manifest" not in code[4]
     assert "flush_and_unmount" in code[5]
+    assert "PUBLISHED = {" in code[5] and "print(PUBLISHED)" in code[5]
+    summary = code[-1]
+    assert "json.dumps(summary" in summary and "SUMMARY_DROP" in summary
+    for forbidden in ("run_stage", "drive", "userdata", "os.environ", "subprocess", "/content/drive"):
+        assert forbidden not in summary
+    assert '"locked_packages"' in summary and '"history"' in summary
+
+
+def test_notebook_summary_cell_compacts_reports_and_runs_after_failure(tmp_path, capsys):
+    import json
+
+    root = Path(__file__).resolve().parents[1]
+    book = nbformat.read(root / "notebooks/COMPSCI764_Colab_Runner.ipynb", as_version=4)
+    summary_cell = [cell.source for cell in book.cells if cell.cell_type == "code"][-1]
+    work = tmp_path / "work"
+    stage = work / "outputs" / "synthetic-run"
+    (stage / "features" / "shards").mkdir(parents=True)
+    (stage / "features" / "shards" / "a.npz").write_bytes(b"x" * 10)
+    (work / "preflight.json").write_text(json.dumps({"passed": True, "locked_packages": {"torch": "2.10.0"},
+                                                      "environment": {"gpu_name": "NVIDIA L4"}}), encoding="utf-8")
+    (work / "smoke_progress.json").write_text(json.dumps([f"step_{i}" for i in range(32)]), encoding="utf-8")
+    (stage / "phase4_report.json").write_text(json.dumps({
+        "models": [{"seed": 0, "history": [1, 2, 3], "metadata": {"note": "n" * 300}}],
+        "pairs": list(range(100)), "aggregate": {"masked_ap": {"mean": 0.9}}}), encoding="utf-8")
+    namespace = {"COMMIT": "c" * 40, "RUN_ID": "synthetic-run", "STAGE": "m0", "BUDGET_POOL": "B",
+                 "READY": True, "STAGE_COMPLETE": False, "WORK": work}
+    exec(compile(summary_cell, "<summary-cell-test>", "exec"), namespace)
+    printed = json.loads(capsys.readouterr().out)
+    assert printed["warning"].startswith("Stage did not complete") and printed["published"] is None
+    assert printed["elapsed_seconds"] is None and printed["stage_complete"] is False
+    assert "locked_packages" not in printed["preflight.json"] and printed["preflight.json"]["passed"] is True
+    assert printed["smoke_progress.json"] == [f"step_{i}" for i in range(32)]
+    report = printed["phase4_report.json"]
+    assert "history" not in report["models"][0] and report["models"][0]["metadata"]["note"].endswith("...")
+    assert len(report["models"][0]["metadata"]["note"]) == 203
+    assert report["pairs"] == {"list_length": 100, "first": [0, 1, 2]}
+    assert report["aggregate"] == {"masked_ap": {"mean": 0.9}}
+    assert printed["stage_inventory"] == {"features": {"files": 1, "bytes": 10},
+                                          "phase4_report.json": {"files": 1, "bytes": (stage / "phase4_report.json").stat().st_size}}
 
 
 def test_notebook_permission_guards_stop_without_secret_access():
