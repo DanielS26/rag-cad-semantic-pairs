@@ -18,6 +18,12 @@ def test_notebook_is_output_cleared_guarded_orchestration():
             assert not any(isinstance(node, (ast.ClassDef, ast.FunctionDef)) for node in ast.walk(tree))
     combined = "\n".join(code)
     assert "PHASE1B_AUTHORISED = False" in combined
+    assert 'BUDGET_POOL = ""' in code[0] and "POOL_CONNECTED_SECONDS_CAP = None" in code[0]
+    assert "10800" not in combined and "verify_budget_pool" in code[1]
+    assert combined.count('bootstrap["remaining_seconds"](STARTED, CONNECTED_SECONDS_USED, COMPUTE_UNITS_USED, '
+                          'COMPUTE_UNITS_PER_HOUR, POOL_CONNECTED_SECONDS_CAP, POOL_COMPUTE_UNITS_CAP)') == 8
+    assert 'bootstrap["remaining_seconds"](STARTED, CONNECTED_SECONDS_USED, COMPUTE_UNITS_USED, COMPUTE_UNITS_PER_HOUR)' not in combined
+    assert 'PREFLIGHT_STAGE = {"run-a": "smoke", "run-b": "smoke", "released-test": "conformance", "m0": "train"}[STAGE]' in code[2]
     assert combined.index('"preflight"') < combined.index("drive.mount")
     assert combined.index("hashlib.sha256(bootstrap_path.read_bytes())") < combined.index("runpy.run_path")
     assert combined.index("clone_env.clear()") < combined.index("runpy.run_path")
@@ -80,12 +86,12 @@ def test_notebook_process_boundaries_use_fixed_sanitized_stages():
                         assert isinstance(lookup.slice, ast.Name) and lookup.slice.id == "STAGE"
                         labels = [value.value for value in lookup.value.values]
                         assert all(isinstance(value, ast.Constant) for value in lookup.value.values)
-                        assert labels == ["smoke_run_a", "smoke_run_b", "conformance_released_test"]
+                        assert labels == ["smoke_run_a", "smoke_run_b", "conformance_released_test", "phase4_m0"]
                         stages.extend(labels)
                     assert any(keyword.arg == "timeout" for keyword in node.keywords)
     assert stages == ["environment_preflight", "artefact_restore", "artefact_restore",
                       "upstream_fetch", "smoke_run_a", "smoke_run_b", "conformance_released_test",
-                      "artefact_publish"]
+                      "phase4_m0", "artefact_publish"]
     checkout = ast.parse(code[1])
     handlers = [node for node in ast.walk(checkout) if isinstance(node, ast.ExceptHandler)]
     assert sum(ast.unparse(node.type) == "subprocess.TimeoutExpired" for node in handlers) == 2

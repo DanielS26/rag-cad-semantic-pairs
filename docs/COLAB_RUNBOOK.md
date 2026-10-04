@@ -197,8 +197,9 @@ m0_base training features and the common test features, trains one head per
 declared seed under the fixed recipe, evaluates every seed and the released
 checkpoint on the same test features, and writes `phase4_report.json` with
 per-seed checkpoint directories under `models/m0_base/`. `m0 fake-run` is its
-CPU twin on synthetic identities. Its notebook stage and the budget-pool
-inputs are added next; until then the stage is reachable from the CLI only.
+CPU twin on synthetic identities. Its notebook stage is `STAGE = "m0"` under
+budget pool B: the preflight runs at the `train` stage, the stage label is
+`phase4_m0`, and Cell 7 publishes under the `phase4` stage on Drive.
 
 Final stages reject candidate/unknown profiles. A tested profile requires Run A
 and Run B manifest hashes, the reviewed commit and lock hash, matching runtime
@@ -244,9 +245,11 @@ and 16 units. An exhausted pool needs a new decision entry, never a quiet
 top-up. Runs before 4 October used 7,200 seconds and 1.84 units under the
 original Phase 1B cap of **20 compute units or 10,800 connected seconds across
 Run A plus Run B** (D-20260921-09); that usage is history and is not charged to
-any pool. Until the runner's cap inputs are added with the Phase 4 stage, the
-committed runner still enforces the original constants, which is tighter than
-pool A. Select the lowest displayed-rate available NVIDIA GPU satisfying the
+any pool. The runner takes the pool name and its two caps as inputs
+(`BUDGET_POOL`, `POOL_CONNECTED_SECONDS_CAP`, `POOL_COMPUTE_UNITS_CAP`), checks
+them against the approved profile's `compute_budget` block right after
+checkout, and cuts every run off at the pool's remainder; the carry-forward
+values are the pool's own cumulative usage. Select the lowest displayed-rate available NVIDIA GPU satisfying the
 gate, preferring T4 when cheapest. Pro does not guarantee a GPU type. No premium
 allocation or retry is implied by the subscription.
 

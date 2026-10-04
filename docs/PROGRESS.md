@@ -1207,6 +1207,28 @@ Historical audit claims are distinguished from checks executed in this session.
     subset, refusal of unknown seeds and existing output, real-path gating),
     and the shared fixture tests/cad_release_fixture.py. Full suite: 282
     passed locally; ruff clean.
-- Still to come before any GPU run: the notebook stage for `m0 run` with the
-  budget pools as inputs, the smoke gate rerun at that commit, and the frozen
-  tested profile with compute_budget_approved true.
+- Full fake run on the real local release (fake encoder and fake trainer, one
+  seed, CPU): 494 s end to end; D0 pinned to train (9 groups) and the released
+  test set pinned to test (57 groups), 66 pinned groups and no validation
+  split; 24,665 training rows in 5 shards and 9,776 test rows in 2 shards;
+  report and per-seed directory written as specified. The recorded, not
+  enforced, leakage report between the released train and test sets shows one
+  injected sentence that appears verbatim on both sides, in 128 test records
+  and 45 training records, plus 20 near-duplicate target pairs and 14 shared
+  benign context sentences: the authors' own split shares malicious wording
+  across its two sides, which the project's families must never do. Recorded
+  in the data card.
+- Notebook stage, branch phase4-m0-notebook-stage on top of the pipeline
+  branch: the runner gains `STAGE = "m0"` (command `m0 run`, preflight at the
+  `train` stage, label phase4_m0, Drive stage phase4) and the budget-pool
+  inputs BUDGET_POOL, POOL_CONNECTED_SECONDS_CAP and POOL_COMPUTE_UNITS_CAP in
+  place of the fixed 10,800-second and 20-unit constants; the bootstrap's
+  remaining_seconds takes the pool caps, the new verify_budget_pool compares
+  the typed caps with the approved profile's compute_budget block right after
+  checkout, and STAGES gains phase4_m0. Both environment profiles declare the
+  four pools of D-20261004-17; the candidate's superseded smoke_budget block
+  is removed. Contract and bootstrap tests updated. Full suite: 287 passed
+  locally; ruff clean.
+- Still to come before any GPU run: the smoke gate rerun (Run A and a fresh
+  Run B under pool A) at the merged commit, then the frozen tested profile
+  with compute_budget_approved true.

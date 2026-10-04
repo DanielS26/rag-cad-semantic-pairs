@@ -103,4 +103,8 @@ D-20261004-15, and the split manifest records that policy. The Phase 4 stage
 keeps the released train/test split exactly as published; the project's
 leakage report between the two is recorded in `phase4_report.json` but not
 enforced, because that split is the authors' and the released test set serves
-only as the upstream reference test.
+only as the upstream reference test. That report shows the two sides share
+malicious wording: one injected sentence appears verbatim in 128 released test
+records and 45 training records, with 20 further near-duplicate target pairs
+and 14 shared benign context sentences. The project keeps the released split as
+published and applies its own leakage rules to the families it writes.

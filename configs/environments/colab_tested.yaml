@@ -8,6 +8,15 @@ remote_code_approved: true
 proposal_only: false
 operator: Daniel Song
 compute_budget_approved: false
+compute_budget:
+  decision: D-20261004-17
+  gpu_selection: lowest_displayed_cost_available_nvidia_gpu_above_8_gib
+  operator_disconnect_required: true
+  pools:
+    A: {connected_seconds: 21600, compute_units: 12, scope: gate_and_conformance_runs}
+    B: {connected_seconds: 14400, compute_units: 8, scope: phase_4_final_stages}
+    C: {connected_seconds: 21600, compute_units: 12, scope: phases_5_and_6}
+    D: {connected_seconds: 28800, compute_units: 16, scope: phases_7_and_8}
 licence_scope: noncommercial_academic_with_attribution_no_jina_weight_redistribution
 minimum_free_bytes: 7516192768
 minimum_free_before_install_bytes: 24696061952
