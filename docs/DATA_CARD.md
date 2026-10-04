@@ -111,5 +111,6 @@ records, and 800 are one travel injection sentence at similarity 0.81 shared
 by 20 test records and 40 training records; 148 of the 389 released test
 records therefore carry an injected sentence that D0 contains verbatim or
 nearly, and 14 benign context sentences are shared. The report's error lists
-are capped at 20 examples each; the counts are in its error_counts field. The project keeps the released split as published and
-applies its own leakage rules to the families it writes.
+are capped at 20 examples each; the counts are in its error_counts field. The
+project keeps the released split as published and applies its own leakage
+rules to the families it writes.
