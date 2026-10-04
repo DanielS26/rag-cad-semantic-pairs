@@ -20,8 +20,9 @@ STAGES = frozenset({
     "git_clone", "git_checkout", "checkout_verification", "virtual_environment_create",
     "locked_dependency_install", "editable_project_install", "pip_check", "cpu_tests",
     "environment_preflight", "artefact_restore", "upstream_fetch",
-    "smoke_run_a", "smoke_run_b", "conformance_released_test", "artefact_publish",
+    "smoke_run_a", "smoke_run_b", "conformance_released_test", "phase4_m0", "artefact_publish",
 })
+BUDGET_POOLS = ("A", "B", "C", "D")
 
 
 def validate_request(repo_url: str, commit: str) -> None:
@@ -150,17 +151,34 @@ def install_and_test(checkout: Path, repo_url: str, commit: str, lock_relative: 
     return environment_python(environment)
 
 
-def remaining_seconds(started: float, connected_seconds_used: float,
-                      units_used: float, units_per_hour: float) -> float:
+def remaining_seconds(started: float, connected_seconds_used: float, units_used: float,
+                      units_per_hour: float, seconds_cap: float, units_cap: float) -> float:
+    """Seconds left in the run's budget pool (D-20261004-17), whichever cap is reached first."""
     import math
 
-    values = (started, connected_seconds_used, units_used, units_per_hour)
+    values = (started, connected_seconds_used, units_used, units_per_hour, seconds_cap, units_cap)
     if any(type(value) not in (float, int) or not math.isfinite(value) or value < 0 for value in values):
         raise ValueError("Budget observations must be finite nonnegative numbers")
     if units_per_hour <= 0:
         raise ValueError("Enter Colab's displayed compute-unit rate")
+    if seconds_cap <= 0 or units_cap <= 0:
+        raise ValueError("Enter the pool caps from the approved profile")
     elapsed = max(0.0, time.monotonic() - started)
-    remaining = min(10800 - connected_seconds_used, (20 - units_used) * 3600 / units_per_hour) - elapsed
+    remaining = min(seconds_cap - connected_seconds_used, (units_cap - units_used) * 3600 / units_per_hour) - elapsed
     if remaining <= 0:
-        raise ValueError("Combined Run A/B budget exhausted; disconnect and delete runtime")
+        raise ValueError("Budget pool exhausted; disconnect and delete runtime")
     return remaining
+
+
+def verify_budget_pool(profile_path: Path, pool: str, seconds_cap: float, units_cap: float) -> None:
+    """The caps typed into the notebook must equal the approved profile's pool entry."""
+    import yaml
+
+    if pool not in BUDGET_POOLS:
+        raise ValueError("Unknown budget pool")
+    profile = yaml.safe_load(Path(profile_path).read_text(encoding="utf-8"))
+    pools = profile.get("compute_budget", {}).get("pools", {}) if isinstance(profile, dict) else {}
+    entry = pools.get(pool)
+    if (not isinstance(entry, dict) or entry.get("connected_seconds") != seconds_cap
+            or entry.get("compute_units") != units_cap):
+        raise ValueError("Budget pool caps differ from the approved profile")

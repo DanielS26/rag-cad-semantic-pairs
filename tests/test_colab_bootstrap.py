@@ -73,12 +73,25 @@ def test_bootstrap_network_permissions_fail_before_subprocess(tmp_path, monkeypa
 def test_combined_budget_uses_first_limit_and_rejects_invalid_values(monkeypatch):
     monkeypatch.setattr(BOOTSTRAP["time"], "monotonic", lambda: 100.0)
     remaining = BOOTSTRAP["remaining_seconds"]
-    assert remaining(100.0, 7200, 19, 2) == 1800
-    assert remaining(100.0, 10700, 0, 1) == 100
-    for args in ((100, 10800, 0, 1), (100, 0, 20, 1), (100, 0, 0, 0),
-                 (100, -1, 0, 1), (100, 0, float("nan"), 1)):
+    assert remaining(100.0, 7200, 19, 2, 10800, 20) == 1800
+    assert remaining(100.0, 10700, 0, 1, 10800, 20) == 100
+    assert remaining(100.0, 0, 0, 1.8, 21600, 12) == 21600
+    for args in ((100, 10800, 0, 1, 10800, 20), (100, 0, 20, 1, 10800, 20), (100, 0, 0, 0, 10800, 20),
+                 (100, -1, 0, 1, 10800, 20), (100, 0, float("nan"), 1, 10800, 20),
+                 (100, 0, 0, 1, 0, 20), (100, 0, 0, 1, 10800, 0)):
         with pytest.raises(ValueError):
             remaining(*args)
+
+
+def test_budget_pool_caps_must_match_the_profile(tmp_path):
+    profile = tmp_path / "profile.yaml"
+    profile.write_text("compute_budget:\n  pools:\n    A: {connected_seconds: 21600, compute_units: 12}\n",
+                       encoding="utf-8")
+    BOOTSTRAP["verify_budget_pool"](profile, "A", 21600, 12)
+    for pool, seconds, units in (("A", 21600, 13), ("A", 3600, 12), ("B", 14400, 8), ("Z", 1, 1)):
+        with pytest.raises(ValueError):
+            BOOTSTRAP["verify_budget_pool"](profile, pool, seconds, units)
+    assert "phase4_m0" in BOOTSTRAP["STAGES"]
 
 
 def test_install_verifies_lock_space_and_total_timeout(tmp_path, monkeypatch):
