@@ -61,7 +61,8 @@ def run(args) -> dict:
                                   near_duplicate_threshold=config.get("near_duplicate_threshold"))
     elif args.action == "split":
         result = assign_splits(records, experiment_value(config, "split_ratios"),
-                               experiment_value(config, "split_seed"))
+                               experiment_value(config, "split_seed"),
+                               d0_holdout_policy=experiment_value(config, "d0_holdout_policy"))
     else:
         manifest = json.loads(local_path(args.manifest).read_text(encoding="utf-8"))
         try:

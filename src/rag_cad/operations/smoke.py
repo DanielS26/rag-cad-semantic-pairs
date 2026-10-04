@@ -31,6 +31,8 @@ STEPS = (
     "run_a_restored_read", "run_b_reload_checked", "run_b_compared",
     "released_test_extracted", "released_test_encoded", "released_test_scored",
     "released_test_report_written",
+    "d0_adapted", "d0_split_assigned", "m0_train_features_built", "m0_test_features_built",
+    "m0_trained", "m0_evaluated", "phase4_report_written",
 )
 PROGRESS_PATH: Path | None = None
 

@@ -188,6 +188,18 @@ would. Its progress steps are released_test_extracted, released_test_encoded,
 released_test_scored and released_test_report_written. The report selects no
 representation mode; see [REPRESENTATION_MODES.md](REPRESENTATION_MODES.md).
 
+`m0 run` is the Phase 4 baseline stage and the first final stage: behind the
+`train` gate (tested profile, approved compute budget, unchanged tested code,
+CUDA runtime) it adapts the pinned release, assigns the split with every D0
+record pinned to train and every released test record pinned to test, records
+the released train/test leakage report without enforcing it, builds the
+m0_base training features and the common test features, trains one head per
+declared seed under the fixed recipe, evaluates every seed and the released
+checkpoint on the same test features, and writes `phase4_report.json` with
+per-seed checkpoint directories under `models/m0_base/`. `m0 fake-run` is its
+CPU twin on synthetic identities. Its notebook stage and the budget-pool
+inputs are added next; until then the stage is reachable from the CLI only.
+
 Final stages reject candidate/unknown profiles. A tested profile requires Run A
 and Run B manifest hashes, the reviewed commit and lock hash, matching runtime
 values, and unchanged tested project code. A subsequent code fix requires review
@@ -200,10 +212,10 @@ Use `python -m rag_cad.cli --help` and the subcommand's `--help`. Commands are
 `upstream validate-cad`, `artefact publish`, `artefact restore`, `artefact verify`,
 `smoke fake`, `smoke run-a`, `smoke run-b`, `data adapt-cad`, `data validate`, `data split`,
 `data check-leakage`, `data compare-budgets`, `features fake-build`,
-`features build`, `conformance fake-released-test`, and
-`conformance released-test`. The default config paths are relative to the
+`features build`, `m0 fake-run`, `m0 run`, `conformance fake-released-test`,
+and `conformance released-test`. The default config paths are relative to the
 repository working directory. All real smoke commands require explicit execution flags and
-approved inputs; no training CLI is offered yet. `features build` is a final
+approved inputs. `features build` is a final
 stage: it requires the tested profile, an approved compute budget, a resolved
 `representation` in `configs/experiment.yaml` equal to the tested profile's
 mode, the verified segmenter resources and the Jina bundle. It writes

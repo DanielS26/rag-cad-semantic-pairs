@@ -36,11 +36,19 @@ def validate_ratios(ratios) -> dict:
     return values
 
 
+D0_SOURCES = ("cad_original_train", "cad_paraphrased_train")
+D0_HOLDOUT_POLICIES = ("none",)
+
+
 def pinned_split(record: dict) -> str | None:
-    """Splits that the contract fixes regardless of the seeded assignment."""
-    if (record["provenance"]["source_dataset"] == "cad_original_test"
-            or record["condition_source"] == "test_only"):
+    """Splits that the contract fixes regardless of the seeded assignment: released CAD test
+    records are test; official D0 records and their paraphrases are train under the "none"
+    holdout policy of D-20261004-15."""
+    source = record["provenance"]["source_dataset"]
+    if source == "cad_original_test" or record["condition_source"] == "test_only":
         return "test"
+    if source in D0_SOURCES:
+        return "train"
     return record["split"]
 
 
@@ -75,10 +83,12 @@ def split_counts(records) -> dict:
     return counts
 
 
-def assign_splits(records, ratios, seed) -> dict:
+def assign_splits(records, ratios, seed, *, d0_holdout_policy: str = "none") -> dict:
     """Assign every group to one split: pinned groups first, then seeded-hash order by deficit."""
     if isinstance(seed, bool) or type(seed) is not int or seed < 0:
         raise ValueError("Split seed must be a non-negative integer")
+    if d0_holdout_policy not in D0_HOLDOUT_POLICIES:
+        raise ValueError("Only the none D0 holdout policy is implemented (D-20261004-15)")
     ratios = validate_ratios(ratios)
     checked = unique_records(records)
     family_groups(checked)
@@ -96,6 +106,7 @@ def assign_splits(records, ratios, seed) -> dict:
         counts[chosen] += 1
     assigned = [{**record, "split": assignments[record["group_id"]]} for record in checked]
     return {"schema": MANIFEST_SCHEMA, "group_field": "group_id", "seed": seed, "ratios": ratios,
+            "d0_holdout_policy": d0_holdout_policy,
             "input": {"records": len(checked), "groups": total, "content_sha256": dataset_digest(checked)},
             "pinned_groups": sorted(group for group, split in pins.items() if split is not None),
             "assignments": dict(sorted(assignments.items())), "counts": split_counts(assigned)}

@@ -12,6 +12,7 @@ from rag_cad.data import commands as data_commands
 from rag_cad.data.conditions import PRIMARY
 from rag_cad.operations import artefacts
 from rag_cad.operations import features as feature_operations
+from rag_cad.operations import phase4 as phase4_operations
 from rag_cad.operations import smoke as smoke_operations
 from rag_cad.operations.paths import execution_paths, local_path
 from rag_cad.operations.preflight import PreflightError, preflight
@@ -99,6 +100,20 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--resources", type=Path, required=True)
             command.add_argument("--model-bundle", type=Path, required=True)
             command.add_argument("--allow-network", action="store_true")
+    m0 = commands.add_parser("m0").add_subparsers(dest="action", required=True)
+    for name in ("fake-run", "run"):
+        command = m0.add_parser(name)
+        command.add_argument("--release", type=Path, default=Path("configs/upstream/cad_release.yaml"))
+        command.add_argument("--source", type=Path, required=True)
+        command.add_argument("--output", type=Path, required=True)
+        command.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
+        if name == "fake-run":
+            command.add_argument("--seeds", type=int, nargs="*")
+        else:
+            execution_options(command)
+            command.add_argument("--resources", type=Path, required=True)
+            command.add_argument("--model-bundle", type=Path, required=True)
+            command.add_argument("--allow-network", action="store_true")
     conformance = commands.add_parser("conformance").add_subparsers(dest="action", required=True)
     fake_test = conformance.add_parser("fake-released-test")
     fake_test.add_argument("--archive", type=Path, required=True)
@@ -149,7 +164,7 @@ def _gate(args):
                for key in ("atol", "rtol")):
             raise ValueError("Explicit bounded smoke tolerances are required")
     stage = {"environment": getattr(args, "stage", None), "features": "features",
-             "conformance": "conformance"}.get(args.command, "smoke")
+             "conformance": "conformance", "m0": "train"}.get(args.command, "smoke")
     evidence = preflight(args.repo, args.commit, profile, stage, args.lock, args.workspace)
     return profile, evidence
 
@@ -194,6 +209,8 @@ def execute(args) -> dict:
         local_path(args.output)
         return evaluate_released_test(FakeBackend(), args.archive, args.output, {"synthetic_only": True},
                                       "fake-local", records=args.records)
+    if args.command == "m0" and args.action == "fake-run":
+        return phase4_operations.fake_run(args)
     try:
         profile, evidence = _gate(args)
     except PreflightError as error:
@@ -205,6 +222,8 @@ def execute(args) -> dict:
         return evidence
     if args.command == "features":
         return feature_operations.build(args, profile, evidence)
+    if args.command == "m0":
+        phase4_operations.prepare_environment()
     spec = load_config(args.release)
     if args.command == "upstream":
         if args.action == "fetch-cad":
@@ -225,6 +244,12 @@ def execute(args) -> dict:
     smoke_operations.PROGRESS_PATH.unlink(missing_ok=True)
     backend = RealBackend(profile, args.source, spec, args.resources, evidence,
                           model_bundle=args.model_bundle, allow_network=args.allow_network)
+    if args.command == "m0":
+        result = phase4_operations.run(args, profile, evidence, backend, spec)
+        result["source_manifest"] = source_manifest
+        result["validation_seconds"] = validation_seconds
+        write_json(args.output / "source_manifest.json", source_manifest)
+        return result
     if args.command == "conformance":
         result = evaluate_released_test(backend, args.source / ARCHIVE, args.output, evidence,
                                         runtime_identity(), records=args.records,

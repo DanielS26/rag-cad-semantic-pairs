@@ -15,7 +15,8 @@ FIXTURE = ROOT / "tests/fixtures/phase2_families.jsonl"
 def prepare(tmp_path):
     experiment = tmp_path / "experiment.yaml"
     experiment.write_text(yaml.safe_dump({"split_ratios": {"train": 0.6, "validation": 0.2, "test": 0.2},
-                                          "split_seed": 764, "representation": None}), encoding="utf-8")
+                                          "split_seed": 764, "d0_holdout_policy": "none",
+                                          "representation": None}), encoding="utf-8")
     manifest = tmp_path / "split_manifest.json"
     assert main(["data", "split", "--input", str(FIXTURE), "--output", str(manifest),
                  "--experiment", str(experiment)]) == 0
