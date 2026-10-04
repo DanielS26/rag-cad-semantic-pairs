@@ -1289,3 +1289,27 @@ Historical audit claims are distinguished from checks executed in this session.
   the first m0 run under pool B from the merge commit of the freeze pull
   request, which changes only configs, docs and tests, so the final-stage
   code-identity check against e7d45fc8 holds.
+
+## 2026-10-04 - PR #25 Merged; One-Paste Summary Cell For The Colab Runner
+
+- PR #25 merged as baa84eadcb7eaba18ef20f5915cbb13dee8d3ba7 (tree identical to
+  the PR head, CAD ancestor retained, CPU tests green on the merge commit).
+  Local main fast-forwarded. The tested profile is re-frozen under
+  D-20261004-18 and the first m0 notebook was generated outside Git for
+  baa84ead; it is superseded by the copy generated from the merge commit of
+  this change, because the runner changes here.
+- Operator request: run a prefilled notebook with one action and report it
+  with one paste. Runtime > Run all already executes the cells in order, and
+  every later cell refuses to run after an earlier failure. The runner gains
+  a final summary cell that prints one compact JSON block: the echoed
+  non-secret inputs, the preflight report, the progress steps and any
+  sanitised failure record, every top-level JSON report in the stage output
+  with training histories, locked-package lists and checkpoint tensor
+  inspections dropped and long lists or strings truncated, an inventory of
+  the stage directory by file count and bytes, the publication result and the
+  elapsed time. The publish cell keeps its result in PUBLISHED for the
+  summary. The cell reads only the local workspace, never Drive or a secret,
+  and runs alone after a failure to summarise what exists. The contract tests
+  cover the new cell: forbidden calls, the compaction rules and the
+  after-failure path. The runner hash changes; the bootstrap, src/rag_cad and
+  therefore the tested profile's code identity are unchanged.

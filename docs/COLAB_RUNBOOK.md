@@ -69,6 +69,18 @@ uses the token only for git clone, never an API download of the bootstrap.
 It clears the temporary environment and removes askpass before verifying the
 exact checkout and clean remote. It then hashes and executes the local helper.
 
+Run a prefilled copy with Runtime > Run all. The cells execute in order and
+every later cell refuses to run after an earlier failure, so a failed run stops
+at its failing cell. The last cell prints one compact JSON summary of the run
+for the record: the non-secret inputs, the preflight report, the progress steps
+and any sanitised failure record, each top-level JSON report of the stage output
+with training histories, locked-package lists and tensor inspections dropped and
+long lists or strings truncated, an inventory of the stage directory by file
+count and bytes, the publication result and the elapsed time. It reads only the
+local workspace, never Drive or a secret, and can be run alone after a failure.
+The remaining manual steps are Colab's own prompts: granting the notebook access
+to the GH_READ_TOKEN secret and authorising the Drive mount.
+
 Installation, CPU tests, and preflight run before the explicit Drive mount cell.
 The bootstrap creates a fresh isolated virtual environment outside the checkout
 (`/content/rag-cad-venv`) without pip, because Colab's Python build lacks
