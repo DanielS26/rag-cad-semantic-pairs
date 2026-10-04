@@ -1293,7 +1293,7 @@ Checklist:
 - [x] Ten-record pilot run and its cost recorded.
 - [x] Full released-test run published and its metrics recorded.
 - [x] Primary representation decided and recorded; experiment.yaml updated. (D-20261004-13.)
-- [ ] Smoke gate rerun in that mode at the commit from which the first final-stage run is launched, freezing the tested profile for it.
+- [x] Smoke gate rerun in that mode at the commit from which the first final-stage run is launched, freezing the tested profile for it. (Run A and Run B from e7d45fc8 on 4 October 2026 under budget pool A; profile re-frozen with the compute budget approved, D-20261004-18.)
 
 Acceptance criterion: a recorded decision that names the primary mode, the evidence behind it and the commit whose smoke gate passed in that mode.
 

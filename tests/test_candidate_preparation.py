@@ -61,8 +61,14 @@ def test_committed_tested_profile_is_frozen_from_both_runs():
     assert b"\r" not in tested_lock
     digest = hashlib.sha256(tested_lock).hexdigest()
     assert digest == profile["expected"]["lock_sha256"] == profile["evidence"]["lock_sha256"]
-    assert profile["status"] == "tested" and profile["compute_budget_approved"] is False
-    assert profile["evidence"]["reviewed_commit"] == "a822b9a032fc3d6c27261b25c62363fc3bc88142"
+    assert profile["status"] == "tested" and profile["compute_budget_approved"] is True
+    assert profile["compute_budget"]["decision"] == "D-20261004-17"
+    assert profile["evidence"]["reviewed_commit"] == "e7d45fc84464cbad027eeafc47bcb9a7f93754e6"
+    assert profile["evidence"]["environment_id"] == "d95a1d816fd98cbde914a4491becd40cd6ae4e3fad7e60a94b164ba86a158614"
+    for run, label in (("run_a", "smoke"), ("run_b", "smoke-run-b")):
+        assert profile["evidence"][f"{run}_run_id"] == f"20261004T083811Z_e7d45fc8_{label}_fe6f6a3d"
+        assert len(profile["evidence"][f"{run}_manifest_sha256"]) == 64
+    assert profile["evidence"]["run_a_manifest_sha256"] != profile["evidence"]["run_b_manifest_sha256"]
     assert all(value not in (None, "", {}) for value in profile["expected"].values())
     assert profile["expected"]["packages"] == candidate["expected"]["packages"]
     for key in ("encoder_revision", "encoder_code_revision", "attention", "representation",

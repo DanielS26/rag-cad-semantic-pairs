@@ -1270,17 +1270,20 @@ Historical audit claims are distinguished from checks executed in this session.
   2,276,652 bytes before the report. Published and verified under
   artefacts/smoke; manifest SHA-256
   32d91cae4056f3cbc223f08d09ef22e639a9e83fc92fac0e2cabc22ea686b5aa as recorded
-  by Run B. Usage: 0.1 units; connected time to be confirmed by the operator.
+  by Run B. Usage: 9 minutes and 0.1 units.
 - Run B (run ID 20261004T083811Z_e7d45fc8_smoke-run-b_fe6f6a3d) in a fresh L4
   runtime (different runtime identity) restored the Run A artefact from Drive
   with hashes verified, re-downloaded the named CAD, NLTK and Jina files,
   reproduced the identical fingerprint and environment ID, reloaded the saved
   checkpoint and matched the saved predictions (restored_predictions_match
   true, run_a_sha256 25ab4e59...); all ten Run B progress steps completed.
-  Published and verified under artefacts/smoke. Usage: 9 minutes and
+  Published and verified under artefacts/smoke; manifest SHA-256
+  d08ef5f3a9164356389e1e2213b453fa024546d482bf7a9a43bbb598618c994b read from
+  its `_SUCCESS` marker on Drive by Daniel Song. Usage: 9 minutes and
   0.1 units.
-- Pool A after both runs: 0.2 units and 540 s plus Run A's connected time.
-  Both runtimes were deleted after publication.
+- Pool A after both runs: 1,080 connected seconds and 0.2 compute units of
+  its 21,600-second / 12-unit cap. Both runtimes were deleted after
+  publication.
 - Next: re-freeze the tested profile from these two runs with
   compute_budget_approved true (decision proposed to the team), then launch
   the first m0 run under pool B from the merge commit of the freeze pull
