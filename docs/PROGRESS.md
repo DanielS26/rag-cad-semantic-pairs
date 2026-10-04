@@ -1232,3 +1232,57 @@ Historical audit claims are distinguished from checks executed in this session.
 - Still to come before any GPU run: the smoke gate rerun (Run A and a fresh
   Run B under pool A) at the merged commit, then the frozen tested profile
   with compute_budget_approved true.
+
+## 2026-10-04 - PRs #23 And #24 Merged; Run A And Run B Passed From e7d45fc8 Under Pool A
+
+- PR #23 merged as 4bceffcc0b81cf8a25f25a4f9c0c53d47a283f5c and PR #24 as
+  e7d45fc84464cbad027eeafc47bcb9a7f93754e6 (CPU tests workflow green on both
+  merge commits, CAD ancestor retained). Local main fast-forwarded. At e7d45fc8
+  the bootstrap hash is 3ff3495694fdf41f5ea46d8747b01c56e294820bf3def1f0cd061528966d29e2,
+  the runner hash b9f220d7... and the candidate profile hash fe6f6a3d...; the
+  run-ID suffix is the candidate profile's short hash, so it changed from
+  5bd0f99b to fe6f6a3d with the budget pools of PR #24.
+- Purpose of the rerun: D-20260922-12 invalidates the tested profile on any
+  change to src/rag_cad or the bootstrap, and D-20261004-13 requires the gate
+  in the chosen mode at the commit from which the first final-stage run is
+  launched. Phase 4 (PRs #22 to #24) changed both the code and the notebook
+  inputs. The standing smoke instruction applied. Disposable prefilled Run A
+  and Run B notebooks were generated outside Git from the committed bytes at
+  e7d45fc8 with the candidate profile and candidate lock, budget pool A with
+  its caps of 21,600 s and 12 units, zero carry-forward (nothing before
+  4 October is charged to a pool under D-20261004-17), and the Drive path of
+  the Run A manifest prefilled in the Run B copy.
+- Run A (run ID 20261004T083811Z_e7d45fc8_smoke_fe6f6a3d) on a fresh NVIDIA L4
+  (23,659,151,360 bytes), CUDA 12.8, driver 580.82.07, Python 3.13.15, lock
+  1b270c04..., displayed rate 1.54 units per hour: preflight passed with the
+  same fingerprint as on 21 and 22 September and environment ID
+  d95a1d816fd98cbde914a4491becd40cd6ae4e3fad7e60a94b164ba86a158614 (differs
+  from the earlier IDs only through the commit); all eighteen progress steps
+  completed; features [3, 2048], finite and deterministic; backend load
+  26.7 s; feature time 0.44 s for three rows (6.8 rows/s); maximum token
+  length 26; peak GPU memory 2,302,938,624 bytes; released-checkpoint
+  probabilities 3.0e-11, 0.437 and 7.0e-08, identical to both earlier passes;
+  representation-mode evidence unchanged (0.437 repo_compatible against 0.569
+  paper_exact on the synthetic target, contextual difference 0.111, isolated
+  blocks identical, both deterministic); one-epoch MLP saved (SHA-256
+  ed93e105...), reloaded and matched; FAISS round trip and checkpoint-swap
+  invariants held; source manifest SHA-256 1b399c7e...; stage output
+  2,276,652 bytes before the report. Published and verified under
+  artefacts/smoke; manifest SHA-256
+  32d91cae4056f3cbc223f08d09ef22e639a9e83fc92fac0e2cabc22ea686b5aa as recorded
+  by Run B. Usage: 0.1 units; connected time to be confirmed by the operator.
+- Run B (run ID 20261004T083811Z_e7d45fc8_smoke-run-b_fe6f6a3d) in a fresh L4
+  runtime (different runtime identity) restored the Run A artefact from Drive
+  with hashes verified, re-downloaded the named CAD, NLTK and Jina files,
+  reproduced the identical fingerprint and environment ID, reloaded the saved
+  checkpoint and matched the saved predictions (restored_predictions_match
+  true, run_a_sha256 25ab4e59...); all ten Run B progress steps completed.
+  Published and verified under artefacts/smoke. Usage: 9 minutes and
+  0.1 units.
+- Pool A after both runs: 0.2 units and 540 s plus Run A's connected time.
+  Both runtimes were deleted after publication.
+- Next: re-freeze the tested profile from these two runs with
+  compute_budget_approved true (decision proposed to the team), then launch
+  the first m0 run under pool B from the merge commit of the freeze pull
+  request, which changes only configs, docs and tests, so the final-stage
+  code-identity check against e7d45fc8 holds.
