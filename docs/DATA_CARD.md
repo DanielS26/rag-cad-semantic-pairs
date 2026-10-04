@@ -96,3 +96,11 @@ features on the upstream units directly, so this affects neither D0's counts
 nor its features; it is a documented train-time versus inference-time
 segmentation difference inherited from the release, and the round-trip
 requirement remains binding for team-authored records.
+
+Splitting: `data split` pins every D0 record and paraphrase to train and every
+released test record to test, under the "none" holdout policy of
+D-20261004-15, and the split manifest records that policy. The Phase 4 stage
+keeps the released train/test split exactly as published; the project's
+leakage report between the two is recorded in `phase4_report.json` but not
+enforced, because that split is the authors' and the released test set serves
+only as the upstream reference test.

@@ -13,7 +13,7 @@ from rag_cad.data.jsonl import read_jsonl, write_jsonl
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests/fixtures/phase2_families.jsonl"
 RESOLVED = {"split_ratios": {"train": 0.6, "validation": 0.2, "test": 0.2}, "split_seed": 764,
-            "near_duplicate_threshold": 0.6, "benign_length_tolerance": 0.5}
+            "near_duplicate_threshold": 0.6, "benign_length_tolerance": 0.5, "d0_holdout_policy": "none"}
 
 
 def experiment(tmp_path, **overrides):

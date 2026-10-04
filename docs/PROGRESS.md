@@ -1160,3 +1160,53 @@ Historical audit claims are distinguished from checks executed in this session.
 - Handoff Phase 4 checklist: hashes, counts, total_units and path variants,
   licences, and the released-test-never-trains items ticked. Runbook and
   README name the new command. Full suite: 274 passed; ruff clean.
+
+## 2026-10-04 - PR #22 Merged; Phase 4 Trainer, Evaluator, D0 Pin And The m0 Stage (CPU Part)
+
+- PR #22 merged by Daniel Song as a3222aa4 (tree identical to the PR head,
+  CAD ancestor retained). Local main fast-forwarded.
+- Branch phase4-m0-pipeline, CPU only, no Colab use:
+  - Split: `pinned_split` now pins every official D0 record and paraphrase to
+    train under the "none" holdout policy of D-20261004-15 (released test
+    records stay pinned to test); `assign_splits` takes `d0_holdout_policy`,
+    refuses any other policy, and records it in the split manifest; the data
+    commands pass the experiment value.
+  - New package src/rag_cad/training: `recipe.py` validates the fixed recipe
+    from configs/experiment.yaml (the CAD head 2048-256-128-2 with dropout
+    0.3, AdamW 1e-3 with weight decay 1e-4, cosine annealing, batch 64,
+    inverse-frequency class-balanced cross-entropy as the pinned upstream
+    trainer computes it, 30 epochs with the final epoch as the checkpoint,
+    seeds 0, 1 and 2) and refuses any deviation; `torch_trainer.py` trains
+    under that recipe with a fixed seed, deterministic algorithms and a seeded
+    loader, writes model.pt in the upstream-compatible format plus the handoff
+    Section 7.3 fields, and verifies every checkpoint by reloading it through
+    the upstream loader; `fake_trainer.py` is a torch-free class-mean
+    classifier that writes the same kind of record so the plumbing is tested
+    where torch is absent.
+  - src/rag_cad/evaluation/offline.py: the upstream boundary mask derived from
+    each record's labels, metrics on all rows, on masked rows and per
+    condition source, prediction rows, and the mean and standard deviation
+    over seeds.
+  - src/rag_cad/operations/phase4.py with CLI `m0 fake-run` (CPU) and
+    `m0 run` (final stage "train": tested profile, approved budget, unchanged
+    tested code, CUDA required): one bounded stage that adapts the release
+    (original archives only), assigns the split, records the released
+    train/test leakage report without enforcing it (the published split is
+    kept), builds the m0_base train features and the common test features,
+    trains one head per seed, evaluates every seed and the released
+    checkpoint on the same test features, and writes phase4_report.json plus
+    per-seed checkpoint directories (model file, config.resolved.yaml,
+    train_manifest.json, run_metadata.json, test_predictions.jsonl). Seven
+    new progress steps. The deterministic cuBLAS workspace variable is set
+    before any torch import on the real path.
+  - Tests: tests/test_training.py (recipe, class weights, mask and metrics,
+    aggregate, fake trainer, D0 pin), tests/test_torch_trainer.py (skipped
+    where torch is absent; it runs in the candidate-lock CI jobs and locally,
+    where torch 2.10.0 CPU was installed into the venv for this check only),
+    tests/test_phase4_fake_run.py (end to end on synthetic archives, seed
+    subset, refusal of unknown seeds and existing output, real-path gating),
+    and the shared fixture tests/cad_release_fixture.py. Full suite: 282
+    passed locally; ruff clean.
+- Still to come before any GPU run: the notebook stage for `m0 run` with the
+  budget pools as inputs, the smoke gate rerun at that commit, and the frozen
+  tested profile with compute_budget_approved true.

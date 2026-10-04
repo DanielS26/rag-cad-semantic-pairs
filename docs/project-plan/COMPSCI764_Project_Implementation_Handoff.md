@@ -1321,7 +1321,7 @@ Checklist:
 - [x] D0 licences/attribution permit the intended research use and redistribution plan. (Data CC-BY-4.0, checkpoint MIT; the adapted files are derived works kept outside Git and shared only within the team on Drive with the release citation.)
 - [x] No released test row enters training or model selection. (Adapted test records carry `condition_source: test_only` and `source_dataset: cad_original_test`; the schema and `pinned_split` refuse any other split.)
 - [ ] A small real feature build completes under the frozen representation/environment.
-- [ ] The official base checkpoint loads and produces finite non-constant probabilities.
+- [x] The official base checkpoint loads and produces finite non-constant probabilities. (Safely loaded in every Run A and in the released-test runs of 23 September 2026; finite, non-constant probabilities on all 9,776 released test rows.)
 - [ ] Project M0 trains for one smoke epoch, then for the fixed 30 epochs and declared seeds.
 - [ ] M0 produces non-constant probabilities and saves predictions.
 
