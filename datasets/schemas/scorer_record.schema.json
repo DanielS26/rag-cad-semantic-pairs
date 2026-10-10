@@ -39,11 +39,11 @@
       "additionalProperties": false,
       "required": ["source_dataset", "source_record_id", "generator_model", "generator_prompt_hash", "licence", "review_status"],
       "properties": {
-        "source_dataset": {"enum": ["team_authored", "cad_original_train", "cad_original_test", "cad_paraphrased_train"]},
+        "source_dataset": {"enum": ["team_authored", "cad_original_train", "cad_original_test", "cad_paraphrased_train", "bipia_adapted"]},
         "source_record_id": {"oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}], "description": "Required for upstream-derived records."},
         "generator_model": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
         "generator_prompt_hash": {"oneOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}], "description": "Set exactly when generator_model is set."},
-        "licence": {"enum": ["team-owned", "CC-BY-4.0"], "description": "Must equal the registry value for source_dataset."},
+        "licence": {"enum": ["team-owned", "CC-BY-4.0", "MIT"], "description": "Must equal the registry value for source_dataset."},
         "review_status": {"enum": ["unreviewed", "single_reviewed", "double_reviewed", "excluded"]}
       }
     }

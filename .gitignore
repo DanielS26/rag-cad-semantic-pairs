@@ -43,7 +43,8 @@ dist/
 .env.*
 !.env.example
 /outputs/
-/datasets/raw/
+/datasets/raw/*
+!/datasets/raw/augmentation/
 /datasets/interim/
 /datasets/processed/
 *.pt
