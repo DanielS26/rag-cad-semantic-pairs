@@ -1561,3 +1561,25 @@ Historical audit claims are distinguished from checks executed in this session.
 - Authoring time for the batch, including the two corrections and the survey:
   about one working session; to be refined per family over the next batches
   for the superseding entry that sets N (D-20261010-19).
+
+## 2026-10-11 - PR #31 Merged; Batch 01 Review Applied; BIPIA Attribution
+
+- PR #31 merged as fb5b521. Daniel Song reviewed the ten batch 01 families from
+  the review sheet and accepted all ten with no wording changes ("I am happy
+  with it"). Applied as manifest `reviewer` Daniel Song and `status` accepted,
+  and record `review_status` `single_reviewed` on all forty records
+  (D-20261010-20: one accountable human reviewer; the second reviewer's random
+  sample is drawn once the forty pilot families exist).
+- Review time for the batch was not recorded separately; the sign-off was a
+  single pass over the sheet. Per-family review minutes will be timed from
+  batch 02 for the superseding entry of D-20261010-19.
+- BIPIA attribution added: the MIT licence text is committed at
+  datasets/raw/augmentation/LICENSES/BIPIA_LICENSE.txt; the README licence
+  section and the data card name the source (Yi et al., arXiv 2312.14197,
+  github.com/microsoft/BIPIA, MIT, Copyright (c) Microsoft Corporation) and
+  state that only the attack strings are used, not BIPIA's third-party
+  contexts.
+- `data prescreen` (minimum per role 1) and `data validate` pass on the
+  reviewed batch; the pre-screen no longer reports awaiting_review. Full CPU
+  suite and ruff unchanged. CPU only.
+- Next: batch 02 (ten families), timed per family.

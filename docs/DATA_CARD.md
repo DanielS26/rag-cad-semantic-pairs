@@ -174,3 +174,17 @@ Batch 01 coverage (10 families, 40 records, all status candidate pending review)
 
 Cue positions: query 4, sentence_before 2, sentence_after 2, heading 1,
 policy 1. Quotation-only cue share: 0. Pre-screen and validate: passed.
+
+Review: all ten batch 01 families were reviewed and accepted by Daniel Song on
+11 October 2026 (manifest `reviewer` and `status`; record `review_status`
+`single_reviewed`), with no wording changes.
+
+Attribution: the malicious target sentences are adapted from the text attacks
+of the BIPIA benchmark, Yi et al., "Benchmarking and Defending Against Indirect
+Prompt Injection Attacks on Large Language Models" (arXiv 2312.14197), code and
+data at <https://github.com/microsoft/BIPIA>, MIT License, Copyright (c)
+Microsoft Corporation. The licence text is kept at
+`datasets/raw/augmentation/LICENSES/BIPIA_LICENSE.txt`. Each adapted record
+names the source file, category slug and index in `source_record_id`. BIPIA's
+own WebQA and summarisation contexts carry separate third-party licences and
+are not used; only the attack strings are.
