@@ -170,3 +170,9 @@ python evaluation/adaptive_autodojo_agentdojo.py --suite banking --family featur
 
 Released under the MIT License. Code under `third_party/` keeps its original
 license and citation requirements.
+
+Malicious target sentences in the team-authored semantic-pair families under
+`datasets/raw/augmentation/` are adapted from the text attacks of Microsoft's
+BIPIA benchmark (<https://github.com/microsoft/BIPIA>, MIT License, Copyright (c)
+Microsoft Corporation). Each record names its source string; the licence text is
+kept at `datasets/raw/augmentation/LICENSES/BIPIA_LICENSE.txt`.
