@@ -1618,3 +1618,54 @@ Historical audit claims are distinguished from checks executed in this session.
   against D0's 24,665. These figures feed the superseding entry of
   D-20261010-19.
 - A review sheet for batch 02 was written outside the repository. CPU only.
+
+## 2026-10-11 - Handoff Adopted: Self-Check Tool, Drafting Rules v2, Batches 01 And 02 Repaired
+
+- The dataset reviewer's handoff (review/handoff_2026-10-11, now archived at
+  docs/archive/handoff_2026-10-11/) was followed in order. Step 1: the checker
+  was installed and, run on the live files with the v1 prompt, failed exactly
+  the predicted checks (batch 02: M3, M5, M6, M7, M9, M12; batch 01: the same
+  without M12), binding to the package tokenisation. Step 2: the second reader
+  answered S1 to S12 for all twenty PROPOSED families before reading the
+  reviewer's answers and disagreed on S1 for pilot_0010, 0011, 0012 and 0014
+  (a cue word in a twin query; "delete it", "the example" and "reverted" in
+  untagged sentences); no role (S10) disagreements. Step 3: Daniel Song
+  approved reopening batch 01, option A for pilot_0020, the S3 cap, and the
+  handoff's checker and proposed files as the base with pull request #34
+  closed and its useful parts carried over (D-20261011-24, D-20261011-25).
+- Step 4 applied. The checker moved into the package as
+  src/rag_cad/data/selfcheck.py with `data selfcheck` as its command and
+  tools/selfcheck.py as a thin wrapper; the prompt hash is computed over LF
+  bytes. Added: check M17 (cue-marker words outside the tagged cue sentence or
+  in a non-query-cue twin's query, WARN; S1 decides) and R21/R22 in the v2
+  rules (R22: literal label prefixes anywhere in a twin only with a heading or
+  policy cue; M7 extended to all twin sentences). Tests: two in
+  tests/test_selfcheck_cli.py (one deliberate violation per rule family M1,
+  M4, M5, M6, M9, M12 all FAIL; the semantic gate's YES rules and the S4/cue
+  rule). The v2 rules were edited before any record carried their hash, so all
+  eighty revised records carry the final v2 hash.
+- Live files replaced by the PROPOSED versions, then repaired in three passes
+  of the loop with context edits only: pass 1 fixed the four residual cues,
+  neutralised an authority word in the task_alignment twins 0015 and 0020,
+  removed the "Analysis:" prefix from 0018's closer and a partial cue from
+  0008; pass 2 fixed two pair lengths and one control length that pass 1 had
+  broken and three cue words in twin queries that M17 caught; pass 3 fixed the
+  token "note", which had reached 50 per cent of batch 02 twin contexts with
+  no malicious use (M6). Final: both batches exit 0 with the accepted WARNs
+  only (single-twin metalanguage tokens; no hard negative, which R16 requires
+  from batch 03); the combined twenty-family run fails only on the per-batch
+  S3 cap counted over twenty families (pilot_0008 and pilot_0016), as the
+  handoff states; `data prescreen` and `data validate` pass; 40 of 40 targets
+  byte-identical to the accepted text; 80 records unreviewed with split null;
+  20 manifest entries candidate with reviewer null.
+- Coverage after the repair: analysis, historical_description, negation,
+  task_alignment 3; authorisation, quotation, translation, warning 2; cue
+  positions query 6, sentence_after 5, sentence_before 4, heading 3, policy 2.
+- Layout: drafting rules and licences under datasets/raw/augmentation/; per
+  batch review artefacts (semantic answers, checker reports) under
+  datasets/raw/augmentation/review/; the handoff and the reviewer's own
+  answers and reports frozen under docs/archive/handoff_2026-10-11/; the
+  checker in the package with a wrapper in tools/. Review sheets for both
+  batches regenerated outside the repository for re-review.
+- Full suite 303 passed; ruff clean. CPU only. Pull request #34 is closed in
+  favour of this branch; pull request #33 is contained in it.

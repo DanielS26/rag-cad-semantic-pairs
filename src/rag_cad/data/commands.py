@@ -50,17 +50,13 @@ def adapt(args) -> dict:
 
 
 def selfcheck(args) -> dict:
-    """Run tools/selfcheck.py (DRAFTING_PROMPT v2 checker M0-M16 and S1-S12) with the same arguments.
+    """Run the family self-check (rag_cad.data.selfcheck, DRAFTING_PROMPT v2 checks M0-M17 and S1-S12).
 
     The tool writes its own report; a non-zero exit is raised as a ContractError carrying that
     report so the CLI exits 2. CPU only; the tool binds to this package's tokenisation.
     """
-    import importlib.util
+    from rag_cad.data import selfcheck as module
 
-    script = local_path(Path(args.repo) / "tools" / "selfcheck.py")
-    spec = importlib.util.spec_from_file_location("rag_cad_selfcheck", script)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
     argv = ["--batch", str(local_path(args.batch)), "--manifest", str(local_path(args.manifest)),
             "--report", str(local_path(args.report)), "--stage", args.stage]
     for previous in args.previous:
