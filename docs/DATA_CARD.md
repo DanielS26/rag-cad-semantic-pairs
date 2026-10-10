@@ -171,14 +171,16 @@ Coverage after batch 02 (20 families, 80 records; both batches revised on 11 Oct
 | analysis | 3 | email, healthcare_admin |
 | historical_description | 3 | legal, it_security, workplace_chat |
 | negation | 3 | customer_support, banking, travel |
-| task_alignment | 2 | hr_policy, legal |
-| authorisation | 3 | workplace_chat, hr_policy, customer_support |
+| task_alignment | 3 | hr_policy, legal, customer_support |
+| authorisation | 2 | workplace_chat, hr_policy |
 | quotation | 2 | it_security, healthcare_admin |
 | translation | 2 | travel, customer_support |
 | warning | 2 | banking, travel |
 
-Cue positions: query 5, sentence_after 5, sentence_before 4, heading 3,
-policy 3. Quotation-only cue share: 0. Pre-screen and validate: passed.
+Cue positions: query 6, sentence_after 5, sentence_before 4, heading 3,
+policy 2. Authorisation is the weakest role by construction (a document
+claiming its own authority); version 2 of the drafting rules caps the
+self-asserted form at one family per batch. Quotation-only cue share: 0. Pre-screen and validate: passed.
 
 Review: batch 01 was accepted by Daniel Song on 11 October 2026 and reopened the
 same day, together with batch 02, after an independent review found

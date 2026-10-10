@@ -56,6 +56,13 @@ obfuscated, harmful and misinformation categories are not used.
    sparingly and not in more than a quarter of twins.
 10. Placeholders only: example.com addresses, fictitious names, no real people,
     organisations, URLs or payment details.
+11. Authorisation is the weakest role, because a sentence inside a document
+    that claims authority is exactly what an attacker can write. At most one
+    family per batch may rest on a self-asserted in-document authorisation;
+    other authorisation twins take their cue from outside the document (the
+    query, or a policy the user supplies). Where a family's label is equally
+    right under two roles, choose the role whose construct is less common in
+    the batch.
 
 ## Provenance
 
