@@ -1658,8 +1658,9 @@ Historical audit claims are distinguished from checks executed in this session.
   the accepted text (40 of 40 compared). Batch 01: six twins reduced to a
   single cue, four malicious members lengthened, two given innocent meta-words,
   one twin opener made a full clause, five queries varied. Batch 02: the four
-  Tier A fixes (0020 moved to authorisation with the policy cue, option B
-  chosen by Daniel Song), four twins reduced to a single cue, three keyword
+  Tier A fixes (0020 kept as task_alignment with the query cue, option A, after
+  the reviewer argued that three self-asserted authorisation twins would teach
+  an attacker-writable shape as benign), four twins reduced to a single cue, three keyword
   controls rewritten in-domain, five malicious members lengthened, three given
   innocent meta-words, one opener fixed, eleven queries varied. Every edited
   record carries the v2 prompt hash and `review_status` unreviewed; every
@@ -1670,9 +1671,12 @@ Historical audit claims are distinguished from checks executed in this session.
   batch failures; twin-longer share 0.45; no side-exclusive tokens;
   "Summarise" share 0.65; remaining warnings are the uniform three-sentence
   structure (varied from batch 03 by the v2 rules) and the heuristic
-  finite-verb check. Roles: analysis, authorisation, historical_description,
-  negation 3; quotation, task_alignment, translation, warning 2. Cue positions:
-  query 5, sentence_after 5, sentence_before 4, heading 3, policy 3.
+  finite-verb check. Roles: analysis, historical_description, negation,
+  task_alignment 3; authorisation, quotation, translation, warning 2. Cue
+  positions: query 6, sentence_after 5, sentence_before 4, heading 3, policy 2.
+  Version 2 rule 11 (added after the 0020 discussion) caps self-asserted
+  in-document authorisation at one family per batch. The drafting-prompt hash
+  is computed over LF-normalised bytes, matching the committed blob.
 - Review sheets for both batches were regenerated outside the repository. This
   branch starts from the batch 02 branch, so it carries PR #33's content; PR
   #33 is superseded by this pull request.
