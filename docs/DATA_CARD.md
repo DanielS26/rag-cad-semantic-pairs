@@ -159,21 +159,21 @@ recorded per record as `source_dataset` `bipia_adapted` with
 are team-authored. All records carry `generator_model` and the SHA-256 of
 datasets/raw/augmentation/DRAFTING_PROMPT.md as `generator_prompt_hash`.
 
-Batch 01 coverage (10 families, 40 records, all status candidate pending review):
+Coverage after batch 02 (20 families, 80 records; batch 01 accepted, batch 02 pending review):
 
 | Role | Families | Domains |
 |---|---:|---|
+| analysis | 3 | email, healthcare_admin |
+| historical_description | 3 | legal, it_security, workplace_chat |
+| negation | 3 | customer_support, banking, travel |
+| task_alignment | 3 | hr_policy, legal, customer_support |
+| authorisation | 2 | workplace_chat, hr_policy |
 | quotation | 2 | it_security, healthcare_admin |
+| translation | 2 | travel, customer_support |
 | warning | 2 | banking, travel |
-| negation | 1 | customer_support |
-| analysis | 1 | email |
-| translation | 1 | travel |
-| historical_description | 1 | legal |
-| task_alignment | 1 | hr_policy |
-| authorisation | 1 | workplace_chat |
 
-Cue positions: query 4, sentence_before 2, sentence_after 2, heading 1,
-policy 1. Quotation-only cue share: 0. Pre-screen and validate: passed.
+Cue positions: query 5, sentence_after 5, sentence_before 4, heading 3,
+policy 3. Quotation-only cue share: 0. Pre-screen and validate: passed.
 
 Review: all ten batch 01 families were reviewed and accepted by Daniel Song on
 11 October 2026 (manifest `reviewer` and `status`; record `review_status`

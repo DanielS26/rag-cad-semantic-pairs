@@ -1583,3 +1583,38 @@ Historical audit claims are distinguished from checks executed in this session.
   reviewed batch; the pre-screen no longer reports awaiting_review. Full CPU
   suite and ruff unchanged. CPU only.
 - Next: batch 02 (ten families), timed per family.
+
+## 2026-10-11 - Phase 5 Pilot Batch 02: Ten More Candidate Families
+
+- Batch 02 (pilot_0011 to pilot_0020), forty records, in
+  datasets/raw/augmentation/families/pilot_batch_02.jsonl, with ten manifest
+  entries appended (status candidate, reviewer null). Seeds again adapted from
+  BIPIA text attacks under the committed drafting instructions (same prompt
+  hash). Roles chosen to lift the six roles that stood at one: negation 2,
+  analysis 2, historical_description 2, task_alignment 2, translation 1,
+  authorisation 1. Cue positions favoured the thin ones: heading 2, policy 2,
+  sentence_after 3, sentence_before 2, query 1.
+- Coverage over all twenty families: roles analysis 3, historical_description
+  3, negation 3, task_alignment 3, authorisation 2, quotation 2, translation 2,
+  warning 2; cue positions query 5, sentence_after 5, sentence_before 4,
+  heading 3, policy 3; nine domains; quotation-only cue share 0.
+- First pre-screen run on the batch failed eight of ten families on
+  control_length_tolerance alone: the twins in this batch carry long cue
+  sentences (policy statements, analysis sentences), and the controls drafted
+  at ordinary length fell more than 25 per cent short. Seventeen control
+  sentences were lengthened by a few words and one twin sentence was trimmed;
+  all ratios are now 1.25 or below (worst 1.247). No vocabulary, structure or
+  wording-identity failures.
+- `data prescreen` (minimum per role 1) passes over all twenty families with
+  no failures or batch warnings; `data validate` passes (80 records, 20
+  families, no differing targets, no cross-group near-duplicate targets).
+- Operational lesson: the report writer refuses to overwrite an existing
+  output file, so a rerun against a stale report path exits 2 without
+  rewriting it; delete or rename the previous report before rerunning.
+- Review time measured on batch 01: about 20 seconds per family (Daniel Song),
+  so human review is not the bound on the family count; drafting with
+  pre-screen fixes is, at roughly 10 to 15 minutes per family. Each family adds
+  six sentence rows per condition; 300 families would add about 1,800 rows
+  against D0's 24,665. These figures feed the superseding entry of
+  D-20261010-19.
+- A review sheet for batch 02 was written outside the repository. CPU only.
