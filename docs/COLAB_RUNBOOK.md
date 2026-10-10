@@ -232,7 +232,8 @@ Use `python -m rag_cad.cli --help` and the subcommand's `--help`. Commands are
 `smoke fake`, `smoke run-a`, `smoke run-b`, `data adapt-cad`, `data validate`, `data split`,
 `data check-leakage`, `data compare-budgets`, `features fake-build`,
 `features build`, `m0 fake-run`, `m0 run`, `conformance fake-released-test`,
-and `conformance released-test`. The default config paths are relative to the
+`conformance released-test`, and `evaluation leak-excluded` (CPU post-hoc on a
+restored m0 artefact; no gate). The default config paths are relative to the
 repository working directory. All real smoke commands require explicit execution flags and
 approved inputs. `features build` is a final
 stage: it requires the tested profile, an approved compute budget, a resolved
