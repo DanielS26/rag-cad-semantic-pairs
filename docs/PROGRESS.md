@@ -1676,5 +1676,5 @@ Historical audit claims are distinguished from checks executed in this session.
 - Review sheets for both batches were regenerated outside the repository. This
   branch starts from the batch 02 branch, so it carries PR #33's content; PR
   #33 is superseded by this pull request.
-- Not done here, pending approval: the decision entry recording the reopen and
-  the v2 rules (proposed as D-20261011-24). Full suite and ruff pass. CPU only.
+- Daniel Song approved the decision entry recording the reopen and the v2 rules
+  (D-20261011-24). Full suite and ruff pass. CPU only.
