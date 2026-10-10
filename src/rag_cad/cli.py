@@ -10,6 +10,7 @@ from pathlib import Path
 from rag_cad.config import load_config
 from rag_cad.data import commands as data_commands
 from rag_cad.data.conditions import PRIMARY
+from rag_cad.evaluation.posthoc import leak_excluded_report
 from rag_cad.operations import artefacts
 from rag_cad.operations import features as feature_operations
 from rag_cad.operations import phase4 as phase4_operations
@@ -114,6 +115,11 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--resources", type=Path, required=True)
             command.add_argument("--model-bundle", type=Path, required=True)
             command.add_argument("--allow-network", action="store_true")
+    evaluation = commands.add_parser("evaluation").add_subparsers(dest="action", required=True)
+    leak = evaluation.add_parser("leak-excluded")
+    leak.add_argument("--artefact", type=Path, required=True)
+    leak.add_argument("--output", type=Path, required=True)
+    leak.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
     conformance = commands.add_parser("conformance").add_subparsers(dest="action", required=True)
     fake_test = conformance.add_parser("fake-released-test")
     fake_test.add_argument("--archive", type=Path, required=True)
@@ -209,6 +215,15 @@ def execute(args) -> dict:
         local_path(args.output)
         return evaluate_released_test(FakeBackend(), args.archive, args.output, {"synthetic_only": True},
                                       "fake-local", records=args.records)
+    if args.command == "evaluation":
+        local_path(args.artefact)
+        local_path(args.output)
+        experiment = load_config(args.experiment)
+        result = leak_excluded_report(
+            args.artefact, threshold=float(experiment.get("threshold", 0.5)),
+            near_duplicate_threshold=float(experiment["near_duplicate_threshold"]))
+        write_json(args.output, result)
+        return result
     if args.command == "m0" and args.action == "fake-run":
         return phase4_operations.fake_run(args)
     try:
