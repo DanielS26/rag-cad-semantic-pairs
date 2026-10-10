@@ -48,13 +48,16 @@ def test_fixture_passes_the_prescreen_with_coverage_summary():
     batch = report["batch"]
     assert set(batch["role_counts"]) == set(ROLES) and batch["roles_below_minimum"] == []
     assert batch["quotation_only_cue_share"] == 0.0 and len(batch["domains"]) == 10
-    assert batch["duplicate_target_families"] == [] and batch["warnings"] == []
+    coverage_warnings = [w for w in batch["warnings"] if w not in batch["shortcuts"]["warnings"]]
+    assert batch["duplicate_target_families"] == [] and coverage_warnings == []
     assert all("awaiting_review" in result["warnings"] for result in report["family_results"].values())
 
 
 def test_minimum_per_role_shortfall_is_a_warning_not_a_failure():
     report = prescreen(records(), manifest(), length_tolerance=0.5, minimum_per_role=4)
-    assert report["passed"] and report["batch"]["warnings"] == ["roles_below_minimum"]
+    coverage_warnings = [w for w in report["batch"]["warnings"]
+                         if w not in report["batch"]["shortcuts"]["warnings"]]
+    assert report["passed"] and coverage_warnings == ["roles_below_minimum"]
     assert len(report["batch"]["roles_below_minimum"]) == 8
 
 

@@ -146,7 +146,12 @@ control sharing attack vocabulary and random control sharing none, drafter
 consistent with generator provenance, the quotation-only cue cap of one in
 four, no repeated target across families, and coverage counts by role, cue
 position, status and domain. The pilot coverage table of D-20261010-19 is
-filled from that report.
+filled from that report. From 11 October 2026 the pre-screen also reports
+batch-level shortcut diagnostics (pair length balance, side-exclusive words,
+pair structure, twin openers, query form) as warnings; see the progress
+entry of that date. D-20261010-21(c), each role at least four times, is not
+yet met after twenty families (maximum 3) and is the target for batches 03
+and 04.
 
 
 ## Pilot families (Phase 5, batch 01)
@@ -159,15 +164,15 @@ recorded per record as `source_dataset` `bipia_adapted` with
 are team-authored. All records carry `generator_model` and the SHA-256 of
 datasets/raw/augmentation/DRAFTING_PROMPT.md as `generator_prompt_hash`.
 
-Coverage after batch 02 (20 families, 80 records; batch 01 accepted, batch 02 pending review):
+Coverage after batch 02 (20 families, 80 records; both batches revised on 11 October 2026 and awaiting re-review):
 
 | Role | Families | Domains |
 |---|---:|---|
 | analysis | 3 | email, healthcare_admin |
 | historical_description | 3 | legal, it_security, workplace_chat |
 | negation | 3 | customer_support, banking, travel |
-| task_alignment | 3 | hr_policy, legal, customer_support |
-| authorisation | 2 | workplace_chat, hr_policy |
+| task_alignment | 2 | hr_policy, legal |
+| authorisation | 3 | workplace_chat, hr_policy, customer_support |
 | quotation | 2 | it_security, healthcare_admin |
 | translation | 2 | travel, customer_support |
 | warning | 2 | banking, travel |
@@ -175,9 +180,14 @@ Coverage after batch 02 (20 families, 80 records; batch 01 accepted, batch 02 pe
 Cue positions: query 5, sentence_after 5, sentence_before 4, heading 3,
 policy 3. Quotation-only cue share: 0. Pre-screen and validate: passed.
 
-Review: all ten batch 01 families were reviewed and accepted by Daniel Song on
-11 October 2026 (manifest `reviewer` and `status`; record `review_status`
-`single_reviewed`), with no wording changes.
+Review: batch 01 was accepted by Daniel Song on 11 October 2026 and reopened the
+same day, together with batch 02, after an independent review found
+cross-batch shortcuts (twins longer than malicious members, meta-words only
+in twins, uniform query forms, multiple cues per twin, off-domain keyword
+controls). Context sentences, queries and controls were revised under
+DRAFTING_PROMPT_v2.md; every target sentence is byte-identical to the
+accepted text. All twenty families are status candidate awaiting re-review;
+records carry the v2 prompt hash.
 
 Attribution: the malicious target sentences are adapted from the text attacks
 of the BIPIA benchmark, Yi et al., "Benchmarking and Defending Against Indirect

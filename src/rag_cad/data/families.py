@@ -154,6 +154,81 @@ def screen_family(entry: dict, members: dict[str, list[dict]], *, length_toleran
     return {"passed": not failures, "failures": failures, "warnings": warnings}
 
 
+FINITE_VERB_HINTS = frozenset("""
+is are was were be been am has have had do does did can could may might must shall should will
+would covers covered captures captured delivers delivered flags flagged carries carried edits
+edited sits sat wrote writes follows followed reproduces reproduced states stated says said
+contains contained includes included lists listed shows shows showed describes described records
+recorded refreshed updated sent received issued applies applied asks asked sells sold moves moved
+thank thanks hope hopes offers offered provides provided keeps kept remains remained covers
+""".split())
+QUERY_SHARE_LIMIT = 0.7
+EXCLUSIVE_TOKEN_SHARE = 0.5
+LENGTH_SHARE_BAND = (0.3, 0.7)
+
+
+def _context_words(record: dict) -> set[str]:
+    words = content_words(record["query"])
+    for item in record["sentences"]:
+        if not item["is_target"]:
+            words |= content_words(item["text"])
+    return words
+
+
+def _has_finite_verb(text: str) -> bool:
+    tokens = normalise(text).split()
+    return any(token in FINITE_VERB_HINTS or (token.endswith("ed") and len(token) > 4) for token in tokens)
+
+
+def shortcut_diagnostics(pairs: list[tuple[dict, dict, dict]], *, length_tolerance: float) -> dict:
+    """Batch-level regularities that separate twins from malicious members without the role.
+
+    pairs holds (manifest entry, malicious record, twin record). Everything here is a warning:
+    a label-correlated regularity is a shortcut a classifier could learn instead of the role.
+    """
+    warnings = []
+    if not pairs:
+        return {"pairs": 0, "warnings": warnings}
+    n = len(pairs)
+    twin_longer = sum(_characters(twin) > _characters(malicious) for _, malicious, twin in pairs)
+    share = twin_longer / n
+    if not LENGTH_SHARE_BAND[0] <= share <= LENGTH_SHARE_BAND[1]:
+        warnings.append("pair_length_imbalance")
+    over = sorted(entry["family_id"] for entry, malicious, twin in pairs
+                  if max(_characters(twin), _characters(malicious))
+                  / max(1, min(_characters(twin), _characters(malicious))) > 1 + length_tolerance)
+    if over:
+        warnings.append("pair_member_length_ratio")
+    twin_counts = Counter(word for _, _, twin in pairs for word in _context_words(twin))
+    malicious_counts = Counter(word for _, malicious, _ in pairs for word in _context_words(malicious))
+    twin_only = sorted(word for word, count in twin_counts.items()
+                       if count / n >= EXCLUSIVE_TOKEN_SHARE and malicious_counts[word] == 0)
+    malicious_only = sorted(word for word, count in malicious_counts.items()
+                            if count / n >= EXCLUSIVE_TOKEN_SHARE and twin_counts[word] == 0)
+    if twin_only or malicious_only:
+        warnings.append("tokens_exclusive_to_one_pair_side")
+    structures = {(len(malicious["sentences"]), next(i for i, s in enumerate(malicious["sentences"]) if s["is_target"]),
+                   len(twin["sentences"]), next(i for i, s in enumerate(twin["sentences"]) if s["is_target"]))
+                  for _, malicious, twin in pairs}
+    if n > 1 and len(structures) == 1:
+        warnings.append("uniform_pair_structure")
+    openers = sorted(entry["family_id"] for entry, _, twin in pairs
+                     if entry["cue_position"] != "heading" and not _has_finite_verb(twin["sentences"][0]["text"]))
+    if openers:
+        warnings.append("twin_openers_without_finite_verb")
+    first_words = Counter(normalise(malicious["query"]).split()[0] for _, malicious, _ in pairs
+                          if normalise(malicious["query"]).split())
+    dominant = first_words.most_common(1)[0] if first_words else (None, 0)
+    if dominant[1] / n > QUERY_SHARE_LIMIT:
+        warnings.append("dominant_malicious_query_form")
+    return {"pairs": n, "twin_longer_share": round(share, 4), "pair_member_length_ratio_over": over[:EXAMPLE_LIMIT],
+            "twin_only_tokens": twin_only[:EXAMPLE_LIMIT], "malicious_only_tokens": malicious_only[:EXAMPLE_LIMIT],
+            "distinct_pair_structures": len(structures),
+            "twin_openers_without_finite_verb": openers[:EXAMPLE_LIMIT],
+            "dominant_malicious_query_word": dominant[0], "dominant_malicious_query_share": round(dominant[1] / n, 4),
+            "warnings": warnings}
+
+
 def prescreen(records, manifest_entries, *, length_tolerance: float, minimum_per_role: int = 4,
               max_quotation_share: float = MAX_QUOTATION_SHARE) -> dict:
     """Screen every family in the manifest against the records; raise ContractError with the report
@@ -168,12 +243,14 @@ def prescreen(records, manifest_entries, *, length_tolerance: float, minimum_per
         if record["family_id"] is not None:
             by_family[record["family_id"]][record["condition_source"]].append(record)
         by_group[record["group_id"]][record["condition_source"]].append(record)
-    results, domains_by_role, target_texts = {}, defaultdict(set), defaultdict(set)
+    results, domains_by_role, target_texts, pairs = {}, defaultdict(set), defaultdict(set), []
     for family_id, entry in sorted(manifest.items()):
         members = {source: list(by_family[family_id][source]) for source in ("shared_malicious", "semantic_benign")}
         for source in ("random_benign", "keyword_benign"):
             members[source] = list(by_group[entry["group_id"]][source])
         results[family_id] = screen_family(entry, members, length_tolerance=length_tolerance)
+        if len(members["shared_malicious"]) == 1 and len(members["semantic_benign"]) == 1:
+            pairs.append((entry, members["shared_malicious"][0], members["semantic_benign"][0]))
         for record in members["shared_malicious"]:
             domains_by_role[entry["semantic_role"]].add(record["domain"])
             for text in _targets(record):
@@ -201,6 +278,8 @@ def prescreen(records, manifest_entries, *, length_tolerance: float, minimum_per
     confined = sorted(role for role, found in domains_by_role.items() if len(found) == 1 and role_counts[role] > 1)
     if confined:
         batch_warnings.append("roles_confined_to_one_domain")
+    shortcuts = shortcut_diagnostics(pairs, length_tolerance=length_tolerance)
+    batch_warnings.extend(shortcuts["warnings"])
     failed = sorted(family for family, result in results.items() if not result["passed"])
     report = {"families": len(manifest), "records": len(checked),
               "family_results": results, "failed_families": failed,
@@ -212,6 +291,7 @@ def prescreen(records, manifest_entries, *, length_tolerance: float, minimum_per
                         "max_quotation_share": max_quotation_share, "domains": domains,
                         "roles_confined_to_one_domain": confined,
                         "duplicate_target_families": duplicate_targets[:EXAMPLE_LIMIT],
+                        "shortcuts": shortcuts,
                         "failures": batch_failures, "warnings": batch_warnings},
               "passed": not failed and not batch_failures}
     if not report["passed"]:

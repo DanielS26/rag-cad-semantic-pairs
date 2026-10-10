@@ -1618,3 +1618,63 @@ Historical audit claims are distinguished from checks executed in this session.
   against D0's 24,665. These figures feed the superseding entry of
   D-20261010-19.
 - A review sheet for batch 02 was written outside the repository. CPU only.
+
+## 2026-10-11 - Independent Review Of Batches 01 And 02; Shortcut Revision; Drafting Prompt v2
+
+- Daniel Song had a second AI reviewer, given the project folder read-only and
+  the review prompt, audit batch 02 and then batch 01. It found regularities
+  that separate twins from malicious members without reference to the role.
+  Recomputed over both batches before revision: twins longer than their
+  malicious member in 17 of 20 families; the words "line", "below", "the
+  following", "planted" or "inserted" in every twin's context and in no
+  malicious member; malicious queries beginning "Summarise" in 19 of 20;
+  identical structure in every pair (three sentences, target in the middle);
+  several twins carrying two or three cues instead of the one tagged; and
+  keyword controls in batch 02 drifting out of the family's domain. Four
+  batch 02 families also had label or consistency problems (0013 twin
+  announced three lines but held one; 0016 twin's "your response" had no
+  referent; 0020 carried both a task-alignment query and a policy cue; 0011
+  justification garbled).
+- The per-family pre-screen could not see any of this. `data prescreen` now
+  computes batch-level shortcut diagnostics over the pairs and reports them as
+  warnings: twin-longer share outside 0.3 to 0.7; pair-member length ratio
+  over the tolerance; content words present in half or more of one side's
+  contexts and none of the other's; a single pair structure across the batch;
+  twin openers without a finite verb when the cue is not a heading; one
+  malicious query form above 70 per cent. Four new tests
+  (tests/test_prescreen_shortcuts.py); existing tests adjusted to separate
+  coverage warnings from shortcut warnings. On the pre-revision data all six
+  warnings fired.
+- Drafting rules moved to datasets/raw/augmentation/DRAFTING_PROMPT_v2.md
+  (version 1 kept unchanged so its hash remains verifiable): exactly one cue in
+  the tagged position with neutral context elsewhere; innocent meta-words
+  allowed in malicious members and at least one malicious member per batch
+  planted inside a security-aware document; full-clause twin openers unless
+  heading; malicious member within 25 per cent of the twin and roughly half
+  the malicious members longer; varied query forms on both sides; in-domain
+  controls; literal "Policy:"/"Analysis:"/"Warning:" prefixes at most once
+  per role; varied sentence counts and target positions from batch 03.
+- Both batches revised under v2 with every target sentence byte-identical to
+  the accepted text (40 of 40 compared). Batch 01: six twins reduced to a
+  single cue, four malicious members lengthened, two given innocent meta-words,
+  one twin opener made a full clause, five queries varied. Batch 02: the four
+  Tier A fixes (0020 moved to authorisation with the policy cue, option B
+  chosen by Daniel Song), four twins reduced to a single cue, three keyword
+  controls rewritten in-domain, five malicious members lengthened, three given
+  innocent meta-words, one opener fixed, eleven queries varied. Every edited
+  record carries the v2 prompt hash and `review_status` unreviewed; every
+  manifest entry is back to status candidate with reviewer null for re-review
+  (D-20261010-20), including batch 01's earlier acceptance, because its texts
+  changed.
+- After revision over all twenty families: pre-screen passes with no family or
+  batch failures; twin-longer share 0.45; no side-exclusive tokens;
+  "Summarise" share 0.65; remaining warnings are the uniform three-sentence
+  structure (varied from batch 03 by the v2 rules) and the heuristic
+  finite-verb check. Roles: analysis, authorisation, historical_description,
+  negation 3; quotation, task_alignment, translation, warning 2. Cue positions:
+  query 5, sentence_after 5, sentence_before 4, heading 3, policy 3.
+- Review sheets for both batches were regenerated outside the repository. This
+  branch starts from the batch 02 branch, so it carries PR #33's content; PR
+  #33 is superseded by this pull request.
+- Not done here, pending approval: the decision entry recording the reopen and
+  the v2 rules (proposed as D-20261011-24). Full suite and ruff pass. CPU only.
