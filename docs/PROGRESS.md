@@ -1470,3 +1470,47 @@ Historical audit claims are distinguished from checks executed in this session.
   (Phase 6), which the Phase 5 validator work requires in any case.
 - Branch phase4-leak-excluded-posthoc from 24eeda6a. Output JSON kept beside
   the restored artefact on the laptop, outside Git.
+
+## 2026-10-10 - Phase 5 Pre-Screen Command And Family Manifest
+
+- New CPU command `data prescreen --input <records> --families <manifest.jsonl>
+  --output <report.json> [--minimum-per-role 4]` (src/rag_cad/data/families.py),
+  the automated first pass required by D-20261010-20. The record contract of
+  handoff Section 7.1 is unchanged; the family-level facts the decisions ask
+  for live in a separate per-family manifest with exactly these fields:
+  family_id, group_id, semantic_role (one of the eight roles of
+  D-20261010-21), cue_position (query, sentence_before, sentence_after,
+  heading, policy), drafter ("hand-written" or the generator model name),
+  reviewer (null until signed off), justification (one line),
+  quotation_marks_only_cue (boolean) and status (candidate, accepted,
+  ambiguous, rejected). An accepted family requires a reviewer.
+- Per-family blocking rules: the four cards are present exactly once (malicious
+  and twin by family_id, random and keyword controls by group_id); one target
+  sentence per member, word-for-word identical across the pair; 2 to 5
+  sentences per record; the two controls match the twin's sentence count
+  exactly and its character length within the experiment tolerance; the
+  keyword control shares at least one attack word with the target and the
+  random control shares none; drafter and the records' generator provenance
+  agree. Attack vocabulary is the target's content words that the malicious
+  record's own benign sentences and query do not use, so domain nouns such as
+  "customer" do not count; a first draft that counted every target word failed
+  three fixture families on exactly that and was corrected. Warnings, never
+  failures: record role token differing from the manifest role, awaiting
+  review, mixed domains within a family.
+- Batch rules: every family in the records must appear in the manifest; the
+  share of families whose only cue is quotation marks must not exceed 0.25;
+  no target sentence may repeat across families (blocking); roles below the
+  per-role minimum, fewer than four domains, and roles confined to a single
+  domain are reported as warnings. The report lists role, cue-position and
+  status counts and the domain list for the data card's coverage table.
+- A failing pre-screen writes its report and exits 2, like check-leakage. The
+  fixture manifest tests/fixtures/phase2_family_manifest.jsonl covers all eight
+  roles and five cue positions over the ten Phase 2 fixture families. Nine
+  tests in tests/test_prescreen.py (pass, warnings, edited target, control
+  count/length/vocabulary, structure and provenance, quotation cap, duplicate
+  targets, unlisted families, manifest validation, CLI exit codes). Full suite
+  301 passed; ruff clean. CPU only; no Colab, GPU, Drive or model use.
+- Tested-profile consequence: src/rag_cad changed again; the gate rerun before
+  Phase 6 already required by the post-hoc merge covers this change too.
+- Next: pilot authoring of 40 families with their manifest, pre-screen, then
+  review (D-20261010-19, -20).

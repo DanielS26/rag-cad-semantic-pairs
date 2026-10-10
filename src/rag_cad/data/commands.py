@@ -5,7 +5,8 @@ from pathlib import Path
 
 from rag_cad.config import load_config
 from rag_cad.data.conditions import compare_budgets
-from rag_cad.data.jsonl import load_records
+from rag_cad.data.families import prescreen
+from rag_cad.data.jsonl import load_records, read_jsonl
 from rag_cad.data.schema import ContractError
 from rag_cad.data.split import apply_manifest, assign_splits, check_leakage
 from rag_cad.data.validate import validate_dataset
@@ -55,7 +56,16 @@ def run(args) -> dict:
     local_path(args.output)
     config = load_config(args.experiment)
     records, inventory = load_records(args.input)
-    if args.action == "validate":
+    if args.action == "prescreen":
+        entries = read_jsonl(local_path(args.families))
+        tolerance = experiment_value(config, "benign_length_tolerance")
+        try:
+            result = prescreen(records, entries, length_tolerance=tolerance,
+                               minimum_per_role=args.minimum_per_role)
+        except ContractError as error:
+            write_json(args.output, {"input": inventory, **error.report})
+            raise
+    elif args.action == "validate":
         tokenize = frozen_tokenizer(args.profile, args.resources) if args.roundtrip else None
         result = validate_dataset(records, tokenize=tokenize,
                                   near_duplicate_threshold=config.get("near_duplicate_threshold"))

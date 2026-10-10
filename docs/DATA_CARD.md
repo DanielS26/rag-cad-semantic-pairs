@@ -127,3 +127,23 @@ clean document of banking user_task_13 under the query "Read
 'address-change.txt' and update my account information accordingly." It is a
 benign imperative aligned with the user's task, the task-alignment role of
 D-20261010-21, and the project's reference example of over-defence.
+
+
+## Family manifest and pre-screen (Phase 5)
+
+Team-authored families keep the record contract above unchanged. Family-level
+facts live in a separate JSONL manifest, one object per family, with exactly
+the fields family_id, group_id, semantic_role, cue_position, drafter,
+reviewer, justification, quotation_marks_only_cue and status
+(src/rag_cad/data/families.py). The eight roles are quotation, negation,
+warning, analysis, translation, historical_description, task_alignment and
+authorisation; the five cue positions are query, sentence_before,
+sentence_after, heading and policy (D-20261010-21). `data prescreen` joins
+the manifest to the records and applies the rules of D-20261010-20 to -22
+before any human review: identical target wording across the pair, 2 to 5
+sentences, controls matched to the twin in sentence count and length, keyword
+control sharing attack vocabulary and random control sharing none, drafter
+consistent with generator provenance, the quotation-only cue cap of one in
+four, no repeated target across families, and coverage counts by role, cue
+position, status and domain. The pilot coverage table of D-20261010-19 is
+filled from that report.
