@@ -1388,3 +1388,30 @@ Historical audit claims are distinguished from checks executed in this session.
   released-test numbers (the 128 records sharing the verbatim sentence
   removed, and the stricter 148-record variant) and a look at the nine
   shared false-positive rows.
+
+## 2026-10-10 - PR #27 Merged; Phase 5 Pilot Design Decisions Approved
+
+- PR #27 merged as 2ee564cb8ad1e61fb68ab30ee38f6e2823b1ab5f (documentation
+  only). Phase 4 is closed: D0 adapted and split, M0 trained for three seeds
+  and matched against the released checkpoint, feature-job cost measured.
+- Daniel Song reviewed five Phase 5 design drafts in a tutoring session, each
+  with a plain-language explanation and sketch, and approved them as
+  D-20261010-19 to D-20261010-23: a 40-family pilot before scaling; LLM
+  drafting with an automated pre-screen and one accountable human reviewer
+  (second reviewer on disagreements and a random sample); family shape rules
+  (identical target wording, 2 to 5 sentences, eight semantic roles each
+  covered at least four times, varied cue position, quotation-mark cap, four
+  or more domains with no role confined to one); construction rules for the
+  random-benign and keyword-benign controls; and a frozen, hashed test-family
+  manifest before any M1 to M3 training.
+- Already fixed by D-20261004-15 and unchanged: 70/15/15 split by family with
+  seed 764, near-duplicate threshold 0.8, length tolerance 0.25, all D0
+  trains, shared malicious additions; `augmentation_budget_sentence_rows`
+  stays null until the pilot measures rows per family.
+- Still pending from Phase 4, independent of the pair data: the CPU post-hoc
+  on the published M0 artefact (leak-excluded released-test numbers and the
+  nine shared false-positive rows).
+- Next: validator and pre-screen changes required by D-20261010-20 to -22
+  (CPU only), then pilot authoring with a role-by-domain coverage table.
+- No Colab, GPU, Drive or model use in this session. Branch
+  phase5-pilot-design from 2ee564cb; documentation only.

@@ -1354,7 +1354,7 @@ Quality rules:
 
 Checklist:
 
-- [ ] Both researchers review the 30-50-family pilot before scaling.
+- [ ] The 40-family pilot passes the automated pre-screen and one researcher's review per family, with the second researcher on disagreements and a random sample, before scaling (D-20261010-19, D-20261010-20).
 - [ ] Every label has a written semantic-role justification.
 - [ ] Pair target wording is identical or the edit is documented.
 - [ ] M1-M3 have equal sentence-level counts and class counts.
