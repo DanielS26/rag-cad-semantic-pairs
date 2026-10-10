@@ -72,6 +72,12 @@ def parser() -> argparse.ArgumentParser:
     adapt.add_argument("--source", type=Path, required=True)
     adapt.add_argument("--output", type=Path, required=True)
     adapt.add_argument("--skip-paraphrased", action="store_true")
+    screen = data.add_parser("prescreen")
+    screen.add_argument("--input", type=Path, required=True)
+    screen.add_argument("--families", type=Path, required=True)
+    screen.add_argument("--output", type=Path, required=True)
+    screen.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
+    screen.add_argument("--minimum-per-role", type=int, default=4)
     for name in ("validate", "split", "check-leakage", "compare-budgets"):
         command = data.add_parser(name)
         command.add_argument("--input", type=Path, required=True)

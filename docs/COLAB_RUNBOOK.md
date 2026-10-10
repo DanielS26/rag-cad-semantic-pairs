@@ -229,7 +229,7 @@ and rerunning the affected full gate; it is not a Colab-side patch.
 Use `python -m rag_cad.cli --help` and the subcommand's `--help`. Commands are
 `audit upstream`, `environment preflight`, `upstream fetch-cad`,
 `upstream validate-cad`, `artefact publish`, `artefact restore`, `artefact verify`,
-`smoke fake`, `smoke run-a`, `smoke run-b`, `data adapt-cad`, `data validate`, `data split`,
+`smoke fake`, `smoke run-a`, `smoke run-b`, `data adapt-cad`, `data validate`, `data prescreen`, `data split`,
 `data check-leakage`, `data compare-budgets`, `features fake-build`,
 `features build`, `m0 fake-run`, `m0 run`, `conformance fake-released-test`,
 `conformance released-test`, and `evaluation leak-excluded` (CPU post-hoc on a
