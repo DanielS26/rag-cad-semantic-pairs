@@ -1313,3 +1313,78 @@ Historical audit claims are distinguished from checks executed in this session.
   cover the new cell: forbidden calls, the compaction rules and the
   after-failure path. The runner hash changes; the bootstrap, src/rag_cad and
   therefore the tested profile's code identity are unchanged.
+
+## 2026-10-04 - PR #26 Merged; First m0 Run Passed From d40b6a6a Under Pool B
+
+- PR #26 merged as d40b6a6a6a33fa9cc6adbe47f58399bbcff68e04 (tree identical to
+  the PR head, CAD ancestor retained, CPU tests green on the merge commit).
+  Local main fast-forwarded. The m0 notebook was regenerated outside Git from
+  the merge commit (run ID 20261004T101405Z_d40b6a6a_m0_8c0933ce; runner hash
+  e8fef1f3..., bootstrap unchanged at 3ff34956...).
+- Daniel Song authorised the m0 run explicitly ("Authorise the m0 run") and
+  ran it with Run all on a fresh NVIDIA L4 at a displayed rate of 1.54 units
+  per hour. Preflight at the train stage passed under the tested profile
+  (profile hash 2f6ccb54..., environment ID
+  eca91b7c15376e7556dcc17f02e1e82acd4abcd2479dec7849bab5848ef7a5ba, which
+  differs from the gate's ID only through the commit); all fourteen m0
+  progress steps completed; published and verified under artefacts/phase4.
+  Usage: 1 hour 12 minutes connected and 2.17 units. Pool B after the run:
+  4,320 connected seconds and 2.17 units of its 14,400-second / 8-unit cap.
+  The runtime was deleted after publication. The last cell's 22 KB summary
+  was the only output reported.
+- Stage facts: D0 adapted in the runtime with the audited counts (1,080
+  records, 24,665 rows, 1,625 malicious; records digest 12bb31fa...), released
+  test set 389 / 9,776 / 3,729 (records digest 3d8a0ee9...); split under the
+  none holdout policy with 9 training groups and 57 test groups pinned and no
+  validation rows (manifest 6b454aa4...). The released train/test leakage
+  report was recorded, not enforced: 6,560 target-sentence pairs at or above
+  the 0.8 threshold across the split, decomposed locally from the adapted
+  records with the project's own similarity: 5,760 pairs are one banking
+  injection sentence shared verbatim by 128 test records and 45 training
+  records, and 800 pairs are one travel injection sentence at similarity
+  0.81 shared by 20 test records and 40 training records, so 148 of the 389
+  released test records carry an injected sentence that D0 contains verbatim
+  or nearly; 14 benign context sentences are shared; no groups or records
+  are shared. Correction to the entries of 4 October above: the "20
+  near-duplicate target pairs" quoted there was the capped example list of
+  the leakage report; the count field says 6,560 and did so in the fake run
+  as well.
+- Features under the tested identity (representation_id dc422ef5...,
+  repo_compatible, float32): m0_base/train 24,665 rows in 5 shards (row
+  digest 947f8e9a...), common/test 9,776 rows in 2 shards (row digest
+  52e9cb69...); maximum token length 529; peak GPU memory 2,434,916,352
+  bytes; stage time 3,974.6 s, almost all of it the two feature builds; each
+  30-epoch head trained in about 35 s. Published payload: features 572.7 MB
+  in 28 files, models 12.4 MB in 15 files, adapted records 5.8 MB, report
+  820 KB, reference-checkpoint predictions 1.7 MB.
+- Results on the released test set, same features for every model. The
+  upstream mask drops the first three and last five units of every injection
+  span: 3,112 rows, all malicious (8 per record), leaving 617 positives and
+  6,047 negatives in 6,664 rows. Threshold 0.5.
+
+  | Model | Masked AUPRC | Masked ROC-AUC | Masked TPR | Masked FPR | All-rows AUPRC | All-rows ROC-AUC | All-rows TPR |
+  |---|---:|---:|---:|---:|---:|---:|---:|
+  | M0 seed 0 | 0.99646 | 0.99968 | 0.9676 | 0.00149 | 0.7917 | 0.8311 | 0.3363 |
+  | M0 seed 1 | 0.98217 | 0.99909 | 0.9692 | 0.00149 | 0.8145 | 0.8528 | 0.3685 |
+  | M0 seed 2 | 0.98552 | 0.99922 | 0.9708 | 0.00149 | 0.8050 | 0.8500 | 0.3693 |
+  | M0 mean (std) | 0.98805 (0.00610) | 0.99933 (0.00025) | 0.9692 (0.0013) | 0.00149 (0) | 0.8037 (0.0093) | 0.8446 (0.0096) | 0.3580 |
+  | Released checkpoint | 0.98131 | 0.99906 | 0.9806 | 0.00149 | 0.8291 | 0.8842 | 0.3709 |
+
+  The released checkpoint's masked AUPRC equals the repo_compatible value of
+  the full released-test run of 23 September to five decimals, so the m0
+  feature builder reproduces the conformance stage's features. M0 matches the
+  released head on the masked protocol (0.988 against 0.981, within one
+  standard deviation across seeds) and sits below it on all rows (0.804
+  against 0.829). Every head, including the released one, flags the same nine
+  benign rows (FPR 9 of 6,047) and detects about a third of all malicious rows
+  at 0.5 with precision above 0.99, because the boundary units that the mask
+  removes are rarely flagged: the masked protocol evaluates 617 interior
+  units, about 1.6 per record. Final-epoch training losses were 4e-8 to 1e-7,
+  so the heads fit D0 almost perfectly.
+- Handoff items ticked: the small real feature build, M0 for one smoke epoch
+  then 30 epochs over the declared seeds, non-constant probabilities with
+  saved predictions, and the Phase 1B feature-job estimate (now measured).
+  Still to do on CPU from the published predictions: the leak-excluded
+  released-test numbers (the 128 records sharing the verbatim sentence
+  removed, and the stricter 148-record variant) and a look at the nine
+  shared false-positive rows.

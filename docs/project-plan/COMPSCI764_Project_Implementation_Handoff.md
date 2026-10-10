@@ -1225,7 +1225,7 @@ Checklist:
 - [x] `pip check`, CPU tests, Jina 2048-dimensional feature test, released-checkpoint score/filter test, MLP reload, FAISS retrieval, and fake RAG pass.
 - [x] Drive publish/restart/restore hash round-trip passes.
 - [x] A fresh runtime recreates the tested environment from committed files.
-- [ ] Estimated full feature job fits the chosen runtime/budget with resumable margins; otherwise the fallback environment is selected now.
+- [x] Estimated full feature job fits the chosen runtime/budget with resumable margins; otherwise the fallback environment is selected now. (Measured in the m0 run of 4 October 2026: the D0 and released-test feature builds plus three 30-epoch heads took 66 minutes of stage time, 1 hour 12 minutes connected and 2.17 units on an L4; pool B holds 4 hours and 8 units; feature shards are content-addressed and resumable.)
 
 Acceptance criterion: the project has evidence that one exact commit can travel from GitHub to a fresh Colab runtime, run the smallest complete pipeline, and restore its verified output after the VM is destroyed.
 
@@ -1320,10 +1320,10 @@ Checklist:
 - [x] Missing/stale `total_units` fields and paraphrase source-path variants are handled explicitly and tested. (360 missing in the original training set, 1,353 missing and 1,278 stale in the paraphrase set, 2,199 prefixed paths normalised, all 3,376 paraphrases mapped to 60 originals.)
 - [x] D0 licences/attribution permit the intended research use and redistribution plan. (Data CC-BY-4.0, checkpoint MIT; the adapted files are derived works kept outside Git and shared only within the team on Drive with the release citation.)
 - [x] No released test row enters training or model selection. (Adapted test records carry `condition_source: test_only` and `source_dataset: cad_original_test`; the schema and `pinned_split` refuse any other split.)
-- [ ] A small real feature build completes under the frozen representation/environment.
+- [x] A small real feature build completes under the frozen representation/environment. (Run A's three rows on 4 October 2026, then the full D0 and released-test builds of 24,665 and 9,776 rows in the m0 run, run ID 20261004T101405Z_d40b6a6a_m0_8c0933ce.)
 - [x] The official base checkpoint loads and produces finite non-constant probabilities. (Safely loaded in every Run A and in the released-test runs of 23 September 2026; finite, non-constant probabilities on all 9,776 released test rows.)
-- [ ] Project M0 trains for one smoke epoch, then for the fixed 30 epochs and declared seeds.
-- [ ] M0 produces non-constant probabilities and saves predictions.
+- [x] Project M0 trains for one smoke epoch, then for the fixed 30 epochs and declared seeds. (One-epoch smoke head in every Run A; 30 epochs for seeds 0, 1 and 2 in the m0 run, about 35 s each.)
+- [x] M0 produces non-constant probabilities and saves predictions. (Masked AUPRC 0.988 +/- 0.006 over the three seeds against 0.981 for the released checkpoint on the same test features; per-row predictions for every seed and for the released checkpoint, and the three checkpoints, published under artefacts/phase4.)
 
 Acceptance criterion: the official D0 can be traced byte-for-byte to the pinned release, adapted row-for-row, and used by a newly trained project M0 that scores hand-checked benign and malicious passages end to end. Matching the paper's table remains a separate reproduction result until the encoder/representation provenance questions are resolved.
 

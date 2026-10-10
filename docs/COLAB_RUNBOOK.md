@@ -211,6 +211,13 @@ per-seed checkpoint directories under `models/m0_base/`. `m0 fake-run` is its
 CPU twin on synthetic identities. Its notebook stage is `STAGE = "m0"` under
 budget pool B: the preflight runs at the `train` stage, the stage label is
 `phase4_m0`, and Cell 7 publishes under the `phase4` stage on Drive.
+The first m0 run (4 October 2026, run ID 20261004T101405Z_d40b6a6a_m0_8c0933ce,
+commit d40b6a6a) took 1 hour 12 minutes connected and 2.17 units on an L4 at a
+displayed rate of 1.54 units per hour: 66 minutes of stage time, almost all of
+it the two feature builds (24,665 training and 9,776 test rows), with each
+30-epoch head training in about 35 s. Pool B holds 4 hours and 8 units, so one
+further run of this size fits; later phases should restore the published
+feature shards rather than rebuild them.
 
 Final stages reject candidate/unknown profiles. A tested profile requires Run A
 and Run B manifest hashes, the reviewed commit and lock hash, matching runtime
