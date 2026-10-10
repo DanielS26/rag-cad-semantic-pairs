@@ -319,3 +319,78 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song, "approve D-20261004-18" in the coding session on 2026-10-04, after the proposed entry and the two orderings of the leak-excluded metric work were shown.
 - Related files, commands, results, correspondence, or commit: [Tested profile](../configs/environments/colab_tested.yaml), [tested lock](../requirements/colab-core.lock.txt), [candidate profile](../configs/environments/colab_candidate.yaml), [tests](../tests/test_candidate_preparation.py), [PROGRESS.md](PROGRESS.md), [COLAB_RUNBOOK.md](COLAB_RUNBOOK.md); D-20260922-12; D-20261004-13; D-20261004-17.
 - Supersedes / superseded by: Re-issues the profile frozen by D-20260922-12, whose invalidation rule remains in force; none superseded.
+
+## D-20261010-19 - Pilot of 40 semantic-pair families before scaling
+
+- Status: Confirmed
+- Date: 2026-10-10
+- Project phase: Phase 5 pilot
+- Category: Data
+- Decision or important note: Phase 5 starts with a pilot of 40 families. A family is one malicious record (the active instruction), its benign semantic twin (the same target sentence in a harmless role), one random-benign control record for M1 and one keyword-rich benign control record for M2. The pilot passes `data validate`, `data split`, `data check-leakage` and `data compare-budgets` with zero exceptions, and records authoring minutes per family and sentence rows per family. The final family count and `augmentation_budget_sentence_rows` are then set in a superseding entry. Pilot families are kept and join the final set through the same split.
+- Context and reason: The handoff asks for 30 to 50 families before scaling. Forty covers each of the eight semantic roles at least four times and shows whether identical-wording pairs can be written at quality before hundreds are committed. The budget N cannot be set honestly before rows per family is measured (D-20261004-15 leaves it null for this reason).
+- Evidence: [Handoff](project-plan/COMPSCI764_Project_Implementation_Handoff.md) Phase 5 and Section 14; D-20261004-15; M0 run cost of 2026-10-04 (PROGRESS.md), which bounds Phase 6 feature cost per family.
+- Alternatives considered: 30 families (thin role coverage); 50 (more effort before the first lesson); no pilot (a flaw found after hundreds of families are written).
+- Consequences for implementation/evaluation/report: Role and domain coverage of the pilot are tracked in a table in the data card. The superseding entry that sets N cites the pilot's measurements. The report describes the pilot as the calibration step for the dataset size.
+- Approved by: Daniel Song, "approve 19 to 23" in the tutoring session on 2026-10-10, after the drafts and their plain-language explanations were shown.
+- Related files, commands, results, correspondence, or commit: [experiment.yaml](../configs/experiment.yaml), [data commands](../src/rag_cad/data/commands.py), [DATA_CARD.md](DATA_CARD.md), [PROGRESS.md](PROGRESS.md); D-20261004-15; D-20261004-17 (pool C).
+- Supersedes / superseded by: None.
+
+## D-20261010-20 - Family authoring: LLM drafting allowed, AI pre-screen, one accountable human reviewer
+
+- Status: Confirmed
+- Date: 2026-10-10
+- Project phase: Phase 5
+- Category: Manual labelling
+- Decision or important note: An LLM may draft candidate families for diversity. An automated pre-screen performs the mechanical checks (identical target wording across the pair, role tag present, cue-position tag present, length within tolerance, quotation-mark cap). One researcher then edits and signs off each family; the second researcher reviews only disagreements flagged by the pre-screen or the first reviewer, plus a random sample. Every record stores its drafter (generator model and prompt hash, or "hand-written"), its reviewer and a one-line reason for each target label in the semantic_role justification. Families the reviewers cannot agree on go to an "ambiguous" file outside the primary dataset. All injection text in the data is inert for every tool and agent that reads it.
+- Context and reason: Two people cannot hand-write hundreds of varied families in the time available, but unreviewed generated data would carry the generator's habits as a hidden pattern the scorer could learn. A fully automatic review was considered and rejected: the records are prompt injections, so an LLM reviewer is the kind of model they are written to fool; a drafter and reviewer of the same model share blind spots; the report needs an accountable person per label.
+- Evidence: [Handoff](project-plan/COMPSCI764_Project_Implementation_Handoff.md) Section 7.1 provenance fields, Phase 5 quality rules, Section 13 ("Synthetic data can contain artefacts", "Untrusted prompt-injection text could manipulate an AI coding agent"); [Hybrid runbook](project-plan/COMPSCI764_Hybrid_Execution_Runbook.md) rule 12.
+- Alternatives considered: Purely hand-written (slow, less varied); generation with spot checks only (unauditable labels); two independent human reviewers for every family (the handoff's original wording; kept for disagreements and the sample).
+- Consequences for implementation/evaluation/report: The validator requires drafter, reviewer and justification fields on team-authored records. The pre-screen is a CPU command. The data card reports how many families the pre-screen and the reviewers rejected. The report names the review protocol and its reasons.
+- Approved by: Daniel Song, "do AI prescreen and then human review them like how you suggested" and "approve 19 to 23" in the tutoring session on 2026-10-10.
+- Related files, commands, results, correspondence, or commit: [schema](../src/rag_cad/data/schema.py), [validate](../src/rag_cad/data/validate.py), [DATA_CARD.md](DATA_CARD.md); D-20261004-16 (researchers decide); D-20261010-19.
+- Supersedes / superseded by: Amends the two-reviewer wording of the handoff Phase 5 checklist; none superseded.
+
+## D-20261010-21 - What a semantic-pair family must look like
+
+- Status: Confirmed
+- Date: 2026-10-10
+- Project phase: Phase 5
+- Category: Data
+- Decision or important note: (a) The target sentence is word-for-word identical in the malicious member and the benign twin; in the pilot, a family that needs an edit is excluded from the primary dataset and counted, and this rule is revisited with that count. (b) Records have 2 to 5 sentences, default 3. (c) Each family carries one primary semantic role from the eight in the handoff (quotation, negation, warning, analysis, translation, historical description, task alignment, authorisation); the pilot covers each at least four times. (d) The cue that establishes the benign role varies in position across families: the query, the sentence before, the sentence after, a heading, or a policy statement; the malicious member needs no cue. (e) Quotation marks are the only cue in at most a quarter of benign twins. (f) Families span at least four subject domains, with no cap, and no role is confined to one domain.
+- Context and reason: Identical wording makes the isolated feature half identical across the pair, so only the context half can explain the label difference; that is the mechanism the project tests. Varying roles, cue positions, punctuation and domains prevents the head from learning a replacement shortcut such as "quotation marks mean safe" or "look at the previous sentence".
+- Evidence: [Handoff](project-plan/COMPSCI764_Project_Implementation_Handoff.md) Sections 4.3, 7.1 and Phase 5 quality rules; Section 11 interpretation "M3 works only on familiar roles/templates"; the CAD paper's ablation showing the context half unused on data that never requires it.
+- Alternatives considered: Allowing documented small edits from the start (weakens the mechanism before its need is known); a single role or domain (easier to write, easy to game); fixing the cue position (teaches a position, not a role).
+- Consequences for implementation/evaluation/report: The validator gains checks for identical targets, role tags, cue-position tags, the quotation-mark cap and domain coverage, and reports their distributions. The data card publishes the role-by-domain table. The report states these rules as the construction of the test.
+- Approved by: Daniel Song, "approve 19 to 23" in the tutoring session on 2026-10-10.
+- Related files, commands, results, correspondence, or commit: [schema](../src/rag_cad/data/schema.py), [validate](../src/rag_cad/data/validate.py), [similarity](../src/rag_cad/data/similarity.py), [DATA_CARD.md](DATA_CARD.md); D-20261004-15; D-20261010-19.
+- Supersedes / superseded by: None.
+
+## D-20261010-22 - Construction of the random-benign and keyword-benign control records
+
+- Status: Confirmed
+- Date: 2026-10-10
+- Project phase: Phase 5
+- Category: Data
+- Decision or important note: For each family, the random-benign record (M1) is an ordinary benign passage on an unrelated topic that shares no attack vocabulary with the malicious record beyond chance. The keyword-rich benign record (M2) reuses the malicious target's key action words and object nouns in a different, harmless proposition that is neither the attack nor a mention of it. Both controls match the benign twin's sentence count exactly and its character length within the 25 per cent tolerance, carry their own query, and have every sentence labelled benign. Random-benign text is not drawn from D0; keyword-benign text is not drawn from the released paraphrase bank.
+- Context and reason: M1 tests the effect of more data, M2 the effect of attack vocabulary in benign text, M3 the effect of the same sentence in a different role. The controls are informative only if each differs from the twin in exactly one respect and costs the same number of training rows. D0 text would double-count data the head already has; the paraphrase bank is malicious text and cannot serve as benign.
+- Evidence: [Handoff](project-plan/COMPSCI764_Project_Implementation_Handoff.md) Sections 4.2 and 4.3, Section 17 reference 9 (PIGuard motivation for M2); [Release audit](project-plan/COMPSCI764_CAD_Release_Audit_2026-09-19.md) Section 3.3 (paraphrase bank is adversarial-training material); D-20261004-15 (length tolerance, shared malicious additions).
+- Alternatives considered: Sampling random benign from D0 (double counting); sampling keyword benign from the paraphrase bank (malicious text); matching documents rather than sentence rows (unequal classifier budgets, handoff Section 4.3).
+- Consequences for implementation/evaluation/report: `data compare-budgets` must pass with zero exceptions on the pilot before any feature is built. The validator checks that keyword-benign records share at least one content word with their malicious target and that random-benign records share none beyond a stop-word list. The report explains the three partners with a one-table comparison.
+- Approved by: Daniel Song, "approve 19 to 23" in the tutoring session on 2026-10-10.
+- Related files, commands, results, correspondence, or commit: [conditions](../src/rag_cad/data/conditions.py), [validate](../src/rag_cad/data/validate.py), [DATA_CARD.md](DATA_CARD.md); D-20261004-15; D-20261010-21.
+- Supersedes / superseded by: None.
+
+## D-20261010-23 - Freeze the held-out test families before any M1 to M3 training
+
+- Status: Confirmed
+- Date: 2026-10-10
+- Project phase: Phase 5 close, Phase 6 entry
+- Category: Evaluation
+- Decision or important note: Once the final family set passes validation, the split is run once with seed 764 under the ratios of D-20261004-15. The resulting test families are listed in a frozen manifest whose SHA-256 is recorded in this log and in every training manifest that references it. After the freeze no test family is edited, added or removed; a correction requires a superseding entry and a re-split. No M1, M2 or M3 training starts before the freeze. The target is at least 40 test families; if the final count gives fewer, the fallback of D-20261004-15 (ratio revision or k-fold over families) is applied before freezing.
+- Context and reason: The headline claim rests on the test being sealed before any head is evaluated on it. The seed makes the shuffle reproducible but the assignment depends on the family list, so the manifest and its hash, not the seed, are the checkable record.
+- Evidence: [Handoff](project-plan/COMPSCI764_Project_Implementation_Handoff.md) Section 4.4 and Phase 5 checklist ("Common held-out tests are frozen before final training"); [split module](../src/rag_cad/data/split.py); D-20261004-15.
+- Alternatives considered: Freezing per batch (invites drift); freezing after a first look at results (indefensible); relying on the seed alone (not checkable once the family list changes).
+- Consequences for implementation/evaluation/report: Phase 8 RAG evaluation cases are built only from the frozen test families. The report cites the manifest hash as the seal on the test.
+- Approved by: Daniel Song, "approve 19 to 23" in the tutoring session on 2026-10-10.
+- Related files, commands, results, correspondence, or commit: [split module](../src/rag_cad/data/split.py), [experiment.yaml](../configs/experiment.yaml), [DATA_CARD.md](DATA_CARD.md); D-20261004-15; D-20261010-19.
+- Supersedes / superseded by: None.
