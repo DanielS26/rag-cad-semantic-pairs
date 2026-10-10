@@ -1514,3 +1514,50 @@ Historical audit claims are distinguished from checks executed in this session.
   Phase 6 already required by the post-hoc merge covers this change too.
 - Next: pilot authoring of 40 families with their manifest, pre-screen, then
   review (D-20261010-19, -20).
+
+## 2026-10-10 - Phase 5 Pilot Batch 01: Ten Candidate Families Drafted And Pre-Screened
+
+- Dataset survey (recorded in the researcher's report notes): attack text for
+  the malicious half exists online; keyword-rich benign text exists as a
+  pattern (NotInject, MIT); no dataset pairs an identical instruction sentence
+  in a malicious and a benign role with sentence labels, a query and context.
+  The twins and controls are therefore written here.
+- Daniel Song approved adapting the malicious target sentences from Microsoft's
+  BIPIA benchmark (MIT licence, verified from its LICENSE file) rather than
+  writing them from scratch. BIPIA's text attacks are instructions aimed at the
+  assistant inside retrieved content (insert a line, change the reply's
+  language, redirect contact), a different lineage and flavour from D0's
+  AgentDojo action attacks. Obfuscated, harmful and misinformation categories
+  are not used. Provenance: `source_dataset` `bipia_adapted` (licence MIT,
+  added to the schema registry and the JSON schema), `source_record_id`
+  `bipia:<file>:<category_slug>:<index>`, generator fields set. Twins and
+  controls are `team_authored` with generator fields set. The drafting
+  instructions are committed as datasets/raw/augmentation/DRAFTING_PROMPT.md and
+  their SHA-256 is every record's `generator_prompt_hash`.
+- Storage: team-authored families are tracked in Git under
+  datasets/raw/augmentation/ (ignore rule changed from `/datasets/raw/` to
+  `/datasets/raw/*` with an exception for that folder; records under
+  `families/`, the family manifest beside it so the recursive loader does not
+  read it as records).
+- Batch 01: ten families, forty records, in
+  datasets/raw/augmentation/families/pilot_batch_01.jsonl with ten manifest
+  entries (status candidate, reviewer null). Coverage: roles quotation 2,
+  warning 2, and one each of negation, analysis, translation,
+  historical_description, task_alignment, authorisation; cue positions query
+  4, sentence_before 2, sentence_after 2, heading 1, policy 1; nine domains
+  (banking, customer_support, email, healthcare_admin, hr_policy, it_security,
+  legal, travel, workplace_chat); quotation-only cue share 0.
+- `data prescreen` (minimum per role 1 for a single batch) passed with no
+  family failures, no batch failures and no batch warnings; `data validate`
+  passed (40 records, 10 families, no differing targets, no cross-group
+  near-duplicate targets). Two drafting corrections were needed before the
+  pass: BIPIA category names with spaces or ampersands are not valid
+  identifiers, so the source id uses a slug; four random controls were more
+  than 25 per cent shorter than their twins and were lengthened.
+- Full suite 301 passed after the registry change; ruff clean. CPU only.
+- A review sheet for the ten families was written outside the repository for
+  the human review of D-20261010-20. Verdicts and any wording fixes will be
+  applied to the manifest (reviewer, status) and records in a follow-up PR.
+- Authoring time for the batch, including the two corrections and the survey:
+  about one working session; to be refined per family over the next batches
+  for the superseding entry that sets N (D-20261010-19).

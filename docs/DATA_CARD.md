@@ -147,3 +147,30 @@ consistent with generator provenance, the quotation-only cue cap of one in
 four, no repeated target across families, and coverage counts by role, cue
 position, status and domain. The pilot coverage table of D-20261010-19 is
 filled from that report.
+
+
+## Pilot families (Phase 5, batch 01)
+
+Location: datasets/raw/augmentation/families/ (records) and
+datasets/raw/augmentation/family_manifest.jsonl (manifest), tracked in Git.
+Malicious target sentences are adapted from Microsoft BIPIA text attacks (MIT),
+recorded per record as `source_dataset` `bipia_adapted` with
+`source_record_id` `bipia:<file>:<category_slug>:<index>`; twins and controls
+are team-authored. All records carry `generator_model` and the SHA-256 of
+datasets/raw/augmentation/DRAFTING_PROMPT.md as `generator_prompt_hash`.
+
+Batch 01 coverage (10 families, 40 records, all status candidate pending review):
+
+| Role | Families | Domains |
+|---|---:|---|
+| quotation | 2 | it_security, healthcare_admin |
+| warning | 2 | banking, travel |
+| negation | 1 | customer_support |
+| analysis | 1 | email |
+| translation | 1 | travel |
+| historical_description | 1 | legal |
+| task_alignment | 1 | hr_policy |
+| authorisation | 1 | workplace_chat |
+
+Cue positions: query 4, sentence_before 2, sentence_after 2, heading 1,
+policy 1. Quotation-only cue share: 0. Pre-screen and validate: passed.
