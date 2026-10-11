@@ -22,7 +22,13 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from rag_cad.data.families import CUE_POSITIONS, FAMILY_FIELDS, ROLES, attack_vocabulary, content_words
+from rag_cad.data.families import (
+    CUE_POSITIONS,
+    FAMILY_FIELDS,
+    ROLES,
+    attack_vocabulary,
+    content_words,
+)
 from rag_cad.data.schema import PROVENANCE_FIELDS
 from rag_cad.data.similarity import normalise
 
