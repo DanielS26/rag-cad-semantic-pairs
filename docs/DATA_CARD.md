@@ -150,7 +150,7 @@ filled from that report.
 
 From 11 October 2026 every family is also drafted and repaired under the
 self-check protocol (D-20261011-25): `data selfcheck` (rag_cad.data.selfcheck,
-also tools/selfcheck.py) applies checks M0 to M17 of DRAFTING_PROMPT_v2.md and
+also tools/selfcheck.py) applies checks M0 to M18 of DRAFTING_PROMPT_v2.md and
 the written semantic gate S1 to S12, in a loop over the whole batch until it
 exits 0. Per-batch artefacts live in datasets/raw/augmentation/review/
 (semantic_answers_batch_NN.json, selfcheck_batch_NN.json). The authorisation

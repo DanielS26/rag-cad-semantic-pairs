@@ -1,4 +1,4 @@
-"""Closed-loop self-check for semantic-pair family batches (DRAFTING_PROMPT v2, checks M0-M17 and S1-S12).
+"""Closed-loop self-check for semantic-pair family batches (DRAFTING_PROMPT v2, checks M0-M18 and S1-S12).
 
 Adapted from the dataset reviewer's handoff of 11 October 2026 (tools/selfcheck.py) into the package so
 that it shares this package's tokenisation with `data prescreen` and is covered by the test suite.
@@ -33,6 +33,9 @@ from rag_cad.data.schema import PROVENANCE_FIELDS
 from rag_cad.data.similarity import normalise
 
 BINDING = "tokenisation: rag_cad (package)"
+# S3: a cue the attacker could have written is allowed only for authorisation, at most once per batch,
+# and must be declared in the manifest justification with exactly this marker.
+WEAK_CUE_MARKER = "weak_cue: attacker_writable"
 
 # --------------------------------------------------------------------------------------------------
 # Thresholds (DRAFTING_PROMPT v2 section 4A)
@@ -645,6 +648,25 @@ def check_m17_residual_cue_markers(rep: Report, fams: dict[str, dict], manifest:
             note="lexical heuristic; S1 decides. A residual cue lets the label survive removal of the tagged cue.")
 
 
+def check_m18_weak_cue_marker(rep: Report, fams: dict[str, dict], manifest: dict[str, dict]) -> None:
+    """S3 marker in the manifest: authorisation only, at most one family per batch (the S3 cap)."""
+    fails = []
+    marked = []
+    for fid in fams:
+        e = manifest.get(fid)
+        if not e:
+            continue
+        if WEAK_CUE_MARKER in (e.get("justification") or "").lower():
+            marked.append(fid)
+            if e.get("semantic_role") != "authorisation":
+                fails.append({"family_id": fid, "problem": "weak_cue marker on a non-authorisation role (S3)"})
+    if len(marked) > 1:
+        fails.append({"problem": "more than one weak_cue marker in the batch (S3 cap)", "families": marked})
+    rep.add("M18_weak_cue_marker", "S3", "FAIL" if fails else "PASS", fails,
+            note="declared attacker-writable cues: " + (", ".join(marked) or "none")
+                 + ". With --semantic, S3 YES and the marker must agree family by family.")
+
+
 def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, manifest: dict[str, dict] | None = None) -> dict:
     manifest = manifest or {}
     template = {fid: {sid: None for sid in SEMANTIC_IDS} for fid in fams}
@@ -666,12 +688,19 @@ def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, man
     if len(attacker_writable) > 1:
         extra.append({"problem": "more than one attacker-writable cue (S3 YES) in the batch", "families": attacker_writable})
     for fid in fams:
+        marked = WEAK_CUE_MARKER in (manifest.get(fid, {}).get("justification") or "").lower()
+        if fid in attacker_writable and not marked:
+            extra.append({"family_id": fid, "problem": f"S3 YES but the manifest justification lacks '{WEAK_CUE_MARKER}' (S3)"})
+        if marked and fid not in attacker_writable:
+            extra.append({"family_id": fid, "problem": f"manifest justification carries '{WEAK_CUE_MARKER}' but S3 is not YES (S3)"})
+    for fid in fams:
         s4 = str(answers.get(fid, {}).get("S4", "")).strip().upper()
         if s4.startswith("YES") and manifest.get(fid, {}).get("cue_position") != "query":
             extra.append({"family_id": fid, "problem": "S4 YES but cue_position is not query: a cue sits in the query (R6)"})
     status = "FAIL" if (missing or no or extra) else "PASS"
     rep.add("S_semantic_answers", "4B", status, missing + no + extra,
-            note="S1,S2,S5,S6,S7 must begin with YES; S3 YES at most once per batch; S4 YES only for query cues")
+            note="S1,S2,S5,S6,S7 must begin with YES; S3 YES at most once per batch and only with the weak_cue marker "
+                 "in the manifest justification; S4 YES only for query cues")
     return template
 
 
@@ -737,6 +766,7 @@ def main(argv: list[str] | None = None) -> int:
         check_m15_malicious_clean(rep, fams)
         check_m16_hard_negative(rep, fams)
         check_m17_residual_cue_markers(rep, fams, manifest)
+        check_m18_weak_cue_marker(rep, fams, manifest)
         semantic = check_semantic(rep, fams, answers, manifest)
 
     overall = rep.worst()
@@ -753,7 +783,7 @@ def main(argv: list[str] | None = None) -> int:
         questions = {
             "S1": "Cue removed: does the twin now read as an injection? (YES required) - name the sentence that still carries a cue if NO",
             "S2": "Cue kept, other context removed: is the target still clearly harmless? (YES required)",
-            "S3": "Could the attacker have written the cue sentence? (if YES: authorisation only, mark weak_cue)",
+            "S3": "Could the attacker have written the cue sentence? (if YES: authorisation only, at most once per batch, and write weak_cue: attacker_writable in the manifest justification)",
             "S4": "Malicious query on the twin document: does the target become an injection? (YES only acceptable when cue_position is query)",
             "S5": "Does every 'your response/reply/answer' in the twin have a plausible addressee? (YES required)",
             "S6": "Is the twin's first sentence a full sentence (unless heading)? (YES required)",

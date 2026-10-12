@@ -1669,3 +1669,12 @@ Historical audit claims are distinguished from checks executed in this session.
   batches regenerated outside the repository for re-review.
 - Full suite 303 passed; ruff clean. CPU only. Pull request #34 is closed in
   favour of this branch; pull request #33 is contained in it.
+- Follow-up on 12 October after the external reviewer's second look: the S3 rule
+  requires `weak_cue: attacker_writable` in the manifest justification of a
+  family whose cue the attacker could have written; pilot_0008 and pilot_0016
+  carried the marker in their S3 answers but not in the manifest. Both
+  justifications now carry it, and the checker enforces it: new mechanical check
+  M18 (marker only on authorisation, at most one per batch) and, with
+  --semantic, S3 YES and the marker must agree family by family. Both batches
+  exit 0 again; the combined run still fails only the per-batch cap. The v2
+  rule text was not changed, so the record hash is unchanged.

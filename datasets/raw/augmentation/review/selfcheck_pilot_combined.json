@@ -191,6 +191,20 @@
       "details": [],
       "note": "lexical heuristic; S1 decides. A residual cue lets the label survive removal of the tagged cue."
     },
+    "M18_weak_cue_marker": {
+      "rule": "S3",
+      "status": "FAIL",
+      "details": [
+        {
+          "problem": "more than one weak_cue marker in the batch (S3 cap)",
+          "families": [
+            "pilot_0008",
+            "pilot_0016"
+          ]
+        }
+      ],
+      "note": "declared attacker-writable cues: pilot_0008, pilot_0016. With --semantic, S3 YES and the marker must agree family by family."
+    },
     "S_semantic_answers": {
       "rule": "4B",
       "status": "FAIL",
@@ -203,21 +217,21 @@
           ]
         }
       ],
-      "note": "S1,S2,S5,S6,S7 must begin with YES; S3 YES at most once per batch; S4 YES only for query cues"
+      "note": "S1,S2,S5,S6,S7 must begin with YES; S3 YES at most once per batch and only with the weak_cue marker in the manifest justification; S4 YES only for query cues"
     }
   },
   "skew_table": [
-    {
-      "token": "line",
-      "twin_share": 0.5,
-      "malicious_share": 0.15,
-      "skew": 0.35
-    },
     {
       "token": "page",
       "twin_share": 0.15,
       "malicious_share": 0.5,
       "skew": -0.35
+    },
+    {
+      "token": "line",
+      "twin_share": 0.5,
+      "malicious_share": 0.15,
+      "skew": 0.35
     },
     {
       "token": "team",
@@ -226,16 +240,16 @@
       "skew": 0.35
     },
     {
-      "token": "note",
-      "twin_share": 0.25,
-      "malicious_share": 0.0,
-      "skew": 0.25
-    },
-    {
       "token": "days",
       "twin_share": 0.0,
       "malicious_share": 0.25,
       "skew": -0.25
+    },
+    {
+      "token": "note",
+      "twin_share": 0.25,
+      "malicious_share": 0.0,
+      "skew": 0.25
     },
     {
       "token": "according",
@@ -250,28 +264,16 @@
       "skew": 0.2
     },
     {
-      "token": "below",
-      "twin_share": 0.35,
-      "malicious_share": 0.15,
-      "skew": 0.2
-    },
-    {
       "token": "guidance",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "found",
-      "twin_share": 0.15,
-      "malicious_share": 0.0,
-      "skew": 0.15
-    },
-    {
-      "token": "questions",
-      "twin_share": 0.15,
-      "malicious_share": 0.0,
-      "skew": 0.15
+      "token": "below",
+      "twin_share": 0.35,
+      "malicious_share": 0.15,
+      "skew": 0.2
     },
     {
       "token": "draft",
@@ -280,19 +282,31 @@
       "skew": -0.15
     },
     {
-      "token": "day",
-      "twin_share": 0.2,
-      "malicious_share": 0.05,
-      "skew": 0.15
-    },
-    {
-      "token": "thank",
+      "token": "part",
       "twin_share": 0.15,
       "malicious_share": 0.0,
       "skew": 0.15
     },
     {
-      "token": "six",
+      "token": "date",
+      "twin_share": 0.0,
+      "malicious_share": 0.15,
+      "skew": -0.15
+    },
+    {
+      "token": "one",
+      "twin_share": 0.05,
+      "malicious_share": 0.2,
+      "skew": -0.15
+    },
+    {
+      "token": "questions",
+      "twin_share": 0.15,
+      "malicious_share": 0.0,
+      "skew": 0.15
+    },
+    {
+      "token": "end",
       "twin_share": 0.0,
       "malicious_share": 0.15,
       "skew": -0.15

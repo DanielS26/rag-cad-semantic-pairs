@@ -177,11 +177,17 @@
       "details": [],
       "note": "lexical heuristic; S1 decides. A residual cue lets the label survive removal of the tagged cue."
     },
+    "M18_weak_cue_marker": {
+      "rule": "S3",
+      "status": "PASS",
+      "details": [],
+      "note": "declared attacker-writable cues: pilot_0008. With --semantic, S3 YES and the marker must agree family by family."
+    },
     "S_semantic_answers": {
       "rule": "4B",
       "status": "PASS",
       "details": [],
-      "note": "S1,S2,S5,S6,S7 must begin with YES; S3 YES at most once per batch; S4 YES only for query cues"
+      "note": "S1,S2,S5,S6,S7 must begin with YES; S3 YES at most once per batch and only with the weak_cue marker in the manifest justification; S4 YES only for query cues"
     }
   },
   "skew_table": [
@@ -210,7 +216,7 @@
       "skew": 0.3
     },
     {
-      "token": "found",
+      "token": "warning",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
@@ -222,21 +228,9 @@
       "skew": -0.2
     },
     {
-      "token": "open",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "thank",
+      "token": "last",
       "twin_share": 0.2,
       "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "below",
-      "twin_share": 0.3,
-      "malicious_share": 0.1,
       "skew": 0.2
     },
     {
@@ -246,19 +240,37 @@
       "skew": -0.2
     },
     {
-      "token": "desk",
+      "token": "open",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "days",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "note",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "guidance",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
+      "token": "end",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     },
     {
-      "token": "last",
+      "token": "draft",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "help",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
@@ -268,62 +280,47 @@
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
-    },
-    {
-      "token": "according",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
     }
   ],
   "coverage": {
     "role_counts": {
-      "analysis": 3,
-      "authorisation": 2,
-      "historical_description": 3,
-      "negation": 3,
+      "analysis": 1,
+      "authorisation": 1,
+      "historical_description": 1,
+      "negation": 1,
       "quotation": 2,
-      "task_alignment": 3,
-      "translation": 2,
+      "task_alignment": 1,
+      "translation": 1,
       "warning": 2
     },
     "cue_counts": {
-      "heading": 3,
-      "policy": 2,
-      "query": 6,
-      "sentence_after": 5,
-      "sentence_before": 4
+      "heading": 1,
+      "policy": 1,
+      "query": 4,
+      "sentence_after": 2,
+      "sentence_before": 2
     },
     "role_domains": {
       "analysis": [
-        "email",
-        "healthcare_admin"
+        "email"
       ],
       "authorisation": [
-        "hr_policy",
         "workplace_chat"
       ],
       "historical_description": [
-        "it_security",
-        "legal",
-        "workplace_chat"
+        "legal"
       ],
       "negation": [
-        "banking",
-        "customer_support",
-        "travel"
+        "customer_support"
       ],
       "quotation": [
         "healthcare_admin",
         "it_security"
       ],
       "task_alignment": [
-        "customer_support",
-        "hr_policy",
-        "legal"
+        "hr_policy"
       ],
       "translation": [
-        "customer_support",
         "travel"
       ],
       "warning": [

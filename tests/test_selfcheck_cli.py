@@ -21,7 +21,7 @@ def control(items, group, source):
 
 
 def violated_batch(tmp_path):
-    """One deliberate violation per rule family: M1, M4, M5, M6, M9, M12."""
+    """One deliberate violation per rule family: M1, M4, M5, M6, M9, M12, M18."""
     items = read_jsonl(RECORDS)
     entries = read_jsonl(MANIFEST)
     # M1: twin target differs from the malicious target
@@ -42,6 +42,9 @@ def violated_batch(tmp_path):
     member(items, "negation_0002", "shared_malicious")["query"] = shared
     # M12: task_alignment with a non-query cue position
     next(e for e in entries if e["family_id"] == "task_0007")["cue_position"] = "policy"
+    # M18: the weak_cue marker on a non-authorisation role, and on two families of one batch
+    for family in ("quote_0001", "authorisation_0008"):
+        next(e for e in entries if e["family_id"] == family)["justification"] += " weak_cue: attacker_writable."
     batch = tmp_path / "batch.jsonl"
     manifest = tmp_path / "manifest.jsonl"
     write_jsonl(batch, items)
@@ -60,7 +63,7 @@ def test_selfcheck_command_fails_each_violated_rule_and_writes_the_report(tmp_pa
     assert report["binding"].startswith("tokenisation: rag_cad")
     checks = report["mechanical"]
     for name in ("M1_target_identical", "M4_control_match", "M5_pair_length", "M6_lexical_skew",
-                 "M9_queries", "M12_manifest_provenance"):
+                 "M9_queries", "M12_manifest_provenance", "M18_weak_cue_marker"):
         assert checks[name]["status"] == "FAIL", name
     assert "zorblax" in json.dumps(report["skew_table"]).lower()
 
@@ -87,6 +90,19 @@ def test_selfcheck_semantic_gate_requires_answers_and_yes_rules(tmp_path):
     problems = json.dumps(details)
     assert families[0] in problems and "S1" in problems
     assert "cue_position is not query" in problems
+    # S3 YES without the manifest marker fails; the marker without S3 YES fails too
+    answers["authorisation_0008"]["S3"] = "YES - HR could have written the cue"
+    entries = read_jsonl(MANIFEST)
+    next(e for e in entries if e["family_id"] == "policy_0009")["justification"] += " weak_cue: attacker_writable."
+    manifest.unlink()
+    write_jsonl(manifest, entries)
+    semantic.write_text(json.dumps(answers), encoding="utf-8")
+    report_path.unlink()
+    assert main(["--repo", str(ROOT), "data", "selfcheck", "--batch", str(batch), "--manifest", str(manifest),
+                 "--semantic", str(semantic), "--report", str(report_path)]) == 2
+    problems = json.dumps(json.loads(report_path.read_text(encoding="utf-8"))["mechanical"]["S_semantic_answers"]["details"])
+    assert "authorisation_0008" in problems and "lacks" in problems
+    assert "policy_0009" in problems and "S3 is not YES" in problems
     # a Drive path is refused before the tool runs
     assert main(["--repo", str(ROOT), "data", "selfcheck", "--batch", "/content/drive/MyDrive/b.jsonl",
                  "--manifest", str(manifest), "--report", str(tmp_path / "r2.json")]) == 2

@@ -169,11 +169,17 @@
       "details": [],
       "note": "lexical heuristic; S1 decides. A residual cue lets the label survive removal of the tagged cue."
     },
+    "M18_weak_cue_marker": {
+      "rule": "S3",
+      "status": "PASS",
+      "details": [],
+      "note": "declared attacker-writable cues: pilot_0016. With --semantic, S3 YES and the marker must agree family by family."
+    },
     "S_semantic_answers": {
       "rule": "4B",
       "status": "PASS",
       "details": [],
-      "note": "S1,S2,S5,S6,S7 must begin with YES; S3 YES at most once per batch; S4 YES only for query cues"
+      "note": "S1,S2,S5,S6,S7 must begin with YES; S3 YES at most once per batch and only with the weak_cue marker in the manifest justification; S4 YES only for query cues"
     }
   },
   "skew_table": [
@@ -196,40 +202,22 @@
       "skew": 0.3
     },
     {
-      "token": "days",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
       "token": "note",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
     },
     {
-      "token": "summarise",
-      "twin_share": 0.7,
-      "malicious_share": 0.5,
-      "skew": 0.2
+      "token": "days",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
     },
     {
-      "token": "part",
+      "token": "response",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
-    },
-    {
-      "token": "twenty",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "according",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
     },
     {
       "token": "drafting",
@@ -238,15 +226,21 @@
       "skew": 0.2
     },
     {
-      "token": "list",
+      "token": "months",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "reply",
-      "twin_share": 0.3,
-      "malicious_share": 0.1,
+      "token": "day",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "stray",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
       "skew": 0.2
     },
     {
@@ -256,13 +250,25 @@
       "skew": -0.2
     },
     {
-      "token": "questions",
+      "token": "apply",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "part",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "response",
+      "token": "reply",
+      "twin_share": 0.3,
+      "malicious_share": 0.1,
+      "skew": 0.2
+    },
+    {
+      "token": "questions",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
