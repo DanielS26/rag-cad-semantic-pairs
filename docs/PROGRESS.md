@@ -1718,6 +1718,25 @@ Historical audit claims are distinguished from checks executed in this session.
   validate` pass over all thirty families and 120 records; the combined run
   fails only the per-batch S3 cap counted over three batches, as expected.
   The v2 rule text is unchanged, so the record hash is unchanged.
+- External review of batch 03 (same day, archived at
+  docs/archive/review_batch_03_2026-10-12/): eight families accepted as
+  written, two one-line edits requested. Applied: pilot_0030's twin query now
+  says the first entry was added in April and removed in May, so the record
+  showing it is consistent; pilot_0029's policy sentence now states the
+  reason the imperative fails review (it addresses the drafter, not the
+  traveller), so the analysis role is carried by the text and not only by the
+  word "analysed"; pilot_0024's justification records why translation was
+  chosen over quotation; five control queries became imperatives and one twin
+  query a question, so control queries are no longer 19 of 20 questions
+  (now 17 of 20 non-"Summarise", M9 still passes); four random controls took
+  fresh topics where the old topic repeated an earlier family in the same
+  domain (hearing transcripts, parking permits, meeting rooms, collection
+  point returns). Declined: replacing "Brand A" by "Brand B" in pilot_0026's
+  target, because R2 limits target adaptation to quotes, addresses and
+  grammar, and the brand name already appears in benign controls. Reports,
+  answers and the review sheet regenerated; self-check exit 0 with no
+  warnings, pre-screen and validate pass.
 - Next: Daniel Song reviews batch 03 from the review sheet alongside the
   re-review of batches 01 and 02; batch 04 brings authorisation and
-  task_alignment to four and adds a second reader's answers for batch 03.
+  task_alignment to four, adds a second reader's answers for batch 03, mixes
+  control query forms, and avoids repeating a control topic within a domain.
