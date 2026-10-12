@@ -44,6 +44,7 @@ WEAK_CUE_MARKER = "weak_cue: attacker_writable"
 THRESH = {
     "min_sentences": 2, "max_sentences": 5,                       # R3
     "control_length_tolerance": 0.20,                             # R4 (validator allows 0.25)
+    "benign_spread_max_ratio": 1.25,                              # R4: max/min chars over twin + both controls (validator and prescreen rule)
     "pair_length_tolerance": 0.10,                                # R5
     "twin_longer_band": (0.30, 0.70),                             # R5
     "exclusive_token_share": 0.50,                                # R10 (metalanguage list is stricter)
@@ -261,7 +262,14 @@ def check_m4_controls(rep: Report, fams: dict[str, dict]) -> None:
             if abs(ratio) > tol:
                 bad.append({"family_id": fid, "record": src, "problem": "length outside tolerance",
                             "twin_chars": chars(twin), "control_chars": chars(ctrl), "ratio": round(ratio, 3)})
-    rep.add("M4_control_match", "R4", "FAIL" if bad else "PASS", bad)
+        lengths = [chars(m[src]) for src in ("semantic_benign", "random_benign", "keyword_benign")]
+        spread = max(lengths) / max(1, min(lengths))
+        if spread > THRESH["benign_spread_max_ratio"]:
+            bad.append({"family_id": fid, "problem": "benign records too far apart in length (validator max/min rule)",
+                        "twin_chars": lengths[0], "random_chars": lengths[1], "keyword_chars": lengths[2],
+                        "max_over_min": round(spread, 3)})
+    rep.add("M4_control_match", "R4", "FAIL" if bad else "PASS", bad,
+            note="each control within 20% of the twin, and max/min over the three benign records at most 1.25")
 
 
 def check_m5_pair_length(rep: Report, fams: dict[str, dict]) -> None:

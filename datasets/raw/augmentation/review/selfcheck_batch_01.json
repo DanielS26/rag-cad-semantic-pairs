@@ -19,6 +19,7 @@
     "min_sentences": 2,
     "max_sentences": 5,
     "control_length_tolerance": 0.2,
+    "benign_spread_max_ratio": 1.25,
     "pair_length_tolerance": 0.1,
     "twin_longer_band": [
       0.3,
@@ -63,7 +64,7 @@
       "rule": "R4",
       "status": "PASS",
       "details": [],
-      "note": ""
+      "note": "each control within 20% of the twin, and max/min over the three benign records at most 1.25"
     },
     "M5_pair_length": {
       "rule": "R5",
@@ -198,16 +199,16 @@
       "skew": 0.5
     },
     {
-      "token": "one",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
       "token": "message",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
+    },
+    {
+      "token": "one",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
     },
     {
       "token": "team",
@@ -216,49 +217,7 @@
       "skew": 0.3
     },
     {
-      "token": "warning",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "working",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "last",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "confirmation",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "open",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "days",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "note",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "end",
+      "token": "customer",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
@@ -270,13 +229,55 @@
       "skew": -0.2
     },
     {
-      "token": "help",
+      "token": "warning",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "customer",
+      "token": "according",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "thank",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "open",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "end",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "guidance",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "below",
+      "twin_share": 0.3,
+      "malicious_share": 0.1,
+      "skew": 0.2
+    },
+    {
+      "token": "found",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "confirmation",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2

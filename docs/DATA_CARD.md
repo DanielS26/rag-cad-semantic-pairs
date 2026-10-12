@@ -158,9 +158,12 @@ role is structurally attacker-writable: its cue is either a sentence inside
 the document claiming permission, which an attacker can write, or it
 collapses into task_alignment when the permission comes from the user's
 query; hence the S3 cap of one attacker-writable cue per batch, marked
-`weak_cue: attacker_writable`. D-20261010-21(c), each role at least four
-times, is not yet met after twenty families (maximum 3) and is the target for
-batches 03 and 04.
+`weak_cue: attacker_writable`. After thirty families six roles have four
+families each; authorisation and task_alignment have three and are the
+target for batch 04 (D-20261010-21(c)). Check M4 also enforces the
+validator's spread rule (max/min characters over the twin and both controls
+at most 1.25), added on 12 October 2026 after the pre-screen failed two
+families the self-check had passed.
 
 
 ## Pilot families (Phase 5, batch 01)
@@ -173,22 +176,27 @@ recorded per record as `source_dataset` `bipia_adapted` with
 are team-authored. All records carry `generator_model` and the SHA-256 of
 datasets/raw/augmentation/DRAFTING_PROMPT.md as `generator_prompt_hash`.
 
-Coverage after batch 02 (20 families, 80 records; both batches reopened and repaired on 11 October 2026, awaiting re-review):
+Coverage after batch 03 (30 families, 120 records; batches 01 and 02 reopened and repaired on 11 October 2026, awaiting re-review; batch 03 drafted on 12 October 2026 under the self-check protocol):
 
 | Role | Families | Domains |
 |---|---:|---|
-| analysis | 3 | email, healthcare_admin |
-| historical_description | 3 | legal, it_security, workplace_chat |
-| negation | 3 | customer_support, banking, travel |
+| analysis | 4 | email, healthcare_admin, travel |
+| historical_description | 4 | legal, it_security, workplace_chat, customer_support |
+| negation | 4 | customer_support, banking, travel, workplace_chat |
+| quotation | 4 | it_security, healthcare_admin, banking |
+| translation | 4 | travel, customer_support, legal, healthcare_admin |
+| warning | 4 | banking, travel, hr_policy, email |
+| authorisation | 3 | workplace_chat, hr_policy, customer_support |
 | task_alignment | 3 | hr_policy, legal, customer_support |
-| authorisation | 2 | workplace_chat, hr_policy |
-| quotation | 2 | it_security, healthcare_admin |
-| translation | 2 | travel, customer_support |
-| warning | 2 | banking, travel |
 
-Cue positions: query 6, sentence_after 5, sentence_before 4, heading 3,
-policy 2. Quotation-only cue share: 0. Pre-screen, validate and the
-self-check (both batches exit 0) passed.
+Cue positions: query 8, sentence_after 7, sentence_before 6, heading 5,
+policy 4. Quotation-only cue share: 0. Pre-screen and validate pass over all
+thirty families; each batch's self-check exits 0 (batch 03 with no warnings).
+Batch 03 (pilot_0021 to pilot_0030) varies the pair structure as rule R3
+requires (two to five sentences, target index 0 to 3), carries the first
+hard-negative malicious member (pilot_0021, a security digest containing a
+live directive) and the first historical twin cued from the query
+(pilot_0030); its one attacker-writable cue is pilot_0026.
 
 Review: batch 01 was accepted by Daniel Song on 11 October 2026 and reopened the
 same day together with batch 02 (D-20261011-24) after an independent review

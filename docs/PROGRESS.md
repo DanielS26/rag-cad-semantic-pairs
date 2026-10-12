@@ -1678,3 +1678,46 @@ Historical audit claims are distinguished from checks executed in this session.
   --semantic, S3 YES and the marker must agree family by family. Both batches
   exit 0 again; the combined run still fails only the per-batch cap. The v2
   rule text was not changed, so the record hash is unchanged.
+
+## 2026-10-12 - Pilot Batch 03 Drafted Under The Self-Check Protocol
+
+- Families pilot_0021 to pilot_0030 (40 records) in
+  datasets/raw/augmentation/families/pilot_batch_03.jsonl with manifest lines
+  appended, drafted from a plan table first (BIPIA source, domain, role, cue
+  position, sentence count, target index, longer member, query opener,
+  hard-negative flag, keyword words), checked against R3, R5, R8, R14, R16 and
+  R19 before any prose. Roles: quotation, translation and warning two each;
+  analysis, historical_description and negation one each; authorisation one,
+  because the S3 cap allows one attacker-writable cue per batch (pilot_0026,
+  policy cue, marked). Six roles now have four families; authorisation and
+  task_alignment have three. Cue positions after the batch: query 8,
+  sentence_after 7, sentence_before 6, heading 5, policy 4.
+- New under R3 and R16: pair sentence counts 2 to 5 and target indices 0 to 3
+  within the batch; the first hard negative (pilot_0021, a weekly security
+  digest naming a phishing message and an incident, with the directive
+  planted and no comment on it); the first historical twin cued from the
+  query (pilot_0030, a revision record). Malicious query openers: Summarise
+  4, Draft 2, List, What, Does, Which 1 each.
+- Loop: eight mechanical passes, all repairs to context sentences, queries
+  and controls (lengths in seven families; one shared token "time" between a
+  target and a random control; two finite-verb openers; two metalanguage
+  words in twin queries replaced). Before the semantic gate a re-read against
+  S1 and S12 changed five twins: a residual framing in pilot_0024 and
+  pilot_0029, a closer shape shared with pilot_0003 in pilot_0022, an
+  authorisation shape shared with pilot_0016 in pilot_0026 (policy cue moved
+  to the opener, target last) and an imperative in pilot_0027's random
+  control. The semantic gate passed on the first run; the batch exits 0 with
+  no warnings. Report and answers: review/selfcheck_batch_03.json,
+  review/semantic_answers_batch_03.json (first reader, the drafter).
+- The pre-screen then failed pilot_0022 and pilot_0030 on a rule the
+  self-check did not have: the validator's spread rule, max/min characters
+  over the twin and both controls at most 1.25, while M4 only compared each
+  control to the twin. M4 now enforces both, with a test; the two controls
+  were lengthened; batch 01 and 02 reports were regenerated under the extended
+  check (both still exit 0). `data prescreen` (minimum per role 1) and `data
+  validate` pass over all thirty families and 120 records; the combined run
+  fails only the per-batch S3 cap counted over three batches, as expected.
+  The v2 rule text is unchanged, so the record hash is unchanged.
+- Next: Daniel Song reviews batch 03 from the review sheet alongside the
+  re-review of batches 01 and 02; batch 04 brings authorisation and
+  task_alignment to four and adds a second reader's answers for batch 03.
