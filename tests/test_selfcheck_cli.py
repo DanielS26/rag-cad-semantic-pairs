@@ -30,6 +30,17 @@ def violated_batch(tmp_path):
     # M4: random control far longer than the twin
     control(items, "unit_negation_0002", "random_benign")["sentences"][0]["text"] += (
         " and the notice continues with a long description of the programme" * 4)
+    # M4 spread: both controls within 20% of the twin but far apart from each other (validator max/min rule)
+    spread_twin = member(items, "history_0006", "semantic_benign")
+    spread_random = control(items, "unit_history_0006", "random_benign")
+    spread_keyword = control(items, "unit_history_0006", "keyword_benign")
+    twin_chars = sum(len(s["text"]) for s in spread_twin["sentences"])
+    def pad_to(record, target_chars):
+        current = sum(len(s["text"]) for s in record["sentences"])
+        record["sentences"][-1]["text"] += " and the office" * max(0, (target_chars - current) // 15)
+    pad_to(spread_random, int(twin_chars * 1.18))
+    for s in spread_keyword["sentences"]:
+        s["text"] = s["text"][: max(1, int(len(s["text"]) * 0.84))].rstrip() + "."
     # M5: malicious member far longer than its twin
     member(items, "warning_0003", "shared_malicious")["sentences"][0]["text"] += (
         " with an extended account of the circumstances" * 5)
@@ -61,6 +72,7 @@ def test_selfcheck_command_fails_each_violated_rule_and_writes_the_report(tmp_pa
     report = json.loads(report_path.read_text(encoding="utf-8"))
     assert report["overall"] == "FAIL"
     assert report["binding"].startswith("tokenisation: rag_cad")
+    assert any("max_over_min" in d for d in report["mechanical"]["M4_control_match"]["details"])
     checks = report["mechanical"]
     for name in ("M1_target_identical", "M4_control_match", "M5_pair_length", "M6_lexical_skew",
                  "M9_queries", "M12_manifest_provenance", "M18_weak_cue_marker"):

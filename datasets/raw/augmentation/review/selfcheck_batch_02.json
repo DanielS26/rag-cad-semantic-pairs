@@ -19,6 +19,7 @@
     "min_sentences": 2,
     "max_sentences": 5,
     "control_length_tolerance": 0.2,
+    "benign_spread_max_ratio": 1.25,
     "pair_length_tolerance": 0.1,
     "twin_longer_band": [
       0.3,
@@ -63,7 +64,7 @@
       "rule": "R4",
       "status": "PASS",
       "details": [],
-      "note": ""
+      "note": "each control within 20% of the twin, and max/min over the three benign records at most 1.25"
     },
     "M5_pair_length": {
       "rule": "R5",
@@ -202,43 +203,19 @@
       "skew": 0.3
     },
     {
-      "token": "note",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
       "token": "days",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
     },
     {
-      "token": "response",
-      "twin_share": 0.2,
+      "token": "note",
+      "twin_share": 0.3,
       "malicious_share": 0.0,
-      "skew": 0.2
+      "skew": 0.3
     },
     {
-      "token": "drafting",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "months",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "day",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "stray",
+      "token": "agents",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
@@ -250,16 +227,16 @@
       "skew": -0.2
     },
     {
-      "token": "apply",
+      "token": "according",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "part",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
+      "token": "weeks",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     },
     {
       "token": "reply",
@@ -268,7 +245,31 @@
       "skew": 0.2
     },
     {
-      "token": "questions",
+      "token": "line",
+      "twin_share": 0.4,
+      "malicious_share": 0.2,
+      "skew": 0.2
+    },
+    {
+      "token": "return",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "list",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "months",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "drafting",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
