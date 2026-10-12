@@ -322,7 +322,7 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 
 ## D-20261010-19 - Pilot of 40 semantic-pair families before scaling
 
-- Status: Confirmed
+- Status: Confirmed | Superseded
 - Date: 2026-10-10
 - Project phase: Phase 5 pilot
 - Category: Data
@@ -333,7 +333,7 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Consequences for implementation/evaluation/report: Role and domain coverage of the pilot are tracked in a table in the data card. The superseding entry that sets N cites the pilot's measurements. The report describes the pilot as the calibration step for the dataset size.
 - Approved by: Daniel Song, "approve 19 to 23" in the tutoring session on 2026-10-10, after the drafts and their plain-language explanations were shown.
 - Related files, commands, results, correspondence, or commit: [experiment.yaml](../configs/experiment.yaml), [data commands](../src/rag_cad/data/commands.py), [DATA_CARD.md](DATA_CARD.md), [PROGRESS.md](PROGRESS.md); D-20261004-15; D-20261004-17 (pool C).
-- Supersedes / superseded by: None.
+- Supersedes / superseded by: None; superseded by D-20261013-27 for the final count and the budget.
 
 ## D-20261010-20 - Family authoring: LLM drafting allowed, AI pre-screen, one accountable human reviewer
 
@@ -439,3 +439,18 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song's standing direction of 2026-10-11, "You can update the checklist/prompt, and python code too automatically, if new rules/checks should be added to make the closed loop for checking generated family data more reliable", applied to each review's findings after the researcher asked for them to be assessed and applied ("if they do, then update our batch 3", 2026-10-12; "help me and see if they suggest the right thing, if we need any changes?", 2026-10-13).
 - Related files, commands, results, correspondence, or commit: [self-check module](../src/rag_cad/data/selfcheck.py), [tests](../tests/test_selfcheck_cli.py), [review artefacts](../datasets/raw/augmentation/review/), [batch 03 review](archive/review_batch_03_2026-10-12/batch_03_review_updates.md), [batch 04 review](archive/review_batch_04_2026-10-13/batch_04_review_updates.md); D-20261011-25.
 - Supersedes / superseded by: Extends the threshold set of D-20261011-25; none superseded.
+
+## D-20261013-27 - Final family count 200, checkpoint at 120, budget set from the measured rows
+
+- Status: Confirmed
+- Date: 2026-10-13
+- Project phase: Phase 5 onward
+- Category: Data
+- Decision or important note: The semantic-pair set grows from the 40 pilot families to 200 families (20 batches of ten), drafted under the protocol of D-20261011-25 and D-20261013-26, every role reaching at least 20 families except authorisation, which is capped at one attacker-writable cue per batch. A checkpoint is taken at 120 families, when the BIPIA directive and task-type strings run out: the second source of target sentences must be identified and licence-checked, and the pilot-wide shortcut audit (combined self-check, skew table, template test) reviewed, before batches 13 to 20 are drafted. `augmentation_budget_sentence_rows` stays the measured per-condition training rows at completion, equal across m1_random, m2_keyword and m3_semantic by construction (6.5 rows per training family in the pilot, so about 900 at 200 families), and is written into configs/experiment.yaml when the set is complete. Pilot families are kept and join the final set through the same split.
+- Context and reason: The pilot closure checks pass (progress entry of 2026-10-13), so the design produces families at quality, but the pilot's 182 training rows per condition are under one percent of D0's 24,665 rows and only six twins land in a 15% test split. At 200 families one condition adds about 900 rows and the test split holds 30 twins; at 120 it would be about 550 and 18. The researcher chose 200 with the 120 checkpoint because the remaining target-sentence supply is the binding constraint: about 48 BIPIA strings are left, and the rest need another source. Authoring cost is about two to three hours of drafting and loop time per ten families plus two to three minutes of human review per family.
+- Evidence: datasets/raw/augmentation/review/pilot_split.json, pilot_leakage.json, pilot_budgets.json; docs/DATA_CARD.md D0 counts; progress entries of 2026-10-12 and 2026-10-13.
+- Alternatives considered: Stop at 40 (a feasibility result only; no measurable training effect); 120 families (half the review cost, 18 test twins, no second source needed); 200 without a checkpoint (commits to a second source before it is found).
+- Consequences for implementation/evaluation/report: Batches 05 to 12 use BIPIA's task-type categories (information_retrieval, content_creation, learning_and_tutoring, programming_help, task_automation, business_intelligence, conversational_agent, research_assistance, sentiment_analysis, plus the three remaining language_translation strings), quotation marks removed under R2; the checkpoint at 120 is a progress entry and, if the second source changes the provenance contract, a decision; the evaluation protocol for the twin test (fixed split or cross-validation over families) is a separate decision to be taken before Phase 6; the report states the count, the budget and the reasons above.
+- Approved by: Daniel Song, "I think we can aim for 200 families" and "I agree with your data decision above, set a checkpoint at 120, when BIPIA runs out, to confirm the second source and look at how the variety is holding up", tutoring session on 2026-10-13.
+- Related files, commands, results, correspondence, or commit: [DATA_CARD.md](DATA_CARD.md), [pilot reports](../datasets/raw/augmentation/review/), [experiment config](../configs/experiment.yaml); D-20261004-15; D-20261010-19; D-20261011-25; D-20261013-26.
+- Supersedes / superseded by: Supersedes D-20261010-19 for the final count and the budget; none superseded otherwise.
