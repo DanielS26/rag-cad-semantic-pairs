@@ -29,6 +29,8 @@
     "max_planted_twins": 1,
     "max_prefix_twins": 1,
     "malicious_opener_share": 0.5,
+    "twin_opener_share": 0.5,
+    "opener_share_gap": 0.3,
     "this_share_gap": 0.3,
     "min_non_summarise_controls": 3,
     "min_keyword_shared": 2,
@@ -101,9 +103,15 @@
     },
     "M9_queries": {
       "rule": "R14",
-      "status": "PASS",
-      "details": [],
-      "note": "malicious openers {'summarise': 5, 'draft': 2, 'what': 1, 'does': 1, 'how': 1}; control non-Summarise 3/20"
+      "status": "WARN",
+      "details": [
+        {
+          "problem": "dominant twin query opener (mirror of the malicious rule; batches 01 and 02 predate it)",
+          "word": "summarise",
+          "share": 0.7
+        }
+      ],
+      "note": "malicious openers {'summarise': 5, 'draft': 2, 'what': 1, 'does': 1, 'how': 1}; twin openers {'summarise': 7, 'prepare': 1, 'follow': 1, 'draft': 1}; control non-Summarise 3/20"
     },
     "M10_domain_field": {
       "rule": "R17",
@@ -215,28 +223,22 @@
       "skew": 0.3
     },
     {
-      "token": "agents",
+      "token": "part",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "date",
-      "twin_share": 0.0,
+      "token": "line",
+      "twin_share": 0.4,
       "malicious_share": 0.2,
-      "skew": -0.2
+      "skew": 0.2
     },
     {
-      "token": "according",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "weeks",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
+      "token": "day",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
     },
     {
       "token": "reply",
@@ -245,7 +247,7 @@
       "skew": 0.2
     },
     {
-      "token": "line",
+      "token": "below",
       "twin_share": 0.4,
       "malicious_share": 0.2,
       "skew": 0.2
@@ -257,22 +259,28 @@
       "skew": -0.2
     },
     {
+      "token": "stray",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "weeks",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
       "token": "list",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "months",
+      "token": "six",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
-    },
-    {
-      "token": "drafting",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
     }
   ],
   "coverage": {

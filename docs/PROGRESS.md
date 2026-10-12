@@ -1788,6 +1788,28 @@ Historical audit claims are distinguished from checks executed in this session.
   and "next" lean twin at 40%, from the cue sentences' way of referring to
   the target; the pilot-wide table now has "team" at 25% against 10% and
   "page" at 10% against 30%.
+- External review of batch 04 (same day, archived at
+  docs/archive/review_batch_04_2026-10-13/): nine families accepted as
+  written, one one-sentence fix. Applied: pilot_0033's policy sentence now
+  points at the directive's real position ("the one at the end of this note"
+  instead of "the next one"); the "Under the ...'s policy" opener shared by
+  five of the six policy cues is broken in 0033 and 0037; three twin queries
+  moved away from "Summarise" (now 4 of 10, malicious 3 of 10); one
+  malicious member uses "wording" innocently and "item" left the twins.
+  Checker (D-20261013-26): M9 mirrored (twin opener above 50% WARN, opener
+  share gap above 30 points FAIL) and `wording`, `item`, `items` added to
+  the R10 balance list, each with a test. Declined: the proposed "message"
+  and "text" tokens (ordinary domain words; batch 01 would have failed
+  retroactively) and the reviewer's exact cue wordings where they dropped the
+  word "policy", which the checker uses to locate a policy cue. Batches 01
+  to 03 regenerated under the extended checker: 01 and 02 carry the new
+  twin-opener warning (60% and 70% "Summarise", predating the rule), 03 two
+  single-twin token warnings; all exit 0; batch 04 exits 0 with none.
+  Pre-screen and validate pass over 40 families; the combined run fails only
+  the per-batch S3 cap. Watch-list recorded from the review: "bot" as the
+  attributed source in two twin cues, "Explain how to" opening four control
+  queries, "audit" in two twin queries; hard negatives so far are both
+  it_security bulletins, so a later one should use another domain and device.
 - Next: Daniel Song reviews batches 03 and 04 from the sheets alongside the
   re-review of batches 01 and 02 (teammate review of batches 01 and 02 in
   progress); a second reader's S1 to S12 for batches 03 and 04; then the

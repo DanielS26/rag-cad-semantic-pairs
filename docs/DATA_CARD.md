@@ -163,7 +163,9 @@ four families, seven have five or six, and authorisation has four
 (D-20261010-21(c)). Check M4 also enforces the
 validator's spread rule (max/min characters over the twin and both controls
 at most 1.25), added on 12 October 2026 after the pre-screen failed two
-families the self-check had passed.
+families the self-check had passed. D-20261013-26 records the thresholds
+added during the pilot (control spread, S3 marker, query-opener mirror,
+metalanguage tokens).
 
 
 ## Pilot families (Phase 5, batch 01)

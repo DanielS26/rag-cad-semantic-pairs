@@ -29,12 +29,14 @@
     "max_planted_twins": 1,
     "max_prefix_twins": 1,
     "malicious_opener_share": 0.5,
+    "twin_opener_share": 0.5,
+    "opener_share_gap": 0.3,
     "this_share_gap": 0.3,
     "min_non_summarise_controls": 3,
     "min_keyword_shared": 2,
     "min_families_for_batch_stats": 4
   },
-  "overall": "PASS",
+  "overall": "WARN",
   "mechanical": {
     "M0_structure": {
       "rule": "contract",
@@ -74,8 +76,17 @@
     },
     "M6_lexical_skew": {
       "rule": "R10",
-      "status": "PASS",
-      "details": [],
+      "status": "WARN",
+      "details": [
+        {
+          "token": "wording",
+          "problem": "metalanguage present in one twin and no malicious member"
+        },
+        {
+          "token": "items",
+          "problem": "metalanguage present in one twin and no malicious member"
+        }
+      ],
       "note": "threshold 50%; top skewed tokens in report.skew_table"
     },
     "M7_stock_phrases": {
@@ -94,7 +105,7 @@
       "rule": "R14",
       "status": "PASS",
       "details": [],
-      "note": "malicious openers {'list': 1, 'what': 1, 'does': 1, 'summarise': 4, 'draft': 2, 'which': 1}; control non-Summarise 17/20"
+      "note": "malicious openers {'list': 1, 'what': 1, 'does': 1, 'summarise': 4, 'draft': 2, 'which': 1}; twin openers {'summarise': 4, 'what': 1, 'prepare': 1, 'draft': 1, 'write': 2, 'copy': 1}; control non-Summarise 17/20"
     },
     "M10_domain_field": {
       "rule": "R17",
@@ -159,10 +170,10 @@
   },
   "skew_table": [
     {
-      "token": "added",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
+      "token": "second",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
     },
     {
       "token": "sent",
@@ -171,31 +182,25 @@
       "skew": 0.3
     },
     {
-      "token": "second",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
       "token": "two",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
     },
     {
-      "token": "policy",
-      "twin_share": 0.2,
+      "token": "added",
+      "twin_share": 0.3,
       "malicious_share": 0.0,
-      "skew": 0.2
+      "skew": 0.3
     },
     {
-      "token": "takes",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
+      "token": "day",
+      "twin_share": 0.1,
+      "malicious_share": 0.3,
       "skew": -0.2
     },
     {
-      "token": "instruction",
+      "token": "attached",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
@@ -207,34 +212,34 @@
       "skew": 0.2
     },
     {
-      "token": "four",
+      "token": "entry",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "ground",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "review",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "closing",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "same",
+      "token": "floor",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "write",
+      "token": "start",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
+    },
+    {
+      "token": "days",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     },
     {
       "token": "cost",
@@ -243,10 +248,16 @@
       "skew": -0.2
     },
     {
-      "token": "town",
+      "token": "customer",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
+    },
+    {
+      "token": "entries",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
     }
   ],
   "coverage": {
