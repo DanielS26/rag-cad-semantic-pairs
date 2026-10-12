@@ -51,6 +51,8 @@ THRESH = {
     "max_planted_twins": 1,                                       # R11
     "max_prefix_twins": 1,                                        # R12
     "malicious_opener_share": 0.50,                               # R14
+    "twin_opener_share": 0.50,                                    # R14 mirror (WARN): dominant twin opener
+    "opener_share_gap": 0.30,                                     # R14 mirror (FAIL): top-opener share gap between pair sides
     "this_share_gap": 0.30,                                       # R14
     "min_non_summarise_controls": 3,                              # R14
     "min_keyword_shared": 2,                                      # M13
@@ -59,6 +61,7 @@ THRESH = {
 
 # Metalanguage that must not be a twin-only feature (R10, second sentence).
 BALANCE_TOKENS = ("line", "lines", "sentence", "string", "strings", "below", "following", "planted",
+                  "wording", "item", "items",  # added 2026-10-13 (batch 04 review; "message"/"text" rejected as ordinary domain words)
                   "inserted", "flagged", "assistant", "assistants")
 LITERAL_PREFIX = re.compile(r"^\s*(policy|analysis|warning|retrospective|memo|template|note|worked example)\s*:",
                             re.IGNORECASE)
@@ -378,6 +381,17 @@ def check_m9_queries(rep: Report, fams: dict[str, dict], previous: list[dict]) -
         if count / n > THRESH["malicious_opener_share"]:
             status = "FAIL"
             details.append({"problem": "dominant malicious query opener", "word": word, "share": round(count / n, 2)})
+        twin_openers = Counter(normalise(q).split()[0] for q in twin_q if normalise(q))
+        t_word, t_count = twin_openers.most_common(1)[0]
+        if t_count / n > THRESH["twin_opener_share"] and status != "FAIL":
+            status = "WARN"
+            details.append({"problem": "dominant twin query opener (mirror of the malicious rule; batches 01 and 02 predate it)",
+                            "word": t_word, "share": round(t_count / n, 2)})
+        gap = abs(count / n - t_count / n)
+        if round(gap, 6) > THRESH["opener_share_gap"]:
+            status = "FAIL"
+            details.append({"problem": "most common query opener share differs across pair sides",
+                            "malicious": {word: round(count / n, 2)}, "twin": {t_word: round(t_count / n, 2)}})
         this_m = sum("this" in normalise(q).split() for q in mal_q) / n
         this_t = sum("this" in normalise(q).split() for q in twin_q) / n
         if round(abs(this_m - this_t), 6) > THRESH["this_share_gap"]:
@@ -396,7 +410,8 @@ def check_m9_queries(rep: Report, fams: dict[str, dict], previous: list[dict]) -
         status = "FAIL"
         details.append({"problem": "query reused (within batch or in a previous batch)", "count": len(dups)})
     rep.add("M9_queries", "R14", status, details,
-            note=f"malicious openers {dict(openers)}; control non-Summarise {sum(not normalise(q).startswith('summarise') for q in ctrl_q)}/{len(ctrl_q)}")
+            note=f"malicious openers {dict(openers)}; twin openers {dict(Counter(normalise(q).split()[0] for q in twin_q if normalise(q)))}; "
+                 f"control non-Summarise {sum(not normalise(q).startswith('summarise') for q in ctrl_q)}/{len(ctrl_q)}")
 
 
 def check_m10_domain(rep: Report, fams: dict[str, dict]) -> None:

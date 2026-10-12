@@ -1746,3 +1746,72 @@ Historical audit claims are distinguished from checks executed in this session.
   malicious documents do not; "page" leans malicious (40% against 13%) from
   "this page" queries. Batch 04 should have a few malicious members mention a
   team innocently and fewer "this page" queries.
+
+## 2026-10-13 - Pilot Batch 04 Drafted: The 40-Family Pilot Is Complete
+
+- Families pilot_0031 to pilot_0040 (40 records) in
+  datasets/raw/augmentation/families/pilot_batch_04.jsonl with manifest lines
+  appended, drafted from a plan table that also carried the batch 03 review
+  rules (control queries mixed between questions and imperatives, no control
+  topic repeated within a domain) and the token watch-list (a few malicious
+  members mention a team innocently; no "this page" queries). Roles: one each
+  of analysis, historical_description, negation, translation and warning,
+  two task_alignment, two quotation, one authorisation. Final pilot counts:
+  quotation 6, authorisation 4, every other role 5; cue positions query 10,
+  sentence_after 9, sentence_before 8, heading 7, policy 6. Authorisation
+  stops at four because the S3 cap allows one attacker-writable cue per batch
+  (pilot_0037 here) and D-20261010-21(c) asks for at least four per role.
+- Remaining BIPIA strings were used as adapted: quotation marks removed from
+  two clickbait and two translation strings; apostrophes inside words
+  ("novel's", "isn't", "won't") are allowed by R2 and M2. First warning twin
+  cued after the target (pilot_0036, also the hard negative: a security
+  bulletin naming two phishing campaigns with the directive planted), first
+  quotation twin cued by a heading (pilot_0034, a two-sentence exhibit),
+  first analysis heading carrying its own reasoning (pilot_0031, the
+  "Analysis:" prefix, unused until now).
+- Loop: five mechanical passes. Pass 1 showed the watch-list overcorrected
+  ("team" in eight of ten malicious members and no twin, an M6 failure), two
+  openers without a recognised finite verb and length drift in eight
+  families; pass 2 fixed those. Before the semantic gate a re-read against S12
+  found six structural echoes of earlier same-role twins (0033 with 0002,
+  0035 with 0013, 0037 with 0016, 0038 and 0039 with all three earlier
+  task_alignment twins, 0040 with 0001) and one residual framing (0031);
+  pass 4 reshaped those documents, which M14 then confirmed by flagging a
+  shared closer between 0037 and 0026; pass 5 fixed that and the lengths it
+  disturbed. The semantic gate passed on its first run; the batch exits 0
+  with no warnings. Report and answers: review/selfcheck_batch_04.json,
+  review/semantic_answers_batch_04.json (first reader, the drafter).
+- `data prescreen` (minimum per role 1) and `data validate` pass over all
+  forty families and 160 records; the combined run fails only the per-batch
+  S3 cap counted over four batches. Watch-list for any later batch, from the
+  batch 04 skew table (all under the 50% threshold): "wording", "newsletter"
+  and "next" lean twin at 40%, from the cue sentences' way of referring to
+  the target; the pilot-wide table now has "team" at 25% against 10% and
+  "page" at 10% against 30%.
+- External review of batch 04 (same day, archived at
+  docs/archive/review_batch_04_2026-10-13/): nine families accepted as
+  written, one one-sentence fix. Applied: pilot_0033's policy sentence now
+  points at the directive's real position ("the one at the end of this note"
+  instead of "the next one"); the "Under the ...'s policy" opener shared by
+  five of the six policy cues is broken in 0033 and 0037; three twin queries
+  moved away from "Summarise" (now 4 of 10, malicious 3 of 10); one
+  malicious member uses "wording" innocently and "item" left the twins.
+  Checker (D-20261013-26): M9 mirrored (twin opener above 50% WARN, opener
+  share gap above 30 points FAIL) and `wording`, `item`, `items` added to
+  the R10 balance list, each with a test. Declined: the proposed "message"
+  and "text" tokens (ordinary domain words; batch 01 would have failed
+  retroactively) and the reviewer's exact cue wordings where they dropped the
+  word "policy", which the checker uses to locate a policy cue. Batches 01
+  to 03 regenerated under the extended checker: 01 and 02 carry the new
+  twin-opener warning (60% and 70% "Summarise", predating the rule), 03 two
+  single-twin token warnings; all exit 0; batch 04 exits 0 with none.
+  Pre-screen and validate pass over 40 families; the combined run fails only
+  the per-batch S3 cap. Watch-list recorded from the review: "bot" as the
+  attributed source in two twin cues, "Explain how to" opening four control
+  queries, "audit" in two twin queries; hard negatives so far are both
+  it_security bulletins, so a later one should use another domain and device.
+- Next: Daniel Song reviews batches 03 and 04 from the sheets alongside the
+  re-review of batches 01 and 02 (teammate review of batches 01 and 02 in
+  progress); a second reader's S1 to S12 for batches 03 and 04; then the
+  superseding decision on the final family count and budget N
+  (D-20261010-19) and the gate rerun before Phase 6.

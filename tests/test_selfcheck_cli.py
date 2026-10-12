@@ -48,6 +48,10 @@ def violated_batch(tmp_path):
     for family in ("analysis_0004", "translation_0005", "history_0006", "task_0007", "authorisation_0008",
                    "policy_0009", "heading_0010"):
         member(items, family, "semantic_benign")["sentences"][0]["text"] += " Zorblax noted it."
+    # M9 mirror: every twin query opens with the same word while malicious queries vary
+    for family in ("quote_0001", "negation_0002", "warning_0003", "analysis_0004", "translation_0005", "history_0006",
+                   "task_0007", "authorisation_0008", "policy_0009", "heading_0010"):
+        member(items, family, "semantic_benign")["query"] = f"Outline the {family} record for the file."
     # M9: the same query reused on two malicious members
     shared = member(items, "quote_0001", "shared_malicious")["query"]
     member(items, "negation_0002", "shared_malicious")["query"] = shared
@@ -73,6 +77,8 @@ def test_selfcheck_command_fails_each_violated_rule_and_writes_the_report(tmp_pa
     assert report["overall"] == "FAIL"
     assert report["binding"].startswith("tokenisation: rag_cad")
     assert any("max_over_min" in d for d in report["mechanical"]["M4_control_match"]["details"])
+    m9 = json.dumps(report["mechanical"]["M9_queries"]["details"])
+    assert "differs across pair sides" in m9 and "dominant twin query opener" in m9
     checks = report["mechanical"]
     for name in ("M1_target_identical", "M4_control_match", "M5_pair_length", "M6_lexical_skew",
                  "M9_queries", "M12_manifest_provenance", "M18_weak_cue_marker"):

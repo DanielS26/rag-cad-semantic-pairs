@@ -158,12 +158,14 @@ role is structurally attacker-writable: its cue is either a sentence inside
 the document claiming permission, which an attacker can write, or it
 collapses into task_alignment when the permission comes from the user's
 query; hence the S3 cap of one attacker-writable cue per batch, marked
-`weak_cue: attacker_writable`. After thirty families six roles have four
-families each; authorisation and task_alignment have three and are the
-target for batch 04 (D-20261010-21(c)). Check M4 also enforces the
+`weak_cue: attacker_writable`. After forty families every role has at least
+four families, seven have five or six, and authorisation has four
+(D-20261010-21(c)). Check M4 also enforces the
 validator's spread rule (max/min characters over the twin and both controls
 at most 1.25), added on 12 October 2026 after the pre-screen failed two
-families the self-check had passed.
+families the self-check had passed. D-20261013-26 records the thresholds
+added during the pilot (control spread, S3 marker, query-opener mirror,
+metalanguage tokens).
 
 
 ## Pilot families (Phase 5, batch 01)
@@ -176,27 +178,28 @@ recorded per record as `source_dataset` `bipia_adapted` with
 are team-authored. All records carry `generator_model` and the SHA-256 of
 datasets/raw/augmentation/DRAFTING_PROMPT.md as `generator_prompt_hash`.
 
-Coverage after batch 03 (30 families, 120 records; batches 01 and 02 reopened and repaired on 11 October 2026, awaiting re-review; batch 03 drafted on 12 October 2026 under the self-check protocol):
+Coverage after batch 04 (40 families, 160 records, the full pilot of D-20261010-19; batches 01 and 02 reopened and repaired on 11 October 2026, awaiting re-review; batches 03 and 04 drafted on 12 and 13 October 2026 under the self-check protocol, awaiting review):
 
 | Role | Families | Domains |
 |---|---:|---|
-| analysis | 4 | email, healthcare_admin, travel |
-| historical_description | 4 | legal, it_security, workplace_chat, customer_support |
-| negation | 4 | customer_support, banking, travel, workplace_chat |
-| quotation | 4 | it_security, healthcare_admin, banking |
-| translation | 4 | travel, customer_support, legal, healthcare_admin |
-| warning | 4 | banking, travel, hr_policy, email |
-| authorisation | 3 | workplace_chat, hr_policy, customer_support |
-| task_alignment | 3 | hr_policy, legal, customer_support |
+| quotation | 6 | it_security, healthcare_admin, banking, legal, customer_support |
+| analysis | 5 | email, healthcare_admin, travel, banking |
+| historical_description | 5 | legal, it_security, workplace_chat, customer_support, hr_policy |
+| negation | 5 | customer_support, banking, travel, workplace_chat, email |
+| task_alignment | 5 | hr_policy, legal, customer_support, email, banking |
+| translation | 5 | travel, customer_support, legal, healthcare_admin, workplace_chat |
+| warning | 5 | banking, travel, hr_policy, email, it_security |
+| authorisation | 4 | workplace_chat, hr_policy, customer_support, travel |
 
-Cue positions: query 8, sentence_after 7, sentence_before 6, heading 5,
-policy 4. Quotation-only cue share: 0. Pre-screen and validate pass over all
-thirty families; each batch's self-check exits 0 (batch 03 with no warnings).
-Batch 03 (pilot_0021 to pilot_0030) varies the pair structure as rule R3
-requires (two to five sentences, target index 0 to 3), carries the first
-hard-negative malicious member (pilot_0021, a security digest containing a
-live directive) and the first historical twin cued from the query
-(pilot_0030); its one attacker-writable cue is pilot_0026.
+Cue positions: query 10, sentence_after 9, sentence_before 8, heading 7,
+policy 6. Quotation-only cue share: 0. Pre-screen and validate pass over all
+forty families; each batch's self-check exits 0 (batches 03 and 04 with no
+warnings). Authorisation stops at four families because the S3 attacker test
+allows one attacker-writable cue per batch (pilot_0008, 0016, 0026, 0037,
+each marked) and D-20261010-21(c) asks for at least four per role. Every
+batch from 03 on carries one hard-negative malicious member (pilot_0021,
+pilot_0036). Across the pilot the pair structure varies from two to five
+sentences with the target in positions 0 to 3.
 
 Review: batch 01 was accepted by Daniel Song on 11 October 2026 and reopened the
 same day together with batch 02 (D-20261011-24) after an independent review
