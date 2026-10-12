@@ -148,6 +148,20 @@ four, no repeated target across families, and coverage counts by role, cue
 position, status and domain. The pilot coverage table of D-20261010-19 is
 filled from that report.
 
+From 11 October 2026 every family is also drafted and repaired under the
+self-check protocol (D-20261011-25): `data selfcheck` (rag_cad.data.selfcheck,
+also tools/selfcheck.py) applies checks M0 to M18 of DRAFTING_PROMPT_v2.md and
+the written semantic gate S1 to S12, in a loop over the whole batch until it
+exits 0. Per-batch artefacts live in datasets/raw/augmentation/review/
+(semantic_answers_batch_NN.json, selfcheck_batch_NN.json). The authorisation
+role is structurally attacker-writable: its cue is either a sentence inside
+the document claiming permission, which an attacker can write, or it
+collapses into task_alignment when the permission comes from the user's
+query; hence the S3 cap of one attacker-writable cue per batch, marked
+`weak_cue: attacker_writable`. D-20261010-21(c), each role at least four
+times, is not yet met after twenty families (maximum 3) and is the target for
+batches 03 and 04.
+
 
 ## Pilot families (Phase 5, batch 01)
 
@@ -159,25 +173,32 @@ recorded per record as `source_dataset` `bipia_adapted` with
 are team-authored. All records carry `generator_model` and the SHA-256 of
 datasets/raw/augmentation/DRAFTING_PROMPT.md as `generator_prompt_hash`.
 
-Batch 01 coverage (10 families, 40 records, all status candidate pending review):
+Coverage after batch 02 (20 families, 80 records; both batches reopened and repaired on 11 October 2026, awaiting re-review):
 
 | Role | Families | Domains |
 |---|---:|---|
+| analysis | 3 | email, healthcare_admin |
+| historical_description | 3 | legal, it_security, workplace_chat |
+| negation | 3 | customer_support, banking, travel |
+| task_alignment | 3 | hr_policy, legal, customer_support |
+| authorisation | 2 | workplace_chat, hr_policy |
 | quotation | 2 | it_security, healthcare_admin |
+| translation | 2 | travel, customer_support |
 | warning | 2 | banking, travel |
-| negation | 1 | customer_support |
-| analysis | 1 | email |
-| translation | 1 | travel |
-| historical_description | 1 | legal |
-| task_alignment | 1 | hr_policy |
-| authorisation | 1 | workplace_chat |
 
-Cue positions: query 4, sentence_before 2, sentence_after 2, heading 1,
-policy 1. Quotation-only cue share: 0. Pre-screen and validate: passed.
+Cue positions: query 6, sentence_after 5, sentence_before 4, heading 3,
+policy 2. Quotation-only cue share: 0. Pre-screen, validate and the
+self-check (both batches exit 0) passed.
 
-Review: all ten batch 01 families were reviewed and accepted by Daniel Song on
-11 October 2026 (manifest `reviewer` and `status`; record `review_status`
-`single_reviewed`), with no wording changes.
+Review: batch 01 was accepted by Daniel Song on 11 October 2026 and reopened the
+same day together with batch 02 (D-20261011-24) after an independent review
+found cross-batch shortcuts: twins longer than malicious members, meta-words
+only in twins, uniform query forms and structure, multiple cues per twin,
+off-domain keyword controls. Context sentences, queries, controls and
+manifest lines were repaired under DRAFTING_PROMPT_v2.md; every target
+sentence is byte-identical to the accepted text. All twenty families are
+status candidate awaiting re-review; records carry the v2 prompt hash and
+`review_status: unreviewed`.
 
 Attribution: the malicious target sentences are adapted from the text attacks
 of the BIPIA benchmark, Yi et al., "Benchmarking and Defending Against Indirect

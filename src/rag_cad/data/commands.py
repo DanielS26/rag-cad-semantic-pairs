@@ -49,9 +49,36 @@ def adapt(args) -> dict:
                          include_paraphrased=not args.skip_paraphrased)
 
 
+def selfcheck(args) -> dict:
+    """Run the family self-check (rag_cad.data.selfcheck, DRAFTING_PROMPT v2 checks M0-M17 and S1-S12).
+
+    The tool writes its own report; a non-zero exit is raised as a ContractError carrying that
+    report so the CLI exits 2. CPU only; the tool binds to this package's tokenisation.
+    """
+    from rag_cad.data import selfcheck as module
+
+    argv = ["--batch", str(local_path(args.batch)), "--manifest", str(local_path(args.manifest)),
+            "--report", str(local_path(args.report)), "--stage", args.stage]
+    for previous in args.previous:
+        argv += ["--previous", str(local_path(previous))]
+    if args.prompt is not None:
+        argv += ["--prompt", str(local_path(args.prompt))]
+    if args.semantic is not None:
+        argv += ["--semantic", str(local_path(args.semantic))]
+    if args.strict:
+        argv.append("--strict")
+    code = module.main(argv)
+    report = json.loads(Path(args.report).read_text(encoding="utf-8"))
+    if code != 0:
+        raise ContractError("Self-check failed; see the report", report)
+    return report
+
+
 def run(args) -> dict:
     if args.action == "adapt-cad":
         return adapt(args)
+    if args.action == "selfcheck":
+        return selfcheck(args)
     local_path(args.input)
     local_path(args.output)
     config = load_config(args.experiment)
