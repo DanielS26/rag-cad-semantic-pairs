@@ -1815,3 +1815,31 @@ Historical audit claims are distinguished from checks executed in this session.
   progress); a second reader's S1 to S12 for batches 03 and 04; then the
   superseding decision on the final family count and budget N
   (D-20261010-19) and the gate rerun before Phase 6.
+
+## 2026-10-13 - Pilot Closure Checks Pass On The 40 Families
+
+- The three checks D-20261010-19 names for the end of the pilot were run over
+  datasets/raw/augmentation/families with the committed experiment settings
+  (split 70/15/15 by group, seed 764, near-duplicate threshold 0.8, benign
+  length tolerance 0.25). `data split`: 28 families to train,
+  6 to validation, 6 to test; 520 sentence rows in all.
+  `data check-leakage`: leakage free, every error count zero (no family, group,
+  record or target sentence crosses a split; no near duplicates across
+  splits). `data compare-budgets`: equal budget across m1_random, m2_keyword
+  and m3_semantic (182 sentence rows each from the 28 training
+  families), shared malicious pool identical, every unit within the character
+  ratio. Reports: datasets/raw/augmentation/review/pilot_split.json,
+  pilot_leakage.json, pilot_budgets.json.
+- Measurements the superseding entry needs: 40 families are 160 records and
+  520 sentence rows, 13 rows per family; one condition's training set from
+  the pilot is 182 rows (6.5 per training family, one malicious record plus
+  one benign record per family). D0 is 1,080 records and 24,665 sentence rows
+  (1,625 malicious), so the pilot adds under one percent of D0's rows and
+  under two percent of its malicious rows per condition. Authoring time under
+  the protocol: a ten-family batch took about two to three hours of drafting
+  and loop time plus the external review and the researcher's review of two
+  to three minutes per family.
+- Open for decision (supersedes D-20261010-19 when taken): the final family
+  count and `augmentation_budget_sentence_rows`. All directive-type BIPIA
+  strings in the allowed categories are used; further families need BIPIA's
+  task-type categories (about 48 strings) or another source.
