@@ -1740,3 +1740,9 @@ Historical audit claims are distinguished from checks executed in this session.
   re-review of batches 01 and 02; batch 04 brings authorisation and
   task_alignment to four, adds a second reader's answers for batch 03, mixes
   control query forms, and avoids repeating a control topic within a domain.
+  Token watch-list from the combined skew table (under the 50% threshold, so
+  no check fires): "team" leans twin (33% of twins, 3% of malicious members)
+  because twins name their author ("records team", "gateway team") and
+  malicious documents do not; "page" leans malicious (40% against 13%) from
+  "this page" queries. Batch 04 should have a few malicious members mention a
+  team innocently and fewer "this page" queries.
