@@ -150,7 +150,7 @@ filled from that report.
 
 From 11 October 2026 every family is also drafted and repaired under the
 self-check protocol (D-20261011-25): `data selfcheck` (rag_cad.data.selfcheck,
-also tools/selfcheck.py) applies checks M0 to M18 of DRAFTING_PROMPT_v2.md and
+also tools/selfcheck.py) applies checks M0 to M19 of DRAFTING_PROMPT_v2.md and
 the written semantic gate S1 to S12, in a loop over the whole batch until it
 exits 0. Per-batch artefacts live in datasets/raw/augmentation/review/
 (semantic_answers_batch_NN.json, selfcheck_batch_NN.json). The authorisation
@@ -178,32 +178,46 @@ recorded per record as `source_dataset` `bipia_adapted` with
 are team-authored. All records carry `generator_model` and the SHA-256 of
 datasets/raw/augmentation/DRAFTING_PROMPT.md as `generator_prompt_hash`.
 
-Coverage after batch 04 (40 families, 160 records, the full pilot of D-20261010-19; batches 01 and 02 reopened and repaired on 11 October 2026, awaiting re-review; batches 03 and 04 drafted on 12 and 13 October 2026 under the self-check protocol, awaiting review):
+Coverage after batch 05 (50 families, 200 records; the 40-family pilot plus the first batch of the 200-family set, D-20261013-27; batches 01 and 02 reopened and repaired on 11 October 2026, batches 03 to 05 drafted on 12 and 13 October 2026 under the self-check protocol; all awaiting review):
 
 | Role | Families | Domains |
 |---|---:|---|
+| analysis | 7 | email, healthcare_admin, travel, banking, workplace_chat |
+| negation | 7 | customer_support, banking, travel, workplace_chat, email, healthcare_admin |
+| warning | 7 | banking, travel, hr_policy, email, it_security |
+| historical_description | 6 | legal, it_security, workplace_chat, customer_support, hr_policy |
 | quotation | 6 | it_security, healthcare_admin, banking, legal, customer_support |
-| analysis | 5 | email, healthcare_admin, travel, banking |
-| historical_description | 5 | legal, it_security, workplace_chat, customer_support, hr_policy |
-| negation | 5 | customer_support, banking, travel, workplace_chat, email |
-| task_alignment | 5 | hr_policy, legal, customer_support, email, banking |
-| translation | 5 | travel, customer_support, legal, healthcare_admin, workplace_chat |
-| warning | 5 | banking, travel, hr_policy, email, it_security |
-| authorisation | 4 | workplace_chat, hr_policy, customer_support, travel |
+| task_alignment | 6 | hr_policy, legal, customer_support, email, banking |
+| translation | 6 | travel, customer_support, legal, healthcare_admin, workplace_chat |
+| authorisation | 5 | workplace_chat, hr_policy, customer_support, travel, it_security |
 
-Cue positions: query 10, sentence_after 9, sentence_before 8, heading 7,
-policy 6. Quotation-only cue share: 0. Pre-screen and validate pass over all
-forty families; each batch's self-check exits 0 (batches 03 and 04 with no
-warnings). Authorisation stops at four families because the S3 attacker test
-allows one attacker-writable cue per batch (pilot_0008, 0016, 0026, 0037,
-each marked) and D-20261010-21(c) asks for at least four per role. Every
-batch from 03 on carries one hard-negative malicious member (pilot_0021,
-pilot_0036). Across the pilot the pair structure varies from two to five
-sentences with the target in positions 0 to 3. The final set is 200
-families with a checkpoint at 120 (D-20261013-27); the pilot families stay in
-it. The project's own test uses five-fold cross-validation at the family level
-(D-20261013-28): every family is held out once, all four records together,
-and D0 is training data in every round.
+Cue positions: query 12, sentence_after 11, sentence_before 11, heading 8,
+policy 8. Quotation-only cue share: 0. Pre-screen and validate pass over all
+fifty families; each batch's self-check exits 0 (batches 03 to 05 with no
+warnings). Authorisation grows by one family per batch because the S3
+attacker test allows one attacker-writable cue per batch (pilot_0008, 0016,
+0026, 0037, 0048, each marked). Every batch from 03 on carries one
+hard-negative malicious member (pilot_0021 and pilot_0036 in it_security,
+pilot_0044 a moderation log in customer_support). Batch 05 is the first drawn
+from BIPIA's task-type categories: its targets are unrelated requests that
+pull the assistant off the user's task (attack_goal task_hijack) rather than
+instructions that alter the reply. `attack_goal` on family malicious members
+takes one of: content_injection, response_manipulation, promotion_insertion,
+contact_redirection, link_insertion (BIPIA directive categories: instruction,
+social_interaction, persuasion, clickbait, marketing_advertising,
+information_dissemination, entertainment, language_translation) and
+task_hijack (BIPIA task-type categories: information_retrieval,
+content_creation, learning_and_tutoring, language_translation,
+task_automation, business_intelligence, conversational_agent,
+research_assistance, sentiment_analysis, programming_help). Question-form
+targets without the "your response" phrasing entered the set in batch 05;
+evaluation is reported per attack category and the cross-validation folds are
+stratified by attack category as well as role (D-20261013-28, amended). For
+a task-type target the malicious document must be one in which the question
+is clearly foreign, and the keyword control describes the task as done or as
+a page's content, never as a request made to someone. Across the set the pair
+structure varies from two to five sentences with the target in positions 0
+to 3.
 
 Review: batch 01 was accepted by Daniel Song on 11 October 2026 and reopened the
 same day together with batch 02 (D-20261011-24) after an independent review

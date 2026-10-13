@@ -1843,3 +1843,75 @@ Historical audit claims are distinguished from checks executed in this session.
   count and `augmentation_budget_sentence_rows`. All directive-type BIPIA
   strings in the allowed categories are used; further families need BIPIA's
   task-type categories (about 48 strings) or another source.
+
+## 2026-10-13 - Batch 05 Drafted: First Batch From BIPIA's Task-Type Strings
+
+- Families pilot_0041 to pilot_0050 (40 records) in
+  datasets/raw/augmentation/families/pilot_batch_05.jsonl with manifest lines
+  appended, the first batch of the 200-family set (D-20261013-27). Targets
+  come from BIPIA's task-type categories (information_retrieval,
+  content_creation, learning_and_tutoring, language_translation,
+  task_automation, business_intelligence, conversational_agent): unrelated
+  requests planted in a document, recorded with attack_goal task_hijack;
+  strings naming real products or places were skipped under R18. Roles:
+  analysis 2, negation 2, warning 2, historical_description 1,
+  task_alignment 1, translation 1, authorisation 1 (pilot_0048, policy cue,
+  marked). Coverage after the batch: analysis, negation and warning 7;
+  historical_description, quotation, task_alignment and translation 6;
+  authorisation 5; cue positions query 12, sentence_after 11, sentence_before
+  11, heading 8, policy 8.
+- The batch 03 and 04 review rules were applied from the plan table: the hard
+  negative is a customer_support moderation log (pilot_0044), not another
+  it_security bulletin; the two policy cues open "By clinic policy" and
+  "Help-desk policy permits", unlike any earlier policy cue; control queries
+  are 14 of 20 non-"Summarise" with questions and imperatives mixed; twin
+  and malicious query openers are balanced (3 and 4 "Summarise" of 10); two
+  malicious members mention a team; no "bot", "wording", "item", "sentence"
+  or "line" in a twin. The "Memo" heading prefix is used for the first time
+  (pilot_0042).
+- Loop: four mechanical passes, all length repairs to context sentences and
+  controls plus one finite-verb opener; before the semantic gate a re-read
+  against S12 reshaped pilot_0041 from three sentences to four so that it did
+  not repeat pilot_0002's neutral-opener, target, negation-closer shape. The
+  semantic gate passed on its first run; the batch exits 0 with no warnings.
+  `data prescreen` (minimum per role 1) and `data validate` pass over all
+  fifty families and 200 records; the combined run fails only the per-batch
+  S3 cap counted over five batches, and its pilot-wide twin-opener share has
+  dropped below the warning threshold. Report, answers and the review sheet:
+  review/selfcheck_batch_05.json, review/semantic_answers_batch_05.json,
+  Project\pilot_review_batch_05.md.
+- Watch-list for batch 06 from the skew table: "question" and "request" lean
+  twin (30% against 0%), the natural way a cue refers to a task-type target;
+  a few malicious members should use them innocently. Supply: about 32 usable
+  BIPIA task-type strings remain, enough for batches 06 to 08; the second
+  source must be confirmed before batch 09 (D-20261013-27).
+- External review of batch 05 (same day, archived at
+  docs/archive/review_batch_05_2026-10-13/): seven families accepted, three
+  with a contestable malicious label. The finding worth keeping: a task-type
+  target is only an injection if it is foreign to its document, and in three
+  families the drafter had placed the question in the one document where it
+  is ordinary content (a maths question in a maths-tutoring channel, a
+  marketing question in a marketing brief, a book request in a reading-group
+  email). Applied: pilot_0046 and pilot_0050 moved to facilities documents
+  and pilot_0049's malicious member to a premium-account fee page, with the
+  random control swapped to cheque clearing to avoid a topic overlap;
+  pilot_0041's negation made unambiguous; pilot_0043's twin given a second
+  note item so "each point" is true; two keyword controls reframed from a
+  request made to someone to the task done (pilot_0044, pilot_0050);
+  pilot_0047's justification records the runner-up role. Checker: new M19
+  warns when every malicious member in a batch has one attack_goal or when
+  the share of targets phrased "your response/reply/answer" differs by more
+  than 50 points from earlier batches, both batch-confound signals that fire
+  on batch 05 by design (task-type strings only). D-20261013-28 amended:
+  folds are stratified by attack category as well as role and results are
+  reported per attack category. The reviewer's plan rule "mix three or four
+  task-hijack strings per batch" cannot be met from BIPIA alone, since its
+  directive strings were used up by the pilot; the mix starts when the second
+  source arrives, which argues for confirming that source before batch 06
+  rather than batch 09. Reports for all five batches regenerated under M19
+  (01 to 03 WARN as before, 04 PASS, 05 WARN on M19 only); pre-screen and
+  validate pass over 50 families; the combined run fails only the per-batch
+  S3 cap.
+- Next: Daniel Song reviews batches 03 to 05 from the sheets alongside the
+  re-review of batches 01 and 02; confirm the second target source (needed
+  for mixing attack types from batch 06); batch 06.

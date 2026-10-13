@@ -20,6 +20,7 @@
     "max_sentences": 5,
     "control_length_tolerance": 0.2,
     "benign_spread_max_ratio": 1.25,
+    "target_phrasing_gap": 0.5,
     "pair_length_tolerance": 0.1,
     "twin_longer_band": [
       0.3,
@@ -161,6 +162,12 @@
       "details": [],
       "note": "declared attacker-writable cues: pilot_0026. With --semantic, S3 YES and the marker must agree family by family."
     },
+    "M19_batch_confound": {
+      "rule": "plan",
+      "status": "PASS",
+      "details": [],
+      "note": "attack_goal counts {'content_injection': 6, 'response_manipulation': 3, 'promotion_insertion': 1}; a confound here is a split-design matter (folds stratified by attack category), not a defect of any family"
+    },
     "S_semantic_answers": {
       "rule": "4B",
       "status": "PASS",
@@ -182,46 +189,22 @@
       "skew": 0.3
     },
     {
-      "token": "two",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
       "token": "added",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
     },
     {
-      "token": "day",
-      "twin_share": 0.1,
-      "malicious_share": 0.3,
-      "skew": -0.2
-    },
-    {
-      "token": "attached",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "copy",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "entry",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "ground",
+      "token": "two",
       "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "held",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
     },
     {
       "token": "floor",
@@ -230,7 +213,49 @@
       "skew": -0.2
     },
     {
-      "token": "start",
+      "token": "instruction",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "three",
+      "twin_share": 0.1,
+      "malicious_share": 0.3,
+      "skew": -0.2
+    },
+    {
+      "token": "policy",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "vendor",
+      "twin_share": 0.3,
+      "malicious_share": 0.1,
+      "skew": 0.2
+    },
+    {
+      "token": "entries",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "booked",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "takes",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "closing",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
@@ -240,24 +265,6 @@
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
-    },
-    {
-      "token": "cost",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "customer",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "entries",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
     }
   ],
   "coverage": {
