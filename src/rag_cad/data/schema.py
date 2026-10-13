@@ -16,7 +16,7 @@ PAIR_MEMBERS = ("benign", "malicious", "unpaired")
 REVIEW_STATUSES = ("unreviewed", "single_reviewed", "double_reviewed", "excluded")
 LICENCES = {"team_authored": "team-owned", "cad_original_train": "CC-BY-4.0",
             "cad_original_test": "CC-BY-4.0", "cad_paraphrased_train": "CC-BY-4.0",
-            "bipia_adapted": "MIT"}
+            "bipia_adapted": "MIT", "asb_adapted": "MIT"}
 RECORD_FIELDS = ("record_id", "group_id", "family_id", "split", "condition_source", "query",
                  "domain", "attack_goal", "pair_member", "sentences", "provenance")
 SENTENCE_FIELDS = ("sentence_id", "text", "label", "semantic_role", "is_target")

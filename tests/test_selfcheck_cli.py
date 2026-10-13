@@ -86,6 +86,35 @@ def test_selfcheck_command_fails_each_violated_rule_and_writes_the_report(tmp_pa
     assert "zorblax" in json.dumps(report["skew_table"]).lower()
 
 
+def test_selfcheck_accepts_every_adapted_source_and_rejects_a_mismatched_id_prefix(tmp_path):
+    """M12: a malicious target may come from any registered adapted source (BIPIA or ASB) with its own id prefix.
+
+    The fixture families are hand-written, so every other family's malicious record fails this rule by
+    design; the assertions look only at the family whose provenance is rewritten here.
+    """
+    def malicious_problems(report_path):
+        details = json.loads(report_path.read_text(encoding="utf-8"))["mechanical"]["M12_manifest_provenance"]["details"]
+        return [d["problem"] for d in details if d.get("family_id") == "quote_0001" and d.get("record") == "shared_malicious"]
+
+    manifest = tmp_path / "manifest.jsonl"
+    write_jsonl(manifest, read_jsonl(MANIFEST))
+    cases = (("bipia_adapted", "bipia:text_attack_train:instruction:0", True),
+             ("asb_adapted", "asb:all_attack_tools:17", True),
+             ("asb_adapted", "bipia:text_attack_train:instruction:3", False))
+    for index, (source, source_id, accepted) in enumerate(cases):
+        items = read_jsonl(RECORDS)
+        malicious = member(items, "quote_0001", "shared_malicious")
+        malicious["provenance"].update(source_dataset=source, source_record_id=source_id, licence="MIT")
+        batch, report_path = tmp_path / f"batch_{index}.jsonl", tmp_path / f"report_{index}.json"
+        write_jsonl(batch, items)
+        main(["--repo", str(ROOT), "data", "selfcheck", "--batch", str(batch), "--manifest", str(manifest),
+              "--report", str(report_path)])
+        problems = [p for p in malicious_problems(report_path) if "adapted source" in p]
+        if accepted:
+            assert problems == [], (source, source_id, problems)
+        else:
+            assert problems and "asb_adapted (asb:...)" in problems[0]
+
 def test_selfcheck_semantic_gate_requires_answers_and_yes_rules(tmp_path):
     items = read_jsonl(RECORDS)
     batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"
