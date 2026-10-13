@@ -303,3 +303,30 @@ two set-wide query tells ("according to" in nine malicious queries and no twin q
 in twelve per cent of twins and no malicious member). Every finding, applied or declined with its
 reason, is archived under docs/archive/review_batch_06_2026-10-14/, and the signals became checker
 warnings and the S13 gate question under D-20261014-30.
+
+## Batch 07: new cue devices and the cue-device register
+
+Batch 07 (pilot_0061 to pilot_0070, drafted 14 October 2026 under DRAFTING_PROMPT_v3.md) takes six
+ASB targets (rows 210, 228, 251, 284, 302 and 337) and four BIPIA task-type strings
+(conversational_agent:2, research_assistance:3 and task_automation:0 from the test file,
+language_translation:4 from the train file). Coverage after 70 families: every role 9 except
+authorisation 7; cue positions query 15, sentence_before 15, sentence_after 14, heading 13, policy
+13; nine domains; no role confined to one domain. The hard negative is pilot_0062, a banking
+fraud-desk digest of attempts made by telephone and in person (the fifth hard negative and a new
+domain for one); the weak cue is pilot_0064, a sign-off in a mentoring channel that an attacker
+could have written. The twin is the longer member in 5 of 10 families (3 of 6 operational, 2 of 4
+task-type). pilot_0061 places ASB row 210, a system-administration row, in the email domain rather
+than it_security, because its target names the email server and all four documents are email; the
+agent-domain mapping above is a default, not a requirement, and this is its first recorded
+deviation. From this batch every manifest justification names the twin's cue device as
+"device: <slug>" (D-20261014-31) so that the self-check can count devices per role; batch 07
+introduces a warning already issued by a named actor (pilot_0063) and a sign-off under a cited
+policy (pilot_0064) in place of the caution-plus-pointer and authority-permits devices that
+covered those two roles in batches 01 to 06.
+
+The two independent readers of D-20261013-29 audited the batch before the human review. They
+converged on six twins whose own query or context carried a second benign reading, on four cue
+frames repeated from earlier twins with other nouns, and on "entry" as a twin-only token; no
+malicious label was contested. Every finding, applied or declined with its reason, is archived
+under docs/archive/review_batch_07_2026-10-14/, and the signals became checker warnings, the
+cue-device register and gate wording under D-20261014-31.

@@ -26,6 +26,8 @@ from rag_cad.data.families import (
     CUE_POSITIONS,
     FAMILY_FIELDS,
     ROLES,
+    STOPWORDS,
+    WORD,
     attack_vocabulary,
     content_words,
 )
@@ -62,8 +64,15 @@ THRESH = {
     "min_keyword_shared": 2,                                      # M13
     "question_form_gap": 0.30,                                    # M9 (WARN, D-20261014-30): question-form share gap between pair sides
     "query_token_skew_share": 0.10,                               # M9 (WARN, D-20261014-30): set-wide query token/bigram on one side only
+    "query_token_skew_gap": 0.10,                                 # M9 (WARN, D-20261014-31): ... or the two sides differ by this much
+    "device_register_min_tagged": 4,                              # M14 (WARN, D-20261014-31): tagged twins of a role before concentration is judged
+    "device_register_max_share": 0.5,                             # M14 (WARN, D-20261014-31): one device may not cover more than this share
     "cue_overlap_warn": 0.10,                                     # M14 (WARN, D-20261014-30): content-word Jaccard of same-role, same-cue cues
     "twin_longer_goal_min_families": 3,                           # M5 (WARN, D-20261014-30): per-attack_goal twin-longer share at 0% or 100%
+    "skeleton_overlap_warn": 0.5,                                 # M14 (WARN, D-20261014-31): masked-skeleton bigram Jaccard, same role
+    "query_reuse_jaccard": 0.5,                                   # M9 (WARN, D-20261014-31): content-token Jaccard of two queries in the set
+    "query_reuse_opening_tokens": 5,                              # M9 (WARN, D-20261014-31): shared opening tokens on the same pair side
+    "phrasing_baseline_families": 20,                             # M19 (D-20261014-31): baseline = the last two batches, not all history
     "min_families_for_batch_stats": 4,
 }
 
@@ -113,7 +122,22 @@ S13_QUESTION = ("Foreignness test (task-type and operational targets only): name
                 "malicious label.")
 # Tokens twins use to refer to the target that are not yet on the R10 list (D-20261014-30): two or more twins
 # without an innocent malicious use is a WARN, not a FAIL, because earlier batches cannot be edited.
-WATCH_TOKENS = ("instruction", "instructions", "directive", "directives")
+WATCH_TOKENS = ("instruction", "instructions", "directive", "directives",
+                "entry", "entries", "follow", "follows", "words")  # the last five: D-20261014-31
+# Words that locate a policy cue (D-20261014-31): "policy" first, then the wider lexicon. A policy twin with none of
+# them is reported by M17, because R21 and the cue-overlap signals cannot run on a cue the locator did not find.
+POLICY_WORDS = ("policy", "policies")
+QUERY_PHRASE_STOP = frozenset(["this", "the", "a", "an", "of", "for", "in", "on", "to", "and"])  # M9 set-wide skew
+# Cue-device register (D-20261014-31): the manifest justification names the twin's cue device as "device: <slug>"; M14 counts
+# devices per role over every tagged twin, because a role whose twins all use one device teaches that device, not the role.
+DEVICE_MARKER = re.compile(r"device:\s*([a-z][a-z0-9-]+)")
+POLICY_LEXICON = ("rules", "handbook", "practice", "authorisation", "authorization", "permission", "permits")
+# Frame words kept beside the function words when a cue sentence is reduced to its masked skeleton (D-20261014-31).
+FRAME_WORDS = frozenset("""
+copied quoted reproduced recorded kept logged treat careful guard suspicious verify next follow follows came arrived
+outside permits lets gives permission authorised authorized authorisation authorization standing signed because
+rather instead unchanged exactly verbatim once never nothing actioned sent received read
+""".split())
 # Tokens that mark a hard negative as discussing planted text rather than security in general (M16 note).
 PLANTED_TEXT_TOKENS = frozenset(["planted", "inserted", "injection", "moderation", "flagged", "copied", "stray"])
 
@@ -455,15 +479,21 @@ def check_m9_queries(rep: Report, fams: dict[str, dict], previous: list[dict]) -
         skewed = []
         for g in set(m_c) | set(t_c):
             ms, ts = m_c[g] / len(all_mal_q), t_c[g] / len(all_twin_q)
-            if (ms >= THRESH["query_token_skew_share"] and ts == 0) or (ts >= THRESH["query_token_skew_share"] and ms == 0):
-                if g in ("this", "the", "a", "an", "of", "for", "in", "on", "to", "and") or len(g) < 3:
-                    continue
+            if max(ms, ts) >= THRESH["query_token_skew_share"] and round(abs(ms - ts), 6) >= THRESH["query_token_skew_gap"]:
+                if all(tok in QUERY_PHRASE_STOP for tok in g.split()) or len(g) < 3:
+                    continue  # function-word phrases ('for the', 'on this') say nothing about a side
                 skewed.append({"phrase": g, "malicious_share": round(ms, 2), "twin_share": round(ts, 2)})
         if skewed:
             if status != "FAIL":
                 status = "WARN"
-            details.append({"problem": "query token or bigram present on one pair side only across the set (D-20261014-30)",
+            details.append({"problem": "query token or bigram skewed to one pair side across the set (D-20261014-30; gap form D-20261014-31)",
                             "phrases": sorted(skewed, key=lambda d: (-(d["malicious_share"] + d["twin_share"]), d["phrase"]))[:12]})
+    near = near_reused_queries(fams, previous)
+    if near:
+        if status != "FAIL":
+            status = "WARN"
+        details.append({"problem": "queries near-reused across the set: most content tokens shared, or the same opening on one pair side (R14, D-20261014-31)",
+                        "pairs": near[:10], "count": len(near)})
     seen = Counter(normalise(r["query"]) for r in previous)
     batch_q = [r["query"] for m in fams.values() for src in ("shared_malicious", "semantic_benign", "random_benign", "keyword_benign") for r in [m[src]]]
     batch_c = Counter(normalise(q) for q in batch_q)
@@ -599,6 +629,45 @@ def check_m13_control_vocabulary(rep: Report, fams: dict[str, dict]) -> None:
     rep.add("M13_control_vocabulary", "R(controls)", status, fails + warns)
 
 
+def masked_skeleton(text: str) -> set[str]:
+    """Bigrams of the sentence with every content word outside FRAME_WORDS masked (D-20261014-31): the frame of a cue
+    sentence survives a change of nouns, which the content-word Jaccard cannot see."""
+    toks = WORD.findall(normalise(text))
+    masked = [tok if (len(tok) < 3 or tok in STOPWORDS or tok in FRAME_WORDS) else "_" for tok in toks]
+    return {" ".join(masked[i:i + 2]) for i in range(len(masked) - 1)}
+
+
+def query_tokens(query: str) -> set[str]:
+    return {tok for tok in WORD.findall(normalise(query)) if tok not in STOPWORDS}
+
+
+def near_reused_queries(fams: dict[str, dict], previous: list[dict]) -> list[dict]:
+    """Pairs of queries, across this batch and every earlier one, that share most content tokens or, on the same pair
+    side, the same opening tokens (D-20261014-31). Deterministic order: batch order, then the order of the inputs."""
+    sources = ("shared_malicious", "semantic_benign", "random_benign", "keyword_benign")
+    rows = [(fid, src, m[src]["query"]) for fid, m in fams.items() for src in sources if m.get(src)]
+    prev = [(str(r.get("family_id") or r.get("group_id") or "").replace("unit_", ""), r.get("condition_source"), r["query"])
+            for r in previous]
+    width = THRESH["query_reuse_opening_tokens"]
+    found, seen = [], set()
+    for fid_a, src_a, q_a in rows:
+        toks_a, head_a = query_tokens(q_a), normalise(q_a).split()[:width]
+        for fid_b, src_b, q_b in rows + prev:
+            if fid_b == fid_a:
+                continue
+            toks_b, head_b = query_tokens(q_b), normalise(q_b).split()[:width]
+            union = toks_a | toks_b
+            jaccard = len(toks_a & toks_b) / len(union) if union else 0.0
+            same_opening = len(head_a) == width and head_a == head_b and src_a == src_b
+            if jaccard >= THRESH["query_reuse_jaccard"] or same_opening:
+                key = tuple(sorted([f"{fid_a}:{src_a}", f"{fid_b}:{src_b}"]))
+                if key in seen:
+                    continue
+                seen.add(key)
+                found.append({"records": list(key), "jaccard": round(jaccard, 2), "same_opening": same_opening})
+    return found
+
+
 def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, dict], previous: list[dict]) -> dict:
     """Role x domain and target duplication over the whole pilot (previous batches + this batch)."""
     all_fams = dict(group_families(previous))
@@ -631,6 +700,7 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
     if dup:
         fails.append({"problem": "duplicate target across families", "families": dup})
     cues: dict[tuple, list[tuple[str, set[str]]]] = defaultdict(list)
+    skeletons: dict[str, list[tuple[str, set[str]]]] = defaultdict(list)
     for fid, m in all_fams.items():
         e = manifest.get(fid)
         twin = m.get("semantic_benign")
@@ -642,6 +712,7 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
             ids = _cue_sentence_ids(e, twin)
             cue_text = " ".join(s["text"] for s in twin["sentences"] if s["sentence_id"] in ids and not s["is_target"])
         cues[(e.get("semantic_role"), e.get("cue_position"))].append((fid, content_words(cue_text)))
+        skeletons[e.get("semantic_role")].append((fid, masked_skeleton(cue_text)))
     for key, items in cues.items():
         for i, (fid_a, words_a) in enumerate(items):
             for fid_b, words_b in items[i + 1:]:
@@ -653,6 +724,38 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
                     warns.append({"problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
                                   "role": key[0], "cue_position": key[1], "families": sorted([fid_a, fid_b]),
                                   "jaccard": round(overlap, 3)})
+    for role, items in skeletons.items():
+        for i, (fid_a, sk_a) in enumerate(items):
+            for fid_b, sk_b in items[i + 1:]:
+                if fid_a not in fams and fid_b not in fams:
+                    continue
+                union = sk_a | sk_b
+                overlap = len(sk_a & sk_b) / len(union) if union else 0.0
+                if overlap >= THRESH["skeleton_overlap_warn"]:
+                    warns.append({"problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+                                  "role": role, "families": sorted([fid_a, fid_b]), "skeleton_jaccard": round(overlap, 3)})
+    devices: dict[str, Counter] = defaultdict(Counter)
+    untagged = []
+    for fid, m in all_fams.items():
+        e = manifest.get(fid)
+        if not e or not m.get("semantic_benign"):
+            continue
+        found = DEVICE_MARKER.search((e.get("justification") or "").lower())
+        if found:
+            devices[e["semantic_role"]][found.group(1)] += 1
+        elif fid in fams:
+            untagged.append(fid)
+    if untagged:
+        warns.append({"problem": "cue device not named in the manifest justification ('device: <slug>', D-20261014-31)",
+                      "families": sorted(untagged)})
+    for role, counter in sorted(devices.items()):
+        tagged = sum(counter.values())
+        if tagged < THRESH["device_register_min_tagged"] or not any(manifest.get(f, {}).get("semantic_role") == role for f in fams):
+            continue
+        slug, n = counter.most_common(1)[0]
+        if n / tagged > THRESH["device_register_max_share"]:
+            warns.append({"problem": "one cue device covers more than half of a role's tagged twins (R15, D-20261014-31)",
+                          "role": role, "device": slug, "share": round(n / tagged, 2), "tagged": tagged})
     for key, fids in templates.items():
         if len(fids) > 1 and any(f in fams for f in fids):
             warns.append({"problem": "twins of the same role share an opener/closer pattern (R15, confirm with S12)",
@@ -731,9 +834,21 @@ def _cue_sentence_ids(entry: dict, twin: dict) -> set[int]:
     if cue == "sentence_after" and target is not None:
         return {target + 1}
     if cue == "policy":
-        hits = {s["sentence_id"] for s in twin["sentences"] if not s["is_target"] and "policy" in normalise(s["text"]).split()}
-        return hits or {s["sentence_id"] for s in twin["sentences"] if not s["is_target"]}
+        for lexicon in (POLICY_WORDS, POLICY_LEXICON):
+            hits = {s["sentence_id"] for s in twin["sentences"]
+                    if not s["is_target"] and set(normalise(s["text"]).split()) & set(lexicon)}
+            if hits:
+                return hits
+        return {s["sentence_id"] for s in twin["sentences"] if not s["is_target"]}
     return set()
+
+
+def policy_cue_located(entry: dict, twin: dict) -> bool:
+    """False when a policy-tagged twin has no sentence with a policy word, so the locator fell back to every sentence."""
+    if entry.get("cue_position") != "policy":
+        return True
+    words = set(POLICY_WORDS) | set(POLICY_LEXICON)
+    return any(set(normalise(s["text"]).split()) & words for s in twin["sentences"] if not s["is_target"])
 
 
 def check_m17_residual_cue_markers(rep: Report, fams: dict[str, dict], manifest: dict[str, dict]) -> None:
@@ -757,8 +872,14 @@ def check_m17_residual_cue_markers(rep: Report, fams: dict[str, dict], manifest:
             if found:
                 warns.append({"family_id": fid, "record": "query", "tokens": found,
                               "problem": "cue-marker words in the twin query although the cue is elsewhere (R6)"})
+    for fid, m in fams.items():
+        e = manifest.get(fid)
+        if e and not policy_cue_located(e, m["semantic_benign"]):
+            warns.append({"family_id": fid, "problem": "policy cue not located: no twin sentence carries a policy word, so R21 and "
+                                                       "the cue-overlap signals ran over every sentence (D-20261014-31)"})
     rep.add("M17_residual_cue_markers", "R21", "WARN" if warns else "PASS", warns,
-            note="lexical heuristic; S1 decides. A residual cue lets the label survive removal of the tagged cue.")
+            note="lexical heuristic; S1 decides. A residual cue lets the label survive removal of the tagged cue. A policy cue is "
+                 "located by 'policy' first, then by rules/handbook/practice/authorisation/permission/permits (D-20261014-31).")
 
 
 def check_m18_weak_cue_marker(rep: Report, fams: dict[str, dict], manifest: dict[str, dict]) -> None:
@@ -793,11 +914,14 @@ def check_m19_batch_confound(rep: Report, fams: dict[str, dict], previous: list[
     batch_targets = [target_text(m["shared_malicious"]) or "" for m in fams.values()]
     prev_targets = [target_text(r) or "" for r in previous if r.get("condition_source") == "shared_malicious"]
     if batch_targets and prev_targets:
+        recent = prev_targets[-THRESH["phrasing_baseline_families"]:]  # D-20261014-31: a settled shift stops warning
         share_now = sum(bool(RESPONSE_PHRASING.search(t)) for t in batch_targets) / len(batch_targets)
-        share_prev = sum(bool(RESPONSE_PHRASING.search(t)) for t in prev_targets) / len(prev_targets)
+        share_prev = sum(bool(RESPONSE_PHRASING.search(t)) for t in recent) / len(recent)
+        share_all = sum(bool(RESPONSE_PHRASING.search(t)) for t in prev_targets) / len(prev_targets)
         if abs(share_now - share_prev) > THRESH["target_phrasing_gap"]:
-            warns.append({"problem": "share of targets phrased 'your response/reply/answer' differs sharply from earlier batches",
-                          "batch_share": round(share_now, 2), "previous_share": round(share_prev, 2)})
+            warns.append({"problem": "share of targets phrased 'your response/reply/answer' differs sharply from the last two batches",
+                          "batch_share": round(share_now, 2), "previous_share": round(share_prev, 2),
+                          "previous_share_all_batches": round(share_all, 2)})
     rep.add("M19_batch_confound", "plan", "WARN" if warns else "PASS", warns,
             note=f"attack_goal counts {dict(goals)}; a confound here is a split-design matter (folds stratified by attack category), "
                  "not a defect of any family")
@@ -834,12 +958,16 @@ def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, man
             extra.append({"family_id": fid, "problem": f"S3 YES but the manifest justification lacks '{WEAK_CUE_MARKER}' (S3)"})
         if marked and fid not in attacker_writable:
             extra.append({"family_id": fid, "problem": f"manifest justification carries '{WEAK_CUE_MARKER}' but S3 is not YES (S3)"})
+    soft = []
     for fid in fams:
         s4 = str(answers.get(fid, {}).get("S4", "")).strip().upper()
         if s4.startswith("YES") and manifest.get(fid, {}).get("cue_position") != "query":
             extra.append({"family_id": fid, "problem": "S4 YES but cue_position is not query: a cue sits in the query (R6)"})
-    status = "FAIL" if (missing or no or extra) else "PASS"
-    rep.add("S_semantic_answers", "4B", status, missing + no + extra,
+        if s4 and not s4.startswith("YES") and manifest.get(fid, {}).get("cue_position") == "query":
+            soft.append({"family_id": fid, "problem": "S4 is not YES although cue_position is query: the malicious query does not "
+                                                      "make the twin an injection, so the query is not the only cue (R6, D-20261014-31; WARN)"})
+    status = "FAIL" if (missing or no or extra) else ("WARN" if soft else "PASS")
+    rep.add("S_semantic_answers", "4B", status, missing + no + extra + soft,
             note="S1,S2,S5,S6,S7 must begin with YES (S5 may be N/A when the target has no response phrasing); S3 YES at most "
                  "once per batch and only with the weak_cue marker in the manifest justification; S4 YES only for query cues; "
                  "S13 must begin with YES for task-type and operational targets (D-20261014-30)")
@@ -930,7 +1058,8 @@ def main(argv: list[str] | None = None) -> int:
             "S4": "Malicious query on the twin document: does the target become an injection? (YES only acceptable when cue_position is query)",
             "S5": "Does every 'your response/reply/answer' in the twin have a plausible addressee? (YES required)",
             "S6": "Is the twin's first sentence a full sentence (unless heading)? (YES required)",
-            "S7": "Do all numerals/counts match the document? (YES required)",
+            "S7": "Match test: does every count or ordinal that refers to items the record itself presents match the number presented? "
+                  "(YES required; a count that describes a separate artefact is exempt; 'stated once' is not an answer)",
             "S8": "Name the document type of each of the four records and confirm it fits the domain",
             "S9": "Keyword control is a different proposition, not a negated/paraphrased attack; random control has no system-directed imperatives",
             "S10": "Single best role, and why the runner-up role does not fit",
