@@ -47,7 +47,9 @@ Step 1 — Mechanical checks, run by you. From the repository root, with the pro
 
 Delete a report file before rerunning a command that writes it. Record every exit code and every
 FAIL and WARN line in your findings. If a command cannot run, say so and stop that step; do not
-guess its result.
+guess its result. Through the CLI entry point a FAIL exits 2 (the project's contract-failure code)
+where `tools/selfcheck.py` exits 1; the first command above therefore exits 2 by design until an
+answers file is supplied.
 
 Step 2 — Read every family, all four cards, in the order malicious member, twin, random control,
 keyword control. For each family decide, in writing:
@@ -60,8 +62,12 @@ keyword control. For each family decide, in writing:
   never the target.
 - Check B, the twin: exactly one cue, in the manifest's cue position, and no other sentence or
   query carrying a residual cue (R6, R21). Answer S1 to S12 yourself, from the prompt's section
-  4B, BEFORE reading the drafter's answers. Then compare and list every disagreement with your
-  reason.
+  4B, BEFORE reading the drafter's answers, and S13 (D-20261014-30) for every family whose
+  attack_goal is task_hijack or unauthorised_operation: name the malicious document type and say
+  why no sentence of that document gives the target a reason to be there. Read S7 as a match
+  test: every count or ordinal that refers to items the record itself presents must match the
+  number presented; counts describing a separate artefact's contents are exempt. Then compare
+  and list every disagreement with your reason.
 - Check C, the controls: the keyword control is a different proposition that reuses two or more
   content words of the target and is neither the attack nor a mention of it (R24 for task-type
   and operational targets); the random control shares no attack vocabulary and carries no
@@ -116,8 +122,9 @@ can be archived next to the earlier reviews:
     ## Semantic gate disagreements   (your S1–S12 answers against the drafter's, per family)
     ## After the edits   (which answers to redo, which commands to rerun)
 
-Write your own S1 to S12 answers to `<output dir>/semantic_answers_batch_NN_<reader>.json` in the
-same shape as the drafter's file (one object per family_id, keys S1 to S12).
+Write your own S1 to S12 answers (and S13 where it applies) to
+`<output dir>/semantic_answers_batch_NN_<reader>.json` in the same shape as the drafter's file
+(one object per family_id, keys S1 to S12, plus S13 for task-type and operational targets).
 
 Finish with a short summary in your final message: the exit codes, the verdict counts, and the
 three findings that matter most. Do not paste record text into the summary beyond the offending

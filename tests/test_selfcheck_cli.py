@@ -115,6 +115,77 @@ def test_selfcheck_accepts_every_adapted_source_and_rejects_a_mismatched_id_pref
         else:
             assert problems and "asb_adapted (asb:...)" in problems[0]
 
+def test_selfcheck_d30_signals_warn_on_batch_and_set_wide_patterns(tmp_path):
+    """D-20261014-30: question-form gap, set-wide query phrase skew, watch tokens, cue overlap, per-goal twin-longer
+    share and the S13 gate for task-type and operational targets. All WARN, except the gate."""
+    items = read_jsonl(RECORDS)
+    entries = read_jsonl(MANIFEST)
+    families = sorted({r["family_id"] for r in items if r["family_id"]})
+    for index, family in enumerate(families):
+        malicious, twin = member(items, family, "shared_malicious"), member(items, family, "semantic_benign")
+        # every malicious query a question with the same trailing phrase; no twin query a question
+        malicious["query"] = f"What does the {family} notice say, according to this page?"
+        twin["query"] = f"Summarise the {family} record for the file."
+        # two attack goals; task_hijack twins all longer, unauthorised_operation twins all shorter
+        goal = "task_hijack" if index < 5 else "unauthorised_operation"
+        malicious["attack_goal"] = goal
+        longer, shorter = (twin, malicious) if goal == "task_hijack" else (malicious, twin)
+        while sum(len(s["text"]) for s in longer["sentences"]) <= sum(len(s["text"]) for s in shorter["sentences"]):
+            longer["sentences"][0]["text"] += " The office confirmed the arrangements with the team in writing."
+    # a watch token in two twins and no malicious member
+    for family in families[:2]:
+        member(items, family, "semantic_benign")["sentences"][-1]["text"] += " The instruction stayed on file."
+    # two twins of the same role and cue position with near-identical cue sentences
+    source = member(items, "quote_0001", "semantic_benign")
+    cue_text = next(s["text"] for s in source["sentences"] if not s["is_target"])
+    copy = member(items, "negation_0002", "semantic_benign")
+    for s in copy["sentences"]:
+        if s["is_target"]:
+            s["semantic_role"] = "quotation"
+        else:
+            s["text"] = cue_text
+            break
+    entry = next(e for e in entries if e["family_id"] == "negation_0002")
+    entry["semantic_role"], entry["cue_position"] = "quotation", "sentence_before"
+    batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"
+    write_jsonl(batch, items)
+    write_jsonl(manifest, entries)
+    from rag_cad.data.selfcheck import RESPONSE_PHRASING
+
+    answers = {fam: {f"S{i}": "YES - fixture" for i in range(1, 14)} for fam in families}
+    for fam in families:
+        answers[fam]["S3"] = "NO"
+        answers[fam]["S4"] = "NO"
+        target = next(s["text"] for s in member(items, fam, "shared_malicious")["sentences"] if s["is_target"])
+        if not RESPONSE_PHRASING.search(target):
+            answers[fam]["S5"] = "N/A - the target has no response phrasing"
+    answers[families[0]]["S13"] = "NO - a human author could have written it there"
+    semantic = tmp_path / "semantic.json"
+    semantic.write_text(json.dumps(answers), encoding="utf-8")
+    report_path = tmp_path / "report.json"
+    main(["--repo", str(ROOT), "data", "selfcheck", "--batch", str(batch), "--manifest", str(manifest),
+          "--semantic", str(semantic), "--report", str(report_path)])
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    checks = report["mechanical"]
+    m9 = json.dumps(checks["M9_queries"]["details"])
+    assert "question-form share differs" in m9 and "according" in m9
+    assert "watch token" in json.dumps(checks["M6_lexical_skew"]["details"])
+    m14 = checks["M14_coverage"]["details"]
+    assert any(d.get("jaccard", 0) >= 0.1 and set(d["families"]) == {"negation_0002", "quote_0001"} for d in m14)
+    assert "within one attack_goal" in json.dumps(checks["M5_pair_length"]["details"])
+    gate = json.dumps(checks["S_semantic_answers"]["details"])
+    assert json.dumps({"family_id": families[0], "question": "S13"}) in gate
+    assert '"question": "S5"' not in gate
+    assert "planted text" in checks["M16_hard_negative"]["note"] or "security in general" in checks["M16_hard_negative"]["note"] \
+        or checks["M16_hard_negative"]["status"] == "WARN"
+    # the template now carries S13 only for task-type and operational targets
+    template_path = tmp_path / "template.json"
+    from rag_cad.data import selfcheck as module
+    module.main(["--batch", str(batch), "--manifest", str(manifest), "--report", str(tmp_path / "r3.json"),
+                 "--write-semantic-template", str(template_path)])
+    template = json.loads(template_path.read_text(encoding="utf-8"))
+    assert "S13" in template["_questions"] and "S13" in template[families[0]]
+
 def test_selfcheck_semantic_gate_requires_answers_and_yes_rules(tmp_path):
     items = read_jsonl(RECORDS)
     batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"

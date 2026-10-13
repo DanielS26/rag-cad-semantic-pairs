@@ -277,3 +277,29 @@ Opus 5 and a fresh Claude Fable 5.1 instance, under `REVIEW_BRIEF_v1.md` and the
 agent definition `.claude/agents/family-reviewer.md`: each reruns the checks, answers S1 to
 S12 on its own and audits the batch against every earlier batch; their findings are applied or
 declined with reasons and archived under `docs/archive/review_batch_NN_<date>/`.
+
+## Batch 06: the first mixed-attack-type batch, and the independent readers' first pass
+
+Batch 06 (pilot_0051 to pilot_0060, drafted 13 and 14 October 2026 under DRAFTING_PROMPT_v3.md) is
+the first batch whose targets come from two sources and two attack types: six ASB non-aggressive
+operational instructions (`unauthorised_operation`) and four BIPIA task-type strings
+(`task_hijack`), so from batch 06 onward `attack_goal` is no longer confounded with batch. Every ASB
+target begins "Please", an attack-type marker that is identical in the twin and the malicious member
+and so not a label shortcut; it is recorded here for the per-category analysis. Coverage after 60
+families: analysis, historical_description, negation, quotation and warning 8 each, task_alignment
+and translation 7, authorisation 6; cue positions query 13, sentence_after 13, sentence_before 13,
+policy 11, heading 10; nine domains; no role confined to one domain. The hard negative is
+pilot_0053, a tender-evaluation note in legal that discusses a security incident and access controls
+(the fourth distinct device); the weak cue is pilot_0055. The twin is the longer member in 6 of 10
+families, 3 of 4 among task-type targets and 3 of 6 among operational ones, because the readers
+found the first draft had the twin longer in every task-type family and in one operational family.
+
+The batch was audited before the human review by the two independent readers of D-20261013-29. Both
+found that pilot_0057's first malicious document (a wind-farm eco-tour itinerary) was one in which a
+human author could have written the renewable-energy question, so the document was moved to a tour
+booking page; both found that a context sentence in pilot_0058 stated the target's purpose; between
+them they found five cue sentences that repeated the frames of earlier twins with other nouns and
+two set-wide query tells ("according to" in nine malicious queries and no twin query; "instruction"
+in twelve per cent of twins and no malicious member). Every finding, applied or declined with its
+reason, is archived under docs/archive/review_batch_06_2026-10-14/, and the signals became checker
+warnings and the S13 gate question under D-20261014-30.

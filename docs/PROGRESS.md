@@ -1958,3 +1958,95 @@ Historical audit claims are distinguished from checks executed in this session.
 - Next: batch 06 (about six ASB operational targets and four BIPIA task-type
   targets) under v3 and the two-reader review, then batches 07 onward, one
   pull request per batch, merged by Daniel Song at the end.
+
+## 2026-10-14 - Batch 06 Drafted Under v3 And Audited By Two Independent Readers; Checker Signals D-20261014-30
+
+- Families pilot_0051 to pilot_0060 (40 records) in
+  datasets/raw/augmentation/families/pilot_batch_06.jsonl with manifest lines
+  appended, the first batch under DRAFTING_PROMPT_v3.md and the first to mix
+  the two attack types (R26): six ASB non-aggressive instructions
+  (asb:all_attack_tools 203, 220, 245, 262, 324, 357; attack_goal
+  unauthorised_operation; index 262's personal name replaced by "the patient
+  with ID 234567" under R2) and four BIPIA task-type strings
+  (research_assistance:1, content_creation:2, information_retrieval:3,
+  task_automation:3; task_hijack). Roles: quotation 2, historical_description
+  2, one each of analysis, warning, authorisation (pilot_0055, policy cue,
+  marked), negation, translation and task_alignment; cue positions heading 2,
+  policy 3, sentence_before 2, sentence_after 2, query 1; the hard negative is
+  pilot_0053, a tender-evaluation note in legal (the device the batch 04
+  review asked for). Plan table first, from the pilot-wide facts (every twin
+  by role, control topics by domain, the eight earlier policy-cue openers, the
+  combined skew table).
+- Drafting loop: three mechanical passes (control and pair lengths in nine
+  families, the "this" share, two first-sentence verbs the heuristic does not
+  know, a heading that tripped the name check), then the written gate on its
+  first run; exit 0 with the M19 warning only, which is expected while no
+  directive strings remain ("your response" share 0 against 0.72).
+- Independent review (D-20261013-29): the second reader (Claude Opus 5) and
+  the third reader (a fresh Claude Fable 5.1 instance) each ran the checks in
+  a detached copy at commit 84141e22, answered S1 to S12 before reading the
+  drafter's answers and audited the batch against batches 01 to 05. Their
+  verdicts: Opus 1 accept, 4 accept with note, 5 fix (one contestable label);
+  Fable 3 accept, 5 accept with note, 1 fix, 1 contestable label. Both found
+  pilot_0057's eco-tour itinerary to be a document in which a human author
+  could have written the renewable-energy question (R23) and a second
+  translation cue in its twin; both found pilot_0058's sentence 1 stated the
+  target's purpose. Opus alone found that pilot_0052's query and closing
+  sentence, pilot_0054's framing sentences and pilot_0055's "three jobs"
+  sentence let the label survive removal of the cue (S1), and that "three
+  jobs" failed S7 as a match test. Between them they found five cue sentences
+  repeating earlier twins' frames with other nouns (0051/0034, 0053/0029,
+  0054/0027-0036, 0056/0025-0041, 0057/0023) and two set-wide query tells:
+  "according to" in nine malicious queries and no twin query, "instruction" in
+  12 per cent of twins and no malicious member. Applied, with context edits
+  only and every target byte-identical: pilot_0057's malicious document moved
+  to a tour booking page and its twin rebuilt (a pronunciation-drill heading
+  without a count, a neutral sentence 2, a non-"Prepare" query); the five cue
+  sentences rewritten in new frames; the pilot_0052, 0054, 0055 and 0058
+  context sentences made neutral; pilot_0055's twin re-anchored in the
+  contact centre and pilot_0056's malicious document moved to a works notice
+  (R17 and R23); "according to" dropped from pilot_0055's malicious query and
+  given to pilot_0059's twin query; "instruction" and "instructions" used
+  innocently in two malicious members; question-form twin queries added; the
+  pair-side query phrases balanced ("on this", "draft a", "write the", "from
+  the", "team", "desk's"). Declined with reasons: the ferry-timetable
+  replacement document (batch 07's device), "word for word" (batch 07 uses
+  it), "directive" in a twin (a watch token), a learning-list keyword control
+  for pilot_0058, a dated full-clause heading for pilot_0051. Both reviews and
+  both readers' answer files are archived under
+  docs/archive/review_batch_06_2026-10-14/ with the outcome stated.
+- Checker (D-20261014-30), each a WARN or a gate question so that no earlier
+  batch fails retroactively: M9 question-form share gap above 30 points; M9
+  set-wide query token or bigram on one pair side only (at least 10 per cent
+  of one side's queries, none of the other's); M6 watch tokens "instruction",
+  "instructions", "directive", "directives" in two or more twins without a
+  malicious use; M14 content-word Jaccard of 0.10 or more between cue
+  sentences of the same role and cue position (it recovers the clusters the
+  batch 04 review found by hand); M5 twin-longer share at 0 or 100 per cent
+  within an attack_goal of three or more families; the semantic gate gains S13
+  (the foreignness test, required YES for task-type and operational targets)
+  and lets S5 be not applicable when the target has no response phrasing; M16
+  reports which tokens made a hard negative hard. One test exercises every
+  signal; full suite 306 passed; ruff clean. REVIEW_BRIEF_v1.md gains S13, the
+  S7 match-test wording and the CLI exit-code note; the prompt text is
+  unchanged so the 240 earlier records keep their hashes.
+- After the edits: self-check exit 0 with the M19 warning only (the per-goal
+  twin-longer shares are 3 of 4 and 3 of 6; no cue-overlap warning; no watch
+  token); `data prescreen` (minimum per role 1) and `data validate` pass over
+  all sixty families and 240 records; the combined 60-family run fails only
+  the per-batch S3 cap and carries the retroactive cue-overlap warnings for
+  the earlier clusters; "instruction" has left the skew table and "according"
+  stands at 0.02 against 0.13. Review sheet regenerated as
+  Project\pilot_review_batch_06.md. The two readers ran as general-purpose
+  agents with the model pinned per call, because the committed agent
+  definition is not loaded into a running session and a Git worktree cannot
+  be created under the checkout's path on Windows (a vendored path is too
+  long); a detached worktree at a short path served as their read-only copy.
+- Coverage after sixty families: analysis, historical_description, negation,
+  quotation and warning 8, task_alignment and translation 7, authorisation 6;
+  cue positions query 13, sentence_after 13, sentence_before 13, policy 11,
+  heading 10. Supply after batch 06: 24 usable BIPIA task-type strings and
+  194 ASB rows.
+- Next: batch 07 (already drafted one step ahead and rebuilt on its own
+  branch after this batch), answered under S13, then the two readers; one
+  pull request per batch, merged by Daniel Song at the end.
