@@ -199,7 +199,11 @@ allows one attacker-writable cue per batch (pilot_0008, 0016, 0026, 0037,
 each marked) and D-20261010-21(c) asks for at least four per role. Every
 batch from 03 on carries one hard-negative malicious member (pilot_0021,
 pilot_0036). Across the pilot the pair structure varies from two to five
-sentences with the target in positions 0 to 3.
+sentences with the target in positions 0 to 3. The final set is 200
+families with a checkpoint at 120 (D-20261013-27); the pilot families stay in
+it. The project's own test uses five-fold cross-validation at the family level
+(D-20261013-28): every family is held out once, all four records together,
+and D0 is training data in every round.
 
 Review: batch 01 was accepted by Daniel Song on 11 October 2026 and reopened the
 same day together with batch 02 (D-20261011-24) after an independent review
