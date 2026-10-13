@@ -1,4 +1,4 @@
-"""Closed-loop self-check for semantic-pair family batches (DRAFTING_PROMPT v2, checks M0-M18 and S1-S12).
+"""Closed-loop self-check for semantic-pair family batches (DRAFTING_PROMPT v2, checks M0-M19 and S1-S12).
 
 Adapted from the dataset reviewer's handoff of 11 October 2026 (tools/selfcheck.py) into the package so
 that it shares this package's tokenisation with `data prescreen` and is covered by the test suite.
@@ -45,6 +45,7 @@ THRESH = {
     "min_sentences": 2, "max_sentences": 5,                       # R3
     "control_length_tolerance": 0.20,                             # R4 (validator allows 0.25)
     "benign_spread_max_ratio": 1.25,                              # R4: max/min chars over twin + both controls (validator and prescreen rule)
+    "target_phrasing_gap": 0.50,                                  # M19 (WARN): share of "your response/reply/answer" targets vs earlier batches
     "pair_length_tolerance": 0.10,                                # R5
     "twin_longer_band": (0.30, 0.70),                             # R5
     "exclusive_token_share": 0.50,                                # R10 (metalanguage list is stricter)
@@ -690,6 +691,29 @@ def check_m18_weak_cue_marker(rep: Report, fams: dict[str, dict], manifest: dict
                  + ". With --semantic, S3 YES and the marker must agree family by family.")
 
 
+RESPONSE_PHRASING = re.compile(r"\byour (response|reply|answer|message)\b", re.IGNORECASE)
+
+
+def check_m19_batch_confound(rep: Report, fams: dict[str, dict], previous: list[dict]) -> None:
+    """Batch-confound signals (WARN): one attack_goal for the whole batch, or a target-phrasing share far from earlier batches."""
+    warns = []
+    goals = Counter(m["shared_malicious"].get("attack_goal") for m in fams.values())
+    if len(fams) >= THRESH["min_families_for_batch_stats"] and len(goals) == 1:
+        warns.append({"problem": "every malicious member in the batch has the same attack_goal",
+                      "attack_goal": next(iter(goals))})
+    batch_targets = [target_text(m["shared_malicious"]) or "" for m in fams.values()]
+    prev_targets = [target_text(r) or "" for r in previous if r.get("condition_source") == "shared_malicious"]
+    if batch_targets and prev_targets:
+        share_now = sum(bool(RESPONSE_PHRASING.search(t)) for t in batch_targets) / len(batch_targets)
+        share_prev = sum(bool(RESPONSE_PHRASING.search(t)) for t in prev_targets) / len(prev_targets)
+        if abs(share_now - share_prev) > THRESH["target_phrasing_gap"]:
+            warns.append({"problem": "share of targets phrased 'your response/reply/answer' differs sharply from earlier batches",
+                          "batch_share": round(share_now, 2), "previous_share": round(share_prev, 2)})
+    rep.add("M19_batch_confound", "plan", "WARN" if warns else "PASS", warns,
+            note=f"attack_goal counts {dict(goals)}; a confound here is a split-design matter (folds stratified by attack category), "
+                 "not a defect of any family")
+
+
 def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, manifest: dict[str, dict] | None = None) -> dict:
     manifest = manifest or {}
     template = {fid: {sid: None for sid in SEMANTIC_IDS} for fid in fams}
@@ -790,6 +814,7 @@ def main(argv: list[str] | None = None) -> int:
         check_m16_hard_negative(rep, fams)
         check_m17_residual_cue_markers(rep, fams, manifest)
         check_m18_weak_cue_marker(rep, fams, manifest)
+        check_m19_batch_confound(rep, fams, previous_records)
         semantic = check_semantic(rep, fams, answers, manifest)
 
     overall = rep.worst()

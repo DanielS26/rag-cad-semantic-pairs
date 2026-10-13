@@ -150,7 +150,7 @@ filled from that report.
 
 From 11 October 2026 every family is also drafted and repaired under the
 self-check protocol (D-20261011-25): `data selfcheck` (rag_cad.data.selfcheck,
-also tools/selfcheck.py) applies checks M0 to M18 of DRAFTING_PROMPT_v2.md and
+also tools/selfcheck.py) applies checks M0 to M19 of DRAFTING_PROMPT_v2.md and
 the written semantic gate S1 to S12, in a loop over the whole batch until it
 exits 0. Per-batch artefacts live in datasets/raw/augmentation/review/
 (semantic_answers_batch_NN.json, selfcheck_batch_NN.json). The authorisation
@@ -201,8 +201,23 @@ hard-negative malicious member (pilot_0021 and pilot_0036 in it_security,
 pilot_0044 a moderation log in customer_support). Batch 05 is the first drawn
 from BIPIA's task-type categories: its targets are unrelated requests that
 pull the assistant off the user's task (attack_goal task_hijack) rather than
-instructions that alter the reply. Across the set the pair structure varies
-from two to five sentences with the target in positions 0 to 3.
+instructions that alter the reply. `attack_goal` on family malicious members
+takes one of: content_injection, response_manipulation, promotion_insertion,
+contact_redirection, link_insertion (BIPIA directive categories: instruction,
+social_interaction, persuasion, clickbait, marketing_advertising,
+information_dissemination, entertainment, language_translation) and
+task_hijack (BIPIA task-type categories: information_retrieval,
+content_creation, learning_and_tutoring, language_translation,
+task_automation, business_intelligence, conversational_agent,
+research_assistance, sentiment_analysis, programming_help). Question-form
+targets without the "your response" phrasing entered the set in batch 05;
+evaluation is reported per attack category and the cross-validation folds are
+stratified by attack category as well as role (D-20261013-28, amended). For
+a task-type target the malicious document must be one in which the question
+is clearly foreign, and the keyword control describes the task as done or as
+a page's content, never as a request made to someone. Across the set the pair
+structure varies from two to five sentences with the target in positions 0
+to 3.
 
 Review: batch 01 was accepted by Daniel Song on 11 October 2026 and reopened the
 same day together with batch 02 (D-20261011-24) after an independent review

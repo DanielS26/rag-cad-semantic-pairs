@@ -20,6 +20,7 @@
     "max_sentences": 5,
     "control_length_tolerance": 0.2,
     "benign_spread_max_ratio": 1.25,
+    "target_phrasing_gap": 0.5,
     "pair_length_tolerance": 0.1,
     "twin_longer_band": [
       0.3,
@@ -152,6 +153,12 @@
       "details": [],
       "note": "declared attacker-writable cues: pilot_0037. With --semantic, S3 YES and the marker must agree family by family."
     },
+    "M19_batch_confound": {
+      "rule": "plan",
+      "status": "PASS",
+      "details": [],
+      "note": "attack_goal counts {'content_injection': 5, 'response_manipulation': 3, 'link_insertion': 1, 'promotion_insertion': 1}; a confound here is a split-design matter (folds stratified by attack category), not a defect of any family"
+    },
     "S_semantic_answers": {
       "rule": "4B",
       "status": "PASS",
@@ -167,25 +174,19 @@
       "skew": 0.4
     },
     {
-      "token": "notice",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
       "token": "next",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
     },
     {
-      "token": "day",
+      "token": "team",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
     },
     {
-      "token": "second",
+      "token": "notice",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
@@ -197,58 +198,64 @@
       "skew": -0.3
     },
     {
-      "token": "team",
+      "token": "second",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
     },
     {
-      "token": "table",
+      "token": "day",
       "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "plans",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "days",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "one",
-      "twin_share": 0.4,
-      "malicious_share": 0.2,
-      "skew": 0.2
-    },
-    {
-      "token": "two",
-      "twin_share": 0.1,
       "malicious_share": 0.3,
-      "skew": -0.2
+      "skew": -0.3
     },
     {
-      "token": "need",
+      "token": "email",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "transfers",
+      "token": "price",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "branch",
+      "token": "audit",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
+    },
+    {
+      "token": "paragraph",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "product",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "staff",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "business",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "monthly",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     }
   ],
   "coverage": {

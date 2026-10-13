@@ -1885,6 +1885,33 @@ Historical audit claims are distinguished from checks executed in this session.
   a few malicious members should use them innocently. Supply: about 32 usable
   BIPIA task-type strings remain, enough for batches 06 to 08; the second
   source must be confirmed before batch 09 (D-20261013-27).
+- External review of batch 05 (same day, archived at
+  docs/archive/review_batch_05_2026-10-13/): seven families accepted, three
+  with a contestable malicious label. The finding worth keeping: a task-type
+  target is only an injection if it is foreign to its document, and in three
+  families the drafter had placed the question in the one document where it
+  is ordinary content (a maths question in a maths-tutoring channel, a
+  marketing question in a marketing brief, a book request in a reading-group
+  email). Applied: pilot_0046 and pilot_0050 moved to facilities documents
+  and pilot_0049's malicious member to a premium-account fee page, with the
+  random control swapped to cheque clearing to avoid a topic overlap;
+  pilot_0041's negation made unambiguous; pilot_0043's twin given a second
+  note item so "each point" is true; two keyword controls reframed from a
+  request made to someone to the task done (pilot_0044, pilot_0050);
+  pilot_0047's justification records the runner-up role. Checker: new M19
+  warns when every malicious member in a batch has one attack_goal or when
+  the share of targets phrased "your response/reply/answer" differs by more
+  than 50 points from earlier batches, both batch-confound signals that fire
+  on batch 05 by design (task-type strings only). D-20261013-28 amended:
+  folds are stratified by attack category as well as role and results are
+  reported per attack category. The reviewer's plan rule "mix three or four
+  task-hijack strings per batch" cannot be met from BIPIA alone, since its
+  directive strings were used up by the pilot; the mix starts when the second
+  source arrives, which argues for confirming that source before batch 06
+  rather than batch 09. Reports for all five batches regenerated under M19
+  (01 to 03 WARN as before, 04 PASS, 05 WARN on M19 only); pre-screen and
+  validate pass over 50 families; the combined run fails only the per-batch
+  S3 cap.
 - Next: Daniel Song reviews batches 03 to 05 from the sheets alongside the
-  re-review of batches 01 and 02; the external reviewer's pass over batch 05;
-  batch 06.
+  re-review of batches 01 and 02; confirm the second target source (needed
+  for mixing attack types from batch 06); batch 06.

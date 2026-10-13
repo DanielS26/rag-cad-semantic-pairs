@@ -121,6 +121,19 @@ def test_selfcheck_semantic_gate_requires_answers_and_yes_rules(tmp_path):
     problems = json.dumps(json.loads(report_path.read_text(encoding="utf-8"))["mechanical"]["S_semantic_answers"]["details"])
     assert "authorisation_0008" in problems and "lacks" in problems
     assert "policy_0009" in problems and "S3 is not YES" in problems
+    # M19: a batch whose malicious members all share one attack_goal and drop the 'your response' phrasing
+    # that every earlier target carried is flagged as a batch confound (WARN, not FAIL)
+    items2 = read_jsonl(RECORDS)
+    for r in items2:
+        if r["condition_source"] == "shared_malicious":
+            r["attack_goal"] = "task_hijack"
+    batch2 = tmp_path / "batch2.jsonl"
+    write_jsonl(batch2, items2)
+    report3 = tmp_path / "r3.json"
+    main(["--repo", str(ROOT), "data", "selfcheck", "--batch", str(batch2), "--manifest", str(manifest),
+          "--previous", str(batch), "--report", str(report3)])
+    m19 = json.loads(report3.read_text(encoding="utf-8"))["mechanical"]["M19_batch_confound"]
+    assert m19["status"] == "WARN" and "same attack_goal" in json.dumps(m19["details"])
     # a Drive path is refused before the tool runs
     assert main(["--repo", str(ROOT), "data", "selfcheck", "--batch", "/content/drive/MyDrive/b.jsonl",
                  "--manifest", str(manifest), "--report", str(tmp_path / "r2.json")]) == 2
