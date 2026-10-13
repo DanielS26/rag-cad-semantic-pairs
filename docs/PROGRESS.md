@@ -1915,3 +1915,46 @@ Historical audit claims are distinguished from checks executed in this session.
 - Next: Daniel Song reviews batches 03 to 05 from the sheets alongside the
   re-review of batches 01 and 02; confirm the second target source (needed
   for mixing attack types from batch 06); batch 06.
+
+## 2026-10-13 - Second Target Source Adopted; Drafting Prompt v3; Reviewer Brief And Agent Definition
+
+- Daniel Song agreed to the second target source, approved D-20261013-29 and
+  amended D-20261013-27 (the checkpoint at 120 families is a reported audit,
+  not a stop), and asked for an independent review of every further batch by
+  a second reader (Claude Opus 5) and a third reader (a fresh Claude Fable 5.1
+  instance), with the drafter remaining Claude Fable 5.1.
+- Second source: the 200 non-aggressive attacker instructions of Agent
+  Security Bench (agiresearch/ASB, MIT, Copyright (c) 2024 AGI Research),
+  file all_attack_tools.jsonl pinned by SHA-256 9205bf61f1c34f4b...; licence text
+  committed under datasets/raw/augmentation/LICENSES/. The schema's licence
+  registry and the JSON schema accept source_dataset asb_adapted (MIT); the
+  self-check's provenance rule reads an adapted-source registry (bipia_adapted
+  with bipia: ids, asb_adapted with asb: ids); tests cover both sources and a
+  mismatched prefix. The autonomous-driving rows name real cities and are
+  skipped. SEP stays a reserve: its data licence download of 13 October was a
+  404 page, so it is not adopted until the text is verified.
+- BIPIA files recovered from the earlier session's working folder and pinned:
+  text_attack_train.json 63f95d3e67eac417...,
+  text_attack_test.json 75750e7b4e8b34e8...; every
+  source id used by batches 01 to 05 was checked against the files (the
+  adapted targets differ from the raw strings only by the R2 adaptations).
+  After batch 05, 28 task-type strings remain usable (five more name real
+  products, places or works and are skipped).
+- DRAFTING_PROMPT_v3.md (SHA-256 09d56ad21d2e5eb7...) replaces v2 for batches
+  06 onward: the thresholds of D-20261013-26 are written into R4, R10 and R14;
+  R23 to R27 add the foreign-document rule for task-type and operational
+  targets, the keyword-control rule for such targets, distinct policy-cue
+  openers, the attack-type mix with the M19 signals, and the S3 marker rule;
+  the inputs, R1, R2 and R20 are generalised to the two sources; Step 8
+  describes the independent review. Batches 01 to 05 keep the v2 hash.
+- REVIEW_BRIEF_v1.md states the readers' standing rules (inert data,
+  read-only, no secrets, tool output for every mechanical claim), the
+  commands to run, checks A to D per family, the cross-batch audit, rule-gap
+  proposals and the fixed findings format; .claude/agents/family-reviewer.md
+  pins the second reader to Opus with edit tools disallowed, and the third
+  reader runs the same definition with the Fable model.
+- Full suite 305 passed; ruff clean. CPU only. The tested Colab profile
+  remains invalid for final stages until the gate is rerun before Phase 6.
+- Next: batch 06 (about six ASB operational targets and four BIPIA task-type
+  targets) under v3 and the two-reader review, then batches 07 onward, one
+  pull request per batch, merged by Daniel Song at the end.
