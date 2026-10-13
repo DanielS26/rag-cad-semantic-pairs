@@ -463,7 +463,7 @@ def check_m9_queries(rep: Report, fams: dict[str, dict], previous: list[dict]) -
             if status != "FAIL":
                 status = "WARN"
             details.append({"problem": "query token or bigram present on one pair side only across the set (D-20261014-30)",
-                            "phrases": sorted(skewed, key=lambda d: -(d["malicious_share"] + d["twin_share"]))[:8]})
+                            "phrases": sorted(skewed, key=lambda d: (-(d["malicious_share"] + d["twin_share"]), d["phrase"]))[:12]})
     seen = Counter(normalise(r["query"]) for r in previous)
     batch_q = [r["query"] for m in fams.values() for src in ("shared_malicious", "semantic_benign", "random_benign", "keyword_benign") for r in [m[src]]]
     batch_c = Counter(normalise(q) for q in batch_q)
