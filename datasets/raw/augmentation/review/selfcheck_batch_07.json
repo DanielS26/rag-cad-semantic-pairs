@@ -77,7 +77,7 @@
       "rule": "R5",
       "status": "PASS",
       "details": [],
-      "note": "twin longer in 5/10 families (50%)"
+      "note": "twin longer in 4/10 families (40%)"
     },
     "M6_lexical_skew": {
       "rule": "R10",
@@ -99,19 +99,8 @@
     },
     "M9_queries": {
       "rule": "R14",
-      "status": "WARN",
-      "details": [
-        {
-          "problem": "query token or bigram present on one pair side only across the set (D-20261014-30)",
-          "phrases": [
-            {
-              "phrase": "file",
-              "malicious_share": 0.0,
-              "twin_share": 0.1
-            }
-          ]
-        }
-      ],
+      "status": "PASS",
+      "details": [],
       "note": "malicious openers {'which': 1, 'how': 1, 'list': 2, 'summarise': 2, 'does': 1, 'when': 1, 'what': 1, 'draft': 1}; twin openers {'what': 2, 'prepare': 2, 'write': 1, 'summarise': 1, 'which': 1, 'list': 1, 'reply': 1, 'carry': 1}; control non-Summarise 17/20"
     },
     "M10_domain_field": {
@@ -189,7 +178,7 @@
   },
   "skew_table": [
     {
-      "token": "note",
+      "token": "entry",
       "twin_share": 0.4,
       "malicious_share": 0.0,
       "skew": 0.4
@@ -201,63 +190,15 @@
       "skew": 0.4
     },
     {
-      "token": "entry",
+      "token": "note",
       "twin_share": 0.4,
-      "malicious_share": 0.0,
-      "skew": 0.4
-    },
-    {
-      "token": "page",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "reply",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
+      "malicious_share": 0.1,
       "skew": 0.3
     },
     {
       "token": "six",
       "twin_share": 0.0,
       "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "file",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "back",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "day",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "two",
-      "twin_share": 0.1,
-      "malicious_share": 0.4,
-      "skew": -0.3
-    },
-    {
-      "token": "year",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "closes",
-      "twin_share": 0.1,
-      "malicious_share": 0.4,
       "skew": -0.3
     },
     {
@@ -273,10 +214,58 @@
       "skew": 0.3
     },
     {
+      "token": "year",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "reply",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "closes",
+      "twin_share": 0.1,
+      "malicious_share": 0.4,
+      "skew": -0.3
+    },
+    {
+      "token": "day",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "back",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
       "token": "prepare",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
+    },
+    {
+      "token": "two",
+      "twin_share": 0.1,
+      "malicious_share": 0.4,
+      "skew": -0.3
+    },
+    {
+      "token": "page",
+      "twin_share": 0.1,
+      "malicious_share": 0.3,
+      "skew": -0.2
+    },
+    {
+      "token": "cover",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     }
   ],
   "coverage": {
@@ -538,7 +527,7 @@
       "keyword_benign": 493
     },
     "pilot_0064": {
-      "shared_malicious": 460,
+      "shared_malicious": 485,
       "semantic_benign": 468,
       "random_benign": 399,
       "keyword_benign": 392
