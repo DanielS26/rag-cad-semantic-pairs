@@ -348,7 +348,7 @@ def test_selfcheck_d33_signals_role_overlap_cue_query_watch_both_ways_and_s11(tm
     assert "whatever the cue position" in m14 and "prev_history_0006" in m14 and "analysis_0004" in m14
     assert "new device slug on an old frame" in m14 and "brand-new-slug" in m14
     m17 = json.dumps(checks["M17_residual_cue_markers"]["details"])
-    assert "shares content words with the tagged cue sentence" in m17 and "analysis_0004" in m17
+    assert "echoes the tagged cue" in m17 and "analysis_0004" in m17
     m6 = json.dumps(checks["M6_lexical_skew"]["details"])
     assert "two or more malicious members and no twin" in m6 and '"token": "notice"' in m6
     gate = json.dumps(checks["S_semantic_answers"]["details"])
