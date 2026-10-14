@@ -2307,3 +2307,92 @@ Historical audit claims are distinguished from checks executed in this session.
 - Next: batch 10's finalisation under the same review (its own section of the
   archived file), then batches 11 and 12 as the next pair; one pull request per
   batch, stacked in order.
+
+## 2026-10-15 - Batch 10 Reviewed And Repaired
+
+- Batch 10 (pilot_0091 to pilot_0100: eight ASB operational targets, two BIPIA
+  task-type strings) was reviewed against commit 20a3ab0 by the independent
+  reader (Claude Opus 5), together with batch 09 as the first pair under
+  pipeline v2: for batch 10, 2 accept, 5 accept with note, 3 fix, 0 contestable
+  labels, all ten S13 answers YES and the provenance check passed; the reader
+  called it the stronger batch of the pair. The findings that mattered: in three
+  of the nine non-query twins the twin's own query or a context sentence
+  re-asserted the cue's proposition (pilot_0091's query presupposed that the
+  records page sets out duties; 0099's opening sentence made the sheet a listing
+  of calls, inside which a request is a logged call; 0100's closing sentence
+  named the audit page and its query asked which page came bottom); pilot_0094's
+  back-translation entailed that an HR notice itself contained a
+  server-monitoring line; pilot_0096's heading never spent the request, so
+  quotation competed with historical_description; pilot_0095's keyword control
+  reused "functions" hollowly; pilot_0091's slug re-describes pilot_0055's
+  mechanism with exclusivity added and pilot_0093 is the fifth twin on
+  user-asked-for-it; pilot_0098 repeats pilot_0085's role, domain and cue
+  position one batch later; "Tongan" returns from pilot_0081. The reader agreed
+  the roles of pilot_0096, 0098 and 0099 and pilot_0091's S3 NO, the last on the
+  "and to nobody else" clause rather than on the policy's ownership, and
+  recorded the convention D-20261015-34 adopted: a standing rule that classifies
+  a request type is a warning cue, a refusal of this instance a negation cue.
+- Applied: all three must-fixes in the reader's wording (pilot_0091's twin
+  query; pilot_0099's opening sentence, which now carries call volumes by topic;
+  pilot_0100's closing sentence and twin query), so every twin query asks and
+  states nothing its cue states; should-fix 6 (pilot_0094's heading
+  back-translates the IT line in the notice, with its closing sentence shortened
+  to keep the pair inside R5), 8 (pilot_0096's heading says the rebuild was
+  finished by 2014, which settles S10) and 9 (pilot_0095's keyword control reads
+  the liver function tests); should-fix 7, 10, 11 and 12 propose no edit and are
+  stated in S12 or carried to the batch 11 watch-list. Every S1 rewritten in the
+  D-20261015-34 form with the twin query quoted and labelled [asks] and the
+  document-type sentence quoted; pilot_0091's S3 restated on the exclusivity
+  clause; S7 of pilot_0099 and S10 of pilot_0096 redone; S11 restating each
+  justification; S12 in the three-field form stating the repeats (pilot_0091,
+  0093, 0094, 0096 and 0098), slugs kept. Declined with reasons: nothing
+  outright; the reader's request for S11 wording independent of the
+  justification is superseded by D-20261015-34 (S11 restates the justification
+  and the reader's own answers are the independent defence). The archived
+  findings file under docs/archive/review_batch_09_10_2026-10-15/ now carries
+  batch 10's outcome in its preamble beside batch 09's.
+- Checker proposals: none beyond the three of the cross-batch section already
+  decided as D-20261015-34 (the S1 asks-or-asserts label, the S11 signal's
+  scope, the two-authorisation planning warning), under which this batch was
+  finalised; the drafter's answers had nine S1 answers without the label and M18
+  fired on the two authorisation families, and the repair clears the first and
+  records the second as a planning signal.
+- After the edits: self-check exit 0 with two WARNs, the set-wide query phrase
+  list ("does", "summarise the", "what", "page", "note", "notice", "list", "list
+  the": eight phrases against seven at review, "what" joining as twin-leaning at
+  0.24 against 0.14) and the M18 planning signal for the two authorisation
+  families (pilot_0091 and pilot_0092), which stands as a fact of this batch's
+  plan; `data prescreen` (minimum per role 1) and `data validate` pass over 100
+  families and 400 records; twin longer in 6 of 10 (5 of 8 operational, 1 of 2
+  task-type), up from 5 because pilot_0096's longer heading tips its pair; hard
+  negative pilot_0095 (a ward key custody notice with a June incident, physical
+  security and access); weak cue pilot_0092 (the signed mandate). Twin query
+  openers Where 2, What 3, Summarise 2, Which, The and Does 1 each against
+  malicious Summarise 2, How 2, Which 2, Write, What, List and Who 1 each;
+  "this" on four malicious and three twin queries. Coverage after 100 families:
+  analysis, negation, quotation and warning 13, authorisation,
+  historical_description, task_alignment and translation 12; cue positions
+  sentence_after 22, sentence_before 22, query 20, heading 19, policy 17. Review
+  sheet regenerated as Project\pilot_review_batch_10.md; cue index regenerated.
+  Full test suite 311 passed. Supply after batch 10: 12 usable BIPIA task-type
+  strings (by subtraction from the batch 09 count) and 166 ASB non-aggressive
+  rows.
+- Watch-list carried to batch 11 (the pair's shared list, with batch 10's
+  additions): twins take live documents and malicious members records and notes
+  as batch 10 did ("page" on six twins against two malicious members); deviate
+  from the agent-to-domain default for operational targets, now the norm; the
+  exemplar frame and the "Which <plural noun> does the <document> <verb>?"
+  shape, both checker warnings; task_alignment has one mechanism and five twins
+  on it (0068, 0069, 0078, 0082, 0093), so the next one varies the user's
+  request; the next hard negative is a verification or identity-check document
+  or a procurement note, not screened text or physical access (0090 and 0095 are
+  both physical access); R23 on the twin side in both forms; the next
+  translation family takes a language the set has not used (Tongan now stands at
+  two) and the cue-device register could carry the language beside the slug; no
+  role by domain by cue-position triple repeated from the previous batch
+  (pilot_0098 repeated pilot_0085's); a two-sentence twin's one context sentence
+  describes something other than the message's authenticity; no request-shaped
+  control sentence; pilot_0100's matched count and pilot_0097's neutral query
+  and context remain the models.
+- Next: the parked drafts of batches 11 and 12 through their own paired review
+  and finalisation, one branch and one pull request per batch, stacked in order.

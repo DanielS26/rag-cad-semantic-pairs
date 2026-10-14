@@ -394,3 +394,41 @@ opening sentence re-asserting the cue's proposition in six of ten twins, a half-
 talk-title reading beside a planted question and four repeated mechanisms, every finding applied
 with its reason under docs/archive/review_batch_09_10_2026-10-15/ and its checker proposals decided
 as D-20261015-34.
+
+## Batch 10
+
+Batch 10 (pilot_0091 to pilot_0100, drafted 15 October 2026 under DRAFTING_PROMPT_v3.md) takes eight
+ASB targets (rows 259, 221, 219, 204, 331, 233, 229 and 207) and two BIPIA task-type strings
+(learning_and_tutoring:3 and programming_help:3 from the train file), the second batch on the
+two-and-eight split. Coverage after 100 families: analysis, negation, quotation and warning 13,
+authorisation, historical_description, task_alignment and translation 12; cue positions
+sentence_after 22, sentence_before 22, query 20, heading 19, policy 17; nine domains; no role
+confined to one domain. The hard negative is pilot_0095, a ward key custody notice with a June
+incident-book entry (the eighth hard negative and the second on physical security and access, so the
+next takes a verification or procurement theme); the weak cue is pilot_0092, the account holder's
+signed mandate on a branch's post sheet, which an attacker could have written. The twin is the
+longer member in 6 of 10 families (5 of 8 operational, 1 of 2 task-type). The batch carries two
+authorisation families, pilot_0091 (the chambers' own delegations policy, S3 NO on its exclusivity
+clause) and pilot_0092 (S3 YES), the planning case the M18 signal of D-20261015-34 now flags because
+the one-weak-cue cap constrains the second family's S3; and the set's first warning cue in the
+policy position (pilot_0099, a phone-desk rule that passes the request to the fraud line, which
+fixed the convention that a standing rule classifying a request type is a warning cue while a
+refusal of this instance is a negation cue). The agent-to-domain mapping above is a default, and
+D-20261015-34 makes deviation from it the norm for operational targets from batch 11; five of this
+batch's eight ASB rows deviate from it, with rows 219 and 204 (system administration) in email and
+hr_policy rather than it_security, 331 (e-commerce) in travel rather than customer_support and 233
+and 229 (financial analysis) in email and customer_support rather than banking, while rows 259
+(legal consultation), 221 (financial analysis) and 207 (system administration) follow it; the review
+found the pair's S1 failures concentrated in the families that followed the mapping, pilot_0091 and
+0100 among them. New cue devices: the chambers' delegations policy (pilot_0091, pilot_0055's
+mechanism with exclusivity added, as its S12 states), a customer's signed mandate (pilot_0092), a
+back-translation under review (pilot_0094, in Tongan again after pilot_0081), a search string
+counted by a portal report (pilot_0095), an anniversary recollection of a finished project
+(pilot_0096), a message recalled by its sender (pilot_0097), a photographed whiteboard typed out by
+a caption (pilot_0098), a fraud-line rule (pilot_0099) and a readability score whose count matches
+the target exactly (pilot_0100); pilot_0093 is the fifth task_alignment twin on user-asked-for-it.
+The independent reader of D-20261013-29 as amended by D-20261014-32 (Claude Opus 5), reviewing
+batches 09 and 10 together, found the twin's own query or a context sentence re-asserting the cue's
+proposition in three of ten twins, an implausible back-translation premise, a heading that never
+spent its request and a hollow control sentence, every finding applied with its reason under
+docs/archive/review_batch_09_10_2026-10-15/ and its checker proposals decided as D-20261015-34.

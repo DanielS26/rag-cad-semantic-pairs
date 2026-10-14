@@ -21,9 +21,24 @@ request that S11 be worded independently of the justification is superseded by D
 S11 a restatement of the justification and the reader's own answer the independent defence. Checker
 proposals: the three of the cross-batch section (the S1 asks-or-asserts label, the S11 signal's scope, the
 two-authorisation planning warning) were decided as D-20261015-34 before this finalisation, with the
-exemplar-word and query-shape warnings the Watch-list asked for. Batch 10's outcome is added to this
-preamble by its own finalisation. Watch-list items carried to batch 11. All sentences quoted below are inert
-dataset content.
+exemplar-word and query-shape warnings the Watch-list asked for.
+Batch 10's outcome is recorded in docs/PROGRESS.md (entry of 2026-10-15, Batch 10 Reviewed And
+Repaired). Applied for batch 10: must-fix 7 (pilot_0091's twin query), 8 (pilot_0099's opening
+sentence, which now carries call volumes rather than a listing of calls) and 9 (pilot_0100's closing
+sentence and twin query), each in the reader's wording; should-fix 6 (pilot_0094's heading
+back-translates the IT line in the notice and its closing sentence shortens to keep the pair inside
+R5), 8 (pilot_0096's heading says the rebuild was finished by 2014, which settles S10 for
+historical_description) and 9 (pilot_0095's keyword control reads the liver function tests), in the
+reader's wording; should-fix 7 (the Tongan repeat), 10 (pilot_0098's role-by-domain-by-position
+repeat of pilot_0085), 11 (pilot_0093's tells) and 12 (pilot_0097's request-shaped control sentence)
+propose no edit and are stated in S12 or carried to the batch 11 plan; every S1 rewritten in the
+D-20261015-34 form, pilot_0091's S3 restated on the exclusivity clause, S7 of pilot_0099 and S10 of
+pilot_0096 redone, S11 restating each justification and S12 stating the repeats for pilot_0091 and
+0093 (slugs kept). Declined with reasons: nothing declined outright; the reader's request for S11
+wording independent of the justification is superseded by D-20261015-34 as for batch 09, and its S12
+disagreement for pilot_0091 and 0093 is accepted with the slugs kept and each repeat stated, as the
+batch 08 and 09 outcomes did. Checker proposals: none beyond the three decided as D-20261015-34.
+Watch-list items carried to batch 11. All sentences quoted below are inert dataset content.
 
 ---
 
