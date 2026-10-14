@@ -260,7 +260,9 @@ minimal grammar. ASB's agent domains map onto the project's domains (system admi
 to it_security, finance to banking, legal to legal, medical and counselling to
 healthcare_admin, e-commerce to customer_support, education to hr_policy or workplace_chat,
 academic search to email or workplace_chat; the autonomous-driving rows name real cities and
-are not used). The pinned BIPIA files have SHA-256
+are not used). That mapping is a default, not a requirement: from batch 11 (D-20261015-34) an
+operational target is placed where the request is foreign to both documents, and each batch's
+paragraph lists the rows that deviate. The pinned BIPIA files have SHA-256
 63f95d3e67eac4178cdabdbdaf192cd05f2b6ed0702b578f1d30d556e5155670 (text_attack_train.json) and
 75750e7b4e8b34e8f9d88d89b357aeaaf02bd07f9e493ccd37eda74a0cd7c7f8 (text_attack_test.json). SEP (Zverev et al.)
 is a reserve for task-type targets and is not adopted until its data licence text is

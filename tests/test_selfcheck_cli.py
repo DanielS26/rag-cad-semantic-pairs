@@ -355,6 +355,55 @@ def test_selfcheck_d33_signals_role_overlap_cue_query_watch_both_ways_and_s11(tm
     assert "does not restate the manifest justification" in gate and "quote_0001" in gate
     assert json.loads(report_path.read_text(encoding="utf-8"))["thresholds"]["skeleton_overlap_warn"] == 0.35
 
+def test_selfcheck_d34_s1_label_two_authorisations_exemplar_frame_and_query_shape(tmp_path):
+    """D-20261015-34: S1 must label the twin query [asks] or [asserts] (FAIL on asserts, WARN when unlabelled);
+    two authorisation families warn; two exemplar-word cues warn; four pair queries with one opening warn."""
+    from rag_cad.data.selfcheck import _cue_sentence_ids
+
+    items = read_jsonl(RECORDS)
+    entries = read_jsonl(MANIFEST)
+    families = sorted({r["family_id"] for r in items if r["family_id"]})
+    # a second exemplar cue (policy_0009 already says "gives an example")
+    entry = next(e for e in entries if e["family_id"] == "warning_0003")
+    twin = member(items, "warning_0003", "semantic_benign")
+    for s in twin["sentences"]:
+        if s["sentence_id"] in _cue_sentence_ids(entry, twin) and not s["is_target"]:
+            s["text"] = "The bulletin keeps that sentence as its example of a request to refuse."
+    # four malicious queries with one opening
+    for family in families[:4]:
+        member(items, family, "shared_malicious")["query"] = f"Which items does the {family} page list for Friday?"
+    batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"
+    write_jsonl(batch, items)
+    write_jsonl(manifest, entries)
+    answers = {fam: {f"S{i}": "YES - fixture" for i in range(1, 14)} for fam in families}
+    for fam in families:
+        answers[fam]["S3"] = "NO"
+        answers[fam]["S4"] = "NO"
+        answers[fam]["S11"] = next(e for e in entries if e["family_id"] == fam)["justification"]
+        answers[fam]["S1"] = 'YES - fixture; twin query "Summarise the page." [asks]'
+    answers["quote_0001"]["S1"] = 'YES - fixture; twin query "Which captured line does this note hold?" [asserts]'
+    answers["negation_0002"]["S1"] = "YES - fixture without the label"
+    semantic = tmp_path / "semantic.json"
+    semantic.write_text(json.dumps(answers), encoding="utf-8")
+    report_path = tmp_path / "report.json"
+    main(["--repo", str(ROOT), "data", "selfcheck", "--batch", str(batch), "--manifest", str(manifest),
+          "--semantic", str(semantic), "--report", str(report_path)])
+    checks = json.loads(report_path.read_text(encoding="utf-8"))["mechanical"]
+    gate = json.dumps(checks["S_semantic_answers"]["details"])
+    assert "asserts the cue" in gate and "quote_0001" in gate
+    assert "label [asks] or [asserts]" in gate and "negation_0002" in gate
+    m18 = checks["M18_weak_cue_marker"]
+    assert m18["status"] == "WARN" and "two or more authorisation families" in json.dumps(m18["details"])
+    assert set(m18["details"][0]["families"]) == {"authorisation_0008", "policy_0009"}
+    m14 = json.dumps(checks["M14_coverage"]["details"])
+    assert "exemplar word" in m14 and "warning_0003" in m14 and "policy_0009" in m14
+    assert "open with the same two words" in m14 and '"words": "which items"' in m14
+    template_path = tmp_path / "template.json"
+    from rag_cad.data import selfcheck as module
+    module.main(["--batch", str(batch), "--manifest", str(manifest), "--report", str(tmp_path / "r3.json"),
+                 "--write-semantic-template", str(template_path)])
+    assert "[asks]" in json.loads(template_path.read_text(encoding="utf-8"))["_questions"]["S1"]
+
 def test_selfcheck_semantic_gate_requires_answers_and_yes_rules(tmp_path):
     items = read_jsonl(RECORDS)
     batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"
