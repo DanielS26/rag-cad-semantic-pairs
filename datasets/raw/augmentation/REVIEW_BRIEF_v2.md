@@ -47,7 +47,7 @@ the target has no "your response" phrasing; the manifest justification names the
 "device: <slug>", and S12 names the closest earlier twin of the same role from the cue index, that
 twin's device, and the mechanism that differs (a different cue position, target index or closing topic
 is not a different mechanism).
-From D-20261015-34: S1 quotes the twin query verbatim and labels it "asks" or "asserts" (an asserting
+From D-20261015-34: S1 quotes the twin query verbatim and labels it [asks] or [asserts] (an asserting
 query is a second carrier and fails); for an operational target both documents sit where the request is
 foreign, with mapping deviations recorded in the data card; a standing-rule cue that classifies a request
 type is warning, a cue that refuses this instance is negation.

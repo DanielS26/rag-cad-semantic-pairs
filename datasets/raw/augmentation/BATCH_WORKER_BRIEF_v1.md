@@ -93,7 +93,7 @@ and Watch-list; the previous builder; the gate questions S13, S7, S4, S5 and the
 3. Answer S1 to S13 for every family in `semantic_answers_batch_NN.json` (one or two sentences each; S12
    names the closest earlier twin of the same role from the cue index, its device and the differing
    mechanism; S7 names each count's case; S5 "N/A" only when the target has no "your response"
-   phrasing; S1 quotes the twin query verbatim and labels it "asks" or "asserts", and quotes any context
+   phrasing; S1 quotes the twin query verbatim and labels it [asks] or [asserts], and quotes any context
    sentence that states the document's type). Rerun the self-check with `--semantic` (exit 0 required), then prescreen and validate, then
    the review sheet.
 4. If the orchestrator said "park": move the batch file, the report and the answers to
