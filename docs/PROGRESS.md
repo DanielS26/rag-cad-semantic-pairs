@@ -2144,3 +2144,79 @@ Historical audit claims are distinguished from checks executed in this session.
   directions; a new slug on an old frame; S11 against the manifest
   justification at 0.50; the three-field S12 template. One test exercises
   every signal; the batch 08 repairs follow in their own entry.
+
+## 2026-10-14 - Batch 08 Reviewed And Repaired
+
+- Batch 08 (pilot_0071 to pilot_0080: six ASB operational targets, four BIPIA
+  task-type strings) was reviewed against commit 560d547 by the independent
+  reader (Claude Opus 5: 0 accept, 4 accept with note, 6 fix, 0 contestable
+  labels; the third reader's run failed and was dropped under D-20261014-32).
+  The findings that mattered: in six of the seven non-query twins the twin's
+  own query or a context sentence carried the benign reading on its own
+  (pilot_0072's opening sentence and query, 0073's query, 0075's opening
+  sentence and query, 0076's query and closing sentence, 0077's opening
+  sentence and query, 0080's opening sentence and query); four device slugs
+  re-described an existing mechanism (0073 against 0065 at a content Jaccard
+  of 0.185, 0077 against 0047, 0079 against 0028 at a skeleton of 0.375, 0080
+  the fifth accidental-insertion provenance); "note" against "notice" split
+  the batch 4/0 and 0/4; three answers quoted superseded cue drafts. Check A
+  and S13 held for all ten families and no label was contested.
+- Applied: every must-fix (the six twins above, in the reader's wording except
+  that pilot_0072's opening sentence says "print proofs", pilot_0075's "lists"
+  and pilot_0076's closing sentence "additions to the file", because the
+  reader's "notes" and "records" are the twin-only tokens the same review
+  names); pilot_0073's cue mechanism changed, as the reader asked, from a
+  scanner classifying the text as software-addressed to a register lookup that
+  matches nothing (device: unmatched-reference; overlap with every earlier
+  analysis cue below 0.05); the three stale answers redone and S12 answered
+  for all ten families in the three-field form; should-fix 1 (pilot_0074's
+  query, now a question), 2 (an innocent malicious "note", carrying "digest",
+  in pilot_0074), 3 (slugs kept, the repeats stated in S12), 5 (through the
+  query edits: question form 5/10 on both sides, "write" off the set-wide
+  list), 7 (the data card); nice-to-have 7 (a fresh ticket number). For the
+  symmetric watch list "instruction" left pilot_0074's malicious member and
+  its twin gained an innocent "notice"; pilot_0079's query opener changed so
+  its skeleton against pilot_0028 falls to 0.222. Declined with reasons:
+  should-fix 4's malicious edit (the reader's own figure, -11.9%, breaks R5 in
+  a two-sentence family; the twin's new mechanism removes the duplication it
+  describes; the access-themed hard negative is a batch 09 plan item);
+  should-fix 6 proposes no edit (recorded in S12); nice-to-have 5 (dropping
+  the German clause breaks R5 at +16%); nice-to-have 1 to 4 and 6 recorded
+  as watch-list items. The review and the reader's answers are archived under
+  docs/archive/review_batch_08_2026-10-14/ with the outcome.
+- Checker proposals: the seven of the review's Step 4 were adopted before this
+  repair as D-20261014-33 and the batch was finalised under them; the review
+  carries no further proposal.
+- After the edits: self-check exit 0 with one WARN, the set-wide query phrase
+  list ("summarise the", "does", "page", "from", "note", "summarise this",
+  "notice", "team", "list", "draft a", "from the", "list the"; "list" joined
+  it when pilot_0074's twin query left the imperative); `data prescreen`
+  (minimum per role 1) and `data validate` pass over 80 families and 320
+  records; twin longer in 5 of 10 (3 of 6 operational, 2 of 4 task-type);
+  hard negative pilot_0073; weak cue pilot_0075. Coverage after 80 families:
+  negation 11, quotation 11, analysis, historical_description,
+  task_alignment, translation and warning 10, authorisation 8; cue positions
+  query 18, sentence_before 17, sentence_after 17, heading 14, policy 14.
+  Review sheet regenerated as Project\pilot_review_batch_08.md; cue index
+  regenerated. Full test suite 310 passed. Supply after batch 08: 16 usable
+  BIPIA task-type strings and 182 ASB rows.
+- Watch-list carried to batch 09: ten of ten malicious documents are live
+  notices, pages or posts while at least seven of ten twins are records,
+  logs, files or digests, the asymmetry behind the note/notice split (a
+  malicious record and innocent malicious "records" and "note" are wanted);
+  the machine-addressee formula ("written for an automated reader",
+  "software", "automated") in six twins and no malicious member; "does" opens
+  7 malicious queries and no twin query, "list" now leans malicious,
+  "according to" is 3 twins against 9 malicious; a two-sentence member should
+  take a query cue, because its query is the only other context; target index
+  0 in two twins; R23 on the twin side (pilot_0078's coaching note, 0079's
+  digest); the accidental-insertion provenance (five negation twins) and the
+  prior-approval device (every authorisation twin) need new mechanisms, as do
+  translation (four exercise devices) and analysis, with slugs that name the
+  mechanism; a hard negative about access or verification rather than
+  screened text; an ASB target in a translation or task_alignment role and a
+  BIPIA question in a warning or authorisation role; pilot_0077's German
+  clause echoes pilot_0047; a positional-copy cue in a document that does not
+  enumerate its contents.
+- Next: batch 09 (drafted one step ahead on its branch) and batch 10, reviewed
+  as the first pair under pipeline v2; one pull request per batch.
