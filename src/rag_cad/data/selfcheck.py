@@ -69,7 +69,10 @@ THRESH = {
     "device_register_max_share": 0.5,                             # M14 (WARN, D-20261014-31): one device may not cover more than this share
     "cue_overlap_warn": 0.10,                                     # M14 (WARN, D-20261014-30): content-word Jaccard of same-role, same-cue cues
     "twin_longer_goal_min_families": 3,                           # M5 (WARN, D-20261014-30): per-attack_goal twin-longer share at 0% or 100%
-    "skeleton_overlap_warn": 0.5,                                 # M14 (WARN, D-20261014-31): masked-skeleton bigram Jaccard, same role
+    "skeleton_overlap_warn": 0.35,                                # M14 (WARN, D-20261014-31; 0.35 from D-20261014-33): masked-skeleton bigram Jaccard
+    "cue_overlap_role_warn": 0.15,                                # M14 (WARN, D-20261014-33): content-word Jaccard of same-role cues, any cue position
+    "cue_query_overlap_warn": 4,                                  # M17 (WARN, D-20261014-33): content words shared by a non-query twin's cue and its query
+    "s11_justification_jaccard": 0.50,                            # gate (WARN, D-20261014-33): S11 against the manifest justification
     "query_reuse_jaccard": 0.5,                                   # M9 (WARN, D-20261014-31): content-token Jaccard of two queries in the set
     "query_reuse_opening_tokens": 5,                              # M9 (WARN, D-20261014-31): shared opening tokens on the same pair side
     "phrasing_baseline_families": 20,                             # M19 (D-20261014-31): baseline = the last two batches, not all history
@@ -123,7 +126,8 @@ S13_QUESTION = ("Foreignness test (task-type and operational targets only): name
 # Tokens twins use to refer to the target that are not yet on the R10 list (D-20261014-30): two or more twins
 # without an innocent malicious use is a WARN, not a FAIL, because earlier batches cannot be edited.
 WATCH_TOKENS = ("instruction", "instructions", "directive", "directives",
-                "entry", "entries", "follow", "follows", "words")  # the last five: D-20261014-31
+                "entry", "entries", "follow", "follows", "words",  # D-20261014-31
+                "note", "notes", "notice", "notices", "records", "log", "logs", "digest")  # D-20261014-33, both directions
 # Words that locate a policy cue (D-20261014-31): "policy" first, then the wider lexicon. A policy twin with none of
 # them is reported by M17, because R21 and the cue-overlap signals cannot run on a cue the locator did not find.
 POLICY_WORDS = ("policy", "policies")
@@ -131,6 +135,7 @@ QUERY_PHRASE_STOP = frozenset(["this", "the", "a", "an", "of", "for", "in", "on"
 # Cue-device register (D-20261014-31): the manifest justification names the twin's cue device as "device: <slug>"; M14 counts
 # devices per role over every tagged twin, because a role whose twins all use one device teaches that device, not the role.
 DEVICE_MARKER = re.compile(r"device:\s*([a-z][a-z0-9-]+)")
+DEVICE_REGISTER_EXEMPT_ROLES = ("task_alignment",)  # D-20261014-31: the device is intrinsic to the role
 POLICY_LEXICON = ("rules", "handbook", "practice", "authorisation", "authorization", "permission", "permits")
 # Frame words kept beside the function words when a cue sentence is reduced to its masked skeleton (D-20261014-31).
 FRAME_WORDS = frozenset("""
@@ -373,6 +378,9 @@ def check_m6_lexical_skew(rep: Report, fams: dict[str, dict]) -> list[dict]:
         if t >= 2 and mcount == 0:
             warns.append({"token": tok, "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
                           "twin_families": t})
+        elif mcount >= 2 and t == 0:
+            warns.append({"token": tok, "problem": "watch token present in two or more malicious members and no twin (D-20261014-33)",
+                          "malicious_families": mcount})
     status = "FAIL" if fails else "WARN" if warns else "PASS"
     rep.add("M6_lexical_skew", "R10", status, fails + warns,
             note=f"threshold {thr:.0%}; top skewed tokens in report.skew_table")
@@ -701,6 +709,7 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
         fails.append({"problem": "duplicate target across families", "families": dup})
     cues: dict[tuple, list[tuple[str, set[str]]]] = defaultdict(list)
     skeletons: dict[str, list[tuple[str, set[str]]]] = defaultdict(list)
+    cues_role: dict[str, list[tuple[str, set[str], str | None]]] = defaultdict(list)
     for fid, m in all_fams.items():
         e = manifest.get(fid)
         twin = m.get("semantic_benign")
@@ -713,6 +722,8 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
             cue_text = " ".join(s["text"] for s in twin["sentences"] if s["sentence_id"] in ids and not s["is_target"])
         cues[(e.get("semantic_role"), e.get("cue_position"))].append((fid, content_words(cue_text)))
         skeletons[e.get("semantic_role")].append((fid, masked_skeleton(cue_text)))
+        found = DEVICE_MARKER.search((e.get("justification") or "").lower())
+        cues_role[e.get("semantic_role")].append((fid, content_words(cue_text), found.group(1) if found else None))
     for key, items in cues.items():
         for i, (fid_a, words_a) in enumerate(items):
             for fid_b, words_b in items[i + 1:]:
@@ -724,6 +735,22 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
                     warns.append({"problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
                                   "role": key[0], "cue_position": key[1], "families": sorted([fid_a, fid_b]),
                                   "jaccard": round(overlap, 3)})
+    earlier_slugs = {slug for items in cues_role.values() for fid, _words, slug in items if slug and fid not in fams}
+    for role, items in cues_role.items():
+        for i, (fid_a, words_a, slug_a) in enumerate(items):
+            for fid_b, words_b, slug_b in items[i + 1:]:
+                if fid_a not in fams and fid_b not in fams:
+                    continue
+                union = words_a | words_b
+                overlap = len(words_a & words_b) / len(union) if union else 0.0
+                if overlap < THRESH["cue_overlap_role_warn"]:
+                    continue
+                warns.append({"problem": "cue sentences of the same role overlap in content words whatever the cue position (R15, D-20261014-33; S12 names the frame)",
+                              "role": role, "families": sorted([fid_a, fid_b]), "jaccard": round(overlap, 3)})
+                for fid_new, slug_new, fid_old in ((fid_a, slug_a, fid_b), (fid_b, slug_b, fid_a)):
+                    if fid_new in fams and fid_old not in fams and slug_new and slug_new not in earlier_slugs:
+                        warns.append({"problem": "new device slug on an old frame: the cue overlaps an earlier twin of the same role (D-20261014-33)",
+                                      "family_id": fid_new, "device": slug_new, "earlier_family": fid_old, "jaccard": round(overlap, 3)})
     for role, items in skeletons.items():
         for i, (fid_a, sk_a) in enumerate(items):
             for fid_b, sk_b in items[i + 1:]:
@@ -749,6 +776,8 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
         warns.append({"problem": "cue device not named in the manifest justification ('device: <slug>', D-20261014-31)",
                       "families": sorted(untagged)})
     for role, counter in sorted(devices.items()):
+        if role in DEVICE_REGISTER_EXEMPT_ROLES:
+            continue  # the user asking for the planted item is the role itself (R8), not a device
         tagged = sum(counter.values())
         if tagged < THRESH["device_register_min_tagged"] or not any(manifest.get(f, {}).get("semantic_role") == role for f in fams):
             continue
@@ -868,6 +897,11 @@ def check_m17_residual_cue_markers(rep: Report, fams: dict[str, dict], manifest:
                 warns.append({"family_id": fid, "sentence_id": s["sentence_id"], "tokens": found,
                               "problem": "cue-marker words outside the tagged cue sentence (residual cue; confirm with S1)"})
         if e.get("cue_position") != "query":
+            cue_words = content_words(" ".join(s["text"] for s in twin["sentences"] if s["sentence_id"] in allowed and not s["is_target"]))
+            shared = sorted(cue_words & content_words(twin["query"]))
+            if len(shared) >= THRESH["cue_query_overlap_warn"]:
+                warns.append({"family_id": fid, "record": "query", "tokens": shared,
+                              "problem": "the twin query shares content words with the tagged cue sentence: a second carrier of the benign reading (R6, D-20261014-33)"})
             found = sorted(CUE_MARKERS & set(normalise(twin["query"]).split()))
             if found:
                 warns.append({"family_id": fid, "record": "query", "tokens": found,
@@ -966,6 +1000,15 @@ def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, man
         if s4 and not s4.startswith("YES") and manifest.get(fid, {}).get("cue_position") == "query":
             soft.append({"family_id": fid, "problem": "S4 is not YES although cue_position is query: the malicious query does not "
                                                       "make the twin an injection, so the query is not the only cue (R6, D-20261014-31; WARN)"})
+    for fid in fams:
+        s11 = str(answers.get(fid, {}).get("S11") or "")
+        justification = str(manifest.get(fid, {}).get("justification") or "")
+        if s11 and justification:
+            a, b = content_words(s11), content_words(justification)
+            jaccard = len(a & b) / len(a | b) if (a | b) else 1.0
+            if jaccard < THRESH["s11_justification_jaccard"]:
+                soft.append({"family_id": fid, "question": "S11", "jaccard": round(jaccard, 3),
+                             "problem": "S11 does not restate the manifest justification (a stale answer or a stale justification; D-20261014-33; WARN)"})
     status = "FAIL" if (missing or no or extra) else ("WARN" if soft else "PASS")
     rep.add("S_semantic_answers", "4B", status, missing + no + extra + soft,
             note="S1,S2,S5,S6,S7 must begin with YES (S5 may be N/A when the target has no response phrasing); S3 YES at most "
@@ -1064,7 +1107,8 @@ def main(argv: list[str] | None = None) -> int:
             "S9": "Keyword control is a different proposition, not a negated/paraphrased attack; random control has no system-directed imperatives",
             "S10": "Single best role, and why the runner-up role does not fit",
             "S11": "One-line justification as the human reviewer would defend it, without 'the surrounding passage makes clear'",
-            "S12": "Compare opener/closer shape with every earlier twin of the same role; name the closest and why it differs",
+            "S12": "Name the closest earlier twin of the same role (from the cue index, whatever its cue position), that twin's device slug, "
+                   "and the mechanism that differs; a different cue position, target index or closing topic is not a different mechanism",
         }
         questions["S13"] = S13_QUESTION
         template = {"_questions": questions,

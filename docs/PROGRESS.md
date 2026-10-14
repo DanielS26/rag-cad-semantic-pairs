@@ -2114,3 +2114,33 @@ Historical audit claims are distinguished from checks executed in this session.
   role and a BIPIA question in a warning or authorisation role from batch 09.
 - Next: batch 08 (drafted one step ahead; rebuilt on its own branch with the
   device markers), the two readers, one pull request per batch.
+
+## 2026-10-14 - Loop Pipeline v2 (D-20261014-32) And Checker Signals From The Batch 08 Review (D-20261014-33)
+
+- Cost of the loop measured on batches 06 to 08: each independent reader
+  340k to 370k tokens and 45 to 50 minutes; the orchestrating session about
+  thirty turns per batch at 150k to 200k tokens of context, the dominant
+  cost. The third reader's findings since batch 06 were a subset of the
+  second reader's except for two checker proposals and a few wording
+  alternatives, and its batch 08 run failed on the shared model quota.
+- Decided with Daniel Song (D-20261014-32): one independent reader (Claude
+  Opus 5) reviewing batches in pairs where the drafting runs ahead; a
+  generated cue index (tools/cue_index.py, committed as
+  review/cue_index.md) in place of full-history reading; REVIEW_BRIEF_v2.md
+  with one self-check run, short answers and no patched copies; each batch
+  drafted and finalised by a fresh worker agent under
+  BATCH_WORKER_BRIEF_v1.md while the orchestrating session spawns, reads
+  short reports and records decisions; the mechanical cross-batch checks
+  unchanged; the session compacted after each pair of batches. Expected
+  cost about 200k to 250k tokens per batch from about 1.1 million.
+- The batch 08 review (one reader; the third reader's run failed) found the
+  batch 07 failure class carried by the twin's own query in six of ten
+  twins, four device slugs re-describing existing mechanisms, "note"
+  against "notice" as a near-perfect split and three stale answers. Its
+  checker proposals are adopted as WARNs and template text (D-20261014-33):
+  same-role cue overlap at 0.15 whatever the cue position; a cue-to-query
+  overlap of four content words for non-query twins; the skeleton threshold
+  at 0.35; document-type nouns on the watch list, checked in both
+  directions; a new slug on an old frame; S11 against the manifest
+  justification at 0.50; the three-field S12 template. One test exercises
+  every signal; the batch 08 repairs follow in their own entry.
