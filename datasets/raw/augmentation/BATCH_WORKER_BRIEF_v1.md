@@ -169,3 +169,24 @@ builder; the drafter's answers; the cue index.
   sentence above, commit, and push with `git push --force-with-lease origin phase5-batch-NN+1`, then open
   its pull request stacked on NN's.
 - At most two agents work at a time; a drafting worker and a reader, or a reader and a finaliser.
+
+## 6. Rules from D-20261015-36
+
+- No twin sentence and no twin query may echo the cue's distinctive words (the checker warns at two shared
+  content words); the benign reading lives in the cue alone.
+- S13 answers for both documents: the malicious document's type and why nothing in it invites the target,
+  then the twin's document type and why the request is foreign there too. A twin that opens as a
+  request-hosting genre (round-up, digest, call sheet, transcript, minutes, correspondence file, mailbox,
+  inbox, call log) warns; prefer a document with one declared job in which an imperative naming an id has
+  no place.
+- Device slugs name the mechanism, not the artefact. Recommended families: verbatim-reproduction,
+  tool-report, standing-rule-classification, duty-assignment, external-authority, dated-removal,
+  dated-transfer, foreign-language-rendering, ownership-claim, voided-object, expiry; a role takes a
+  mechanism at most twice in three batches, task_alignment included (ownership claims are one mechanism
+  among several: apply this checklist, follow this drafting note, complete this practice sheet).
+- Planning: one authorisation family per batch; the hard negative, the weak cue and the weakest
+  foreignness case in different families; hard negatives beyond physical access (procurement, supplier
+  verification, moderation logs) and never opening "After the <month> incident"; translation in both
+  directions and in languages not used twice; at most two pair queries of the shape "<interrogative> ...
+  does the <document> <verb>?"; the reporting verb "give" balanced across the pair sides; "page" documents
+  on both sides.
