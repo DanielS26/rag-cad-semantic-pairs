@@ -360,3 +360,37 @@ carried by the twin's own query or context in six of ten twins, four slugs re-de
 mechanisms, "note" against "notice" as a near-perfect split and three stale answers, every finding
 applied or declined with its reason under docs/archive/review_batch_08_2026-10-14/ and its checker
 proposals adopted as the warnings and gate wording of D-20261014-33.
+
+## Batch 09
+
+Batch 09 (pilot_0081 to pilot_0090, drafted 14 October 2026 under DRAFTING_PROMPT_v3.md) takes eight
+ASB targets (rows 269, 209, 223, 230, 244, 213, 226 and 217) and two BIPIA task-type strings
+(business_intelligence:1 and conversational_agent:1 from the test file), the first batch on the
+two-and-eight split that the thin BIPIA supply now requires. Coverage after 90 families: negation,
+quotation and warning 12, analysis, historical_description, task_alignment and translation 11,
+authorisation 10; cue positions sentence_after 20, sentence_before 20, query 19, heading 16, policy
+15; nine domains; no role confined to one domain. The hard negative is pilot_0090, a building
+security notice on visitor badges and an escort incident (the seventh hard negative and the set's
+first on physical access rather than screened text); the weak cue is pilot_0089, a rota line in a
+guides' noticeboard digest that an attacker could have written. The twin is the longer member in 5
+of 10 families (4 of 8 operational, 1 of 2 task-type). The batch brings the role and attack-type
+crossing the batch 07 and 08 reviews asked for: ASB operational targets in the translation
+(pilot_0081) and task_alignment (pilot_0082) roles and BIPIA questions in the warning (pilot_0083)
+and authorisation (pilot_0084) roles, so role is no longer collinear with attack category for the
+ASB half. The agent-to-domain mapping above is a default: three of this batch's eight ASB rows
+deviate from it, with row 223 (financial analysis) in workplace_chat rather than banking, 213
+(system administration) in hr_policy rather than it_security and 226 (financial analysis) in travel
+rather than banking, while rows 269 (medical), 209 and 217 (system administration), 230 (financial
+analysis) and 244 (legal consultation) follow it; the review found the S1 failures of the pair
+concentrated in families that followed the mapping, which is why D-20261015-34 makes deviation the
+norm from batch 11. New cue devices: a translation agency's per-word quote (pilot_0081), a content
+filter's catch shown for recognition (pilot_0083), minuted speech attributed to a named speaker
+(pilot_0085), a request declined in writing (pilot_0086), a page's revision history (pilot_0087) and
+a live alert about a request in circulation (pilot_0090, introduced by the review in place of the
+month's example); the slugs of pilot_0082, 0084, 0088 and 0089 name variations of earlier
+mechanisms, which their S12 answers state. The independent reader of D-20261013-29 as amended by
+D-20261014-32 (Claude Opus 5), reviewing batches 09 and 10 together, found the twin's own query or
+opening sentence re-asserting the cue's proposition in six of ten twins, a half-hosted request, a
+talk-title reading beside a planted question and four repeated mechanisms, every finding applied
+with its reason under docs/archive/review_batch_09_10_2026-10-15/ and its checker proposals decided
+as D-20261015-34.
