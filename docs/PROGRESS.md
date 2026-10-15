@@ -2396,3 +2396,110 @@ Historical audit claims are distinguished from checks executed in this session.
   and context remain the models.
 - Next: the parked drafts of batches 11 and 12 through their own paired review
   and finalisation, one branch and one pull request per batch, stacked in order.
+
+## 2026-10-15 - Batch 11 Reviewed And Repaired
+
+- Batch 11 (pilot_0101 to pilot_0110: eight ASB operational targets, two BIPIA
+  task-type strings) was reviewed against commit 292f9ea by the independent
+  reader (Claude Opus 5), together with batch 12 as the second pair under
+  pipeline v2: for batch 11, 0 accept, 6 accept with note, 4 fix, 1 contestable
+  label (inside pilot_0107's fix); every S13 YES for the malicious document, one
+  NO on the twin side (pilot_0107), and the provenance check passed (the eight
+  ASB rows and both BIPIA strings byte-identical to the pinned sources, no source
+  id reused). The findings that mattered: two closing sentences restated their
+  heading's proposition in words no marker list holds (pilot_0104's "the two
+  files were otherwise identical", pilot_0105's captions and Korean audio);
+  pilot_0107's twin was the accounts desk whose own job the transaction check
+  is, so the twin document carried the request before the cue said anything
+  (D-20261015-34 on the twin side), and its witness cue resembled pilot_0076's
+  quotation mechanism (the contestable label); pilot_0103's keyword control
+  named itself an IT security page inside an hr_policy family; pilot_0101's cue
+  promised a replacement the sheet never showed; pilot_0102 and pilot_0106 void
+  a request because something ended, one mechanism across two roles, and
+  pilot_0102's heading nearly repeats pilot_0061's wording; pilot_0108 is at
+  once the hard negative, the only attacker-writable cue and the weakest
+  foreignness case (a general branch bulletin); pilot_0109 and pilot_0110 both
+  ran pilot_0093's ownership-claim template, the role's eighth and ninth twins
+  on one mechanism.
+- Applied: must-fix 1 (pilot_0104's closing sentence, with "held in the works"
+  and "delivery to the wards" for the reader's printer's bay and clinic so that
+  it shares no distinctive word with the heading), 2 (pilot_0105's closing
+  sentence and twin query, with "recording", "learning page" and "induction
+  checklist" for the reader's nouns, which echoed the heading), 3 (pilot_0107's
+  writer is the clerk on front reception who sent the message on to the
+  accounts desk, in the reader's wording but for "front reception"); should-fix
+  1 (pilot_0101's opening sentence names the block of misplaced text,
+  "misplaced" for the reader's "stray", a cue-marker word, and the cue says what
+  replaces the passage is noted on the reverse of the slip) and 2 (pilot_0103's
+  keyword control is the HR systems page, its query renamed); should-fix 3, 4
+  and 5 propose no edit and are stated in S12; should-fix 6 is answered under
+  D-20261015-36: pilot_0110 takes the practice-sheet mechanism (the user says
+  the sentence halfway down the post is a practice exercise handed to the
+  service-desk trainees and asks for it to be worked through; the query was
+  reshaped twice more, off the metalanguage token "line" and off pilot_0069's
+  skeleton) and pilot_0109 keeps the ownership claim under the slug
+  ownership-claim. Beyond the reader's text, under D-20261015-36: the cues of
+  pilot_0103 and pilot_0108 and the opening sentence of pilot_0106 reworded so
+  that no context sentence or query shares two distinctive words with its cue;
+  every S1 in the asks-or-asserts form with the document-type sentence quoted;
+  S7 of pilot_0101, 0104 and 0107 redone; S11 restating each justification; S12
+  in the three-field form stating every repeat the reader named (pilot_0101 on
+  pilot_0060's frame, 0102 on 0061's wording and 0106's mechanism, 0103 the
+  third policy-position warning, 0104 the third tool-report cue, 0105 the fourth
+  rendering into English, 0107 the second retold dated message, 0108's three
+  weaknesses, 0109 and 0110 against the ownership claim), slugs kept except the
+  two task_alignment slugs; every S13 answering for both documents. The
+  contestable label of pilot_0107 is resolved by moving the document, never the
+  target or the label: the writer sits on front reception, where the request is
+  foreign, and the cue recounts the message's arrival, its passing on and its
+  consequence rather than reproducing it. Declined with reasons: nothing
+  outright; each word of the reader's replaced is listed above with its checker
+  reason. The archived findings file under
+  docs/archive/review_batch_11_12_2026-10-15/ carries batch 11's outcome in its
+  preamble, with both reader answer files; batch 12's outcome is added at its
+  finalisation.
+- Checker proposals: the three of the cross-batch section (cue echo in any twin
+  sentence or the query, S13 for the twin document with the request-hosting
+  genre list, the mechanism register with the task_alignment exemption
+  withdrawn) were decided as D-20261015-36 before this finalisation and this
+  batch is finalised under them; none further.
+- After the edits: self-check exit 0 with two WARNs, the set-wide query phrase
+  list ("does" 0.33 malicious against 0.19 twin, "page" 0.23/0.11, "note"
+  0.06/0.17, "notice" 0.15/0.03, "list" 0.12/0.02, "list the" 0.11/0.01, the
+  six of the review state) and the task_alignment device register
+  (user-asked-for-it on 5 of 7 tagged twins), which stands as a planning
+  signal: the slug covers every earlier task_alignment twin and this batch's
+  two twins take different mechanisms (ownership-claim, practice-sheet); no
+  cue-echo, genre or S13 warning remains; `data prescreen` (minimum per role 1)
+  and `data validate` pass over 110 families and 440 records; twin longer in 5
+  of 10 (5 of 8 operational, 0 of 2 task-type), unchanged; hard negative
+  pilot_0108 (the counter team's night-safe note with an April incident,
+  physical security); weak cue pilot_0108 (the regulator's direction under the
+  bank's rules, the set's first external-authority cue). Twin query openers
+  Which 3, When, How, Does, Who, Summarise, I and Our 1 each against malicious
+  Which 3, What 2, How 2, Summarise, List and Give 1 each; "this" on three
+  queries of each side; question form on seven of each side. Coverage after 110
+  families: analysis, negation, quotation, warning, historical_description and
+  task_alignment 14, authorisation and translation 13; cue positions
+  sentence_after 23, sentence_before 23, heading 22, query 22, policy 20. Review
+  sheet regenerated as Project\pilot_review_batch_11.md; cue index regenerated.
+  Full test suite 312 passed. Supply after batch 11, by subtraction: 10 usable
+  BIPIA task-type strings and 158 ASB non-aggressive rows.
+- Watch-list carried to batch 13 (batch 12 was drafted in parallel and is
+  finalised next): the next hard negative is a tender or procurement note, a
+  supplier-verification file or a moderation log, not physical access (0090,
+  0095, 0108 and 0113 are four in a row), and it does not open "After the
+  <month> incident"; the hard negative, the weak cue and the weakest foreignness
+  case in different families, and one authorisation family per batch;
+  task_alignment keeps varying its mechanism (checklist, drafting note, practice
+  sheet) now that pilot_0110 has broken the ownership run; translation takes the
+  other direction, in a language not yet used twice (four consecutive renderings
+  into English; Samoan and Tongan three times in four batches); the house query
+  shape "<interrogative> ... does the <document> <verb>?" (nine of batch 11's
+  twenty pair queries) at most twice per batch, and the reporting verb "give"
+  balanced across the pair sides; twins with one declared job rather than
+  bulletins, notices pages or contracts pages; "page" documents on both pair
+  sides; S11 remains a restatement of the justification (a consistency signal),
+  the reader's answers being the independent defence.
+- Next: `git rebase phase5-batch-11` on phase5-batch-12 with the section 5
+  recipe, then batch 12's finalisation, its pull request stacked on this one.

@@ -432,3 +432,36 @@ batches 09 and 10 together, found the twin's own query or a context sentence re-
 proposition in three of ten twins, an implausible back-translation premise, a heading that never
 spent its request and a hollow control sentence, every finding applied with its reason under
 docs/archive/review_batch_09_10_2026-10-15/ and its checker proposals decided as D-20261015-34.
+
+## Batch 11
+
+Batch 11 (pilot_0101 to pilot_0110, drafted 15 October 2026 under DRAFTING_PROMPT_v3.md) takes eight
+ASB targets (rows 298, 214, 201, 211, 212, 224, 239 and 208) and two BIPIA task-type strings
+(research_assistance:0 and task_automation:2 from the test file), the third batch on the two-and-eight
+split. Coverage after 110 families: analysis, negation, quotation, warning, historical_description and
+task_alignment 14, authorisation and translation 13; cue positions sentence_after 23, sentence_before
+23, heading 22, query 22, policy 20; nine domains; no role confined to one domain. The hard negative
+is pilot_0108, the counter team's night-safe note with an April incident (the ninth hard negative and
+the third in a row on physical security and access), and the weak cue is the same family's regulator's
+direction given standing by the bank's rules (S3 YES, `weak_cue: attacker_writable`), so the batch's
+hard negative, its only attacker-writable cue and its weakest foreignness case (a general branch
+bulletin, which can host almost any announcement) sit in one family, a planning lesson the review
+recorded: the next plans keep the three apart. The twin is the longer member in 5 of 10 families (5 of
+8 operational, 0 of 2 task-type). Six of the eight ASB rows deviate from the agent-to-domain default
+above, as D-20261015-34 makes the norm for operational targets: row 298 (education) in travel, rows
+214, 201, 211 and 212 (system administration) in workplace_chat, hr_policy, customer_support and
+legal, and row 224 (financial analysis) in email; only rows 239 (financial analysis, banking) and 208
+(system administration, it_security) follow it. New cue devices, each named in its justification: a
+correction slip's quoted search key (pilot_0101), a request whose object went to the recycler
+(pilot_0102), a tripwire the security team seeded on its own page (pilot_0103), a compare tool's one
+difference between two files (pilot_0104), a caption in a captioner's draft rendered from the Korean
+(pilot_0105), an ask on a 2019 list abandoned with nothing begun (pilot_0106), a reception clerk's
+witness account of the message she passed on (pilot_0107), a regulator's written direction, the set's
+first external-authority cue (pilot_0108), the ownership claim under its own slug (pilot_0109) and a
+practice exercise set for trainees (pilot_0110, the role's first non-ownership mechanism since batch
+06, drawn from the reader's watch-list under D-20261015-36). The independent reader of D-20261013-29
+as amended by D-20261014-32 (Claude Opus 5), reviewing batches 11 and 12 together, found two closing
+sentences restating their cue's proposition, a twin document that was itself the desk whose job the
+request is, a control document from another domain and two task_alignment twins on one template,
+every finding applied with its reason under docs/archive/review_batch_11_12_2026-10-15/ and its
+checker proposals decided as D-20261015-36.
