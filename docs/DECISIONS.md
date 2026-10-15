@@ -681,3 +681,18 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song's request of 2026-10-15 for the comparison; the allocation follows the figures and stands unless he says otherwise.
 - Related files, commands, results, correspondence, or commit: [self-check module](../src/rag_cad/data/selfcheck.py), [tests](../tests/test_selfcheck_cli.py); D-20261015-39; D-20261015-40; D-20261015-41.
 - Supersedes / superseded by: Closes the trial of D-20261015-39 and D-20261015-40; nothing superseded.
+
+## D-20261016-43 - Fable-light allocation for batches 17 to 20 (amends D-20261016-42)
+
+- Status: Confirmed
+- Date: 2026-10-16
+- Project phase: Phase 5 onward
+- Category: Process
+- Decision or important note: Batches 17 to 20 are drafted by one worker per batch on Claude Opus 5, one batch after the other, read per pair by Claude Fable 5.1 and finalised on Claude Opus 5; the controls step of D-20261015-40 stays dropped. This replaces the Fable-drafting allocation of D-20261016-42 (b) because the binding constraint is the weekly Fable allowance: measured per batch, the draft is 318k Fable tokens and the review about 200k, so drafting on Opus leaves only the review on Fable (about 0.8M for the four batches against about 1.3M plus the session's own turns). The cut-off Fable draft of batch 17 was discarded unused.
+- Context and reason: Daniel Song reported 48 per cent of the week's Fable allowance left on 2026-10-16 and chose the Fable-light option after the comparison of D-20261016-42.
+- Evidence: the usage figures in D-20261016-42; Daniel's message of 2026-10-16.
+- Alternatives considered: Fable drafting with Opus reading and finalising (fits the allowance with a smaller margin; chosen against for the margin); Opus reading as well (declined: the reader must be a different model from the drafter).
+- Consequences for implementation/evaluation/report: the data card names Claude Opus 5 as the drafting model for batches 17 to 20; the mechanism-novelty weakness seen in the trial is addressed by sequential drafting and the S12 window warning, and the Fable reader is told to count new mechanisms.
+- Approved by: Daniel Song, 2026-10-16 ("ok continue with the fable light option").
+- Related files, commands, results, correspondence, or commit: D-20261016-42; D-20261015-39.
+- Supersedes / superseded by: Amends D-20261016-42 (b); nothing else superseded.
