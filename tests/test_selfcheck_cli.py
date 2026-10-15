@@ -461,7 +461,6 @@ def test_selfcheck_d41_mechanism_register_counts_genera_per_role(tmp_path):
     twins of a role on one genus warn as a planning signal."""
     items = read_jsonl(RECORDS)
     entries = read_jsonl(MANIFEST)
-    families = sorted({r["family_id"] for r in items if r["family_id"]})
     for family, genus in (("quote_0001", "exercise-prompt"), ("negation_0002", "exercise-prompt"), ("warning_0003", "exercise-prompt")):
         e = next(x for x in entries if x["family_id"] == family)
         e["semantic_role"], e["cue_position"] = "task_alignment", "query"
