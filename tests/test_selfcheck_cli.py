@@ -479,6 +479,15 @@ def test_selfcheck_d41_mechanism_register_counts_genera_per_role(tmp_path):
     assert "share one mechanism genus" in m14 and "exercise-prompt" in m14
     assert "three or more tagged twins" in m14
 
+def test_s12_window_requires_a_family_from_before_the_previous_batch():
+    """D-20261016-42: pilot_0158 (batch 16) naming only batch 15 and 16 families fails the window; naming pilot_0117 passes."""
+    from rag_cad.data.selfcheck import s12_window_ok
+
+    assert not s12_window_ok("pilot_0158", "closest earlier twin pilot_0147 (expiry) and pilot_0152")
+    assert s12_window_ok("pilot_0158", "closest earlier twin pilot_0117 (lapsed-request); pilot_0147 shares the genus")
+    assert s12_window_ok("pilot_0158", "no earlier twin of this role carries a two-sentence cue")
+    assert s12_window_ok("quote_0001", "pilot_0147")
+
 def test_selfcheck_semantic_gate_requires_answers_and_yes_rules(tmp_path):
     items = read_jsonl(RECORDS)
     batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"

@@ -1046,6 +1046,21 @@ def check_m19_batch_confound(rep: Report, fams: dict[str, dict], previous: list[
                  "not a defect of any family")
 
 
+FAMILY_NUMBER = re.compile(r"pilot_(\d{4})")
+
+
+def s12_window_ok(fid: str, s12: str) -> bool:
+    """D-20261016-42: an S12 answer that names earlier families must name at least one from before the previous batch
+    (ten families per batch), so the comparison window does not collapse to the batch just drafted. Non-pilot ids and
+    answers naming no family pass."""
+    own = FAMILY_NUMBER.fullmatch(fid)
+    named = FAMILY_NUMBER.findall(s12)
+    if not own or not named:
+        return True
+    this_batch = (int(own.group(1)) - 1) // 10 + 1
+    return any((int(n) - 1) // 10 + 1 < this_batch - 1 for n in named)
+
+
 def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, manifest: dict[str, dict] | None = None) -> dict:
     manifest = manifest or {}
     template = {fid: {sid: None for sid in SEMANTIC_IDS} for fid in fams}
@@ -1098,6 +1113,11 @@ def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, man
         s13 = str(answers.get(fid, {}).get("S13") or "")
         if s13 and m["shared_malicious"].get("attack_goal") in S13_GOALS and "twin" not in s13.lower():
             soft.append({"family_id": fid, "question": "S13", "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"})
+    for fid in fams:
+        s12 = str(answers.get(fid, {}).get("S12") or "")
+        if s12 and not s12_window_ok(fid, s12):
+            soft.append({"family_id": fid, "question": "S12", "problem": "S12 compares only with this batch or the previous one; name the closest "
+                                                       "earlier twin of the role from the whole cue index (D-20261016-42; WARN)"})
     for fid in fams:
         s1 = str(answers.get(fid, {}).get("S1") or "").lower()
         if not s1 or manifest.get(fid, {}).get("cue_position") == "query":
