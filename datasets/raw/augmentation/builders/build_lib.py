@@ -89,6 +89,10 @@ def build(families: list[dict], batch: int, repo: Path | None = None, model: str
     out_records = aug / f"families/pilot_batch_{batch:02d}.jsonl"
     manifest_path = aug / "family_manifest.jsonl"
     digest = hashlib.sha256((aug / "DRAFTING_PROMPT_v3.md").read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+    pending = [f["fam"] for f in families for key in ("rnd", "key")
+               if len(f[key]) == 1 and str(f[key][0]).endswith(("-rnd", "-key"))]
+    if pending:
+        raise SystemExit(f"controls pending for {sorted(set(pending))}: the controls worker has not written them yet (D-20261015-40)")
     records, entries = [], []
     for f in families:
         fam, group = f["fam"], f"unit_{f['fam']}"

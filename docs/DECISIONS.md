@@ -637,6 +637,21 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Related files, commands, results, correspondence, or commit: [builder library](../datasets/raw/augmentation/builders/build_lib.py), [self-check module](../src/rag_cad/data/selfcheck.py); D-20261014-32; D-20261015-37; D-20261015-38.
 - Supersedes / superseded by: Amends the model allocation of D-20261014-32 for batches 15 and 16; nothing else superseded.
 
+## D-20261015-40 - Controls drafted by a cheaper model from a specification, trialled from batch 15 with the model swap
+
+- Status: Confirmed
+- Date: 2026-10-15
+- Project phase: Phase 5 onward
+- Category: Process
+- Decision or important note: From batch 15 the two control documents of each family (the random control and the keyword control, about forty per cent of a batch's text) are written by a controls worker running Claude Sonnet 5 from a one-line specification per family that the drafting worker leaves (domain, sentence count, the twin's length, the pair queries, the target's content words, the two topics, the words the keyword control must reuse, the topics to avoid), under CONTROLS_WORKER_BRIEF_v1.md; the drafting worker (Claude Opus 5 in the trial of D-20261015-39) writes the pair members, the justification and the specification, returns after the controls to write the answers and commit, and the independent reader (Claude Fable 5.1 in the trial) reviews the whole family as before. The builder refuses to build while control placeholders remain, so no record can be produced without controls. The controls carry none of the cue logic and are checked mechanically (length band and spread, domain, control vocabulary, query reuse and near reuse) and by the reader's Check C, which is why the cheaper model is admitted for them and for nothing else. The trial runs together with the model swap, so the comparison with batches 13 and 14 attributes cost by step: part 1 and part 2 of drafting (Opus), the controls (Sonnet), the review (Fable), the finalisation (Opus).
+- Context and reason: Daniel Song asked on 2026-10-15 what consumes the drafting tokens, learned that the reasoning behind two hundred constrained pieces of text dominates them, and approved trying a cheaper model for the controls together with the model swap from batch 15 ("yes give the cheaper model for drafting a try like you mentioned above, plus the opus model for drafting and fable for checking changes. Give these a try from batch 15").
+- Evidence: the batch 15 and 16 worker and reader reports, when written; the batch 13 and 14 figures as the baseline.
+- Alternatives considered: a cheaper model for the pair members too (declined: the cue logic is the judgement the dataset exists to test); keeping one drafting worker and accepting the cost (the baseline); Claude Haiku 4.5 for the controls (not chosen for the trial; Sonnet 5 first, Haiku as a later step if the controls prove trivial).
+- Consequences for implementation/evaluation/report: BATCH_WORKER_BRIEF_v2.md gains section 7 and build_lib.py the placeholder check; the data card's per-batch paragraph names the models that drafted the pairs and the controls; the report compares the three allocations tried (Fable drafts and Opus reads; Opus drafts and Fable reads; controls by Sonnet) on cost and on the reader's findings.
+- Approved by: Daniel Song, 2026-10-15.
+- Related files, commands, results, correspondence, or commit: [controls worker brief](../datasets/raw/augmentation/CONTROLS_WORKER_BRIEF_v1.md), [worker brief v2](../datasets/raw/augmentation/BATCH_WORKER_BRIEF_v2.md), [builder library](../datasets/raw/augmentation/builders/build_lib.py); D-20261015-37; D-20261015-39.
+- Supersedes / superseded by: Extends D-20261015-39's trial; nothing superseded.
+
 ## D-20261015-41 - The mechanism register, after the batch 13 and 14 pair review
 
 - Status: Confirmed

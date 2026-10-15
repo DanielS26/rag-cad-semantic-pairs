@@ -132,3 +132,21 @@ twin) so that one repair pass suffices.
    request on NN's. Remove the reader's worktree if the orchestrator named one.
 7. Report: per batch the applied and declined items with reasons, how any contestable label was resolved, the exit
    codes, the twin-longer share, the commit hashes and pull request URLs, anything unresolved.
+
+## 7. Phase A in two parts with a controls worker (D-20261015-40, from batch 15)
+
+When the orchestrator says so, the drafting worker writes the pair members and a controls specification, a
+separate controls worker (a cheaper model, under CONTROLS_WORKER_BRIEF_v1.md) writes the two controls of each
+family, and the drafting worker returns for the answers and the commit.
+
+- Part 1 (drafting worker): steps 1 and 2 of section 4, with every family's `rnd=` and `key=` written as the
+  placeholders `rnd=("pilot_NNNN-rnd",)` and `key=("pilot_NNNN-key",)`. Do not run the pipeline (the builder
+  refuses to build with placeholders). Write `<scratch>/batchNN/controls_spec_NN.json`: a list with one object per
+  family: `family`, `domain`, `sentence_count`, `twin_chars`, `pair_queries` (both), `target_content_words`
+  (the target's content words), `random` {`topic`, `query_hint`}, `keyword` {`topic`, `reuse_words` (two or more of
+  the target's content words), `query_hint`}, `avoid_topics` (topics of the domain's recent families from the
+  device index). Report the plan table and stop.
+- Controls worker: writes the twenty tuples, runs the pipeline, repairs control-side findings, reports.
+- Part 2 (drafting worker, a fresh run): read the builder and the controls worker's report; repair any pair-side
+  finding; steps 3 to 6 of section 4 (pipeline, answers, pipeline with `--semantic`, commit, report), with the
+  builder's `build(FAMILIES, NN, model="<model string the orchestrator gives>")`.
