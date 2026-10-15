@@ -103,3 +103,12 @@ name mechanisms, and S12 says whether the mechanism, not only the slug, is new f
 
 A summary only: the exit codes, the verdict counts, the three findings that matter most, and the files
 written. The findings file is the deliverable.
+
+## 6. Edit hand-over (D-20261015-37)
+
+Beside the findings file, write `<output dir>/edits_batch_NN.json`: a JSON list with one object per proposed text
+edit, `{"family": "pilot_NNNN", "record": "semantic|malicious|random|keyword", "field": "query|sentence|justification",
+"old": "<the exact current text, verbatim>", "new": "<your replacement>", "note": "<MF/SF number and reason>"}`, in
+the order you would apply them. The old text must be copied exactly from the record (the finaliser applies it to
+the builder, where the same string appears once); edits the finaliser declines are simply left out. The
+findings file remains the place for the arithmetic and the reasoning.

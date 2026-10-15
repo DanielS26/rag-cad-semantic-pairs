@@ -52,3 +52,4 @@ dist/
 *.safetensors
 *.tar.gz
 .ipynb_checkpoints/
+.pipeline_out/
