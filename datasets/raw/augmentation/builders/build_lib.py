@@ -38,17 +38,17 @@ def source_dataset(seed: str) -> str:
     return "asb_adapted" if seed.startswith("asb:") else "bipia_adapted"
 
 
-def drafter(seed: str) -> str:
-    return f"{MODEL}; target adapted from {'ASB' if seed.startswith('asb:') else 'BIPIA'}"
+def drafter(seed: str, model: str = MODEL) -> str:
+    return f"{model}; target adapted from {'ASB' if seed.startswith('asb:') else 'BIPIA'}"
 
 
 def sentence(index: int, text: str, label: int = 0, role: str | None = None, target: bool = False) -> dict:
     return {"sentence_id": index, "text": text, "label": label, "semantic_role": role, "is_target": target}
 
 
-def provenance(source: str, seed: str | None, digest: str) -> dict:
+def provenance(source: str, seed: str | None, digest: str, model: str = MODEL) -> dict:
     return {"source_dataset": source, "source_record_id": source_id(seed) if seed else None,
-            "generator_model": MODEL, "generator_prompt_hash": digest, "licence": LICENCES[source],
+            "generator_model": model, "generator_prompt_hash": digest, "licence": LICENCES[source],
             "review_status": "unreviewed"}
 
 
@@ -82,8 +82,9 @@ def lengths(families: list[dict]) -> list[dict]:
     return rows
 
 
-def build(families: list[dict], batch: int, repo: Path | None = None) -> dict:
-    """Write families/pilot_batch_NN.jsonl and re-append the batch's manifest entries; return the summary."""
+def build(families: list[dict], batch: int, repo: Path | None = None, model: str = MODEL) -> dict:
+    """Write families/pilot_batch_NN.jsonl and re-append the batch's manifest entries; return the summary.
+    The model string names the drafting model in every record's provenance and in the manifest drafter field (D-20261015-39)."""
     aug = (repo / "datasets/raw/augmentation") if repo else AUG
     out_records = aug / f"families/pilot_batch_{batch:02d}.jsonl"
     manifest_path = aug / "family_manifest.jsonl"
@@ -95,15 +96,15 @@ def build(families: list[dict], batch: int, repo: Path | None = None) -> dict:
         assert f["mal"].index(T) == f["twin"].index(T), fam
         records.append(record(f"{fam}_malicious", group, fam, "shared_malicious", f["mal"][0], f["domain"], f["goal"],
                               "malicious", pair_sentences(f["mal"], f["target"], 1, "unauthorised_directive"),
-                              provenance(source_dataset(f["seed"]), f["seed"], digest)))
+                              provenance(source_dataset(f["seed"]), f["seed"], digest, model)))
         records.append(record(f"{fam}_semantic", group, fam, "semantic_benign", f["twin"][0], f["domain"], None, "benign",
-                              pair_sentences(f["twin"], f["target"], 0, f["role"]), provenance("team_authored", None, digest)))
+                              pair_sentences(f["twin"], f["target"], 0, f["role"]), provenance("team_authored", None, digest, model)))
         records.append(record(f"{fam}_random", group, None, "random_benign", f["rnd"][0], f["domain"], None, "unpaired",
-                              [sentence(i, t) for i, t in enumerate(f["rnd"][1:])], provenance("team_authored", None, digest)))
+                              [sentence(i, t) for i, t in enumerate(f["rnd"][1:])], provenance("team_authored", None, digest, model)))
         records.append(record(f"{fam}_keyword", group, None, "keyword_benign", f["key"][0], f["domain"], None, "unpaired",
-                              [sentence(i, t) for i, t in enumerate(f["key"][1:])], provenance("team_authored", None, digest)))
+                              [sentence(i, t) for i, t in enumerate(f["key"][1:])], provenance("team_authored", None, digest, model)))
         entries.append({"family_id": fam, "group_id": group, "semantic_role": f["role"], "cue_position": f["cue"],
-                        "drafter": drafter(f["seed"]), "reviewer": None, "justification": f["justification"],
+                        "drafter": drafter(f["seed"], model), "reviewer": None, "justification": f["justification"],
                         "quotation_marks_only_cue": False, "status": "candidate"})
     out_records.parent.mkdir(parents=True, exist_ok=True)
     with out_records.open("w", encoding="utf-8", newline="\n") as handle:

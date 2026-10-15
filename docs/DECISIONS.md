@@ -622,6 +622,21 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Related files, commands, results, correspondence, or commit: [cue and device index](../src/rag_cad/data/cue_index.py), [worker brief v2](../datasets/raw/augmentation/BATCH_WORKER_BRIEF_v2.md); D-20261013-29; D-20261015-34; D-20261015-37.
 - Supersedes / superseded by: Extends D-20261013-29's source provisions; nothing superseded.
 
+## D-20261015-39 - Model-swap trial for batches 15 and 16; BIPIA exhausted; two checker additions
+
+- Status: Confirmed
+- Date: 2026-10-15
+- Project phase: Phase 5 onward
+- Category: Process
+- Decision or important note: (a) Batches 15 and 16 are drafted and finalised by workers running Claude Opus 5 and read by an independent reader running Claude Fable 5.1, the reverse of batches 08 to 14, as a measured trial: the drafter's and finaliser's tokens and tool calls, the reader's tokens, the reader's verdict counts (fixes and contestable labels), the number of checker warnings at the first pipeline run and whether the reader's edits applied as given are compared with batches 13 and 14 before the allocation for batches 17 to 20 is decided. The property that the reader is a different model from the drafter is kept; the argument for the swap is that the review is the judgement whose misses nothing but the human sheet catches, that the drafting and finalising bulk then leaves the quota that has interrupted three runs, and that the per-token price of the two models differs. Every record names its drafting model in provenance (generator_model) and every manifest line in its drafter field, so the builder library takes the model as a parameter and batches 15 and 16 say claude-opus-5; this is a documented batch-level change of style, not a label confound, because both members of a family come from the same drafter. (b) BIPIA is exhausted: the last string named for batch 14 (train language_translation:0) was already pilot_0039's target, so batch 14 took train learning_and_tutoring:2, and every remaining unused BIPIA task-type string names a real product, place, person or work; batches 15 to 20 are ASB only, with one attack_goal per batch (M19's same-goal signal is expected there and recorded as such; the folds still stratify by attack category over the whole set, D-20261013-28). (c) The policy-cue locator lexicon gains the singular "rule", and the hard-negative token list gains "impersonation", both from the batch 14 draft.
+- Context and reason: Daniel Song asked on 2026-10-15 whether the swapped allocation would cost less while keeping or improving quality and approved a trial from batch 15 with a comparison; the batch 14 worker reported the BIPIA exhaustion and the two checker gaps.
+- Evidence: the batch 13 and 14 worker reports and their usage figures (progress entries of 2026-10-15); the batch 15 and 16 reports and the 13 and 14 pair review, when written.
+- Alternatives considered: swapping at once for all remaining batches (declined: measure first); a same-model reader (declined: the batch 06 and 07 evidence); adopting SEP for the task-type supply (declined: Daniel asked to be consulted before SEP is used, and the design needs no more task-type strings).
+- Consequences for implementation/evaluation/report: the data card records the drafting model per batch and the BIPIA exhaustion; the report compares the two allocations on the measured figures; the Opus 5.5 model Daniel asked about does not exist in this environment, so the trial uses Claude Opus 5.
+- Approved by: Daniel Song, 2026-10-15 ("yes, swap from batch 15 and do a comparsion and see the token usage difference").
+- Related files, commands, results, correspondence, or commit: [builder library](../datasets/raw/augmentation/builders/build_lib.py), [self-check module](../src/rag_cad/data/selfcheck.py); D-20261014-32; D-20261015-37; D-20261015-38.
+- Supersedes / superseded by: Amends the model allocation of D-20261014-32 for batches 15 and 16; nothing else superseded.
+
 ## D-20261015-41 - The mechanism register, after the batch 13 and 14 pair review
 
 - Status: Confirmed

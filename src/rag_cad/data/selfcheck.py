@@ -154,7 +154,7 @@ DEVICE_REGISTER_EXEMPT_ROLES: tuple[str, ...] = ()  # D-20261014-31 exempted tas
 # Opening-sentence genres that host requests by nature, so the twin document itself carries the benign reading (D-20261015-36).
 REQUEST_HOSTING_GENRES = ("round-up", "roundup", "digest", "call sheet", "transcript", "minutes", "correspondence", "mailbox", "inbox",
                           "log of calls", "call log")
-POLICY_LEXICON = ("rules", "handbook", "practice", "authorisation", "authorization", "permission", "permits")
+POLICY_LEXICON = ("rule", "rules", "handbook", "practice", "authorisation", "authorization", "permission", "permits")  # "rule": D-20261015-39
 # Frame words kept beside the function words when a cue sentence is reduced to its masked skeleton (D-20261014-31).
 FRAME_WORDS = frozenset("""
 copied quoted reproduced recorded kept logged treat careful guard suspicious verify next follow follows came arrived
@@ -865,7 +865,7 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
 
 
 SECURITY_TOPIC = ("incident", "planted", "inserted", "injection", "moderation", "flagged", "compromised",
-                  "attacker", "phishing", "malicious", "tampered")
+                  "attacker", "phishing", "malicious", "tampered", "impersonation")  # "impersonation": D-20261015-39
 
 
 def check_m15_malicious_clean(rep: Report, fams: dict[str, dict]) -> None:
