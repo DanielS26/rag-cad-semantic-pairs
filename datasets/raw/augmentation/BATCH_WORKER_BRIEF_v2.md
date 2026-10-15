@@ -61,7 +61,9 @@ twin's document type and why the request is foreign there too); S7 a match test 
 for a query cue; S5 "N/A" only without "your response" phrasing; S1 quotes the twin query verbatim and labels it
 [asks] or [asserts] (an asserting query fails) and quotes any context sentence that states the document's type;
 S11 restates the manifest justification; S12 names the closest earlier twin of the same role, its device slug and
-the differing mechanism; every justification names its device as `device: <slug>`, the slug naming a mechanism
+the differing mechanism; every justification names its device as `device: <slug>` and its mechanism genus as
+`mechanism: <genus>` (D-20261015-41; the checker warns at two twins of a batch or three tagged twins of a role on one
+genus, so choose a genus the role has not used lately), the slug naming a mechanism
 (verbatim-reproduction, tool-report, standing-rule-classification, duty-assignment, external-authority,
 dated-removal, dated-transfer, foreign-language-rendering, ownership-claim, voided-object, expiry, or a new one),
 a role taking a mechanism at most twice in three batches; one attacker-writable cue per batch (`weak_cue:

@@ -53,7 +53,8 @@ foreign, with mapping deviations recorded in the data card; a standing-rule cue 
 type is warning, a cue that refuses this instance is negation.
 From D-20261015-36: S13 answers for both documents (the twin's document type and why the request is foreign
 there too); a context sentence that echoes the cue's distinctive words is a second carrier; device slugs
-name mechanisms, and S12 says whether the mechanism, not only the slug, is new for the role.
+name mechanisms, and S12 says whether the mechanism, not only the slug, is new for the role; from batch 13 the
+justification also carries `mechanism: <genus>` (D-20261015-41), and S12 says whether that genus is right.
 
 ## 3. Steps
 
