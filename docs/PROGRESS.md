@@ -2790,3 +2790,65 @@ Historical audit claims are distinguished from checks executed in this session.
 - Next: batch 15 on phase5-batch-15 under D-20261015-39 and D-20261015-40 (the
   model swap and controls from a specification), with the register's warnings
   in force at plan time; the reader's worktree rcsp_review14 removed
+
+## 2026-10-16 - Batch 15 Reviewed And Repaired
+
+- Review: accept 0, accept with note 7, fix 3, contestable label 0, must-fix
+  0; what mattered: the quotation cue promised a bulletin reference the line
+  does not carry (pilot_0142), the negation heading had no negating word and
+  read as a dated provenance (pilot_0143), one grammar slip in the twenty
+  controls (pilot_0150 keyword), and three mechanism genera were mistagged
+  (pilot_0144, pilot_0146, pilot_0150); the reader also recorded that none of
+  the ten devices is a new mechanism for its role and that nine S12 answers
+  chose a twin other than the closest
+- Applied: SF1, pilot_0142: the policy cue and its justification now keep the
+  bulletin's number on the file instead of promising the reference with the
+  line; SF2, pilot_0143: the heading reads "never issued" outright, so the
+  negation no longer rests on inference; SF4, pilot_0150: "a claim queries" to
+  "a claimant queries" in the keyword control; G1, pilot_0144: mechanism
+  dated-removal to compromised-source-hold; G2, pilot_0146: mechanism foreign-
+  language-rendering to awaiting-rendering; G3, pilot_0150: mechanism agreed-
+  objective to ownership-claim; every S12 answer rewritten to name the closest
+  earlier twin of the role from the whole cue index with its device slug and
+  genus (pilot_0111, pilot_0101, pilot_0102, pilot_0134, pilot_0095,
+  pilot_0077, pilot_0106, pilot_0092, pilot_0083, pilot_0128), and S2, S7 and
+  S11 of pilot_0142 and S10 and S11 of pilot_0143 redone. Declined with
+  reasons: none.
+- Checker proposals: the reader proposes A, a cross-batch topic-reuse WARN on
+  the content stems of a record's first sentence against the previous three
+  batches (four record pairs fire on this pair); B, a WARN when an S12 answer
+  names no family earlier than the previous batch (batch 16 fires on 10 of 10,
+  batch 15 on 0 of 10); C, a WARN when two policy cues share their first two
+  tokens ("Under the" opens six policy cues) - all three are the
+  orchestrator's to decide, and none is implemented here
+- After the edits: self-check 0, prescreen 0, validate 0, semantic gate 0,
+  with four WARNs: the set-wide query phrase list ("does" 0.33 against 0.20),
+  M14's genus planning signal on warning and compromised-source-hold at three
+  tagged twins (which the G1 correction raises, as the reader expected), M18's
+  two-authorisation planning signal (pilot_0141 and pilot_0148) and M19's
+  single attack goal; twin longer in 7 of 10 (pilot_0142 and pilot_0143
+  crossed over when the review's two cue edits lengthened the twin); hard
+  negative pilot_0143, the community team's email on how reported posts are
+  handled, a moderation document after the tender note and the identity-checks
+  page; weak cue pilot_0148, a ward sister's authority given by telephone and
+  noted against the order (attacker_writable); coverage after 150 families:
+  roles analysis 19, authorisation 19, historical_description 18, negation 19,
+  quotation 19, task_alignment 19, translation 18, warning 19; cue positions
+  30 each; review sheet pilot_review_batch_15.md; supply ten ASB non-
+  aggressive rows and no BIPIA string, the BIPIA supply being exhausted
+  (D-20261015-39).
+- Watch-list for the next batch: name the closest earlier twin from the whole
+  cue index in S12, not from the device index's three-batch window; one new
+  mechanism per role by genus: none of this pair's twenty devices is a new
+  mechanism for its role; check the two control topics and the malicious
+  topics against the previous two batches (visitor wifi, projectors, lifts,
+  bike stores and code-opened lockers are each used twice in this pair); a
+  two-sentence twin needs a query the cue answers as a fact, never one that
+  presupposes the record frame; headings must state the status outright, and a
+  page carrying a headed block should have a reason to carry it; vary policy-
+  cue openers; "Under the ... rules/policy" now opens six; draw the negation
+  and historical_description boundary by mechanism, not by the verb, and keep
+  template residue under negation; keep the Sonnet controls, with a question-
+  to-imperative mix target and their topics checked against the device index
+- Next: batch 16 is finalised on its own branch from this one, and batch 17 is
+  drafted against this watch-list
