@@ -22,8 +22,13 @@ makes every decision this brief marks as one.
   the paths listed in the phase; push with `git push -u origin phase5-batch-NN`; open pull requests with the GitHub
   CLI by its full path and always with `-R DanielS26/rag-cad-semantic-pairs`, base `main`, title
   "Phase 5: <what the PR does>", label `phase-5`; Daniel Song merges them in order.
-- Keep every reply short (a few hundred words); write long text with the Write tool, in two parts when a file
-  is long; never produce one very long reply. One worker runs at a time.
+- Keep every reply short (a few hundred words); write a builder or an answers file with one Write call each
+  (they are about 35 KB, well inside the limit); never produce one very long reply. One worker runs at a time.
+- Read only what a step needs (D-20261015-38): the previous builder's first two FAMILIES entries as the shape
+  (not the whole file), the latest archived review's outcome preamble and watch-list by section (not the whole
+  review), the device index, and the source rows you are choosing among printed by index range with a
+  one-line script (never the whole source file). The checker already compares your batch with every earlier
+  batch, so do not re-read earlier batches yourself.
 
 ## 2. Paths and commands
 
@@ -83,14 +88,16 @@ twin) so that one repair pass suffices.
 
 1. Read: this brief; `DRAFTING_PROMPT_v3.md`; `review/device_index.md`; the latest archived review's outcome
    preamble and watch-list under `docs/archive/`; the previous builder's FAMILIES as the shape to copy. Nothing else.
-2. Choose sources from the device index's used list and the source files (the orchestrator says how many of each),
+2. Choose sources from the device index's used list and the source files (the orchestrator says how many of each;
+   from batch 14 the ASB pools are the clean non-aggressive rows, rows naming a person used with the R2 placeholder
+   "the patient with ID <id>" or "the client with ID <id>", and the aerospace rows 380 to 399, D-20261015-38),
    plan the ten families as the docstring table (family, source, goal, domain, role, cue, sentence count, target
-   index, longer member, device), and write the builder in two parts.
+   index, longer member, device), and write the builder with one Write call.
 3. Run the pipeline without `--semantic`; put every finding into one direct edit of the builder; rerun. Repeat only
    for regressions. The target is exit 0 with the set-wide query phrase list as the only WARN (planning signals the
    orchestrator named may stand; say so).
 4. Write `review/semantic_answers_batch_NN.json` (S1 to S13, one or two sentences each, the forms of section 3)
-   in two parts; run the pipeline with `--semantic` (exit 0 required).
+   with one Write call; run the pipeline with `--semantic` (exit 0 required).
 5. Commit exactly: the builder, `families/pilot_batch_NN.jsonl`, `family_manifest.jsonl`,
    `review/selfcheck_batch_NN.json`, `review/semantic_answers_batch_NN.json`, `review/cue_index.md`,
    `review/device_index.md`. Message "Draft batch NN under prompt v3: <sources>, with the cue device named in every

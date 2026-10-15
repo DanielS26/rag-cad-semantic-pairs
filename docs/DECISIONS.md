@@ -607,6 +607,21 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Related files, commands, results, correspondence, or commit: [builders](../datasets/raw/augmentation/builders/README.md), [pipeline](../src/rag_cad/data/batch_pipeline.py), [edits](../src/rag_cad/data/edits.py), [finalise docs](../src/rag_cad/data/finalise_docs.py), [cue and device index](../src/rag_cad/data/cue_index.py), [worker brief v2](../datasets/raw/augmentation/BATCH_WORKER_BRIEF_v2.md); D-20261014-32; D-20261015-35.
 - Supersedes / superseded by: Operational detail under D-20261014-32 and D-20261015-35; BATCH_WORKER_BRIEF_v1.md is superseded for new batches.
 
+## D-20261015-38 - ASB supply pools for batches 14 to 20, and smaller worker inputs
+
+- Status: Confirmed
+- Date: 2026-10-15
+- Project phase: Phase 5 onward
+- Category: Data
+- Decision or important note: (a) After batch 13, the ASB rows that are non-aggressive, name no person, no city or route and belong to a mapped agent domain number 69, exactly the 69 that batches 14 to 20 need. Two further pools are admitted so that choice remains: rows that name a patient or a person, used with the R2 placeholder replacement already applied in pilot_0065 (the name becomes "the patient with ID <id>" or "the client with ID <id>"; the provenance keeps the row id and the drafter field says "target adapted from ASB"), and the aerospace rows 380 to 399, which have no mapped agent domain and are placed, like every operational target since D-20261015-34, where the request is foreign to both documents. A batch takes at most two adapted rows and says which in its data-card paragraph. The autonomous-driving rows that name real cities stay excluded. The last usable BIPIA task-type string (train Language Translation 0) goes into batch 14; batches 15 to 20 are ASB only, so from batch 15 the attack_goal is one per batch and M19's same-goal signal is expected and recorded as such; the folds still stratify by attack category over the whole set (D-20261013-28). (b) The batch 13 draft under BATCH_WORKER_BRIEF_v2.md used 34 tool calls instead of about fifty but 318k tokens, the same as before, because the cost counts the text read and written and the model's reasoning, not the calls. The worker inputs are therefore cut: the compact device index lists query openings for the last three batches only (exact and near reuse stay checked mechanically over all batches), a builder and an answers file are written with one Write call each, and the brief tells workers to read only the previous builder's first two entries as the shape, the archived review's preamble and watch-list by section, and the candidate source rows by index range.
+- Context and reason: The batch 13 worker reported the supply count and the call count; Daniel Song's priority on 2026-10-15 is token cost without loss of data quality, and the remaining cost sits in the material a worker reads and writes.
+- Evidence: the batch 13 worker report (progress entry of 2026-10-15); tests/test_batch_tools.py.
+- Alternatives considered: adopting SEP as a further target source (Daniel asked to be consulted before SEP is touched; not needed with the two pools); dropping to nine families per batch (changes the 200-family target of D-20261013-27); keeping the full query list in the compact index (it was 38 KB, most of it queries from batches 01 to 10).
+- Consequences for implementation/evaluation/report: the data card records the adapted rows per batch and the aerospace placements; the report notes that the second source was exhausted at batch 14 and how the remaining supply was managed.
+- Approved by: Daniel Song's approvals of 2026-10-15 ("yes do 1 - 4 then as soon as feasible" and "I care more about what can we do to save token usage at this point while not giving up on the data quality"), applied to the batch 13 worker's questions.
+- Related files, commands, results, correspondence, or commit: [cue and device index](../src/rag_cad/data/cue_index.py), [worker brief v2](../datasets/raw/augmentation/BATCH_WORKER_BRIEF_v2.md); D-20261013-29; D-20261015-34; D-20261015-37.
+- Supersedes / superseded by: Extends D-20261013-29's source provisions; nothing superseded.
+
 ## D-20261015-41 - The mechanism register, after the batch 13 and 14 pair review
 
 - Status: Confirmed

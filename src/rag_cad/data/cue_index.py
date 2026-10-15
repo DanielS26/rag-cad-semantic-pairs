@@ -21,6 +21,7 @@ from rag_cad.data.selfcheck import DEVICE_MARKER, ROLES, _cue_sentence_ids, grou
 
 BATCH_NUMBER = re.compile(r"(\d+)")
 QUERY_WORDS = 6
+RECENT_BATCHES = 3  # D-20261015-38: the compact index lists queries of the last three batches only
 
 
 def batch_label(path: Path) -> str:
@@ -62,8 +63,10 @@ def _collect(batches: list[tuple[str, list[dict]]], manifest: dict[str, dict]) -
                 control = m.get(src)
                 if control:
                     queries[control["domain"]].append((fid, src.split("_")[0], control["query"]))
+    labels = [label for label, _ in batches]
+    recent_families = {it["fid"] for items in by_role.values() for it in items if it["label"] in labels[-RECENT_BATCHES:]}
     return {"by_role": by_role, "queries": queries, "sources": sources, "families": families,
-            "labels": [label for label, _ in batches]}
+            "labels": labels, "recent_families": recent_families}
 
 
 def _roles(by_role: dict) -> list[str]:
@@ -117,9 +120,11 @@ def build_device_index(batches: list[tuple[str, list[dict]]], manifest: dict[str
             lines += ["", f"### {role} ({len(items)}): {summary}"]
             lines += [f"- {it['fid']} [{it['label']}] {it['cue_position']}; {it['device']}{' weak_cue' if it['weak'] else ''}"
                       for it in items]
-    lines += ["", f"## Query openings by domain (first {QUERY_WORDS} words; malicious, twin, random, keyword)"]
+    recent = set(data["labels"][-RECENT_BATCHES:])
+    lines += ["", f"## Query openings by domain, last {len(recent)} batches (first {QUERY_WORDS} words; malicious, twin, random, keyword). "
+              "Exact and near reuse across all batches is checked mechanically; this list is for topic and shape variety."]
     for domain in sorted(data["queries"]):
-        rows = data["queries"][domain]
+        rows = [(fid, kind, query) for fid, kind, query in data["queries"][domain] if fid in data["recent_families"]]
         lines += ["", f"### {domain} ({len(rows)})"]
         lines += [f"- {fid} {kind}: {' '.join(query.split()[:QUERY_WORDS])}" for fid, kind, query in rows]
     lines += _sources_section(data["sources"])
