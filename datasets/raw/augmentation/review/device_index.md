@@ -206,7 +206,7 @@
 - pilot_0114 random: Where does the mobile banking van
 - pilot_0114 keyword: What does the online banking page
 - pilot_0127 malicious: When is the Saturday mortgage clinic,
-- pilot_0127 twin: How old is the letter this
+- pilot_0127 twin: How are the archive's entries arranged,
 - pilot_0127 random: How do shops book a business
 - pilot_0127 keyword: Describe the review stage on the
 
@@ -570,7 +570,7 @@
 - pilot_0120 random: When are the mooting competition rounds
 - pilot_0120 keyword: What does the consumer page say
 - pilot_0124 malicious: Set out the photocopier arrangements the
-- pilot_0124 twin: Does the sponsorship page say when
+- pilot_0124 twin: Does the matter page say when
 - pilot_0124 random: Explain the firm's client lounge arrangements
 - pilot_0124 keyword: How does the firm's marketing page
 
