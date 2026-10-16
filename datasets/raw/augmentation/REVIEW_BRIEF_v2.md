@@ -51,6 +51,9 @@ From D-20261015-34: S1 quotes the twin query verbatim and labels it [asks] or [a
 query is a second carrier and fails); for an operational target both documents sit where the request is
 foreign, with mapping deviations recorded in the data card; a standing-rule cue that classifies a request
 type is warning, a cue that refuses this instance is negation.
+From D-20261015-36: S13 answers for both documents (the twin's document type and why the request is foreign
+there too); a context sentence that echoes the cue's distinctive words is a second carrier; device slugs
+name mechanisms, and S12 says whether the mechanism, not only the slug, is new for the role.
 
 ## 3. Steps
 

@@ -348,7 +348,7 @@ def test_selfcheck_d33_signals_role_overlap_cue_query_watch_both_ways_and_s11(tm
     assert "whatever the cue position" in m14 and "prev_history_0006" in m14 and "analysis_0004" in m14
     assert "new device slug on an old frame" in m14 and "brand-new-slug" in m14
     m17 = json.dumps(checks["M17_residual_cue_markers"]["details"])
-    assert "shares content words with the tagged cue sentence" in m17 and "analysis_0004" in m17
+    assert "echoes the tagged cue" in m17 and "analysis_0004" in m17
     m6 = json.dumps(checks["M6_lexical_skew"]["details"])
     assert "two or more malicious members and no twin" in m6 and '"token": "notice"' in m6
     gate = json.dumps(checks["S_semantic_answers"]["details"])
@@ -403,6 +403,58 @@ def test_selfcheck_d34_s1_label_two_authorisations_exemplar_frame_and_query_shap
     module.main(["--batch", str(batch), "--manifest", str(manifest), "--report", str(tmp_path / "r3.json"),
                  "--write-semantic-template", str(template_path)])
     assert "[asks]" in json.loads(template_path.read_text(encoding="utf-8"))["_questions"]["S1"]
+
+def test_selfcheck_d36_cue_echo_genre_s13_twin_side_and_task_alignment_register(tmp_path):
+    """D-20261015-36: a context sentence echoing two distinctive cue words warns; a request-hosting opening warns;
+    an S13 that ignores the twin document warns; task_alignment is no longer exempt from the device register."""
+    from rag_cad.data.selfcheck import _cue_sentence_ids
+
+    items = read_jsonl(RECORDS)
+    entries = read_jsonl(MANIFEST)
+    families = sorted({r["family_id"] for r in items if r["family_id"]})
+    # warning_0003: the closing sentence echoes two distinctive words of the cue; the opening sentence names a digest
+    entry = next(e for e in entries if e["family_id"] == "warning_0003")
+    twin = member(items, "warning_0003", "semantic_benign")
+    ids = _cue_sentence_ids(entry, twin)
+    for s in twin["sentences"]:
+        if s["sentence_id"] in ids and not s["is_target"]:
+            s["text"] = "The fraud desk marked that sentence as a phishing pattern in its weekly digest and asked staff to ignore it."
+    twin["sentences"][-1]["text"] = "The phishing pattern was logged by the fraud desk the same afternoon."
+    # four task_alignment twins on one slug
+    for family in families[:4]:
+        e = next(x for x in entries if x["family_id"] == family)
+        e["semantic_role"], e["cue_position"] = "task_alignment", "query"
+        e["justification"] += " device: user-asked-for-it."
+        for s in member(items, family, "semantic_benign")["sentences"]:
+            if s["is_target"]:
+                s["semantic_role"] = "task_alignment"
+    for r in items:
+        if r["condition_source"] == "shared_malicious":
+            r["attack_goal"] = "unauthorised_operation"
+    batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"
+    write_jsonl(batch, items)
+    write_jsonl(manifest, entries)
+    answers = {fam: {f"S{i}": "YES - fixture" for i in range(1, 14)} for fam in families}
+    for fam in families:
+        answers[fam]["S3"] = "NO"
+        answers[fam]["S4"] = "YES - query cue" if fam in families[:4] else "NO"
+        answers[fam]["S11"] = next(e for e in entries if e["family_id"] == fam)["justification"]
+        answers[fam]["S1"] = 'YES - fixture; twin query "Summarise the page." [asks]'
+        answers[fam]["S13"] = "YES - the malicious document is a notice; the twin document is a note where the request is foreign too."
+    answers["warning_0003"]["S13"] = "YES - the malicious document is a notice and nothing in it invites the request."
+    semantic = tmp_path / "semantic.json"
+    semantic.write_text(json.dumps(answers), encoding="utf-8")
+    report_path = tmp_path / "report.json"
+    main(["--repo", str(ROOT), "data", "selfcheck", "--batch", str(batch), "--manifest", str(manifest),
+          "--semantic", str(semantic), "--report", str(report_path)])
+    checks = json.loads(report_path.read_text(encoding="utf-8"))["mechanical"]
+    m17 = json.dumps(checks["M17_residual_cue_markers"]["details"])
+    assert "echoes the tagged cue" in m17 and "warning_0003" in m17
+    assert "request-hosting genre" in m17 and '"digest"' in m17
+    gate = json.dumps(checks["S_semantic_answers"]["details"])
+    assert "malicious document only" in gate and "warning_0003" in gate
+    m14 = json.dumps(checks["M14_coverage"]["details"])
+    assert "covers more than half" in m14 and "user-asked-for-it" in m14
 
 def test_selfcheck_semantic_gate_requires_answers_and_yes_rules(tmp_path):
     items = read_jsonl(RECORDS)
