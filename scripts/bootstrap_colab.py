@@ -21,6 +21,7 @@ STAGES = frozenset({
     "locked_dependency_install", "editable_project_install", "pip_check", "cpu_tests",
     "environment_preflight", "artefact_restore", "upstream_fetch",
     "smoke_run_a", "smoke_run_b", "conformance_released_test", "phase4_m0", "artefact_publish",
+    "phase6_family_features",
 })
 BUDGET_POOLS = ("A", "B", "C", "D")
 

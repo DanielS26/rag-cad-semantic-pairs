@@ -3324,3 +3324,28 @@ Historical audit claims are distinguished from checks executed in this session.
   encoder identity did not change). The runbook's current-gate section adds
   the fourth pass; plan step 3 is marked done
 - Next: merge (commit Y), then the features stage from Y under pool C
+
+
+## 2026-10-17 - Phase 6: features stage label added to the bootstrap whitelist
+
+- Defect: the runner's features stage passes the label
+  phase6_family_features to the bootstrap's run_stage, but the STAGES
+  whitelist in scripts/bootstrap_colab.py did not contain it. The first
+  features attempt therefore stopped at the whitelist ("Invalid subprocess
+  stage") before any encoding; there is no pool C spend beyond connection
+  time
+- Fix: phase6_family_features is added to STAGES; no other bootstrap,
+  src/rag_cad, profile, lock or budget change. The committed bootstrap
+  SHA-256 changes from 3ff3495694fdf41f5ea46d8747b01c56e294820bf3def1f0cd061528966d29e2
+  to 5f0ee41811384c47b1c58324f4c5d2de8d8d73353de156919c5e25a11ae36309; no
+  repository file pins it (the runner's BOOTSTRAP_SHA256 is supplied per run)
+- New test tests/test_runner_stage_labels.py parses the runner's stage cell
+  without executing it and checks that every STAGE_LABEL value is in the
+  bootstrap's STAGES and every PUBLISH_STAGE value is accepted by artefact
+  publish; it fails on 31d03496 and passes with the fix
+- Gate consequence: the tested profile accepts final stages only from commits
+  without a change to scripts/bootstrap_colab.py since its reviewed commit,
+  so under D-20260922-12 and D-20261004-18 the bootstrap change requires a
+  fresh gate pass and re-freeze before the features stage
+- Next: merge, gate rerun from the merge commit, re-freeze, then the
+  features stage under pool C
