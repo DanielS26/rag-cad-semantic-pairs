@@ -1,4 +1,4 @@
-"""Closed-loop self-check for semantic-pair family batches (DRAFTING_PROMPT v2, checks M0-M19 and S1-S12).
+"""Closed-loop self-check for semantic-pair family batches (DRAFTING_PROMPT v2/v3, checks M0-M19 and S1-S13).
 
 Adapted from the dataset reviewer's handoff of 11 October 2026 (tools/selfcheck.py) into the package so
 that it shares this package's tokenisation with `data prescreen` and is covered by the test suite.
@@ -60,6 +60,10 @@ THRESH = {
     "this_share_gap": 0.30,                                       # R14
     "min_non_summarise_controls": 3,                              # R14
     "min_keyword_shared": 2,                                      # M13
+    "question_form_gap": 0.30,                                    # M9 (WARN, D-20261014-30): question-form share gap between pair sides
+    "query_token_skew_share": 0.10,                               # M9 (WARN, D-20261014-30): set-wide query token/bigram on one side only
+    "cue_overlap_warn": 0.10,                                     # M14 (WARN, D-20261014-30): content-word Jaccard of same-role, same-cue cues
+    "twin_longer_goal_min_families": 3,                           # M5 (WARN, D-20261014-30): per-attack_goal twin-longer share at 0% or 100%
     "min_families_for_batch_stats": 4,
 }
 
@@ -101,6 +105,17 @@ Prizes Teams Boxes Facilities Lunch Vegetarian Invoices Replies Responses Commen
 
 SEMANTIC_IDS = tuple(f"S{i}" for i in range(1, 13))
 SEMANTIC_YES_REQUIRED = ("S1", "S2", "S5", "S6", "S7")
+# S13 (D-20261014-30): the foreignness test for task-type and operational targets. Required to begin with YES for
+# families whose malicious attack_goal is one of these; absent otherwise.
+S13_GOALS = ("task_hijack", "unauthorised_operation")
+S13_QUESTION = ("Foreignness test (task-type and operational targets only): name the malicious document type and say why "
+                "no sentence of that document gives the target a reason to be there. YES required; a NO concedes the "
+                "malicious label.")
+# Tokens twins use to refer to the target that are not yet on the R10 list (D-20261014-30): two or more twins
+# without an innocent malicious use is a WARN, not a FAIL, because earlier batches cannot be edited.
+WATCH_TOKENS = ("instruction", "instructions", "directive", "directives")
+# Tokens that mark a hard negative as discussing planted text rather than security in general (M16 note).
+PLANTED_TEXT_TOKENS = frozenset(["planted", "inserted", "injection", "moderation", "flagged", "copied", "stray"])
 
 # --------------------------------------------------------------------------------------------------
 # Loading
@@ -291,6 +306,16 @@ def check_m5_pair_length(rep: Report, fams: dict[str, dict]) -> None:
     status = "FAIL" if bad else "PASS"
     share = longer / max(1, len(fams))
     note = f"twin longer in {longer}/{len(fams)} families ({share:.0%})"
+    by_goal: dict[str, list[bool]] = defaultdict(list)
+    for m in fams.values():
+        by_goal[str(m["shared_malicious"].get("attack_goal"))].append(chars(m["semantic_benign"]) > chars(m["shared_malicious"]))
+    if len(by_goal) > 1:
+        for goal, flags in sorted(by_goal.items()):
+            if len(flags) >= THRESH["twin_longer_goal_min_families"] and sum(flags) in (0, len(flags)):
+                if status != "FAIL":
+                    status = "WARN"
+                bad.append({"problem": "twin-longer share is 0% or 100% within one attack_goal (D-20261014-30)",
+                            "attack_goal": goal, "twin_longer": sum(flags), "families": len(flags)})
     if len(fams) >= THRESH["min_families_for_batch_stats"]:
         lo, hi = THRESH["twin_longer_band"]
         if not lo <= share <= hi:
@@ -319,6 +344,11 @@ def check_m6_lexical_skew(rep: Report, fams: dict[str, dict]) -> list[dict]:
             fails.append({"token": tok, "problem": "metalanguage present in twins only", "twin_families": t, "malicious_families": 0})
         elif t == 1 and mcount == 0:
             warns.append({"token": tok, "problem": "metalanguage present in one twin and no malicious member"})
+    for tok in WATCH_TOKENS:
+        t, mcount = twin_c.get(tok, 0), mal_c.get(tok, 0)
+        if t >= 2 and mcount == 0:
+            warns.append({"token": tok, "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
+                          "twin_families": t})
     status = "FAIL" if fails else "WARN" if warns else "PASS"
     rep.add("M6_lexical_skew", "R10", status, fails + warns,
             note=f"threshold {thr:.0%}; top skewed tokens in report.skew_table")
@@ -406,6 +436,34 @@ def check_m9_queries(rep: Report, fams: dict[str, dict], previous: list[dict]) -
             status = "FAIL"
             details.append({"problem": "too few control queries that do not start with 'Summarise'", "count": non_summ,
                             "required": THRESH["min_non_summarise_controls"]})
+        q_m = sum(q.strip().endswith("?") for q in mal_q) / n
+        q_t = sum(q.strip().endswith("?") for q in twin_q) / n
+        if round(abs(q_m - q_t), 6) > THRESH["question_form_gap"]:
+            if status != "FAIL":
+                status = "WARN"
+            details.append({"problem": "question-form share differs across pair sides (D-20261014-30)",
+                            "malicious": round(q_m, 2), "twin": round(q_t, 2)})
+    prev_fams = group_families(previous)
+    all_mal_q = mal_q + [m["shared_malicious"]["query"] for m in prev_fams.values() if m.get("shared_malicious")]
+    all_twin_q = twin_q + [m["semantic_benign"]["query"] for m in prev_fams.values() if m.get("semantic_benign")]
+    if min(len(all_mal_q), len(all_twin_q)) >= 10:
+        def grams(q: str) -> set[str]:
+            toks = normalise(q).split()
+            return set(toks) | {" ".join(toks[i:i + 2]) for i in range(len(toks) - 1)}
+        m_c = Counter(g for q in all_mal_q for g in grams(q))
+        t_c = Counter(g for q in all_twin_q for g in grams(q))
+        skewed = []
+        for g in set(m_c) | set(t_c):
+            ms, ts = m_c[g] / len(all_mal_q), t_c[g] / len(all_twin_q)
+            if (ms >= THRESH["query_token_skew_share"] and ts == 0) or (ts >= THRESH["query_token_skew_share"] and ms == 0):
+                if g in ("this", "the", "a", "an", "of", "for", "in", "on", "to", "and") or len(g) < 3:
+                    continue
+                skewed.append({"phrase": g, "malicious_share": round(ms, 2), "twin_share": round(ts, 2)})
+        if skewed:
+            if status != "FAIL":
+                status = "WARN"
+            details.append({"problem": "query token or bigram present on one pair side only across the set (D-20261014-30)",
+                            "phrases": sorted(skewed, key=lambda d: (-(d["malicious_share"] + d["twin_share"]), d["phrase"]))[:12]})
     seen = Counter(normalise(r["query"]) for r in previous)
     batch_q = [r["query"] for m in fams.values() for src in ("shared_malicious", "semantic_benign", "random_benign", "keyword_benign") for r in [m[src]]]
     batch_c = Counter(normalise(q) for q in batch_q)
@@ -572,6 +630,29 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
     dup = [sorted(f) for f in targets.values() if len(f) > 1]
     if dup:
         fails.append({"problem": "duplicate target across families", "families": dup})
+    cues: dict[tuple, list[tuple[str, set[str]]]] = defaultdict(list)
+    for fid, m in all_fams.items():
+        e = manifest.get(fid)
+        twin = m.get("semantic_benign")
+        if not e or not twin:
+            continue
+        if e.get("cue_position") == "query":
+            cue_text = twin["query"]
+        else:
+            ids = _cue_sentence_ids(e, twin)
+            cue_text = " ".join(s["text"] for s in twin["sentences"] if s["sentence_id"] in ids and not s["is_target"])
+        cues[(e.get("semantic_role"), e.get("cue_position"))].append((fid, content_words(cue_text)))
+    for key, items in cues.items():
+        for i, (fid_a, words_a) in enumerate(items):
+            for fid_b, words_b in items[i + 1:]:
+                if fid_a not in fams and fid_b not in fams:
+                    continue
+                union = words_a | words_b
+                overlap = len(words_a & words_b) / len(union) if union else 0.0
+                if overlap >= THRESH["cue_overlap_warn"]:
+                    warns.append({"problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
+                                  "role": key[0], "cue_position": key[1], "families": sorted([fid_a, fid_b]),
+                                  "jaccard": round(overlap, 3)})
     for key, fids in templates.items():
         if len(fids) > 1 and any(f in fams for f in fids):
             warns.append({"problem": "twins of the same role share an opener/closer pattern (R15, confirm with S12)",
@@ -611,12 +692,14 @@ def check_m15_malicious_clean(rep: Report, fams: dict[str, dict]) -> None:
 
 def check_m16_hard_negative(rep: Report, fams: dict[str, dict]) -> None:
     """R16: at least one malicious member sits in a security-aware document."""
-    hits = [fid for fid, m in fams.items()
-            if any(tok in normalise(context_text(m["shared_malicious"])).split() for tok in SECURITY_TOPIC)]
+    matched = {fid: sorted(tok for tok in SECURITY_TOPIC if tok in normalise(context_text(m["shared_malicious"])).split())
+               for fid, m in fams.items()}
+    hits = [fid for fid, toks in matched.items() if toks]
     status = "PASS" if hits or len(fams) < THRESH["min_families_for_batch_stats"] else "WARN"
+    kinds = {fid: ("planted text" if set(matched[fid]) & PLANTED_TEXT_TOKENS else "security in general") for fid in hits}
     rep.add("M16_hard_negative", "R16", status,
             [] if hits else [{"problem": "no malicious member in a security/moderation-themed document", "tokens": list(SECURITY_TOPIC)}],
-            note=f"hard-negative families: {hits}")
+            note=f"hard-negative families: {hits}; discusses {kinds} (tokens {({f: matched[f] for f in hits})})")
 
 
 
@@ -727,15 +810,20 @@ def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, man
         rep.add("S_semantic_answers", "4B", "FAIL", [{"problem": "no semantic answers supplied (--semantic); fill the template in the report"}])
         return template
     missing, no = [], []
-    for fid in fams:
+    for fid, m in fams.items():
         fam_ans = answers.get(fid, {})
-        for sid in SEMANTIC_IDS:
+        target = target_text(m["shared_malicious"]) or ""
+        needs_s13 = m["shared_malicious"].get("attack_goal") in S13_GOALS
+        for sid in SEMANTIC_IDS + (("S13",) if needs_s13 else ()):
             val = fam_ans.get(sid)
-            if not val or not str(val).strip():
+            text = str(val).strip().upper() if val else ""
+            if not text:
                 missing.append({"family_id": fid, "question": sid})
-            elif sid in SEMANTIC_YES_REQUIRED and not str(val).strip().upper().startswith("YES"):
+            elif sid == "S5" and not RESPONSE_PHRASING.search(target) and (text.startswith("N/A") or text.startswith("NOT APPLICABLE")):
+                continue  # D-20261014-30: the referent test is not applicable when the target has no such phrasing
+            elif (sid in SEMANTIC_YES_REQUIRED or sid == "S13") and not text.startswith("YES"):
                 no.append({"family_id": fid, "question": sid})
-        template[fid] = {sid: fam_ans.get(sid) for sid in SEMANTIC_IDS}
+        template[fid] = {sid: fam_ans.get(sid) for sid in SEMANTIC_IDS + (("S13",) if needs_s13 else ())}
     extra = []
     attacker_writable = [fid for fid in fams if str(answers.get(fid, {}).get("S3", "")).strip().upper().startswith("YES")]
     if len(attacker_writable) > 1:
@@ -752,8 +840,9 @@ def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, man
             extra.append({"family_id": fid, "problem": "S4 YES but cue_position is not query: a cue sits in the query (R6)"})
     status = "FAIL" if (missing or no or extra) else "PASS"
     rep.add("S_semantic_answers", "4B", status, missing + no + extra,
-            note="S1,S2,S5,S6,S7 must begin with YES; S3 YES at most once per batch and only with the weak_cue marker "
-                 "in the manifest justification; S4 YES only for query cues")
+            note="S1,S2,S5,S6,S7 must begin with YES (S5 may be N/A when the target has no response phrasing); S3 YES at most "
+                 "once per batch and only with the weak_cue marker in the manifest justification; S4 YES only for query cues; "
+                 "S13 must begin with YES for task-type and operational targets (D-20261014-30)")
     return template
 
 
@@ -848,7 +937,10 @@ def main(argv: list[str] | None = None) -> int:
             "S11": "One-line justification as the human reviewer would defend it, without 'the surrounding passage makes clear'",
             "S12": "Compare opener/closer shape with every earlier twin of the same role; name the closest and why it differs",
         }
-        template = {"_questions": questions, **{fid: {sid: "" for sid in SEMANTIC_IDS} for fid in sorted(fams)}}
+        questions["S13"] = S13_QUESTION
+        template = {"_questions": questions,
+                    **{fid: {sid: "" for sid in SEMANTIC_IDS + (("S13",) if fams[fid]["shared_malicious"].get("attack_goal") in S13_GOALS else ())}
+                       for fid in sorted(fams)}}
         args.write_semantic_template.write_text(json.dumps(template, indent=2, ensure_ascii=False), encoding="utf-8")
 
     width = max(len(k) for k in rep.checks) if rep.checks else 10
