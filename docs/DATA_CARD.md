@@ -807,3 +807,25 @@ exactly one shard per mode, and the m1_random, m2_keyword and m3_semantic sets (
 reproduce the 160 training and 40 held-out families of all five rounds of folds_v1
 (docs/archive/phase6_features_2026-10-17/).
 
+## Results on the folds (repo_compatible)
+
+Heads were trained on the cached repo_compatible features over the five rounds of folds_v1 on the
+laptop CPU (49 cells, 48 of them trained, three seeds, 30 epochs; commit e857b9d, 16 October 2026,
+48 minutes) and scored on the 40 held-out families of each round. Pooled over rounds, record basis,
+mean over seeds:
+
+| row | twin FA | random FA | keyword FA | detection | paired share |
+|---|---|---|---|---|---|
+| BoW baseline | 0.190 | n/a | n/a | 0.775 | 0.905 |
+| N0 released | 0.515 | 0.595 | 0.460 | 0.660 | 0.595 |
+| M0 base | 0.542 | 0.597 | 0.475 | 0.677 | 0.603 |
+| M1 random | 0.935 | 0.022 | 0.058 | 0.947 | 0.547 |
+| M2 keyword | 0.943 | 0.040 | 0.028 | 0.965 | 0.575 |
+| M3 semantic | 0.485 | 0.037 | 0.013 | 0.750 | 0.842 |
+
+The random and keyword counterparts teach the head that the injected sentence is always malicious,
+so it flags almost every twin. The semantic counterparts halve those twin false alarms and raise
+the paired share to 0.84, but the bag-of-words baseline still does better on the twin metrics. The
+full tables (by role, attack category and cue position, the target-sentence basis and the released
+CAD test), the driver report and the per-cell predictions are in
+docs/archive/phase7_results_2026-10-17/. The interpretation is recorded in the decision log.
