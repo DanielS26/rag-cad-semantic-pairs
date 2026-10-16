@@ -757,3 +757,42 @@ one sentence of forty malicious documents left the figure unchanged (81.8 percen
 baseline and with a within-family paired metric; the floor is a property of cue-based minimal pairs,
 not of a particular batch.
 
+## Folds (version 1)
+
+The 200 families are cut into five folds for cross-validation (D-20261013-28, D-20261017-51): every
+record of a family stays in one fold, seed 764, five families of each semantic role in every fold and,
+within role, the attack category (task-type targets adapted from BIPIA, operational targets adapted
+from ASB) spread so that no fold differs from another by more than one in any role. The assignment is
+datasets/raw/augmentation/folds_v1.jsonl with its counts in folds_v1.summary.json; it is fixed, and a
+new version needs a decision entry. Families per fold by role, task-type / operational:
+
+| Role | Fold 1 | Fold 2 | Fold 3 | Fold 4 | Fold 5 |
+|---|---|---|---|---|---|
+| analysis | 2 / 3 | 2 / 3 | 2 / 3 | 2 / 3 | 2 / 3 |
+| authorisation | 1 / 4 | 1 / 4 | 1 / 4 | 2 / 3 | 1 / 4 |
+| historical_description | 2 / 3 | 1 / 4 | 1 / 4 | 2 / 3 | 2 / 3 |
+| negation | 2 / 3 | 2 / 3 | 1 / 4 | 1 / 4 | 2 / 3 |
+| quotation | 2 / 3 | 2 / 3 | 2 / 3 | 1 / 4 | 2 / 3 |
+| task_alignment | 2 / 3 | 3 / 2 | 3 / 2 | 3 / 2 | 2 / 3 |
+| translation | 2 / 3 | 2 / 3 | 2 / 3 | 2 / 3 | 2 / 3 |
+| warning | 2 / 3 | 2 / 3 | 2 / 3 | 1 / 4 | 2 / 3 |
+| All roles | 15 / 25 | 15 / 25 | 14 / 26 | 14 / 26 | 15 / 25 |
+
+Each fold holds seven to nine families of each cue position (40 per position in all). In each of the
+five rounds no family, record, query or sentence text is shared between the training and the
+held-out families (review/leakage_round_1.json to leakage_round_5.json).
+
+Bag-of-words baseline on these folds (the naive Bayes of the lexical floor, trained per round on the
+other four folds, twin against malicious, target sentence left out):
+
+| | Fold 1 | Fold 2 | Fold 3 | Fold 4 | Fold 5 | All 200 |
+|---|---|---|---|---|---|---|
+| Accuracy | 81.25 | 85.0 | 77.5 | 77.5 | 75.0 | 79.25 |
+| Paired share (twin above its malicious partner) | 90.0 | 95.0 | 87.5 | 90.0 | 90.0 | 90.5 |
+
+Balanced accuracy equals accuracy because each held-out family contributes one record of each class.
+By attack category: task-type 82.2 percent accuracy and 94.5 percent paired, operational 77.6 and
+88.2. The overall figure is lower than the 81.5 percent of the audit's unstratified folds (the paired
+share is the same); every scorer result on these folds is reported beside these two rows
+(review/bow_baseline_v1.json).
+
