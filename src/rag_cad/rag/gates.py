@@ -63,7 +63,7 @@ class ScoreView:
     def sentence_scores(self, document: Document) -> list[float]:
         if self.probabilities is None:
             raise ValueError(f"{self.name} scores records, not sentences; no sentence filter")
-        scored = self.probabilities.get(document.doc_id)
+        scored = self.probabilities.get(document.scored_id)
         if scored is None or any(sid not in scored for sid in document.sentence_ids):
             raise ValueError(f"{self.name} does not score every sentence of {document.doc_id}")
         return [scored[sid] for sid in document.sentence_ids]

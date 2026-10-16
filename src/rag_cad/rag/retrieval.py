@@ -16,11 +16,17 @@ Retrieval is exact cosine search over the unit document vectors, the top five pe
 broken by store order; it depends only on the store, so every gate condition sees identical
 retrievals.
 
+The query's own record's sentences are among the matched sentences, so the hit rate of the own
+record describes this placement as much as the retriever; the placement with the own record's
+sentences masked is computed beside it and reported, never used for gating.
+
 Distractors: the released CAD test holds no wholly benign record (every record carries an
 injection), so a distractor is the benign remainder of a leak-excluded released-test record (its
 label-0 sentences in their original order). Records whose remainders are the same text after
 normalisation are one candidate (one representative drawn per text), and the set is drawn once
-with seed 764, the same in every round.
+with seed 764, the same in every round. Each remainder is cut into passages of at most five
+consecutive sentences (family records hold two to five), as even in length as possible; every
+passage is a store document that records its parent record.
 """
 
 import math
@@ -35,6 +41,7 @@ from rag_cad.operations.provenance import digest
 EMBEDDING_COLUMNS = 1024
 TOP_K = 5
 QUERY_SENTENCES = 5
+PASSAGE_SENTENCES = 5
 DISTRACTOR_SEED = 764
 FAMILY_KINDS = ("malicious", "twin", "random_control", "keyword_control")
 DISTRACTOR = "distractor"
@@ -75,6 +82,7 @@ class Document:
     cue_ids: frozenset = frozenset()
     semantic_role: str | None = None
     cue_position: str | None = None
+    parent_id: str | None = None
 
     def __post_init__(self):
         count = len(self.sentence_ids)
@@ -90,6 +98,11 @@ class Document:
             raise ValueError(f"Document {self.doc_id} has an unknown cue or several targets")
         if self.kind == DISTRACTOR and any(self.labels):
             raise ValueError(f"Distractor {self.doc_id} holds a malicious sentence")
+
+    @property
+    def scored_id(self) -> str:
+        """The record whose predictions score this document (a passage's parent record)."""
+        return self.parent_id or self.doc_id
 
     @property
     def target_id(self) -> int | None:
@@ -125,6 +138,7 @@ class Store:
                 "sentences": sum(sentences.values()),
                 "sentences_by_kind": {kind: sentences.get(kind, 0) for kind in KINDS},
                 "distractor_ids": sorted(d.doc_id for d in self.documents if d.kind == DISTRACTOR),
+                "distractor_records": len({d.scored_id for d in self.documents if d.kind == DISTRACTOR}),
                 "digest": digest([[d.doc_id, list(d.sentence_ids)] for d in self.documents])}
 
 
@@ -176,6 +190,20 @@ def select_distractors(records: list[dict], excluded: set[str], count: int,
                     "seed": seed, "chosen_ids": [item["record_id"] for item in chosen]}
 
 
+def passage_bounds(count: int, size: int = PASSAGE_SENTENCES) -> list[tuple[int, int]]:
+    """Cut count sentences into the fewest runs of at most size, as even as possible."""
+    if count < 1 or size < 1:
+        raise ValueError("Passages need at least one sentence")
+    parts = math.ceil(count / size)
+    base, extra = divmod(count, parts)
+    bounds, start = [], 0
+    for part in range(parts):
+        length = base + (1 if part < extra else 0)
+        bounds.append((start, start + length))
+        start += length
+    return bounds
+
+
 class LexicalIndex:
     """TF-IDF vectors of texts (terms from normalise, idf log((1 + n) / (1 + df)), so a term in
     every text weighs zero); used only to place a query among the store's sentences."""
@@ -202,28 +230,39 @@ class LexicalIndex:
         return self.matrix @ self.vector(normalise(text).split())
 
 
+def _place(similarity: np.ndarray, embeddings: np.ndarray,
+           sentences: int) -> tuple[np.ndarray, str, list[int]]:
+    order = np.argsort(-similarity, kind="stable")[:sentences]
+    chosen = [int(i) for i in order if similarity[i] > 0]
+    if chosen:
+        return embeddings[chosen].mean(axis=0), LEXICAL, chosen
+    return embeddings.mean(axis=0), CENTROID, chosen
+
+
 def query_vectors(store: Store, queries: list[tuple[str, str]],
-                  sentences: int = QUERY_SENTENCES) -> tuple[np.ndarray, list[dict]]:
+                  sentences: int = QUERY_SENTENCES) -> tuple[np.ndarray, np.ndarray, list[dict]]:
     """Each query's unit vector: the mean embedding of the store sentences that match its text
-    best by TF-IDF cosine (positive matches only, ties by store order), else the store centroid."""
+    best by TF-IDF cosine (positive matches only, ties by store order), else the store centroid;
+    and the same placement with the query's own record's sentences masked (reported only)."""
     places = [(document, position) for document in store.documents
               for position in range(len(document.sentence_ids))]
+    owners = np.asarray([document.doc_id for document, _ in places])
     embeddings = np.concatenate([np.asarray(d.embeddings, dtype=np.float64) for d in store.documents])
     index = LexicalIndex([document.texts[position] for document, position in places])
-    vectors, details = [], []
+    vectors, masked_vectors, details = [], [], []
     for query_id, text in queries:
         similarity = index.similarities(text)
-        order = np.argsort(-similarity, kind="stable")[:sentences]
-        chosen = [int(i) for i in order if similarity[i] > 0]
-        if chosen:
-            vector, source = embeddings[chosen].mean(axis=0), LEXICAL
-        else:
-            vector, source = embeddings.mean(axis=0), CENTROID
+        vector, source, chosen = _place(similarity, embeddings, sentences)
+        masked, masked_source, _ = _place(np.where(owners == query_id, 0.0, similarity),
+                                          embeddings, sentences)
         vectors.append(unit(vector, f"query {query_id}"))
-        details.append({"query_id": query_id, "source": source,
+        masked_vectors.append(unit(masked, f"masked query {query_id}"))
+        own = sum(owners[i] == query_id for i in chosen)
+        details.append({"query_id": query_id, "source": source, "masked_source": masked_source,
+                        "own_match_share": round(own / len(chosen), 6) if chosen else 0.0,
                         "matched": [[places[i][0].doc_id, places[i][0].sentence_ids[places[i][1]],
                                      round(float(similarity[i]), 6)] for i in chosen]})
-    return np.stack(vectors), details
+    return np.stack(vectors), np.stack(masked_vectors), details
 
 
 @dataclass(frozen=True)
@@ -236,6 +275,7 @@ class Retrieval:
     scores: tuple[tuple[float, ...], ...]
     own_rank: tuple[int, ...]
     sources: tuple[str, ...]
+    masked_rank: tuple[int, ...]
     details: tuple[dict, ...] = field(repr=False, compare=False)
 
     @property
@@ -248,9 +288,14 @@ class Retrieval:
         own_family = [store.documents[store.index[d]].group_id == store.documents[store.index[q]].group_id
                       for q, top in zip(self.query_ids, self.top) for d in top]
         ranks = np.asarray(self.own_rank, dtype=float)
+        masked = np.asarray(self.masked_rank, dtype=float)
         return {"round": self.round, "queries": len(self.query_ids), "top_k": k,
                 "hit_at_k": round(float((ranks <= k).mean()), 6),
                 "mean_rank": round(float(ranks.mean()), 6), "median_rank": float(np.median(ranks)),
+                "hit_at_k_masked": round(float((masked <= k).mean()), 6),
+                "mean_rank_masked": round(float(masked.mean()), 6),
+                "median_rank_masked": float(np.median(masked)),
+                "own_match_share": round(float(np.mean([d["own_match_share"] for d in self.details])), 6),
                 "slots": int(sum(len(top) for top in self.top)),
                 "slots_by_kind": {kind: kinds.get(kind, 0) for kind in KINDS},
                 "own_family_slot_share": round(float(np.mean(own_family)), 6),
@@ -265,14 +310,18 @@ def retrieve(store: Store, queries: list[tuple[str, str]], k: int = TOP_K,
         raise ValueError("Every query must name a record of the store")
     if k < 1 or k > len(store.documents):
         raise ValueError("Top k must lie between one and the store size")
-    vectors, details = query_vectors(store, queries, sentences)
+    vectors, masked_vectors, details = query_vectors(store, queries, sentences)
     scores = vectors @ store.matrix.T
+    masked_scores = masked_vectors @ store.matrix.T
     ids = [document.doc_id for document in store.documents]
-    top, top_scores, ranks = [], [], []
-    for (query_id, _), row in zip(queries, scores):
+    top, top_scores, ranks, masked_ranks = [], [], [], []
+    for (query_id, _), row, masked in zip(queries, scores, masked_scores):
         order = np.argsort(-row, kind="stable")
         top.append(tuple(ids[i] for i in order[:k]))
         top_scores.append(tuple(round(float(row[i]), 8) for i in order[:k]))
         ranks.append(int(np.flatnonzero(order == store.index[query_id])[0]) + 1)
+        masked_order = np.argsort(-masked, kind="stable")
+        masked_ranks.append(int(np.flatnonzero(masked_order == store.index[query_id])[0]) + 1)
     return Retrieval(store.round, tuple(q for q, _ in queries), tuple(top), tuple(top_scores),
-                     tuple(ranks), tuple(d["source"] for d in details), tuple(details))
+                     tuple(ranks), tuple(d["source"] for d in details), tuple(masked_ranks),
+                     tuple(details))

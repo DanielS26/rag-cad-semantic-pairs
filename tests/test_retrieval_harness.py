@@ -43,6 +43,7 @@ from rag_cad.rag.retrieval import (
     EMBEDDING_COLUMNS,
     Document,
     build_store,
+    passage_bounds,
     retrieve,
     select_distractors,
     sentence_embeddings,
@@ -171,6 +172,9 @@ def test_store_requires_whole_families_and_records_its_composition():
         doc("cad:2", DISTRACTOR, (0, 1))
     with pytest.raises(ValueError, match="misaligned"):
         Document("x", "random_control", (0,), (0,), (False,), ("a",), np.zeros((2, EMBEDDING_COLUMNS)))
+    # a cue outside the record (sentence_before a target at sentence 0) is refused
+    with pytest.raises(ValueError, match="unknown cue"):
+        doc("g9_semantic", "twin", (0, 0), targets=(True, False), cue=(-1,))
 
 
 def test_retriever_places_queries_through_matching_sentences_and_ranks_by_cosine():
@@ -199,6 +203,15 @@ def test_retriever_places_queries_through_matching_sentences_and_ranks_by_cosine
     assert retrieval.sources[2] == CENTROID and retrieval.details[2]["matched"] == []
     facts = retrieval.facts(store, k=2)
     assert facts["queries"] == 4 and facts["slots"] == 8 and facts["centroid_fallback_queries"] == 1
+    # own-match shares: query 1 matched its own sentence and a_keyword's (1/2), query 2 both its own
+    # (1), query 3 nothing (0), query 4 only its own (1)
+    assert [d["own_match_share"] for d in retrieval.details] == [0.5, 1.0, 0.0, 1.0]
+    assert facts["own_match_share"] == pytest.approx(0.625)
+    # masked: "charlie delta" and "hotel" then match nothing and fall back to the centroid;
+    # "alpha river" keeps only "hotel river" (axis 6), which puts a_keyword first and a_malicious second
+    assert [d["masked_source"] for d in retrieval.details] == ["lexical", CENTROID, CENTROID, CENTROID]
+    assert retrieval.masked_rank[0] == 2  # a_keyword at 0.707, then the zero ties in store order
+    assert facts["hit_at_k_masked"] == pytest.approx(sum(r <= 2 for r in retrieval.masked_rank) / 4)
     assert facts["hit_at_k"] == pytest.approx(sum(r <= 2 for r in retrieval.own_rank) / 4, abs=1e-6)
     # the same store and queries give the same retrieval; ties go by store order
     assert retrieve(store, queries, k=2, sentences=2).digest == retrieval.digest
@@ -210,6 +223,20 @@ def test_retriever_places_queries_through_matching_sentences_and_ranks_by_cosine
                                                                "b_random")
     with pytest.raises(ValueError, match="name a record"):
         retrieve(store, [("missing", "alpha")])
+
+
+def test_passages_are_at_most_five_sentences_and_as_even_as_possible():
+    assert passage_bounds(1) == [(0, 1)] and passage_bounds(5) == [(0, 5)]
+    assert passage_bounds(6) == [(0, 3), (3, 6)] and passage_bounds(7) == [(0, 4), (4, 7)]
+    lengths = [end - start for start, end in passage_bounds(36)]
+    assert lengths == [5, 5, 5, 5, 4, 4, 4, 4] and sum(lengths) == 36
+    for count in range(1, 60):
+        bounds = passage_bounds(count)
+        assert bounds[0][0] == 0 and bounds[-1][1] == count and max(e - s for s, e in bounds) <= 5
+        assert all(left[1] == right[0] for left, right in zip(bounds, bounds[1:]))
+        assert max(e - s for s, e in bounds) - min(e - s for s, e in bounds) <= 1
+    with pytest.raises(ValueError, match="at least one"):
+        passage_bounds(0)
 
 
 def test_distractors_are_benign_remainders_drawn_once_with_the_seed():
@@ -308,6 +335,15 @@ def test_harness_end_to_end_on_synthetic_caches(synthetic, tmp_path, capsys):
         assert store["families"] == families and store["by_kind"][DISTRACTOR] == 2
         assert store["distractor_ids"] == report["stores"][0]["distractor_ids"]
     assert sum(store["documents"] - 2 for store in report["stores"]) == 4 * GROUPS
+    assert report["distractors"]["passages"] == 2 and report["distractors"]["passage_sentences"] == 6
+    assert report["stores"][0]["distractor_records"] == 2
+    concentration = report["retrieval"]["distractor_concentration"]
+    assert concentration["passages"] == 2
+    assert concentration["distractor_slots"] == report["retrieval"]["pooled"]["slots_by_kind"][DISTRACTOR]
+    benign = report["retrieval"]["pooled"]["benign_sentences_by_kind"]
+    assert report["gates"]["document_gate"][NO_GATE]["per_seed"]["none"]["overall"]["counts"][
+        "context_survival"] == sum(benign.values())
+    assert {"hit_at_k_masked", "mean_rank_masked", "own_match_share"} <= set(report["retrieval"]["pooled"])
     # one retrieval per round, identical for every row and gate
     digests = {json.dumps(table["retrieval_digests"], sort_keys=True)
                for gate in report["gates"].values() for table in gate.values()}
@@ -331,7 +367,8 @@ def test_harness_end_to_end_on_synthetic_caches(synthetic, tmp_path, capsys):
     assert set(m3["per_seed"]["0"]["per_round"]) == {str(r) for r in rounds}
     assert report["gates"]["document_gate"]["n0_released"]["seeds"] == ["none"]
     text = (output / MARKDOWN_FILE).read_text(encoding="utf-8")
-    assert "pass it unscored" in text and "## Sentence filter" in text and "hit@5" in text
+    assert "pass it unscored" in text and "## Sentence filter" in text and "hit@5 (own sentences masked)" in text
+    assert "Retrieved benign sentences" in text and "not a measure of retriever quality" in text
     table = [line.split(" | ")[0] for line in text.split("## Document gate")[1].splitlines() if line.startswith("| ")]
     assert table[1:8] == ["| no gate", "| BoW baseline", "| N0 released", "| M0 base", "| M1 random",
                           "| M2 keyword", "| M3 semantic"]
@@ -351,14 +388,16 @@ def test_distractors_are_scored_by_the_same_cell(synthetic):
     leaked = json.loads((synthetic["run"] / "leaked.json").read_text(encoding="utf-8"))
     chosen, _ = select_distractors(test_records, set(leaked["near_records"]), 160)
     documents = distractor_documents(cache, test_records, chosen)
+    # two remainders of three sentences each: one passage each, named after the parent record
     assert len(documents) == 2 and all(d.kind == DISTRACTOR and not any(d.labels) for d in documents)
+    assert all(d.doc_id == f"{d.parent_id}#p1" and d.scored_id == d.parent_id for d in documents)
     _, cells = load_run(synthetic["run"])
     manifest = cells[f"m3_semantic/round_{synthetic['rounds'][0]}/seed_1"]
     view = cell_view(manifest)
     scored = {(row["record_id"], row["sentence_id"]): row["probability"]
               for row in read_jsonl(manifest["directory"] / "released_test_rows.jsonl")}
     for document in documents:
-        expected = [scored[(document.doc_id, sid)] for sid in document.sentence_ids]
+        expected = [scored[(document.parent_id, sid)] for sid in document.sentence_ids]
         assert view.sentence_scores(document) == expected
         assert forward(document, DOCUMENT_GATE, view) == (() if max(expected) > 0.5 else document.sentence_ids)
         assert forward(document, SENTENCE_FILTER, view) == tuple(
@@ -387,6 +426,24 @@ def test_harness_refuses_inconsistent_inputs(synthetic, tmp_path, capsys):
     broken[name]["directory"] = copy
     with pytest.raises(ValueError, match="exactly the round's records"):
         run_harness(cache, synthetic["records"], test_records, leaked, cells | {name: broken[name]}, bow)
+    # a distractor sentence the cell's released-test rows do not score
+    unscored = tmp_path / "unscored"
+    shutil.copytree(cells[name]["directory"], unscored)
+    chosen = set(report["distractors"]["chosen_ids"])
+    rows = read_jsonl(unscored / "released_test_rows.jsonl")
+    dropped = next(i for i, row in enumerate(rows) if row["record_id"] in chosen and row["label"] == 0)
+    write_jsonl_lines(unscored / "released_test_rows.jsonl", rows[:dropped] + rows[dropped + 1:])
+    with pytest.raises(ValueError, match="does not score every sentence"):
+        run_harness(cache, synthetic["records"], test_records, leaked,
+                    cells | {name: {**cells[name], "directory": unscored}}, bow, distractors=1)
+    # a record flag that disagrees with the cell's own rows
+    disagree = tmp_path / "disagree"
+    shutil.copytree(cells[name]["directory"], disagree)
+    held = read_jsonl(disagree / "heldout_records.jsonl")
+    held[0] = {**held[0], "flagged": not held[0]["flagged"]}
+    write_jsonl_lines(disagree / "heldout_records.jsonl", held)
+    with pytest.raises(ValueError, match="flag differs from its rows"):
+        cell_view({**cells[name], "directory": disagree})
     # a baseline that misses a family; a family record whose text differs from the encoded one
     with pytest.raises(ValueError, match="every family once"):
         run_harness(cache, synthetic["records"], test_records, leaked, cells,

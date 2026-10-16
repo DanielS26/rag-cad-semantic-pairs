@@ -45,6 +45,7 @@ from rag_cad.rag.retrieval import (
     Retrieval,
     Store,
     build_store,
+    passage_bounds,
     retrieve,
     select_distractors,
     sentence_embeddings,
@@ -74,8 +75,10 @@ NAMES = {NO_GATE: "no gate", BOW: "BoW baseline", N0: "N0 released", M0: "M0 bas
          "m1_random": "M1 random", "m2_keyword": "M2 keyword", "m3_semantic": "M3 semantic"}
 LABELS = {"injected_pass_through": "injected pass-through", "twin_loss": "twin loss",
           "random_control_loss": "random loss", "keyword_control_loss": "keyword loss",
-          "distractor_loss": "distractor loss", "context_survival": "context survival",
-          "context_survival_family": "family context", "context_survival_distractor": "distractor context"}
+          "context_survival_family": "family context survival",
+          "context_survival": "context survival (all slots)", "distractor_loss": "distractor loss",
+          "context_survival_distractor": "distractor context"}
+CONCENTRATION_TOP = 10
 
 
 def family_documents(cache: TwoCache, records: list[dict]) -> dict[str, Document]:
@@ -114,7 +117,8 @@ def family_documents(cache: TwoCache, records: list[dict]) -> dict[str, Document
 
 
 def distractor_documents(cache: TwoCache, test_records: list[dict], chosen: list[dict]) -> list[Document]:
-    """The chosen benign remainders, with embeddings from the cached released-test rows."""
+    """The chosen benign remainders cut into passages of at most five consecutive sentences, each
+    a document that names its parent record, with embeddings from the cached released-test rows."""
     rows = cache.released_test.rows
     positions = {(row["record_id"], row["sentence_id"]): index for index, row in enumerate(rows)}
     by_id = {record["record_id"]: record for record in test_records}
@@ -130,11 +134,13 @@ def distractor_documents(cache: TwoCache, test_records: list[dict], chosen: list
             if rows[positions[key]]["record_content_hash"] != record_content_hash(record):
                 raise ValueError(f"Released-test record {item['record_id']} differs from its encoding")
             indices.append(positions[key])
-        ids = tuple(item["sentence_ids"])
-        documents.append(Document(item["record_id"], DISTRACTOR, ids, (0,) * len(ids), (False,) * len(ids),
-                                  tuple(texts[i] for i in ids),
-                                  sentence_embeddings(cache.released_test.features[indices]),
-                                  group_id=record["group_id"]))
+        embeddings = sentence_embeddings(cache.released_test.features[indices])
+        for number, (start, end) in enumerate(passage_bounds(len(indices)), 1):
+            ids = tuple(item["sentence_ids"][start:end])
+            documents.append(Document(f"{item['record_id']}#p{number}", DISTRACTOR, ids, (0,) * len(ids),
+                                      (False,) * len(ids), tuple(texts[i] for i in ids),
+                                      embeddings[start:end], group_id=record["group_id"],
+                                      parent_id=item["record_id"]))
     return documents
 
 
@@ -263,25 +269,59 @@ def run_harness(cache: TwoCache, records: list[dict], test_records: list[dict], 
                         if not family_ids <= held or (condition not in (N0, M0) and held != family_ids):
                             raise ValueError(f"Cell {manifest['cell']} does not hold exactly the round's "
                                              "records")
+                        for document in stores[number].documents:  # every store document, retrieved or not
+                            view_of(manifest).sentence_scores(document)
                         checked.add((manifest["cell"], number))
                     outcomes[seed][number] = gate_outcomes(stores[number], retrievals[number], gate,
                                                            view_of(manifest))
             tables[gate][condition] = row_table(outcomes, digests)
     facts = [retrievals[n].facts(stores[n]) for n in cache.rounds]
     ranks = np.asarray([rank for n in cache.rounds for rank in retrievals[n].own_rank], dtype=float)
+    masked = np.asarray([rank for n in cache.rounds for rank in retrievals[n].masked_rank], dtype=float)
+    shares = [d["own_match_share"] for n in cache.rounds for d in retrievals[n].details]
+    benign: dict[str, int] = {}
+    for item in (item for n in cache.rounds for item in plain[SEED_NONE][n]):
+        benign[item["kind"]] = benign.get(item["kind"], 0) + item["benign"]
     pooled = {"queries": int(len(ranks)), "hit_at_k": round(float((ranks <= TOP_K).mean()), 6),
               "mean_rank": round(float(ranks.mean()), 6), "median_rank": float(np.median(ranks)),
+              "hit_at_k_masked": round(float((masked <= TOP_K).mean()), 6),
+              "mean_rank_masked": round(float(masked.mean()), 6),
+              "median_rank_masked": float(np.median(masked)),
+              "own_match_share": round(float(np.mean(shares)), 6),
+              "benign_sentences_by_kind": {kind: benign.get(kind, 0) for kind in facts[0]["slots_by_kind"]},
               "slots": sum(f["slots"] for f in facts),
               "slots_by_kind": {kind: sum(f["slots_by_kind"][kind] for f in facts)
                                 for kind in facts[0]["slots_by_kind"]},
               "own_family_slot_share": round(float(np.mean([f["own_family_slot_share"] for f in facts])), 6),
               "centroid_fallback_queries": sum(f["centroid_fallback_queries"] for f in facts)}
+    sizes = {d.doc_id: (d.scored_id, len(d.sentence_ids)) for d in pool}
+    slots: dict[str, int] = {}
+    for number in cache.rounds:
+        for top in retrievals[number].top:
+            for doc_id in top:
+                if doc_id in sizes:
+                    slots[doc_id] = slots.get(doc_id, 0) + 1
+    parents: dict[str, int] = {}
+    for doc_id, count in slots.items():
+        parents[sizes[doc_id][0]] = parents.get(sizes[doc_id][0], 0) + count
+    ranked = sorted(slots.items(), key=lambda item: (-item[1], item[0]))
+    total = sum(slots.values())
+    concentration = {"distractor_slots": total, "passages_retrieved": len(slots), "passages": len(pool),
+                     "top_passages": [{"doc_id": doc_id, "parent_id": sizes[doc_id][0],
+                                       "sentences": sizes[doc_id][1], "slots": count}
+                                      for doc_id, count in ranked[:CONCENTRATION_TOP]],
+                     "top_three_share": round(sum(c for _, c in ranked[:3]) / total, 6) if total else None,
+                     "slots_by_parent": dict(sorted(parents.items(), key=lambda item: (-item[1], item[0])))}
+    summary = {**summary, "passages": len(pool), "passage_sentences": sum(len(d.sentence_ids) for d in pool),
+               "passage_lengths": sorted(len(d.sentence_ids) for d in pool),
+               "max_passage_sentences": max(len(d.sentence_ids) for d in pool)}
     lines = []
     for number in cache.rounds:
         store, retrieval = stores[number], retrievals[number]
         for query_id, top, scores, rank, details in zip(retrieval.query_ids, retrieval.top, retrieval.scores,
                                                         retrieval.own_rank, retrieval.details):
             lines.append({"round": number, "query_id": query_id, "own_rank": rank, "source": details["source"],
+                          "own_match_share": details["own_match_share"],
                           "matched_sentences": details["matched"],
                           "top": [[doc_id, store.documents[store.index[doc_id]].kind, score]
                                   for doc_id, score in zip(top, scores)]})
@@ -291,7 +331,8 @@ def run_harness(cache: TwoCache, records: list[dict], test_records: list[dict], 
                            "distractors_requested": distractors, "rounds": cache.rounds},
               "distractors": summary,
               "stores": [stores[n].composition() for n in cache.rounds],
-              "retrieval": {"per_round": facts, "pooled": pooled, "digest": digest(digests)},
+              "retrieval": {"per_round": facts, "pooled": pooled, "digest": digest(digests),
+                            "distractor_concentration": concentration},
               "gates": tables}
     return report, lines
 
@@ -301,13 +342,19 @@ DEFINITIONS = {
                 "(the standalone half of the cached CAD feature, columns 0 to 1,023), unit-normalised",
     "query_vector": "the mean embedding of the five store sentences that best match the query field by "
                     "TF-IDF cosine (no cache holds a query embedding and the encoder is not called); the "
-                    "store centroid when no term matches",
+                    "store centroid when no term matches. The query's own record's sentences are "
+                    "among the matched sentences (the own-match share), so hit@5 describes this "
+                    "placement as much as the retriever and is not a measure of retriever quality; "
+                    "the figure with the own record's sentences masked is given beside it. Retrieval "
+                    "is identical for every row, so the gate comparisons do not depend on it",
     "retrieval": "exact cosine search, top five per query, ties by store order; one retrieval per round "
                  "serves every row",
     "distractor": "the benign (label 0) sentences of a released CAD test record outside the excluded set; "
-                  "one record per distinct remainder text, drawn once with seed 764, the same in every "
-                  "round; scored by the same cell's released-test predictions, which were made with the "
-                  "record's injected sentence still in context",
+                  "one record per distinct remainder text, drawn once with seed 764, cut into passages of "
+                  "at most five consecutive sentences (as even as possible), each passage a document, "
+                  "the same in every round; scored by its parent record's predictions in the same "
+                  "cell's released-test rows, which were made with the injected sentence still in "
+                  "context",
     "document_gate": "drop a retrieved document the scorer flags (any sentence probability above 0.5); "
                      "the bag-of-words baseline scores twin and malicious records only, so controls and "
                      "distractors pass it unscored",
@@ -318,8 +365,9 @@ DEFINITIONS = {
                  "or a cue sentence (a query cue sits in the query, which no gate touches)",
     "control_loss": "share of retrieved random or keyword controls dropped or forwarded with any "
                     "sentence removed; distractor loss the same for distractors",
-    "context_survival": "share of retrieved benign sentences forwarded (all slots; family records only; "
-                        "distractors only)",
+    "context_survival": "share of retrieved benign sentences forwarded: family records only (the "
+                        "headline), all slots, and distractors only; the retrieved benign sentence "
+                        "counts per kind are printed under each gate table",
     "slots": "every document in every query's top five; a document retrieved by several queries counts "
              "each time",
     "spread": "each seed's slots pooled over the rounds; mean over seeds with the population sd (ddof 0); "
@@ -343,22 +391,42 @@ def markdown(report: dict) -> str:
              f"{settings['threshold']}; distractors {report['distractors']['chosen']} of "
              f"{settings['distractors_requested']} requested ({settings['distractor_set']}, seed "
              f"{settings['distractor_seed']}, {report['distractors']['distinct_benign_remainders']} "
-             "distinct benign remainders available); Phase 7 run "
+             f"distinct benign remainders available, cut into {report['distractors']['passages']} "
+             f"passages of {report['distractors']['passage_sentences']} sentences, at most "
+             f"{report['distractors']['max_passage_sentences']} each); Phase 7 run "
              f"{report['inputs']['run_config_fingerprint'][:12]}; commit {str(report['commit'])[:12]}.", "",
              "## Retrieval (identical for every row)", "",
-             "| round | documents | family records | distractors | queries | hit@5 | mean rank | "
+             "hit@5 and mean rank describe the query placement as much as the retriever: the query's "
+             "own record's sentences are among its matched sentences (own-match share). The masked "
+             "columns place the query without them. Retrieval is the same for every row, so the gate "
+             "comparisons do not depend on it.", "",
+             "| round | documents | family records | distractor passages | queries | hit@5 | mean rank | "
+             "hit@5 (own sentences masked) | mean rank (masked) | own-match share | "
              "slots: malicious / twin / random / keyword / distractor | centroid queries |",
-             "|---|---|---|---|---|---|---|---|---|"]
+             "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for store, facts in zip(report["stores"], report["retrieval"]["per_round"]):
         kinds = facts["slots_by_kind"]
         lines.append(f"| {facts['round']} | {store['documents']} | {store['documents'] - store['by_kind'][DISTRACTOR]}"
                      f" | {store['by_kind'][DISTRACTOR]} | {facts['queries']} | {facts['hit_at_k']:.3f} | "
-                     f"{facts['mean_rank']:.2f} | " + " / ".join(str(kinds[k]) for k in kinds) +
-                     f" | {facts['centroid_fallback_queries']} |")
+                     f"{facts['mean_rank']:.2f} | {facts['hit_at_k_masked']:.3f} | "
+                     f"{facts['mean_rank_masked']:.2f} | {facts['own_match_share']:.3f} | " +
+                     " / ".join(str(kinds[k]) for k in kinds) + f" | {facts['centroid_fallback_queries']} |")
     kinds = retrieval["slots_by_kind"]
     lines.extend([f"| all | | | | {retrieval['queries']} | {retrieval['hit_at_k']:.3f} | "
-                  f"{retrieval['mean_rank']:.2f} | " + " / ".join(str(kinds[k]) for k in kinds) +
-                  f" | {retrieval['centroid_fallback_queries']} |", ""])
+                  f"{retrieval['mean_rank']:.2f} | {retrieval['hit_at_k_masked']:.3f} | "
+                  f"{retrieval['mean_rank_masked']:.2f} | {retrieval['own_match_share']:.3f} | " +
+                  " / ".join(str(kinds[k]) for k in kinds) + f" | {retrieval['centroid_fallback_queries']} |", ""])
+    concentration = report["retrieval"]["distractor_concentration"]
+    if concentration["distractor_slots"]:
+        top = concentration["top_passages"][0]
+        lines.extend([f"Distractor slots: {concentration['distractor_slots']} over "
+                      f"{concentration['passages_retrieved']} of {concentration['passages']} passages; the "
+                      f"most retrieved passage ({top['sentences']} sentences) takes {top['slots']}, the top "
+                      f"three {concentration['top_three_share']:.3f} of them.", ""])
+    benign = retrieval["benign_sentences_by_kind"]
+    counts = ("Retrieved benign sentences (the survival denominators, the same for every row): " +
+              ", ".join(f"{kind.replace('_', ' ')} {count}" for kind, count in benign.items()) +
+              f"; family {sum(c for k, c in benign.items() if k != DISTRACTOR)}, all {sum(benign.values())}.")
     columns = tuple(LABELS)
     for gate in GATES:
         title = "Document gate" if gate == DOCUMENT_GATE else "Sentence filter"
@@ -367,11 +435,11 @@ def markdown(report: dict) -> str:
         rows = [(row, report["gates"][gate][row]) for row in ROWS if row in report["gates"][gate]]
         for row, table in rows:
             lines.append(f"| {NAMES[row]} | " + " | ".join(_cell(table["overall"][c]) for c in columns) + " |")
-        lines.append("")
+        lines.extend(["", counts, ""])
         if gate == DOCUMENT_GATE:
             lines.extend(["The BoW baseline scores twin and malicious records only: controls and distractors "
                           "pass it unscored, so its control and distractor loss are zero by construction.", ""])
-        family_columns = columns[:4] + ("context_survival_family",)
+        family_columns = columns[:5]
         for name in BREAKDOWN:
             lines.extend([f"### {title} by {name.replace('_', ' ')}", "",
                           "| slice | row | " + " | ".join(LABELS[c] for c in family_columns) + " |",
