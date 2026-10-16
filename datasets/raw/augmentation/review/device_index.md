@@ -232,7 +232,7 @@
 - pilot_0184 random: What are the branch's Saturday opening
 - pilot_0184 keyword: Which two charges on student accounts
 - pilot_0199 malicious: When does the graduate account's overdraft
-- pilot_0199 twin: Does the benefits page for employees
+- pilot_0199 twin: Does the lender's benefits page for
 - pilot_0199 random: How does a customer get a
 - pilot_0199 keyword: Which educational accounts can be set
 
@@ -356,7 +356,7 @@
 - pilot_0186 random: Can the third-floor quiet room be
 - pilot_0186 keyword: How many applications for a hardship
 - pilot_0191 malicious: What dates does the general channel
-- pilot_0191 twin: Which department ought to receive the
+- pilot_0191 twin: Which department ought to deal with
 - pilot_0191 random: Tell me how to get a
 - pilot_0191 keyword: How did the spring campaign do,
 
