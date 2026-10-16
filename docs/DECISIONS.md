@@ -561,3 +561,18 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song's standing direction of 2026-10-13 and his approval of the pipeline change on 2026-10-14, applied to the reader's proposals of 2026-10-15.
 - Related files, commands, results, correspondence, or commit: [self-check module](../src/rag_cad/data/selfcheck.py), [worker brief](../datasets/raw/augmentation/BATCH_WORKER_BRIEF_v1.md), [reader brief](../datasets/raw/augmentation/REVIEW_BRIEF_v2.md), [data card](DATA_CARD.md); D-20261014-32; D-20261014-33.
 - Supersedes / superseded by: Extends D-20261014-33; nothing superseded.
+
+## D-20261015-35 - Leaner loop steps for batches 13 to 20: drafting on the branch, one finalisation per pair, two agents at a time
+
+- Status: Confirmed
+- Date: 2026-10-15
+- Project phase: Phase 5 onward
+- Category: Process
+- Decision or important note: The pipeline of D-20261014-32 keeps its quality controls and drops three steps that cost tokens without adding checks. (a) From batch 13 a drafting worker drafts directly on the batch's branch (created from the previous batch's branch head) and commits; the park-and-commit split, which cost a second worker of 145k to 195k tokens per batch, is kept only for drafting in parallel. (b) After a paired review, one worker finalises both batches in sequence: the first on its branch, then the second after rebasing its branch onto the first (manifest rebuilt from the finalised branch plus the new entries, cue index regenerated), with one archive directory for the pair and one pull request per batch as before. (c) Drafting aims at one repair pass: lengths planned before writing (pair members within five per cent, controls within ten per cent of the twin), every self-check finding fixed in one edit script, a second pass only for regressions. (d) At most two agents run at a time, so the usage window is not exhausted mid-batch. Measured cost per batch under D-20261014-32 before this change: drafting 320k to 360k tokens, commit step 145k to 195k, reader 140k (paired), finalisation 260k to 300k, about 950k in all; expected after it about 600k to 650k. Not changed: the independent reader per pair, the mechanical cross-batch checks on every run, the human review sheet, the archive, the per-batch data-card and progress entries. Considered and declined: drafting all remaining families at once and slicing them into batches at the end (no saving, since the cost is per family and per agent context, and it would remove the per-pair feedback that has changed the rules at D-30 to D-34 and repaired about half the twins of every batch); reviews in triples (the finalisation of three batches in one worker grows its context past the point where the saving holds).
+- Context and reason: Daniel Song asked on 2026-10-15 whether creating all remaining data at once would be cheaper and approved these steps instead ("Ok I agree go with your ideas").
+- Evidence: the worker and reader token and duration figures recorded in the progress entries of 2026-10-14 and 2026-10-15.
+- Alternatives considered: as above.
+- Consequences for implementation/evaluation/report: BATCH_WORKER_BRIEF_v1.md gains section 5 (sequencing, pair finalisation, the rebase recipe); batches 11 and 12, already drafted and parked, still go through the commit step; batches 13 to 20 follow the new steps; the report's cost figures for the loop are the ones above.
+- Approved by: Daniel Song, 2026-10-15.
+- Related files, commands, results, correspondence, or commit: [worker brief](../datasets/raw/augmentation/BATCH_WORKER_BRIEF_v1.md); D-20261014-32; D-20261015-34.
+- Supersedes / superseded by: Amends the worker steps of D-20261014-32; nothing else superseded.

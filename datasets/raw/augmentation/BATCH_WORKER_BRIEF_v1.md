@@ -147,3 +147,25 @@ builder; the drafter's answers; the cue index.
    `git worktree remove --force <path>`.
 5. Report: applied and declined lists with reasons, the checker proposals verbatim (for decision), the
    exit codes, the commit hash and the pull request URL.
+
+## 5. Sequencing, pair finalisation and the rebase recipe (D-20261015-35)
+
+- Phase A runs on the batch's branch unless the orchestrator says "park": create `phase5-batch-NN` from the
+  branch head the orchestrator names, build with RCSP_REPO set to the main checkout, check, answer, then
+  commit the five paths of Phase A step 4 and push. Plan lengths before writing (pair members within five
+  per cent of each other, controls within ten per cent of the twin) so that the self-check needs one repair
+  pass; put every finding of the first full run into one edit script, and use a second pass only for
+  regressions.
+- Phase B in pair mode finalises batches NN and NN+1 in one run after their paired review. First finalise
+  NN on `phase5-batch-NN` exactly as section 4 says (archive directory `review_batch_NN_NN+1_<date>`, the
+  preamble carrying NN's outcome and the sentence "Batch NN+1's outcome is added below."), commit, push,
+  open its pull request. Then `git checkout phase5-batch-NN+1` and `git rebase phase5-batch-NN`. If the
+  rebase stops on conflicts: for `datasets/raw/augmentation/review/cue_index.md` take the version from the
+  commit being replayed (`git checkout --theirs <path>` then `git add <path>`); for
+  `datasets/raw/augmentation/family_manifest.jsonl` do the same, then after `git rebase --continue` rebuild
+  the manifest as the finalised batch NN manifest (`git show phase5-batch-NN:datasets/raw/augmentation/family_manifest.jsonl`)
+  followed by batch NN+1's own ten entries, regenerate the cue index, and commit that repair before any
+  other edit. Then finalise NN+1 as section 4 says, add its outcome to the pair preamble in place of the
+  sentence above, commit, and push with `git push --force-with-lease origin phase5-batch-NN+1`, then open
+  its pull request stacked on NN's.
+- At most two agents work at a time; a drafting worker and a reader, or a reader and a finaliser.
