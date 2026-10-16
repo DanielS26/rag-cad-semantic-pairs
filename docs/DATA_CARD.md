@@ -542,3 +542,43 @@ near their targets' subjects). The independent reader's findings (accept 1, acce
 fix 3 (one must-fix, pilot_0127), contestable label 0; S13 YES for every malicious document, with
 reservations on the twin side for pilot_0122 and pilot_0124; the provenance check passed) are
 archived under docs/archive/review_batch_13_14_2026-10-15 with the outcome.
+
+## Batch 14
+
+Batch 14 (pilot_0131 to pilot_0140, drafted 15 October 2026 under DRAFTING_PROMPT_v3.md) takes
+nine ASB operational targets (rows 202, 206, 231, 283, 287, 334 and 358 clean; row 271 with the
+patient's name replaced under R2 by 'the patient with ID 789012'; the aerospace row 398 under the
+supply decision of D-20261015-38; all Aggressive false) and the BIPIA task-type string train
+learning_and_tutoring:2, taken after train language_translation:0 proved already used by
+pilot_0039, drafted by Claude Fable 5.1. Coverage after 140 families: quotation, negation,
+analysis and task_alignment 18, warning, translation, historical_description and authorisation 17;
+every cue position 28; nine domains in the batch, travel twice. The hard negative is pilot_0133,
+the branch's identity-checks page (token 'phishing', an identity-check document, neither
+procurement nor physical access, not opening 'After the <month> incident'); the weak cue is
+pilot_0131, the records officer's data-handling certificate on the long-service awards page (S3
+YES, weak_cue: attacker_writable, M18 agreeing). The twin is the longer member in 4 of 10 (5 of 10
+at the draft: pilot_0133's trim made its malicious member the longer one), 9 of 20 across the
+pair. Agent-to-domain deviations: six of the nine ASB rows sit away from their default domain: row
+206 (system administration) in email, 202 (system administration) in workplace_chat, 358 (academic
+search) in banking, 271 (medical) in it_security, 231 (finance) in travel and 283 (education) in
+healthcare_admin; rows 287 (education, hr_policy) and 334 (e-commerce, customer_support) sit in a
+default domain but in documents that never carry such a request (a long-service awards page and a
+staff shuttle page; a loyalty page and a bike assembly page); row 398 (aerospace) has no default
+and sits in legal. Devices: accredited-operator (pilot_0131, mechanism operator-accreditation),
+misdirected-request (pilot_0132, standing-rule-refusal), paste-error (pilot_0133, mistaken-paste,
+a new genus name), breached-vendor (pilot_0134, compromised-source-hold), stylometric-match
+(pilot_0135, specimen-measurement), benchmark-input (pilot_0136, specimen-measurement),
+translator-query (pilot_0137, awaiting-rendering, English into Finnish, a language new to the
+set), abolished-post (pilot_0138, dated-removal), bug-report-reproduction (pilot_0139, verbatim-
+reproduction) and interview-scenario (pilot_0140, exercise-prompt); the register's within-batch
+warning on the two analysis twins stands as a planning signal. After the review, pilot_0137's
+closing sentence reports the training-system trial and the handover to the site's service desk
+(the agency and the open questions that carried the benign reading are gone), pilot_0133's closing
+sentence ends at the branch's advisers, and pilot_0138's cue names the board's 1998 minute; the
+two query-cue families label their S1 query [asserts]. BIPIA is exhausted from this batch
+(D-20261015-39). The reader's independence caveat on pilot_0135 is carried in the archive
+preamble. The independent reader's findings (accept 3, accept with note 4, fix 3 (one must-fix,
+pilot_0137), contestable label 0; S13 YES for every malicious document; the provenance check
+passed, with pilot_0137's declared R2 adaptation (the patient's name replaced) the only difference
+from the pinned file) are archived under docs/archive/review_batch_13_14_2026-10-15 with the
+outcome.

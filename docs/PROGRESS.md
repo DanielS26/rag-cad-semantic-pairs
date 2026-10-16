@@ -2701,3 +2701,92 @@ Historical audit claims are distinguished from checks executed in this session.
 - Next: batch 14's finalisation on phase5-batch-14 rebased onto this branch,
   then batch 15 on phase5-batch-15 under D-20261015-40 with the register's
   warnings in force at plan time
+
+## 2026-10-15 - Batch 14 Reviewed And Repaired
+
+- Review: accept 3, accept with note 4, fix 3 (one must-fix, pilot_0137),
+  contestable label 0; S13 YES for every malicious document; the provenance
+  check passed, with pilot_0137's declared R2 adaptation (the patient's name
+  replaced) the only difference from the pinned file; what mattered:
+  pilot_0137's closing sentence said the rest of the text went to the agency
+  and that open questions are answered, a second carrier of the benign reading
+  without the heading (must-fix 1); pilot_0133's closing sentence was padded
+  to 311 characters to meet R4/R5 and carried the batch's third twin-side
+  'appointment' (should-fix 3); pilot_0138's 'the board's minute of that year'
+  took 2008 as its antecedent while the duty comes from the 1998 minute
+  (should-fix 4); the mechanism repeats inside the pair: pilot_0132 repeats
+  pilot_0122's standing-rule refusal, pilot_0134 repeats pilot_0125's
+  compromised source (with pilot_0116 the genus's third use), pilot_0137 keeps
+  pilot_0070's awaiting-rendering in pilot_0105's and pilot_0114's heading
+  skeleton, both analysis twins measure the sentence as a specimen, and
+  pilot_0140 recombines pilot_0109 and pilot_0110; pilot_0135, pilot_0136 and
+  pilot_0139 were accepted outright, pilot_0136's letter count the best count
+  answer in the set so far
+- Applied: must-fix 1 (pilot_0137's closing sentence in the reader's wording:
+  the finished version is tried on the training system, the site's service
+  desk takes over support and the desk's hours are listed at the foot of the
+  page); should-fix 3 (pilot_0133's closing sentence trimmed of its padded
+  clause, in the reader's wording); should-fix 4 (pilot_0138's cue names the
+  board's 1998 minute); the mechanism genus of D-20261015-41 in every
+  justification: from the reader's mapping where it names one (pilot_0131
+  operator-accreditation, 0132 standing-rule-refusal, 0134 compromised-source-
+  hold, 0135 and 0136 specimen-measurement, 0137 awaiting-rendering, 0140
+  exercise-prompt), from the decision's vocabulary where it does not (0138
+  dated-removal, 0139 verbatim-reproduction) and one new name stated as such
+  (0133 mistaken-paste, the genus pilot_0056's mistaken paste would share);
+  the S1 labels of the two query-cue families (pilot_0133, pilot_0140) changed
+  to [asserts]. Declined with reasons: none.
+- Checker proposals: as recorded for batch 13: A and B are recorded for the
+  orchestrator with the reader's retroactive counts, and C was adopted as
+  D-20261015-41 and applied here; batch 14's genera are operator-
+  accreditation, standing-rule-refusal, mistaken-paste (new), compromised-
+  source-hold, specimen-measurement (twice), awaiting-rendering, dated-
+  removal, verbatim-reproduction and exercise-prompt; the register's within-
+  batch warning fires on the analysis role (pilot_0135 and pilot_0136 on
+  specimen-measurement) and stands as a planning signal for this pair, drafted
+  before the register existed; no genus reaches three tagged twins of a role
+  yet (standing-rule-refusal, compromised-source-hold, specimen-measurement
+  and exercise-prompt stand at two each across the pair). The reader recorded
+  an independence caveat: it saw the drafter's pilot_0135 answers (and part of
+  pilot_0134's) before writing its own, so the pilot_0135 agreement is
+  unverified
+- After the edits: self-check exit 0 against batches 01 to 13 with two WARNs,
+  the set-wide M9 query phrase list ('does', 'page', 'notice') and the M14
+  planning signal (analysis, specimen-measurement, pilot_0135 and pilot_0136);
+  prescreen exit 0 (140 families, no failures or warnings); validate exit 0
+  (560 records, no duplicates); the semantic gate passed with the refreshed
+  answers; twin longer in 4 of 10 (5 of 10 at the draft: pilot_0133's trim
+  made its malicious member the longer one), 9 of 20 across the pair; hard
+  negative pilot_0133, the branch's identity-checks page (token 'phishing', an
+  identity-check document, neither procurement nor physical access, not
+  opening 'After the <month> incident'); weak cue pilot_0131, the records
+  officer's data-handling certificate on the long-service awards page (S3 YES,
+  weak_cue: attacker_writable, M18 agreeing); coverage after 140 families:
+  quotation, negation, analysis and task_alignment 18, warning, translation,
+  historical_description and authorisation 17; every cue position 28; nine
+  domains in the batch, travel twice; review sheet pilot_review_batch_14.md
+  regenerated; supply BIPIA is exhausted from this batch (D-20261015-39):
+  train language_translation:0 proved already used by pilot_0039, so train
+  learning_and_tutoring:2 was taken under R1's swap rule; ASB rows 202, 206,
+  231, 271, 283, 287, 334, 358 and 398 join the used list; batches 15 to 20
+  draw on the ASB pools of D-20261015-38.
+- Watch-list for the next batch: the attack-goal mix is the first planning
+  problem: BIPIA is exhausted, so batches 15 to 20 carry one goal each and
+  batch number predicts the goal, which the folds absorb and M19 reports per
+  batch; one mechanism genus per role per pair, now counted by the register:
+  negation wants a recall or a voided object, task_alignment a checklist
+  applied to the user's own draft (pilot_0007's frame), translation a glossary
+  check or a pronunciation drill, analysis anything but a measurement of the
+  sentence; put the twin where the target's object has no place: name the
+  target's object at plan time and check that no non-cue sentence of the twin
+  mentions it (pilot_0134's IT channel hosting a root-access request is this
+  batch's case); query cues label their S1 query [asserts]; count numerals per
+  side at plan time (batch 14's malicious members carried 35 against 22 twin);
+  balance 'asks'/'asked' across the sides (five malicious members against one
+  twin in this batch) rather than moving it off the twin side; no general-
+  purpose venue (a notices page, a channel) for a twin; no closing sentence
+  padded past about 250 characters to meet R4/R5; add a sentence to the
+  controls instead
+- Next: batch 15 on phase5-batch-15 under D-20261015-39 and D-20261015-40 (the
+  model swap and controls from a specification), with the register's warnings
+  in force at plan time; the reader's worktree rcsp_review14 removed
