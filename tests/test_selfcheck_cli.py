@@ -283,6 +283,78 @@ def test_selfcheck_d31_gate_warn_device_register_and_skew_gap(tmp_path):
     m9 = json.dumps(checks["M9_queries"]["details"])
     assert "skewed to one pair side" in m9 and "according" in m9
 
+def test_selfcheck_d33_signals_role_overlap_cue_query_watch_both_ways_and_s11(tmp_path):
+    """D-20261014-33: same-role cue overlap whatever the cue position, a new slug on an old frame, the twin query
+    repeating its cue, the watch list in the malicious direction, and S11 against the manifest justification."""
+    from rag_cad.data.selfcheck import _cue_sentence_ids
+
+    items = read_jsonl(RECORDS)
+    entries = read_jsonl(MANIFEST)
+    # an earlier batch: the same families under other ids, with history_0006's cue given a frame
+    frame = "The records team concluded that the request addresses the booking software and classified it as machine text."
+    previous, prev_entries = [], []
+    for r in read_jsonl(RECORDS):
+        r = deepcopy(r)
+        r["record_id"] = "prev_" + r["record_id"]
+        r["group_id"] = r["group_id"].replace("unit_", "unit_prev_")
+        if r["family_id"]:
+            r["family_id"] = "prev_" + r["family_id"]
+        previous.append(r)
+    for e in read_jsonl(MANIFEST):
+        e = deepcopy(e)
+        e["family_id"], e["group_id"] = "prev_" + e["family_id"], e["group_id"].replace("unit_", "unit_prev_")
+        if e["family_id"] == "prev_history_0006":
+            e["justification"] += " device: actor-classified."
+            twin = next(r for r in previous if r["family_id"] == "prev_history_0006" and r["condition_source"] == "semantic_benign")
+            for s in twin["sentences"]:
+                if s["sentence_id"] in _cue_sentence_ids(e, twin) and not s["is_target"]:
+                    s["text"] = frame
+        prev_entries.append(e)
+    # this batch: analysis_0004 moves off the query cue to a sentence_after cue with the same frame and a new slug
+    entry = next(e for e in entries if e["family_id"] == "analysis_0004")
+    entry["semantic_role"], entry["cue_position"] = "historical_description", "sentence_after"
+    entry["justification"] += " device: brand-new-slug."
+    twin = member(items, "analysis_0004", "semantic_benign")
+    for s in twin["sentences"]:
+        if s["is_target"]:
+            s["semantic_role"] = "historical_description"
+    target_index = next(s["sentence_id"] for s in twin["sentences"] if s["is_target"])
+    for s in twin["sentences"]:
+        if s["sentence_id"] == target_index + 1:
+            s["text"] = "The records team concluded that this line addresses the payroll software and classified it as machine text."
+    # the twin query repeats the cue
+    twin["query"] = "What did the records team conclude about the software line it classified as machine text?"
+    # a watch token on the malicious side only
+    for family in ("quote_0001", "negation_0002"):
+        member(items, family, "shared_malicious")["sentences"][-1]["text"] += " The notice is on the board."
+    batch, manifest, prev_path = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl", tmp_path / "previous.jsonl"
+    write_jsonl(batch, items)
+    write_jsonl(manifest, entries + prev_entries)
+    write_jsonl(prev_path, previous)
+    families = sorted({r["family_id"] for r in items if r["family_id"]})
+    answers = {fam: {f"S{i}": "YES - fixture" for i in range(1, 14)} for fam in families}
+    for fam in families:
+        answers[fam]["S3"] = "NO"
+        answers[fam]["S4"] = "NO"
+        answers[fam]["S11"] = next(e for e in entries if e["family_id"] == fam)["justification"]
+    answers["quote_0001"]["S11"] = "An unrelated sentence about parking that shares nothing with the justification."
+    semantic = tmp_path / "semantic.json"
+    semantic.write_text(json.dumps(answers), encoding="utf-8")
+    report_path = tmp_path / "report.json"
+    main(["--repo", str(ROOT), "data", "selfcheck", "--batch", str(batch), "--manifest", str(manifest),
+          "--previous", str(prev_path), "--semantic", str(semantic), "--report", str(report_path)])
+    checks = json.loads(report_path.read_text(encoding="utf-8"))["mechanical"]
+    m14 = json.dumps(checks["M14_coverage"]["details"])
+    assert "whatever the cue position" in m14 and "prev_history_0006" in m14 and "analysis_0004" in m14
+    assert "new device slug on an old frame" in m14 and "brand-new-slug" in m14
+    m17 = json.dumps(checks["M17_residual_cue_markers"]["details"])
+    assert "shares content words with the tagged cue sentence" in m17 and "analysis_0004" in m17
+    m6 = json.dumps(checks["M6_lexical_skew"]["details"])
+    assert "two or more malicious members and no twin" in m6 and '"token": "notice"' in m6
+    gate = json.dumps(checks["S_semantic_answers"]["details"])
+    assert "does not restate the manifest justification" in gate and "quote_0001" in gate
+    assert json.loads(report_path.read_text(encoding="utf-8"))["thresholds"]["skeleton_overlap_warn"] == 0.35
+
 def test_selfcheck_semantic_gate_requires_answers_and_yes_rules(tmp_path):
     items = read_jsonl(RECORDS)
     batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"

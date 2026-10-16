@@ -330,3 +330,31 @@ frames repeated from earlier twins with other nouns, and on "entry" as a twin-on
 malicious label was contested. Every finding, applied or declined with its reason, is archived
 under docs/archive/review_batch_07_2026-10-14/, and the signals became checker warnings, the
 cue-device register and gate wording under D-20261014-31.
+
+## Batch 08
+
+Batch 08 (pilot_0071 to pilot_0080, drafted 14 October 2026 under DRAFTING_PROMPT_v3.md) takes six
+ASB targets (rows 216, 234, 255, 286, 333 and 351) and four BIPIA task-type strings
+(business_intelligence:4 and conversational_agent:4 from the test file, content_creation:4 and
+language_translation:3 from the train file). Coverage after 80 families: negation 11, quotation 11,
+analysis, historical_description, task_alignment, translation and warning 10, authorisation 8; cue
+positions query 18, sentence_before 17, sentence_after 17, heading 14, policy 14; nine domains; no
+role confined to one domain. The hard negative is pilot_0073, an email quarantine notice (the sixth
+hard negative, a new domain for one, and the set's first two-sentence pair member); the weak cue is
+pilot_0075, a change ticket in a gateway change log that an attacker could have written. The twin is
+the longer member in 5 of 10 families (3 of 6 operational, 2 of 4 task-type). The agent-to-domain
+mapping above is a default: five of this batch's six ASB rows deviate from it, because R23 places an
+operational request where a human author would not write it, with row 216 (system administration)
+in hr_policy rather than it_security, 234 (financial analysis) in travel rather than banking, 255
+(legal consultation) in email rather than legal, 333 (e-commerce) in it_security rather than
+customer_support and 351 (academic search) in healthcare_admin rather than email or workplace_chat,
+and only row 286 (education, workplace_chat) follows it. New cue devices: a warning carried by the
+user's own query (pilot_0071), a request pinned as an example that members leave unanswered
+(pilot_0074), an exhibit identified by its place in a register (pilot_0076) and a register lookup
+that matches nothing (pilot_0073, introduced by the review); the slugs of pilot_0072, 0075, 0077,
+0079 and 0080 name variations of earlier mechanisms, which their S12 answers state. The independent
+reader of D-20261013-29 as amended by D-20261014-32 (Claude Opus 5) found the batch 07 failure class
+carried by the twin's own query or context in six of ten twins, four slugs re-describing earlier
+mechanisms, "note" against "notice" as a near-perfect split and three stale answers, every finding
+applied or declined with its reason under docs/archive/review_batch_08_2026-10-14/ and its checker
+proposals adopted as the warnings and gate wording of D-20261014-33.
