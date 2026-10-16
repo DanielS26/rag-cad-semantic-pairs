@@ -224,6 +224,36 @@
   },
   "skew_table": [
     {
+      "token": "book",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "says",
+      "twin_share": 0.7,
+      "malicious_share": 1.0,
+      "skew": -0.3
+    },
+    {
+      "token": "usually",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "request",
+      "twin_share": 0.4,
+      "malicious_share": 0.1,
+      "skew": 0.3
+    },
+    {
+      "token": "back",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
       "token": "takes",
       "twin_share": 0.1,
       "malicious_share": 0.4,
@@ -236,7 +266,7 @@
       "skew": -0.3
     },
     {
-      "token": "back",
+      "token": "pages",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
@@ -248,33 +278,9 @@
       "skew": -0.3
     },
     {
-      "token": "says",
-      "twin_share": 0.7,
-      "malicious_share": 1.0,
-      "skew": -0.3
-    },
-    {
-      "token": "pages",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "book",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "usually",
-      "twin_share": 0.0,
+      "token": "counter",
+      "twin_share": 0.1,
       "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "accounts",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
       "skew": -0.2
     },
     {
@@ -284,34 +290,28 @@
       "skew": -0.2
     },
     {
-      "token": "thursday",
+      "token": "many",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "longer",
+      "token": "monday",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "week",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "two",
-      "twin_share": 0.1,
-      "malicious_share": 0.3,
-      "skew": -0.2
-    },
-    {
-      "token": "falls",
+      "token": "floor",
       "twin_share": 0.3,
       "malicious_share": 0.1,
       "skew": 0.2
+    },
+    {
+      "token": "made",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     }
   ],
   "coverage": {
@@ -573,7 +573,7 @@
   "lengths": {
     "pilot_0161": {
       "shared_malicious": 494,
-      "semantic_benign": 475,
+      "semantic_benign": 481,
       "random_benign": 426,
       "keyword_benign": 420
     },
@@ -597,7 +597,7 @@
     },
     "pilot_0165": {
       "shared_malicious": 369,
-      "semantic_benign": 399,
+      "semantic_benign": 398,
       "random_benign": 359,
       "keyword_benign": 348
     },

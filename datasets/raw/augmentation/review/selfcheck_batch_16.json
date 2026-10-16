@@ -53,6 +53,8 @@
     "mechanism_role_warn": 3,
     "query_reuse_jaccard": 0.5,
     "query_reuse_opening_tokens": 5,
+    "identifier_echo_digits": 4,
+    "policy_opener_tokens": 2,
     "phrasing_baseline_families": 20,
     "min_families_for_batch_stats": 4
   },
@@ -216,6 +218,12 @@
   },
   "skew_table": [
     {
+      "token": "two",
+      "twin_share": 0.2,
+      "malicious_share": 0.6,
+      "skew": -0.4
+    },
+    {
       "token": "moved",
       "twin_share": 0.4,
       "malicious_share": 0.0,
@@ -228,10 +236,16 @@
       "skew": 0.4
     },
     {
-      "token": "two",
-      "twin_share": 0.2,
-      "malicious_share": 0.6,
-      "skew": -0.4
+      "token": "book",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "english",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
     },
     {
       "token": "says",
@@ -240,16 +254,16 @@
       "skew": -0.3
     },
     {
-      "token": "again",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
       "token": "new",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
+    },
+    {
+      "token": "again",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
     },
     {
       "token": "rules",
@@ -264,43 +278,31 @@
       "skew": -0.3
     },
     {
-      "token": "english",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "book",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "rate",
+      "token": "sheet",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "date",
+      "token": "section",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "clause",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "park",
+      "token": "monday",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "collection",
+      "token": "take",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "collect",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
@@ -565,13 +567,13 @@
   "lengths": {
     "pilot_0151": {
       "shared_malicious": 594,
-      "semantic_benign": 608,
+      "semantic_benign": 606,
       "random_benign": 650,
       "keyword_benign": 587
     },
     "pilot_0152": {
       "shared_malicious": 653,
-      "semantic_benign": 630,
+      "semantic_benign": 626,
       "random_benign": 600,
       "keyword_benign": 598
     },
@@ -613,7 +615,7 @@
     },
     "pilot_0159": {
       "shared_malicious": 409,
-      "semantic_benign": 429,
+      "semantic_benign": 433,
       "random_benign": 454,
       "keyword_benign": 460
     },

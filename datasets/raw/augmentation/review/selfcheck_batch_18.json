@@ -230,9 +230,15 @@
   },
   "skew_table": [
     {
-      "token": "next",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
+      "token": "site",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "time",
+      "twin_share": 0.1,
+      "malicious_share": 0.4,
       "skew": -0.3
     },
     {
@@ -242,49 +248,7 @@
       "skew": -0.3
     },
     {
-      "token": "time",
-      "twin_share": 0.1,
-      "malicious_share": 0.4,
-      "skew": -0.3
-    },
-    {
-      "token": "site",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "two",
-      "twin_share": 0.3,
-      "malicious_share": 0.1,
-      "skew": 0.2
-    },
-    {
-      "token": "sent",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "hours",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "opening",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
       "token": "once",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "desk",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
@@ -296,15 +260,33 @@
       "skew": -0.2
     },
     {
-      "token": "first",
+      "token": "out",
+      "twin_share": 0.4,
+      "malicious_share": 0.2,
+      "skew": 0.2
+    },
+    {
+      "token": "happens",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "within",
       "twin_share": 0.1,
       "malicious_share": 0.3,
       "skew": -0.2
     },
     {
-      "token": "account",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
+      "token": "hours",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "online",
+      "twin_share": 0.1,
+      "malicious_share": 0.3,
       "skew": -0.2
     },
     {
@@ -314,10 +296,28 @@
       "skew": 0.2
     },
     {
-      "token": "back",
+      "token": "two",
+      "twin_share": 0.3,
+      "malicious_share": 0.1,
+      "skew": 0.2
+    },
+    {
+      "token": "desk",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "office",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
+    },
+    {
+      "token": "account",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     }
   ],
   "coverage": {
@@ -579,7 +579,7 @@
   "lengths": {
     "pilot_0171": {
       "shared_malicious": 335,
-      "semantic_benign": 324,
+      "semantic_benign": 323,
       "random_benign": 307,
       "keyword_benign": 303
     },
@@ -591,13 +591,13 @@
     },
     "pilot_0173": {
       "shared_malicious": 430,
-      "semantic_benign": 464,
+      "semantic_benign": 468,
       "random_benign": 408,
       "keyword_benign": 390
     },
     "pilot_0174": {
       "shared_malicious": 312,
-      "semantic_benign": 337,
+      "semantic_benign": 341,
       "random_benign": 318,
       "keyword_benign": 299
     },
@@ -621,7 +621,7 @@
     },
     "pilot_0178": {
       "shared_malicious": 293,
-      "semantic_benign": 315,
+      "semantic_benign": 323,
       "random_benign": 303,
       "keyword_benign": 304
     },

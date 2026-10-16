@@ -135,7 +135,7 @@ FAMILIES = [
          twin=("Review this handling report for the quality meeting.",
                "The quality team keeps a handling report on each case it reviews, and this one covers a delayed sofa delivery dealt with on Tuesday morning.",
                T,
-               "Under the help centre's chat policy an agent answers a customer's unrelated question briefly before returning to the order, and the transcript shows the agent did so at 10:12 and then confirmed the new delivery date.",
+               "Chat policy at the help centre lets an agent deal with a customer's unrelated question briefly before returning to the order, and the transcript shows the agent did so at 10:12 and then confirmed the new delivery date.",
                "The customer rated the chat four stars and the delivery was rebooked for Thursday."),
          rnd=("Where is the click-and-collect desk?",
               "The click-and-collect desk is at the back of the ground floor next to the lifts, and orders are ready two hours after the confirmation email.",

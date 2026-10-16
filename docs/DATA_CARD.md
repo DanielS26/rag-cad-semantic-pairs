@@ -731,3 +731,15 @@ finalised under D-20261016-46. With it the set closes at 200 families: every rol
 cue position at 40. The independent reader's findings (accept 3, accept with note 5, fix 2, must-
 fix 0, contestable label 0) are archived under docs/archive/review_batch_19_20_2026-10-16 with the
 outcome.
+
+## Reopening after the 200-family audit
+
+The 200-family audit found two habits that only twins carried: a cue sentence ending in a colon
+(16 twins) and a cue sentence opening with 'That' (16 twins), with 'Under the' opening six more twin
+sentences and nothing else. Under D-20261016-47 these 38 cue sentences were reworded once, across
+batches 01 to 20, keeping each cue's mechanism, position and single-carrier role and the length
+rules; no non-target sentence of any record kind now ends in a colon or opens with 'That' or 'Under
+the'. The older review answers were brought to the current format (S1 quoting the twin query with
+its label, S13 for both documents, S12 naming an earlier twin from before the previous batch, and
+batch 05's missing S13 answers). No target sentence and no label changed. Every edit is listed old
+against new in docs/archive/audit_200_2026-10-16/reopening_edits.json.

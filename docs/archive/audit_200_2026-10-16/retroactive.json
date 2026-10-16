@@ -1,0 +1,7024 @@
+[
+ {
+  "batch": 1,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "token": "note",
+   "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
+   "twin_families": 2
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "query token or bigram skewed to one pair side across the set (D-20261014-30; gap form D-20261014-31)",
+   "phrases": [
+    {
+     "phrase": "summarise",
+     "malicious_share": 0.5,
+     "twin_share": 0.6
+    },
+    {
+     "phrase": "from this",
+     "malicious_share": 0.3,
+     "twin_share": 0.2
+    },
+    {
+     "phrase": "summarise the",
+     "malicious_share": 0.3,
+     "twin_share": 0.2
+    },
+    {
+     "phrase": "summarise this",
+     "malicious_share": 0.1,
+     "twin_share": 0.4
+    },
+    {
+     "phrase": "page",
+     "malicious_share": 0.3,
+     "twin_share": 0.1
+    },
+    {
+     "phrase": "what",
+     "malicious_share": 0.3,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "about",
+     "malicious_share": 0.0,
+     "twin_share": 0.2
+    },
+    {
+     "phrase": "about the",
+     "malicious_share": 0.0,
+     "twin_share": 0.2
+    },
+    {
+     "phrase": "according",
+     "malicious_share": 0.2,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "according to",
+     "malicious_share": 0.2,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "customer",
+     "malicious_share": 0.2,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "draft",
+     "malicious_share": 0.2,
+     "twin_share": 0.0
+    }
+   ]
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "queries near-reused across the set: most content tokens shared, or the same opening on one pair side (R14, D-20261014-31)",
+   "pairs": [
+    {
+     "records": [
+      "pilot_0002:random_benign",
+      "pilot_0010:random_benign"
+     ],
+     "jaccard": 0.5,
+     "same_opening": false
+    }
+   ],
+   "count": 1
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0001",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0001",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0001",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0001",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0002",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0002",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0002",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0002",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0003",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0003",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0003",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0003",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0004",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0004",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0004",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0004",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0005",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0005",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0005",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0005",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0006",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0006",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0006",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0006",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0007",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0007",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0007",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0007",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0008",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0008",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0008",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0008",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0009",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0009",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0009",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0009",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0010",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0010",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0010",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0010",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue device not named in the manifest justification ('device: <slug>', D-20261014-31)",
+   "families": [
+    "pilot_0001",
+    "pilot_0002",
+    "pilot_0003",
+    "pilot_0004",
+    "pilot_0005",
+    "pilot_0006",
+    "pilot_0007",
+    "pilot_0008",
+    "pilot_0009",
+    "pilot_0010"
+   ]
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "pair queries of the batch open with the same two words (R14, D-20261015-34)",
+   "openings": [
+    {
+     "words": "summarise the",
+     "count": 5
+    },
+    {
+     "words": "summarise this",
+     "count": 5
+    }
+   ]
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M16_hard_negative",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "no malicious member in a security/moderation-themed document",
+   "tokens": [
+    "incident",
+    "planted",
+    "inserted",
+    "injection",
+    "moderation",
+    "flagged",
+    "compromised",
+    "attacker",
+    "phishing",
+    "malicious",
+    "tampered",
+    "impersonation"
+   ]
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0001",
+   "record": "query",
+   "tokens": [
+    "help",
+    "page"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0004",
+   "sentence_id": 0,
+   "tokens": [
+    "mailbox"
+   ],
+   "problem": "the twin opens as a request-hosting genre, which carries the benign reading without the cue (D-20261015-34 venue rule, D-20261015-36; S13 decides)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0004",
+   "record": "query",
+   "tokens": [
+    "analyse"
+   ],
+   "problem": "cue-marker words in the twin query although the cue is elsewhere (R6)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0008",
+   "sentence_id": 2,
+   "tokens": [
+    "members",
+    "new"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0008",
+   "sentence_id": 3,
+   "tokens": [
+    "members",
+    "new"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0010",
+   "sentence_id": 2,
+   "tokens": [
+    "house",
+    "page",
+    "rules"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0005",
+   "question": "S11",
+   "jaccard": 0.273,
+   "problem": "S11 does not restate the manifest justification (a stale answer or a stale justification; D-20261014-33; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0006",
+   "question": "S11",
+   "jaccard": 0.214,
+   "problem": "S11 does not restate the manifest justification (a stale answer or a stale justification; D-20261014-33; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0009",
+   "question": "S11",
+   "jaccard": 0.364,
+   "problem": "S11 does not restate the manifest justification (a stale answer or a stale justification; D-20261014-33; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0001",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0002",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0003",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0004",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0005",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0006",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0007",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0008",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0009",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0010",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0001",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0002",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0003",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0006",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0008",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 1,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0010",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "token": "note",
+   "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
+   "twin_families": 3
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "query token or bigram skewed to one pair side across the set (D-20261014-30; gap form D-20261014-31)",
+   "phrases": [
+    {
+     "phrase": "summarise",
+     "malicious_share": 0.5,
+     "twin_share": 0.65
+    },
+    {
+     "phrase": "summarise the",
+     "malicious_share": 0.35,
+     "twin_share": 0.25
+    },
+    {
+     "phrase": "from",
+     "malicious_share": 0.2,
+     "twin_share": 0.3
+    },
+    {
+     "phrase": "page",
+     "malicious_share": 0.45,
+     "twin_share": 0.05
+    },
+    {
+     "phrase": "summarise this",
+     "malicious_share": 0.05,
+     "twin_share": 0.4
+    },
+    {
+     "phrase": "team",
+     "malicious_share": 0.0,
+     "twin_share": 0.3
+    },
+    {
+     "phrase": "draft",
+     "malicious_share": 0.2,
+     "twin_share": 0.05
+    },
+    {
+     "phrase": "note",
+     "malicious_share": 0.0,
+     "twin_share": 0.25
+    },
+    {
+     "phrase": "this page",
+     "malicious_share": 0.25,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "about",
+     "malicious_share": 0.05,
+     "twin_share": 0.15
+    },
+    {
+     "phrase": "according",
+     "malicious_share": 0.2,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "according to",
+     "malicious_share": 0.2,
+     "twin_share": 0.0
+    }
+   ]
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "queries near-reused across the set: most content tokens shared, or the same opening on one pair side (R14, D-20261014-31)",
+   "pairs": [
+    {
+     "records": [
+      "pilot_0008:keyword_benign",
+      "pilot_0019:random_benign"
+     ],
+     "jaccard": 0.6,
+     "same_opening": false
+    },
+    {
+     "records": [
+      "pilot_0008:keyword_benign",
+      "pilot_0019:keyword_benign"
+     ],
+     "jaccard": 0.6,
+     "same_opening": false
+    }
+   ],
+   "count": 2
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0011",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0011",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0011",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0011",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0012",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0012",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0012",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0012",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0013",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0013",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0013",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0013",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0014",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0014",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0014",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0014",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0015",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0015",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0015",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0015",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0016",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0016",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0016",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0016",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0017",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0017",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0017",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0017",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0018",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0018",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0018",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0018",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0019",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0019",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0019",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0019",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0020",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0020",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0020",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0020",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "translation",
+   "families": [
+    "pilot_0005",
+    "pilot_0013"
+   ],
+   "skeleton_jaccard": 0.4
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "historical_description",
+   "families": [
+    "pilot_0006",
+    "pilot_0019"
+   ],
+   "skeleton_jaccard": 0.417
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "task_alignment",
+   "families": [
+    "pilot_0007",
+    "pilot_0015"
+   ],
+   "skeleton_jaccard": 0.667
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "task_alignment",
+   "families": [
+    "pilot_0007",
+    "pilot_0020"
+   ],
+   "skeleton_jaccard": 0.5
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue device not named in the manifest justification ('device: <slug>', D-20261014-31)",
+   "families": [
+    "pilot_0011",
+    "pilot_0012",
+    "pilot_0013",
+    "pilot_0014",
+    "pilot_0015",
+    "pilot_0016",
+    "pilot_0017",
+    "pilot_0018",
+    "pilot_0019",
+    "pilot_0020"
+   ]
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "pair queries of the batch open with the same two words (R14, D-20261015-34)",
+   "openings": [
+    {
+     "words": "summarise the",
+     "count": 7
+    },
+    {
+     "words": "summarise this",
+     "count": 4
+    }
+   ]
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M16_hard_negative",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "no malicious member in a security/moderation-themed document",
+   "tokens": [
+    "incident",
+    "planted",
+    "inserted",
+    "injection",
+    "moderation",
+    "flagged",
+    "compromised",
+    "attacker",
+    "phishing",
+    "malicious",
+    "tampered",
+    "impersonation"
+   ]
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0011",
+   "record": "query",
+   "tokens": [
+    "content",
+    "team"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0011",
+   "sentence_id": 2,
+   "tokens": [
+    "content",
+    "team"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0013",
+   "sentence_id": 2,
+   "tokens": [
+    "centre",
+    "help"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0014",
+   "sentence_id": 2,
+   "tokens": [
+    "faq",
+    "page"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0016",
+   "sentence_id": 0,
+   "tokens": [
+    "discount",
+    "staff"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0017",
+   "sentence_id": 2,
+   "tokens": [
+    "hotel",
+    "supplier"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0018",
+   "record": "query",
+   "tokens": [
+    "records",
+    "team"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0018",
+   "sentence_id": 0,
+   "tokens": [
+    "appointment",
+    "records",
+    "team"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0020",
+   "problem": "S4 is not YES although cue_position is query: the malicious query does not make the twin an injection, so the query is not the only cue (R6, D-20261014-31; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0019",
+   "question": "S11",
+   "jaccard": 0.4,
+   "problem": "S11 does not restate the manifest justification (a stale answer or a stale justification; D-20261014-33; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0011",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0012",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0013",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0014",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0015",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0016",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0017",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0018",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0019",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0020",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0011",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0012",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0013",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0014",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0016",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0017",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0018",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 2,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0019",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "token": "instruction",
+   "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
+   "twin_families": 2
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "token": "entry",
+   "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
+   "twin_families": 2
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "token": "entries",
+   "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
+   "twin_families": 2
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "query token or bigram skewed to one pair side across the set (D-20261014-30; gap form D-20261014-31)",
+   "phrases": [
+    {
+     "phrase": "summarise",
+     "malicious_share": 0.47,
+     "twin_share": 0.57
+    },
+    {
+     "phrase": "summarise the",
+     "malicious_share": 0.37,
+     "twin_share": 0.23
+    },
+    {
+     "phrase": "from",
+     "malicious_share": 0.17,
+     "twin_share": 0.3
+    },
+    {
+     "phrase": "page",
+     "malicious_share": 0.37,
+     "twin_share": 0.03
+    },
+    {
+     "phrase": "summarise this",
+     "malicious_share": 0.03,
+     "twin_share": 0.33
+    },
+    {
+     "phrase": "draft",
+     "malicious_share": 0.2,
+     "twin_share": 0.07
+    },
+    {
+     "phrase": "team",
+     "malicious_share": 0.0,
+     "twin_share": 0.23
+    },
+    {
+     "phrase": "does",
+     "malicious_share": 0.17,
+     "twin_share": 0.03
+    },
+    {
+     "phrase": "note",
+     "malicious_share": 0.0,
+     "twin_share": 0.2
+    },
+    {
+     "phrase": "what",
+     "malicious_share": 0.17,
+     "twin_share": 0.03
+    },
+    {
+     "phrase": "draft a",
+     "malicious_share": 0.17,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "this page",
+     "malicious_share": 0.17,
+     "twin_share": 0.0
+    }
+   ]
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "queries near-reused across the set: most content tokens shared, or the same opening on one pair side (R14, D-20261014-31)",
+   "pairs": [
+    {
+     "records": [
+      "pilot_0014:random_benign",
+      "pilot_0021:random_benign"
+     ],
+     "jaccard": 0.6,
+     "same_opening": false
+    },
+    {
+     "records": [
+      "pilot_0020:shared_malicious",
+      "pilot_0026:shared_malicious"
+     ],
+     "jaccard": 0.5,
+     "same_opening": false
+    },
+    {
+     "records": [
+      "pilot_0017:semantic_benign",
+      "pilot_0026:semantic_benign"
+     ],
+     "jaccard": 0.5,
+     "same_opening": false
+    },
+    {
+     "records": [
+      "pilot_0017:semantic_benign",
+      "pilot_0029:semantic_benign"
+     ],
+     "jaccard": 0.44,
+     "same_opening": true
+    }
+   ],
+   "count": 4
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0021",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0021",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0021",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0021",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0022",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0022",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0022",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0022",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0023",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0023",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0023",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0023",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0024",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0024",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0024",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0024",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0025",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0025",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0025",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0025",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0026",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0026",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0026",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0026",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0027",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0027",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0027",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0027",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0028",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0028",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0028",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0028",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0029",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0029",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0029",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0029",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0030",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0030",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0030",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0030",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
+   "role": "authorisation",
+   "cue_position": "policy",
+   "families": [
+    "pilot_0008",
+    "pilot_0026"
+   ],
+   "jaccard": 0.15
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role overlap in content words whatever the cue position (R15, D-20261014-33; S12 names the frame)",
+   "role": "warning",
+   "families": [
+    "pilot_0010",
+    "pilot_0022"
+   ],
+   "jaccard": 0.176
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role overlap in content words whatever the cue position (R15, D-20261014-33; S12 names the frame)",
+   "role": "authorisation",
+   "families": [
+    "pilot_0008",
+    "pilot_0026"
+   ],
+   "jaccard": 0.15
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "warning",
+   "families": [
+    "pilot_0010",
+    "pilot_0022"
+   ],
+   "skeleton_jaccard": 0.368
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "translation",
+   "families": [
+    "pilot_0005",
+    "pilot_0023"
+   ],
+   "skeleton_jaccard": 0.357
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "authorisation",
+   "families": [
+    "pilot_0008",
+    "pilot_0026"
+   ],
+   "skeleton_jaccard": 0.533
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue device not named in the manifest justification ('device: <slug>', D-20261014-31)",
+   "families": [
+    "pilot_0021",
+    "pilot_0022",
+    "pilot_0023",
+    "pilot_0024",
+    "pilot_0025",
+    "pilot_0026",
+    "pilot_0027",
+    "pilot_0028",
+    "pilot_0029",
+    "pilot_0030"
+   ]
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "two or more twins of the batch carry an exemplar word in the cue, the frame S12 cannot see across roles (R15, D-20261015-34)",
+   "families": [
+    "pilot_0023",
+    "pilot_0024"
+   ]
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "pair queries of the batch open with the same two words (R14, D-20261015-34)",
+   "openings": [
+    {
+     "words": "summarise the",
+     "count": 6
+    }
+   ]
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "policy cue of pilot_0026 opens with the same 2 tokens 'under the' as the policy cue of earlier family pilot_0011, across roles (literal opener test, R15, D-20261016-44 c; S12 names the frame)",
+   "family_id": "pilot_0026",
+   "opener": "under the",
+   "earlier_families": [
+    "pilot_0011"
+   ]
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0022",
+   "record": "query",
+   "tokens": [
+    "facilities",
+    "notice"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0024",
+   "sentence_id": 2,
+   "tokens": [
+    "portal",
+    "vendor"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0026",
+   "record": "query",
+   "tokens": [
+    "delivery",
+    "desk"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0029",
+   "record": "query",
+   "tokens": [
+    "desk",
+    "travel"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0021",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0022",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0023",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0024",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0025",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0026",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0027",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 3,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0029",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "token": "words",
+   "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
+   "twin_families": 2
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "token": "notice",
+   "problem": "watch token present in two or more malicious members and no twin (D-20261014-33)",
+   "malicious_families": 3
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "query token or bigram skewed to one pair side across the set (D-20261014-30; gap form D-20261014-31)",
+   "phrases": [
+    {
+     "phrase": "summarise",
+     "malicious_share": 0.42,
+     "twin_share": 0.53
+    },
+    {
+     "phrase": "summarise the",
+     "malicious_share": 0.35,
+     "twin_share": 0.23
+    },
+    {
+     "phrase": "from",
+     "malicious_share": 0.15,
+     "twin_share": 0.25
+    },
+    {
+     "phrase": "page",
+     "malicious_share": 0.28,
+     "twin_share": 0.03
+    },
+    {
+     "phrase": "summarise this",
+     "malicious_share": 0.03,
+     "twin_share": 0.28
+    },
+    {
+     "phrase": "does",
+     "malicious_share": 0.2,
+     "twin_share": 0.07
+    },
+    {
+     "phrase": "draft",
+     "malicious_share": 0.2,
+     "twin_share": 0.05
+    },
+    {
+     "phrase": "note",
+     "malicious_share": 0.0,
+     "twin_share": 0.2
+    },
+    {
+     "phrase": "team",
+     "malicious_share": 0.0,
+     "twin_share": 0.17
+    },
+    {
+     "phrase": "desk",
+     "malicious_share": 0.0,
+     "twin_share": 0.15
+    },
+    {
+     "phrase": "draft a",
+     "malicious_share": 0.15,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "customer",
+     "malicious_share": 0.12,
+     "twin_share": 0.0
+    }
+   ]
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "queries near-reused across the set: most content tokens shared, or the same opening on one pair side (R14, D-20261014-31)",
+   "pairs": [
+    {
+     "records": [
+      "pilot_0023:random_benign",
+      "pilot_0036:random_benign"
+     ],
+     "jaccard": 0.33,
+     "same_opening": true
+    }
+   ],
+   "count": 1
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0031",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0031",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0031",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0031",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0032",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0032",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0032",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0032",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0033",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0033",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0033",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0033",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0034",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0034",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0034",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0034",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0035",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0035",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0035",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0035",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0036",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0036",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0036",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0036",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0037",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0037",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0037",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0037",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0038",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0038",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0038",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0038",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0039",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0039",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0039",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0039",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0040",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0040",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0040",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0040",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
+   "role": "authorisation",
+   "cue_position": "policy",
+   "families": [
+    "pilot_0026",
+    "pilot_0037"
+   ],
+   "jaccard": 0.136
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
+   "role": "negation",
+   "cue_position": "policy",
+   "families": [
+    "pilot_0011",
+    "pilot_0033"
+   ],
+   "jaccard": 0.111
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
+   "role": "translation",
+   "cue_position": "sentence_before",
+   "families": [
+    "pilot_0013",
+    "pilot_0035"
+   ],
+   "jaccard": 0.111
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role overlap in content words whatever the cue position (R15, D-20261014-33; S12 names the frame)",
+   "role": "quotation",
+   "families": [
+    "pilot_0021",
+    "pilot_0034"
+   ],
+   "jaccard": 0.235
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "authorisation",
+   "families": [
+    "pilot_0008",
+    "pilot_0037"
+   ],
+   "skeleton_jaccard": 0.357
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "authorisation",
+   "families": [
+    "pilot_0026",
+    "pilot_0037"
+   ],
+   "skeleton_jaccard": 0.467
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue device not named in the manifest justification ('device: <slug>', D-20261014-31)",
+   "families": [
+    "pilot_0031",
+    "pilot_0032",
+    "pilot_0033",
+    "pilot_0034",
+    "pilot_0035",
+    "pilot_0036",
+    "pilot_0037",
+    "pilot_0038",
+    "pilot_0039",
+    "pilot_0040"
+   ]
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "pair queries of the batch open with the same two words (R14, D-20261015-34)",
+   "openings": [
+    {
+     "words": "summarise the",
+     "count": 5
+    }
+   ]
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0032",
+   "sentence_id": 2,
+   "tokens": [
+    "checklist",
+    "spring"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0033",
+   "record": "query",
+   "tokens": [
+    "editor",
+    "note"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0033",
+   "sentence_id": 1,
+   "tokens": [
+    "newsletter",
+    "out"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0035",
+   "record": "query",
+   "tokens": [
+    "localisation",
+    "one"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0037",
+   "record": "query",
+   "tokens": [
+    "booking",
+    "desk"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0040",
+   "record": "query",
+   "tokens": [
+    "audit",
+    "quality",
+    "record"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0040",
+   "sentence_id": 3,
+   "tokens": [
+    "audit",
+    "kept"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0040",
+   "sentence_id": 0,
+   "tokens": [
+    "minutes"
+   ],
+   "problem": "the twin opens as a request-hosting genre, which carries the benign reading without the cue (D-20261015-34 venue rule, D-20261015-36; S13 decides)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0031",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0032",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0033",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0034",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0035",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0036",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0037",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 4,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0040",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "token": "digest",
+   "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
+   "twin_families": 2
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "question-form share differs across pair sides (D-20261014-30)",
+   "malicious": 0.5,
+   "twin": 0.1
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "query token or bigram skewed to one pair side across the set (D-20261014-30; gap form D-20261014-31)",
+   "phrases": [
+    {
+     "phrase": "summarise the",
+     "malicious_share": 0.36,
+     "twin_share": 0.24
+    },
+    {
+     "phrase": "page",
+     "malicious_share": 0.26,
+     "twin_share": 0.04
+    },
+    {
+     "phrase": "summarise this",
+     "malicious_share": 0.02,
+     "twin_share": 0.22
+    },
+    {
+     "phrase": "draft",
+     "malicious_share": 0.16,
+     "twin_share": 0.06
+    },
+    {
+     "phrase": "note",
+     "malicious_share": 0.0,
+     "twin_share": 0.18
+    },
+    {
+     "phrase": "according",
+     "malicious_share": 0.14,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "according to",
+     "malicious_share": 0.14,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "desk",
+     "malicious_share": 0.0,
+     "twin_share": 0.14
+    },
+    {
+     "phrase": "team",
+     "malicious_share": 0.0,
+     "twin_share": 0.14
+    },
+    {
+     "phrase": "draft a",
+     "malicious_share": 0.12,
+     "twin_share": 0.0
+    },
+    {
+     "phrase": "write",
+     "malicious_share": 0.0,
+     "twin_share": 0.12
+    },
+    {
+     "phrase": "customer",
+     "malicious_share": 0.1,
+     "twin_share": 0.0
+    }
+   ]
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "queries near-reused across the set: most content tokens shared, or the same opening on one pair side (R14, D-20261014-31)",
+   "pairs": [
+    {
+     "records": [
+      "pilot_0001:keyword_benign",
+      "pilot_0048:keyword_benign"
+     ],
+     "jaccard": 0.5,
+     "same_opening": false
+    }
+   ],
+   "count": 1
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0041",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0041",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0041",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0041",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0042",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0042",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0042",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0042",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0043",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0043",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0043",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0043",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0044",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0044",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0044",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0044",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0045",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0045",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0045",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0045",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0046",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0046",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0046",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0046",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0047",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0047",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0047",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0047",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0048",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0048",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0048",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0048",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0049",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0049",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0049",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0049",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0050",
+   "record": "shared_malicious",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0050",
+   "record": "semantic_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0050",
+   "record": "random_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M12_manifest_provenance",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0050",
+   "record": "keyword_benign",
+   "problem": "generator_prompt_hash does not match the prompt file"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
+   "role": "warning",
+   "cue_position": "heading",
+   "families": [
+    "pilot_0022",
+    "pilot_0042"
+   ],
+   "jaccard": 0.1
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
+   "role": "authorisation",
+   "cue_position": "policy",
+   "families": [
+    "pilot_0026",
+    "pilot_0048"
+   ],
+   "jaccard": 0.13
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
+   "role": "negation",
+   "cue_position": "policy",
+   "families": [
+    "pilot_0011",
+    "pilot_0045"
+   ],
+   "jaccard": 0.12
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role and cue position overlap in content words (R15/R25, D-20261014-30; S12 names the frame)",
+   "role": "negation",
+   "cue_position": "policy",
+   "families": [
+    "pilot_0033",
+    "pilot_0045"
+   ],
+   "jaccard": 0.154
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role overlap in content words whatever the cue position (R15, D-20261014-33; S12 names the frame)",
+   "role": "negation",
+   "families": [
+    "pilot_0033",
+    "pilot_0045"
+   ],
+   "jaccard": 0.154
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "translation",
+   "families": [
+    "pilot_0005",
+    "pilot_0047"
+   ],
+   "skeleton_jaccard": 0.375
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "translation",
+   "families": [
+    "pilot_0023",
+    "pilot_0047"
+   ],
+   "skeleton_jaccard": 0.462
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "authorisation",
+   "families": [
+    "pilot_0008",
+    "pilot_0048"
+   ],
+   "skeleton_jaccard": 0.438
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue device not named in the manifest justification ('device: <slug>', D-20261014-31)",
+   "families": [
+    "pilot_0041",
+    "pilot_0042",
+    "pilot_0043",
+    "pilot_0044",
+    "pilot_0045",
+    "pilot_0046",
+    "pilot_0047",
+    "pilot_0048",
+    "pilot_0049",
+    "pilot_0050"
+   ]
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "pair queries of the batch open with the same two words (R14, D-20261015-34)",
+   "openings": [
+    {
+     "words": "summarise the",
+     "count": 7
+    }
+   ]
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0041",
+   "record": "query",
+   "tokens": [
+    "guide",
+    "note"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0042",
+   "record": "query",
+   "tokens": [
+    "editors",
+    "memo"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0042",
+   "sentence_id": 1,
+   "tokens": [
+    "page",
+    "study",
+    "support"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0047",
+   "record": "query",
+   "tokens": [
+    "check",
+    "glossary",
+    "page",
+    "seminar"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0048",
+   "record": "query",
+   "tokens": [
+    "desk",
+    "help",
+    "questions"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0048",
+   "sentence_id": 0,
+   "tokens": [
+    "desk",
+    "help",
+    "questions"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0048",
+   "sentence_id": 1,
+   "tokens": [
+    "agents",
+    "answer",
+    "one"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "M19_batch_confound",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "share of targets phrased 'your response/reply/answer' differs sharply from the last two batches",
+   "batch_share": 0.0,
+   "previous_share": 0.85,
+   "previous_share_all_batches": 0.9
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0041",
+   "question": "S13"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0042",
+   "question": "S13"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0043",
+   "question": "S13"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0044",
+   "question": "S13"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0045",
+   "question": "S13"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0046",
+   "question": "S13"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0047",
+   "question": "S13"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0048",
+   "question": "S13"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0049",
+   "question": "S13"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0050",
+   "question": "S13"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0047",
+   "question": "S11",
+   "jaccard": 0.462,
+   "problem": "S11 does not restate the manifest justification (a stale answer or a stale justification; D-20261014-33; WARN)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0041",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0042",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0044",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0045",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0046",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0047",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0048",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 5,
+  "check": "S_semantic_answers",
+  "status_now": "FAIL",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0049",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "token": "notes",
+   "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
+   "twin_families": 2
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "token": "notice",
+   "problem": "watch token present in two or more malicious members and no twin (D-20261014-33)",
+   "malicious_families": 2
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "query token or bigram skewed to one pair side across the set (D-20261014-30; gap form D-20261014-31)",
+   "phrases": [
+    {
+     "phrase": "summarise the",
+     "malicious_share": 0.33,
+     "twin_share": 0.2
+    },
+    {
+     "phrase": "from",
+     "malicious_share": 0.12,
+     "twin_share": 0.22
+    },
+    {
+     "phrase": "does",
+     "malicious_share": 0.22,
+     "twin_share": 0.1
+    },
+    {
+     "phrase": "page",
+     "malicious_share": 0.27,
+     "twin_share": 0.05
+    },
+    {
+     "phrase": "note",
+     "malicious_share": 0.03,
+     "twin_share": 0.2
+    },
+    {
+     "phrase": "summarise this",
+     "malicious_share": 0.03,
+     "twin_share": 0.2
+    },
+    {
+     "phrase": "desk",
+     "malicious_share": 0.02,
+     "twin_share": 0.13
+    },
+    {
+     "phrase": "from the",
+     "malicious_share": 0.02,
+     "twin_share": 0.13
+    },
+    {
+     "phrase": "according",
+     "malicious_share": 0.12,
+     "twin_share": 0.02
+    },
+    {
+     "phrase": "according to",
+     "malicious_share": 0.12,
+     "twin_share": 0.02
+    },
+    {
+     "phrase": "draft a",
+     "malicious_share": 0.12,
+     "twin_share": 0.02
+    },
+    {
+     "phrase": "team",
+     "malicious_share": 0.02,
+     "twin_share": 0.12
+    }
+   ]
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M9_queries",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "queries near-reused across the set: most content tokens shared, or the same opening on one pair side (R14, D-20261014-31)",
+   "pairs": [
+    {
+     "records": [
+      "pilot_0003:keyword_benign",
+      "pilot_0052:keyword_benign"
+     ],
+     "jaccard": 0.5,
+     "same_opening": false
+    }
+   ],
+   "count": 1
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "authorisation",
+   "families": [
+    "pilot_0026",
+    "pilot_0055"
+   ],
+   "skeleton_jaccard": 0.364
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue device not named in the manifest justification ('device: <slug>', D-20261014-31)",
+   "families": [
+    "pilot_0051",
+    "pilot_0052",
+    "pilot_0053",
+    "pilot_0054",
+    "pilot_0055",
+    "pilot_0056",
+    "pilot_0057",
+    "pilot_0058",
+    "pilot_0059",
+    "pilot_0060"
+   ]
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "two or more twins of the batch carry an exemplar word in the cue, the frame S12 cannot see across roles (R15, D-20261015-34)",
+   "families": [
+    "pilot_0057",
+    "pilot_0058",
+    "pilot_0060"
+   ]
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0051",
+   "sentence_id": 1,
+   "tokens": [
+    "attachment",
+    "desk",
+    "mailbox",
+    "service",
+    "ticket",
+    "tuesday",
+    "vendor"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0051",
+   "sentence_id": 3,
+   "tokens": [
+    "attachment",
+    "desk",
+    "ticket",
+    "vendor"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0051",
+   "sentence_id": 0,
+   "tokens": [
+    "mailbox"
+   ],
+   "problem": "the twin opens as a request-hosting genre, which carries the benign reading without the cue (D-20261015-34 venue rule, D-20261015-36; S13 decides)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0053",
+   "sentence_id": 1,
+   "tokens": [
+    "clerk",
+    "entry",
+    "tender"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0055",
+   "record": "query",
+   "tokens": [
+    "audit",
+    "desk",
+    "pack",
+    "quarter"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0055",
+   "sentence_id": 0,
+   "tokens": [
+    "centre",
+    "contact",
+    "desk"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0055",
+   "sentence_id": 3,
+   "tokens": [
+    "centre",
+    "contact",
+    "pack",
+    "quarter"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0056",
+   "record": "query",
+   "tokens": [
+    "email",
+    "exam",
+    "office",
+    "registrar"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0056",
+   "sentence_id": 0,
+   "tokens": [
+    "email",
+    "exam",
+    "office",
+    "registrar",
+    "team"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0057",
+   "sentence_id": 3,
+   "tokens": [
+    "guides",
+    "issued"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0059",
+   "sentence_id": 0,
+   "tokens": [
+    "carried",
+    "clinic"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0060",
+   "record": "query",
+   "tokens": [
+    "listing",
+    "office"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0060",
+   "sentence_id": 0,
+   "tokens": [
+    "covering",
+    "listing",
+    "office"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0051",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0052",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0053",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0054",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0055",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0056",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0057",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0058",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0059",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0060",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0055",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0051",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0052",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0053",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0054",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0055",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0056",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0057",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0059",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 6,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0060",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "token": "notice",
+   "problem": "watch token present in two or more malicious members and no twin (D-20261014-33)",
+   "malicious_families": 2
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M6_lexical_skew",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "token": "log",
+   "problem": "watch token present in two or more twins and no malicious member (D-20261014-30)",
+   "twin_families": 2
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue sentences of the same role share a masked skeleton: the frame repeats with other nouns (R15, D-20261014-31; S12 names the frame)",
+   "role": "task_alignment",
+   "families": [
+    "pilot_0058",
+    "pilot_0069"
+   ],
+   "skeleton_jaccard": 0.467
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue mechanism genus not named in the manifest justification ('mechanism: <genus>', D-20261015-41)",
+   "families": [
+    "pilot_0061",
+    "pilot_0062",
+    "pilot_0063",
+    "pilot_0064",
+    "pilot_0065",
+    "pilot_0066",
+    "pilot_0067",
+    "pilot_0068",
+    "pilot_0069",
+    "pilot_0070"
+   ]
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0061",
+   "record": "query",
+   "tokens": [
+    "facilities",
+    "mailbox"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0061",
+   "sentence_id": 0,
+   "tokens": [
+    "mailbox"
+   ],
+   "problem": "the twin opens as a request-hosting genre, which carries the benign reading without the cue (D-20261015-34 venue rule, D-20261015-36; S13 decides)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0062",
+   "record": "query",
+   "tokens": [
+    "log",
+    "ombudsman"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0062",
+   "sentence_id": 0,
+   "tokens": [
+    "branch",
+    "customer",
+    "log"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0063",
+   "record": "query",
+   "tokens": [
+    "clerks",
+    "room"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0063",
+   "sentence_id": 0,
+   "tokens": [
+    "clerks",
+    "room"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0063",
+   "record": "context",
+   "tokens": [
+    "829374"
+   ],
+   "problem": "identifier echo in pilot_0063: the target's digit string 829374 recurs in the twin sentence 0, a lexical bridge between target and cue (D-20261016-44 c; S1 decides)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0064",
+   "sentence_id": 0,
+   "tokens": [
+    "digest"
+   ],
+   "problem": "the twin opens as a request-hosting genre, which carries the benign reading without the cue (D-20261015-34 venue rule, D-20261015-36; S13 decides)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0066",
+   "record": "query",
+   "tokens": [
+    "centre",
+    "help"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0066",
+   "sentence_id": 2,
+   "tokens": [
+    "centre",
+    "guide",
+    "help",
+    "style"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0067",
+   "record": "query",
+   "tokens": [
+    "lobby",
+    "noticeboard",
+    "reception",
+    "team"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0069",
+   "sentence_id": 0,
+   "tokens": [
+    "digest"
+   ],
+   "problem": "the twin opens as a request-hosting genre, which carries the benign reading without the cue (D-20261015-34 venue rule, D-20261015-36; S13 decides)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0063",
+   "question": "S11",
+   "jaccard": 0.296,
+   "problem": "S11 does not restate the manifest justification (a stale answer or a stale justification; D-20261014-33; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0064",
+   "question": "S11",
+   "jaccard": 0.323,
+   "problem": "S11 does not restate the manifest justification (a stale answer or a stale justification; D-20261014-33; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0061",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0062",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0063",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0064",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0065",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0066",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0067",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0068",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0069",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0070",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0064",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0061",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0062",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0063",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0064",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0065",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0066",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0067",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 7,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0070",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue mechanism genus not named in the manifest justification ('mechanism: <genus>', D-20261015-41)",
+   "families": [
+    "pilot_0071",
+    "pilot_0072",
+    "pilot_0073",
+    "pilot_0074",
+    "pilot_0075",
+    "pilot_0076",
+    "pilot_0077",
+    "pilot_0078",
+    "pilot_0079",
+    "pilot_0080"
+   ]
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "two or more twins of the batch carry an exemplar word in the cue, the frame S12 cannot see across roles (R15, D-20261015-34)",
+   "families": [
+    "pilot_0074",
+    "pilot_0080"
+   ]
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0072",
+   "record": "query",
+   "tokens": [
+    "brochure",
+    "pages",
+    "wellness"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0072",
+   "sentence_id": 0,
+   "tokens": [
+    "brochure",
+    "file"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0072",
+   "sentence_id": 3,
+   "tokens": [
+    "pages",
+    "partner",
+    "wellness"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0074",
+   "sentence_id": 3,
+   "tokens": [
+    "members",
+    "moderators"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0075",
+   "record": "query",
+   "tokens": [
+    "gateway",
+    "log",
+    "quarter"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0075",
+   "sentence_id": 0,
+   "tokens": [
+    "change",
+    "desk",
+    "gateway",
+    "log",
+    "quarter",
+    "raised"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0076",
+   "record": "query",
+   "tokens": [
+    "file",
+    "officer",
+    "records"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0076",
+   "sentence_id": 2,
+   "tokens": [
+    "file",
+    "officer",
+    "records"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0077",
+   "sentence_id": 0,
+   "tokens": [
+    "clerk",
+    "hour",
+    "trainees"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0079",
+   "sentence_id": 0,
+   "tokens": [
+    "digest"
+   ],
+   "problem": "the twin opens as a request-hosting genre, which carries the benign reading without the cue (D-20261015-34 venue rule, D-20261015-36; S13 decides)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0080",
+   "sentence_id": 0,
+   "tokens": [
+    "language",
+    "setup",
+    "widget"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0080",
+   "sentence_id": 3,
+   "tokens": [
+    "language",
+    "widget"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0071",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0072",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0073",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0074",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0075",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0076",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0077",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0078",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0079",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0080",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0072",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0074",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0075",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0078",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0080",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0072",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0073",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0074",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0075",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0076",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0077",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 8,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0080",
+   "question": "S1",
+   "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue mechanism genus not named in the manifest justification ('mechanism: <genus>', D-20261015-41)",
+   "families": [
+    "pilot_0081",
+    "pilot_0082",
+    "pilot_0083",
+    "pilot_0084",
+    "pilot_0085",
+    "pilot_0086",
+    "pilot_0087",
+    "pilot_0088",
+    "pilot_0089",
+    "pilot_0090"
+   ]
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "one cue device covers more than half of a role's tagged twins (R15, D-20261014-31)",
+   "role": "task_alignment",
+   "device": "user-asked-for-it",
+   "share": 1.0,
+   "tagged": 4
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "policy cue of pilot_0084 opens with the same 2 tokens 'under the' as the policy cue of earlier family pilot_0011, across roles (literal opener test, R15, D-20261016-44 c; S12 names the frame)",
+   "family_id": "pilot_0084",
+   "opener": "under the",
+   "earlier_families": [
+    "pilot_0011",
+    "pilot_0026"
+   ]
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0081",
+   "sentence_id": 0,
+   "tokens": [
+    "agency",
+    "covers",
+    "leaflet",
+    "patient"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0083",
+   "record": "query",
+   "tokens": [
+    "editors",
+    "feed",
+    "supplier"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0083",
+   "sentence_id": 2,
+   "tokens": [
+    "editors",
+    "feed",
+    "supplier"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0084",
+   "sentence_id": 3,
+   "tokens": [
+    "chat",
+    "customer",
+    "delivery"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0086",
+   "record": "query",
+   "tokens": [
+    "desk",
+    "log"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0087",
+   "record": "query",
+   "tokens": [
+    "page",
+    "room"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0087",
+   "sentence_id": 2,
+   "tokens": [
+    "page",
+    "room"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0087",
+   "sentence_id": 3,
+   "tokens": [
+    "one",
+    "page"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0088",
+   "record": "query",
+   "tokens": [
+    "editors",
+    "guide"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0088",
+   "sentence_id": 0,
+   "tokens": [
+    "editors",
+    "guide",
+    "notice"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0089",
+   "record": "query",
+   "tokens": [
+    "duty",
+    "reception",
+    "week"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0089",
+   "sentence_id": 3,
+   "tokens": [
+    "duty",
+    "guide",
+    "reception"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0089",
+   "sentence_id": 0,
+   "tokens": [
+    "digest"
+   ],
+   "problem": "the twin opens as a request-hosting genre, which carries the benign reading without the cue (D-20261015-34 venue rule, D-20261015-36; S13 decides)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0090",
+   "record": "query",
+   "tokens": [
+    "bulletin",
+    "leads",
+    "team"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0081",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0082",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0083",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0084",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0085",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0086",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0087",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0088",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0089",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0090",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 9,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0089",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "cue mechanism genus not named in the manifest justification ('mechanism: <genus>', D-20261015-41)",
+   "families": [
+    "pilot_0091",
+    "pilot_0092",
+    "pilot_0093",
+    "pilot_0094",
+    "pilot_0095",
+    "pilot_0096",
+    "pilot_0097",
+    "pilot_0098",
+    "pilot_0099",
+    "pilot_0100"
+   ]
+  }
+ },
+ {
+  "batch": 10,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "problem": "one cue device covers more than half of a role's tagged twins (R15, D-20261014-31)",
+   "role": "task_alignment",
+   "device": "user-asked-for-it",
+   "share": 1.0,
+   "tagged": 5
+  }
+ },
+ {
+  "batch": 10,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0091",
+   "sentence_id": 0,
+   "tokens": [
+    "manual",
+    "records"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0093",
+   "sentence_id": 0,
+   "tokens": [
+    "mailbox"
+   ],
+   "problem": "the twin opens as a request-hosting genre, which carries the benign reading without the cue (D-20261015-34 venue rule, D-20261015-36; S13 decides)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0095",
+   "record": "query",
+   "tokens": [
+    "editor",
+    "report",
+    "web"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0095",
+   "sentence_id": 0,
+   "tokens": [
+    "portal",
+    "report"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0096",
+   "record": "query",
+   "tokens": [
+    "anniversary",
+    "part"
+   ],
+   "problem": "the twin query echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261014-33, D-20261015-36)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0097",
+   "sentence_id": 0,
+   "tokens": [
+    "mailbox"
+   ],
+   "problem": "the twin opens as a request-hosting genre, which carries the benign reading without the cue (D-20261015-34 venue rule, D-20261015-36; S13 decides)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "M17_residual_cue_markers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0100",
+   "sentence_id": 2,
+   "tokens": [
+    "english",
+    "intranet",
+    "plain"
+   ],
+   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0091",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0092",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0093",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0094",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0095",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0096",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0097",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0098",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0099",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0100",
+   "question": "S13",
+   "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"
+  }
+ },
+ {
+  "batch": 10,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0098",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 11,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "cue mechanism genus not named in the manifest justification ('mechanism: <genus>', D-20261015-41)",
+   "families": [
+    "pilot_0101",
+    "pilot_0102",
+    "pilot_0103",
+    "pilot_0104",
+    "pilot_0105",
+    "pilot_0106",
+    "pilot_0107",
+    "pilot_0108",
+    "pilot_0109",
+    "pilot_0110"
+   ]
+  }
+ },
+ {
+  "batch": 11,
+  "check": "S_semantic_answers",
+  "status_now": "WARN",
+  "status_at_finalisation": "PASS",
+  "item": {
+   "family_id": "pilot_0104",
+   "question": "S12",
+   "problem": "S12 compares only with this batch or the previous one; name the closest earlier twin of the role from the whole cue index (D-20261016-42; WARN)"
+  }
+ },
+ {
+  "batch": 12,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "cue mechanism genus not named in the manifest justification ('mechanism: <genus>', D-20261015-41)",
+   "families": [
+    "pilot_0111",
+    "pilot_0112",
+    "pilot_0113",
+    "pilot_0114",
+    "pilot_0115",
+    "pilot_0116",
+    "pilot_0117",
+    "pilot_0118",
+    "pilot_0119",
+    "pilot_0120"
+   ]
+  }
+ },
+ {
+  "batch": 12,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "policy cue of pilot_0116 opens with the same 2 tokens 'under the' as the policy cue of earlier family pilot_0011, across roles (literal opener test, R15, D-20261016-44 c; S12 names the frame)",
+   "family_id": "pilot_0116",
+   "opener": "under the",
+   "earlier_families": [
+    "pilot_0011",
+    "pilot_0026",
+    "pilot_0084"
+   ]
+  }
+ },
+ {
+  "batch": 12,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "policy cue of pilot_0118 opens with the same 2 tokens 'under the' as the policy cue of earlier family pilot_0011, across roles (literal opener test, R15, D-20261016-44 c; S12 names the frame)",
+   "family_id": "pilot_0118",
+   "opener": "under the",
+   "earlier_families": [
+    "pilot_0011",
+    "pilot_0026",
+    "pilot_0084",
+    "pilot_0116"
+   ]
+  }
+ },
+ {
+  "batch": 16,
+  "check": "M14_coverage",
+  "status_now": "WARN",
+  "status_at_finalisation": "WARN",
+  "item": {
+   "problem": "policy cue of pilot_0152 opens with the same 2 tokens 'under the' as the policy cue of earlier family pilot_0011, across roles (literal opener test, R15, D-20261016-44 c; S12 names the frame)",
+   "family_id": "pilot_0152",
+   "opener": "under the",
+   "earlier_families": [
+    "pilot_0011",
+    "pilot_0026",
+    "pilot_0084",
+    "pilot_0116",
+    "pilot_0118"
+   ]
+  }
+ }
+]

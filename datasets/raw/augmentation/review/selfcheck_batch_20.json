@@ -280,15 +280,27 @@
       "skew": 0.4
     },
     {
+      "token": "sit",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
       "token": "month",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
     },
     {
-      "token": "second",
-      "twin_share": 0.2,
-      "malicious_share": 0.5,
+      "token": "long",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "lists",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
       "skew": -0.3
     },
     {
@@ -304,7 +316,13 @@
       "skew": -0.3
     },
     {
-      "token": "long",
+      "token": "second",
+      "twin_share": 0.2,
+      "malicious_share": 0.5,
+      "skew": -0.3
+    },
+    {
+      "token": "comes",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
@@ -316,34 +334,16 @@
       "skew": 0.3
     },
     {
-      "token": "lists",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "comes",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
       "token": "people",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
     },
     {
-      "token": "asks",
+      "token": "count",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
-    },
-    {
-      "token": "sits",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
     },
     {
       "token": "own",
@@ -352,15 +352,15 @@
       "skew": 0.2
     },
     {
-      "token": "application",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
+      "token": "office",
+      "twin_share": 0.2,
+      "malicious_share": 0.4,
       "skew": -0.2
     },
     {
-      "token": "anything",
-      "twin_share": 0.3,
-      "malicious_share": 0.1,
+      "token": "panel",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
       "skew": 0.2
     }
   ],
@@ -647,19 +647,19 @@
     },
     "pilot_0195": {
       "shared_malicious": 504,
-      "semantic_benign": 557,
+      "semantic_benign": 556,
       "random_benign": 495,
       "keyword_benign": 550
     },
     "pilot_0196": {
       "shared_malicious": 682,
-      "semantic_benign": 674,
+      "semantic_benign": 679,
       "random_benign": 602,
       "keyword_benign": 589
     },
     "pilot_0197": {
       "shared_malicious": 588,
-      "semantic_benign": 643,
+      "semantic_benign": 641,
       "random_benign": 543,
       "keyword_benign": 569
     },

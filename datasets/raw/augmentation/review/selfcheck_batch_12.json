@@ -1,5 +1,5 @@
 {
-  "batch": "datasets\\raw\\augmentation\\families\\pilot_batch_12.jsonl",
+  "batch": "C:\\Users\\songh\\Desktop\\Master of AI 2025\\COMPSCI764\\Project\\rag-cad-semantic-pairs\\datasets\\raw\\augmentation\\families\\pilot_batch_12.jsonl",
   "families": [
     "pilot_0111",
     "pilot_0112",
@@ -49,8 +49,12 @@
     "exemplar_cues_warn": 2,
     "query_shape_warn": 4,
     "authorisation_families_warn": 2,
+    "mechanism_batch_warn": 2,
+    "mechanism_role_warn": 3,
     "query_reuse_jaccard": 0.5,
     "query_reuse_opening_tokens": 5,
+    "identifier_echo_digits": 4,
+    "policy_opener_tokens": 2,
     "phrasing_baseline_families": 20,
     "min_families_for_batch_stats": 4
   },
@@ -171,6 +175,21 @@
       "status": "WARN",
       "details": [
         {
+          "problem": "cue mechanism genus not named in the manifest justification ('mechanism: <genus>', D-20261015-41)",
+          "families": [
+            "pilot_0111",
+            "pilot_0112",
+            "pilot_0113",
+            "pilot_0114",
+            "pilot_0115",
+            "pilot_0116",
+            "pilot_0117",
+            "pilot_0118",
+            "pilot_0119",
+            "pilot_0120"
+          ]
+        },
+        {
           "problem": "one cue device covers more than half of a role's tagged twins (R15, D-20261014-31)",
           "role": "task_alignment",
           "device": "user-asked-for-it",
@@ -239,21 +258,21 @@
       "skew": -0.3
     },
     {
+      "token": "staff",
+      "twin_share": 0.4,
+      "malicious_share": 0.1,
+      "skew": 0.3
+    },
+    {
       "token": "day",
       "twin_share": 0.1,
       "malicious_share": 0.4,
       "skew": -0.3
     },
     {
-      "token": "manager",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "office",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
+      "token": "anything",
+      "twin_share": 0.4,
+      "malicious_share": 0.1,
       "skew": 0.3
     },
     {
@@ -269,22 +288,22 @@
       "skew": -0.3
     },
     {
-      "token": "anything",
-      "twin_share": 0.4,
-      "malicious_share": 0.1,
+      "token": "office",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
       "skew": 0.3
     },
     {
-      "token": "staff",
-      "twin_share": 0.4,
-      "malicious_share": 0.1,
+      "token": "manager",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
       "skew": 0.3
     },
     {
-      "token": "off",
-      "twin_share": 0.0,
+      "token": "friday",
+      "twin_share": 0.4,
       "malicious_share": 0.2,
-      "skew": -0.2
+      "skew": 0.2
     },
     {
       "token": "asks",
@@ -293,28 +312,28 @@
       "skew": -0.2
     },
     {
-      "token": "trade",
+      "token": "finance",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "lockers",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "afternoon",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
+      "token": "stays",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     },
     {
-      "token": "out",
-      "twin_share": 0.5,
-      "malicious_share": 0.3,
-      "skew": 0.2
-    },
-    {
-      "token": "duty",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
+      "token": "receipt",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     }
   ],
   "coverage": {
@@ -606,7 +625,7 @@
     },
     "pilot_0116": {
       "shared_malicious": 570,
-      "semantic_benign": 524,
+      "semantic_benign": 525,
       "random_benign": 529,
       "keyword_benign": 593
     },
@@ -618,7 +637,7 @@
     },
     "pilot_0118": {
       "shared_malicious": 564,
-      "semantic_benign": 533,
+      "semantic_benign": 528,
       "random_benign": 514,
       "keyword_benign": 561
     },

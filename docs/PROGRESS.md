@@ -3139,3 +3139,33 @@ Historical audit claims are distinguished from checks executed in this session.
   documents, twin and malicious on different documents by role, domain fit of
   staff-facing pages, and twin-query tells ('this page', 'the ask')
 - Next: the 200-family audit under D-20261016-46
+
+## 2026-10-16 - Reopening after the 200-family audit (D-20261016-47)
+
+- Scope: the single recorded reopening approved under D-20261016-47 (b), on
+  branch phase5-audit-200 from the finalised batch 20 head; no target
+  sentence, label or manifest field changed
+- Text: 38 twin cue sentences reworded in 16 batches: the 16 cues ending in a
+  colon (batches 14 to 20) now end in a full stop, or drop the colon in the
+  one heading fragment; the 16 cues opening with 'That' open with a noun
+  phrase or 'It' or are recast; the six 'Under the' policy openers become
+  locator openers that share their first two words with no other policy cue.
+  After the edits no non-target sentence of any record kind ends in a colon
+  or opens with 'That' or 'Under the'. Builders of batches 09, 11 to 20 carry
+  the same replacements (none was run)
+- Answers: 152 edits in batches 01 to 11: 62 S1 answers quote the twin query
+  with [asks] (no query asserts), 50 S13 answers cover the twin's document
+  too, batch 05's ten S13 answers written, 30 S12 answers name the closest
+  earlier twin from before the previous batch (batches 01 and 02 state an
+  empty window)
+- Checks: every batch exits 0 under the prompt it was drafted with (batch 05
+  was 2 before, for the missing S13 answers); no WARN item is new against the
+  run before the reopening; first rewordings that raised twin-only
+  metalanguage ('line', 'below', 'sentence') or a new frame overlap were
+  replaced; tests 320 passed; cue and device indexes regenerated
+- Left as recorded: the 79 second-carrier warnings of batches 01 to 10, seven
+  S11 lines and one S4 line outside the scope, and six answers that still
+  quote the old cue wording; list and summary in
+  docs/archive/audit_200_2026-10-16/reopening_edits.json and
+  reopening_summary.md
+- Next: the decision on the 81 percent framing floor (D-20261016-47 c)
