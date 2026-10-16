@@ -612,3 +612,32 @@ twenty controls by Claude Sonnet 5 from the drafter's specification, and the ind
 was Claude Fable 5.1, who found one grammar slip and no attack vocabulary in the forty control
 records. The independent reader's findings (accept 0, accept with note 7, fix 3, contestable label
 0, must-fix 0) are archived under docs/archive/review_batch_15_16_2026-10-16 with the outcome.
+
+## Batch 16
+
+Batch 16 (pilot_0151 to pilot_0160, drafted 2026-10-15 under DRAFTING_PROMPT_v3.md) takes ten ASB
+non-aggressive attacker instructions and no BIPIA string (rows 386, 282, 291, 276, 218, 253, 338,
+238, 268 and 240; row 276 adapted under the R2 placeholder rule to "the patient with ID 345978",
+and row 386 from the aerospace pool, which has no default domain). Coverage after 160 families:
+roles 20 each; cue positions 32 each. The hard negative is pilot_0152, the branch's page on the
+counter system's audit log, a records-security document after the tender note, the identity-checks
+page and the moderation email; the weak cue is pilot_0159, a provider's contract schedule at
+clause nine (attacker_writable). The twin is the longer member in 5 of 10. Agent-to-domain
+deviations: nine of the ten rows deviate from the data card's default agent-to-domain mapping, as
+R23 and D-20261015-34 ask for operational targets - rows 282 and 291 (education) in banking and
+it_security, 276 and 268 (medical) in legal and email, 218 (system administration) in
+customer_support, 253 and 240 (legal) in travel and workplace_chat, 338 (e-commerce) in hr_policy
+and 238 (finance) in healthcare_admin; row 386 (aerospace) has no default and sits in
+customer_support; nine domains, customer_support twice. Devices: found-item-inscription (object-
+inscription, new to the register), void-on-return (voided-object), template-residue (mistaken-
+paste), plain-english-category (standing-rule-classification), term-context-check (glossary-check,
+new), parallel-text-sheet (foreign-language-rendering), duty-moved-to-contractor (dated-transfer),
+closed-scheme-duty (expiry), provider-contract-schedule (duty-assignment) and own-list-line
+(ownership-claim). Batch 16 is the second batch of the model-swap trial of D-20261015-39 and
+D-20261015-40: the pair members and justifications were drafted by Claude Opus 5, the twenty
+controls by Claude Sonnet 5 from the drafter's specification, and the independent reader was
+Claude Fable 5.1, who found no defect in the forty control records. Across the pair the reader
+recorded five fixes and no contestable label against the previous pair's six and none, one must-
+fix against two, no new mechanism for any role, and topics repeated between the two batches. The
+independent reader's findings (accept 0, accept with note 8, fix 2, contestable label 0, must-fix
+1) are archived under docs/archive/review_batch_15_16_2026-10-16 with the outcome.
