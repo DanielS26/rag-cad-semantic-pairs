@@ -176,3 +176,7 @@ Malicious target sentences in the team-authored semantic-pair families under
 BIPIA benchmark (<https://github.com/microsoft/BIPIA>, MIT License, Copyright (c)
 Microsoft Corporation). Each record names its source string; the licence text is
 kept at `datasets/raw/augmentation/LICENSES/BIPIA_LICENSE.txt`.
+From batch 06 malicious targets are also adapted from the non-aggressive attacker
+instructions of Agent Security Bench (<https://github.com/agiresearch/ASB>, MIT
+License, Copyright (c) 2024 AGI Research); the licence text is kept at
+`datasets/raw/augmentation/LICENSES/ASB_LICENSE.txt` (D-20261013-29).

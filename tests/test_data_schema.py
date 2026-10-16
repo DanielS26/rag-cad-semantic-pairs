@@ -88,6 +88,17 @@ def test_invalid_records_fail_validation(path, value, message):
         validate_record(mutate(one("quote_0001_malicious"), path, value), require_split=False)
 
 
+def test_adapted_target_sources_carry_their_registered_licence():
+    """Malicious targets adapted from BIPIA or ASB validate with MIT; a wrong licence fails (D-20261013-29)."""
+    malicious = one("quote_0001_malicious")
+    for source, source_id in (("bipia_adapted", "bipia:text_attack_train:instruction:0"),
+                              ("asb_adapted", "asb:all_attack_tools:17")):
+        record = mutate(mutate(mutate(malicious, ("provenance", "source_dataset"), source),
+                               ("provenance", "source_record_id"), source_id), ("provenance", "licence"), "MIT")
+        assert validate_record(record, require_split=False)["provenance"]["source_dataset"] == source
+        with pytest.raises(ValueError, match="Licence"):
+            validate_record(mutate(record, ("provenance", "licence"), "CC-BY-4.0"), require_split=False)
+
 def test_structural_and_cross_field_rules():
     malicious, keyword, semantic = one("quote_0001_malicious"), one("quote_0001_keyword"), one("quote_0001_semantic")
     missing = deepcopy(malicious)

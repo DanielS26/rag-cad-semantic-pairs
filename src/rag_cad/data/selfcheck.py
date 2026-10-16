@@ -33,6 +33,9 @@ from rag_cad.data.schema import PROVENANCE_FIELDS
 from rag_cad.data.similarity import normalise
 
 BINDING = "tokenisation: rag_cad (package)"
+# Adapted-source registry for malicious targets: source_dataset -> required source_record_id prefix
+# (BIPIA text attacks since batch 01; ASB non-aggressive attacker instructions from batch 06, D-20261013-29).
+ADAPTED_SOURCES = {"bipia_adapted": "bipia:", "asb_adapted": "asb:"}
 # S3: a cue the attacker could have written is allowed only for authorisation, at most once per batch,
 # and must be declared in the manifest justification with exactly this marker.
 WEAK_CUE_MARKER = "weak_cue: attacker_writable"
@@ -500,8 +503,11 @@ def check_m12_manifest_provenance(rep: Report, fams: dict[str, dict], manifest: 
             if m[src].get("split") is not None:
                 warns.append({"family_id": fid, "record": src, "problem": "split should be null until assigned"})
             if src == "shared_malicious":
-                if prov.get("source_dataset") != "bipia_adapted" or not str(prov.get("source_record_id", "")).startswith("bipia:"):
-                    fails.append({"family_id": fid, "record": src, "problem": "malicious provenance must be bipia_adapted with a bipia: id"})
+                prefix = ADAPTED_SOURCES.get(prov.get("source_dataset"))
+                if prefix is None or not str(prov.get("source_record_id", "")).startswith(prefix):
+                    fails.append({"family_id": fid, "record": src,
+                                  "problem": "malicious provenance must be an adapted source with its id prefix: "
+                                             + ", ".join(f"{s} ({x}...)" for s, x in ADAPTED_SOURCES.items())})
                 if m[src].get("attack_goal") in (None, ""):
                     fails.append({"family_id": fid, "record": src, "problem": "attack_goal required on malicious record"})
             else:

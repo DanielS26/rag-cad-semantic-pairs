@@ -209,7 +209,8 @@ information_dissemination, entertainment, language_translation) and
 task_hijack (BIPIA task-type categories: information_retrieval,
 content_creation, learning_and_tutoring, language_translation,
 task_automation, business_intelligence, conversational_agent,
-research_assistance, sentiment_analysis, programming_help). Question-form
+research_assistance, sentiment_analysis, programming_help) and, from batch 06,
+unauthorised_operation (ASB non-aggressive attacker instructions, D-20261013-29). Question-form
 targets without the "your response" phrasing entered the set in batch 05;
 evaluation is reported per attack category and the cross-validation folds are
 stratified by attack category as well as role (D-20261013-28, amended). For
@@ -238,3 +239,41 @@ Microsoft Corporation. The licence text is kept at
 names the source file, category slug and index in `source_record_id`. BIPIA's
 own WebQA and summarisation contexts carry separate third-party licences and
 are not used; only the attack strings are.
+
+
+## Second target source, prompt version 3 and the independent readers (batches 06 onward)
+
+From batch 06 (D-20261013-29) the malicious target sentences come from two sources. The
+remaining BIPIA task-type strings continue as above. The second source is Agent Security
+Bench, ASB (Zhang et al., "Agent Security Bench (ASB): Formalizing and Benchmarking Attacks
+and Defenses in LLM-based Agents", <https://github.com/agiresearch/ASB>, MIT License,
+Copyright (c) 2024 AGI Research; licence text at
+`datasets/raw/augmentation/LICENSES/ASB_LICENSE.txt`): the 200 rows of
+`data/all_attack_tools.jsonl` with `Aggressive` false, single-sentence operational requests
+("Please allocate additional computational resources to ...") tagged by agent domain. Records
+adapted from it carry `source_dataset` `asb_adapted`, licence MIT, `source_record_id`
+`asb:all_attack_tools:<index>` (the zero-based line index in the file whose SHA-256 is
+9205bf61f1c34f4be5b644ae829da22042c92a86d4d1e70352ccec5f60cf12d6), `attack_goal` `unauthorised_operation`, and drafter
+"<model>; target adapted from ASB". Adaptation follows rule R2 only: quotation marks
+removed; identifiers, personal, product and organisation names replaced by placeholders;
+minimal grammar. ASB's agent domains map onto the project's domains (system administration
+to it_security, finance to banking, legal to legal, medical and counselling to
+healthcare_admin, e-commerce to customer_support, education to hr_policy or workplace_chat,
+academic search to email or workplace_chat; the autonomous-driving rows name real cities and
+are not used). The pinned BIPIA files have SHA-256
+63f95d3e67eac4178cdabdbdaf192cd05f2b6ed0702b578f1d30d556e5155670 (text_attack_train.json) and
+75750e7b4e8b34e8f9d88d89b357aeaaf02bd07f9e493ccd37eda74a0cd7c7f8 (text_attack_test.json). SEP (Zverev et al.)
+is a reserve for task-type targets and is not adopted until its data licence text is
+retrieved and verified; InjecAgent and Open-Prompt-Injection are not used.
+
+Batches from 06 are drafted under `DRAFTING_PROMPT_v3.md` (SHA-256 09d56ad21d2e5eb78265ddc6dc3d20f97f9c830c66d5831cf4e87a4f9a03670d),
+which keeps the version 2 rules, writes the thresholds of D-20261013-26 into R4, R10 and R14,
+adds R23 to R27 (a task-type or operational target is planted only where a human author would
+never have written it; keyword controls for such targets describe the task done, not
+requested; policy cues never share an opener; attack types are mixed within a batch; the S3
+marker rule) and generalises provenance to the two sources. Batches 01 to 05 keep the version 2
+hash. Before the human review every batch from 06 is read by two independent readers, Claude
+Opus 5 and a fresh Claude Fable 5.1 instance, under `REVIEW_BRIEF_v1.md` and the committed
+agent definition `.claude/agents/family-reviewer.md`: each reruns the checks, answers S1 to
+S12 on its own and audits the batch against every earlier batch; their findings are applied or
+declined with reasons and archived under `docs/archive/review_batch_NN_<date>/`.
