@@ -10,6 +10,7 @@ from pathlib import Path
 from rag_cad.config import load_config
 from rag_cad.data import commands as data_commands
 from rag_cad.data.conditions import PRIMARY
+from rag_cad.evaluation.bow_baseline import bow_baseline_command
 from rag_cad.evaluation.posthoc import leak_excluded_report
 from rag_cad.operations import artefacts
 from rag_cad.operations import features as feature_operations
@@ -92,14 +93,34 @@ def parser() -> argparse.ArgumentParser:
         command.add_argument("--input", type=Path, required=True)
         command.add_argument("--output", type=Path, required=True)
         command.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
-        if name in ("check-leakage", "compare-budgets"):
+        if name == "compare-budgets":
             command.add_argument("--manifest", type=Path, required=True)
+        if name == "check-leakage":
+            source = command.add_mutually_exclusive_group(required=True)
+            source.add_argument("--manifest", type=Path, help="split manifest from data split")
+            source.add_argument("--folds", type=Path,
+                                help="fold table from data assign-folds; checks the cut of --round")
+            command.add_argument("--round", type=int,
+                                 help="with --folds: the held-out fold of the round (1 to 5)")
         if name == "compare-budgets":
             command.add_argument("--conditions", nargs="+", default=list(PRIMARY))
         if name == "validate":
             command.add_argument("--roundtrip", action="store_true")
             command.add_argument("--profile", type=Path)
             command.add_argument("--resources", type=Path)
+    folds = data.add_parser(
+        "assign-folds", help="five-fold family assignment (D-20261013-28, D-20261017-51)",
+        description="Assign every family (all records of its group) to one of five folds with the "
+                    "experiment's split_seed, five families per semantic role per fold and, within "
+                    "role, attack category (malicious record source: bipia_adapted task_type, "
+                    "asb_adapted operational) balanced to at most one apart. Writes the fold table "
+                    "to --output (JSONL: family_id, group_id, fold, semantic_role, attack_category, "
+                    "cue_position) and the achieved counts to its sibling <stem>.summary.json; "
+                    "refuses to overwrite either.")
+    folds.add_argument("--input", type=Path, required=True, help="family batch file or directory")
+    folds.add_argument("--manifest", type=Path, required=True, help="family_manifest.jsonl")
+    folds.add_argument("--output", type=Path, required=True, help="fold table, e.g. folds_v1.jsonl")
+    folds.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
     features = commands.add_parser("features").add_subparsers(dest="action", required=True)
     for name in ("fake-build", "build"):
         command = features.add_parser(name)
@@ -135,6 +156,17 @@ def parser() -> argparse.ArgumentParser:
     leak.add_argument("--artefact", type=Path, required=True)
     leak.add_argument("--output", type=Path, required=True)
     leak.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
+    bow = evaluation.add_parser(
+        "bow-baseline", help="bag-of-words baseline on the family folds (D-20261016-49 (d))",
+        description="Train the audit's multinomial naive Bayes (unigrams and bigrams of the query and "
+                    "non-target sentences, add-one smoothing) on each round's training families and "
+                    "score the held-out twin and malicious records. Writes overall, per-fold, per-role, "
+                    "per-category and per-cue figures with the within-family paired share to --output, "
+                    "prints the result as JSON and a table to standard error. CPU only.")
+    bow.add_argument("--input", type=Path, required=True, help="family batch file or directory")
+    bow.add_argument("--manifest", type=Path, required=True, help="family_manifest.jsonl")
+    bow.add_argument("--folds", type=Path, required=True, help="fold table from data assign-folds")
+    bow.add_argument("--output", type=Path, required=True)
     conformance = commands.add_parser("conformance").add_subparsers(dest="action", required=True)
     fake_test = conformance.add_parser("fake-released-test")
     fake_test.add_argument("--archive", type=Path, required=True)
@@ -230,6 +262,8 @@ def execute(args) -> dict:
         local_path(args.output)
         return evaluate_released_test(FakeBackend(), args.archive, args.output, {"synthetic_only": True},
                                       "fake-local", records=args.records)
+    if args.command == "evaluation" and args.action == "bow-baseline":
+        return bow_baseline_command(args)
     if args.command == "evaluation":
         local_path(args.artefact)
         local_path(args.output)

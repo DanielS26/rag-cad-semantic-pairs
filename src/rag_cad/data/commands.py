@@ -1,4 +1,4 @@
-"""CPU data commands: validate, split, check-leakage and compare-budgets."""
+"""CPU data commands: validate, split, assign-folds, check-leakage and compare-budgets."""
 
 import json
 from pathlib import Path
@@ -74,9 +74,54 @@ def selfcheck(args) -> dict:
     return report
 
 
+def assign(args) -> dict:
+    """Write the fold table and its sibling summary once; never overwrite either (D-20261017-51 (b))."""
+    from rag_cad.data.folds import assign_folds
+    from rag_cad.data.jsonl import write_jsonl
+    from rag_cad.operations.provenance import sha256
+
+    output = local_path(args.output)
+    summary_path = output.with_name(output.stem + ".summary.json")
+    if output.exists() or summary_path.exists():
+        raise ValueError("Fold table or summary already exists; a new assignment needs a decision entry")
+    config = load_config(args.experiment)
+    records, inventory = load_records(args.input)
+    rows, summary = assign_folds(records, read_jsonl(local_path(args.manifest)),
+                                 experiment_value(config, "split_seed"))
+    summary = {"input_files": inventory, "manifest_sha256": sha256(args.manifest), **summary}
+    write_jsonl(output, rows)
+    write_json(summary_path, summary)
+    return summary
+
+
+def check_folds(args) -> dict:
+    """check-leakage over one round of a fold table: fold --round held out, the rest training."""
+    from rag_cad.data.folds import check_round
+
+    if args.round is None:
+        raise ValueError("--folds needs --round")
+    local_path(args.input)
+    local_path(args.output)
+    config = load_config(args.experiment)
+    records, inventory = load_records(args.input)
+    try:
+        result = check_round(records, read_jsonl(local_path(args.folds)), args.round,
+                             near_duplicate_threshold=experiment_value(config, "near_duplicate_threshold"))
+    except ContractError as error:
+        write_json(args.output, {"input": inventory, **error.report})
+        raise
+    result = {"input": inventory, **result}
+    write_json(args.output, result)
+    return result
+
+
 def run(args) -> dict:
     if args.action == "adapt-cad":
         return adapt(args)
+    if args.action == "assign-folds":
+        return assign(args)
+    if args.action == "check-leakage" and args.folds is not None:
+        return check_folds(args)
     if args.action == "selfcheck":
         return selfcheck(args)
     local_path(args.input)
