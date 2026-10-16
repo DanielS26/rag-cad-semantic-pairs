@@ -3462,3 +3462,51 @@ Historical audit claims are distinguished from checks executed in this session.
 - Tests: 358 passed (10 new); ruff clean
 - Next: the tie rule into a decision entry, then the real run on the
   laptop
+
+## 2026-10-17 - Phase 7: repo_compatible fold training completed
+
+- Scope: Daniel Song ran training run-folds --mode repo_compatible --threads 6
+  on the laptop CPU from main e857b9d7d958381afab2e34c0753f639812fe23a into
+  C:\p7\repo_compatible, then evaluation fold-tables; nothing retrained
+  since
+- Run: 49 cells planned and run (N0 scored, M0 three seeds, M1 to M3 five
+  rounds by three seeds), 48 trained, 0 skipped, exit 0; identity check
+  matched; configuration fingerprint 65e8db5e1b54; started
+  2026-10-16T15:48:49Z, finished 16:36:28Z UTC, 48 minutes, about 59 s per
+  trained cell (the plan estimated 58.5 s)
+- Held-out families, pooled over rounds, record basis (twin false alarm /
+  detection / paired share): BoW baseline 0.190 / 0.775 / 0.905; N0
+  0.515 / 0.660 / 0.595; M0 0.542 / 0.677 / 0.603; M1 random
+  0.935 / 0.947 / 0.547; M2 keyword 0.943 / 0.965 / 0.575; M3 semantic
+  0.485 / 0.750 / 0.842. Random and keyword control false alarms are near
+  zero for M1 to M3 (0.013 to 0.058) against 0.46 to 0.60 for N0 and M0. No
+  ties in any cell
+- Target-sentence basis: M3 0.465 / 0.750 / 0.870; M1 and M2 stay above
+  0.92 twin false alarm
+- By semantic role: M3 has its fewest twin false alarms on analysis and
+  quotation (0.360) and historical description (0.373) and its most on
+  warning (0.693) and negation (0.600), where its paired share is also
+  lowest (0.733); M1 and M2 flag at least 0.88 of twins in every role, and
+  the baseline stays below M3 in every role
+- By cue position: M3's twin false alarm runs from 0.417 with heading cues
+  to 0.542 with policy cues, and its paired share from 0.725 for query
+  cues to 0.908 for a cue in the following sentence; M1 and M2 stay at 0.88
+  or above at every position
+- Released CAD test, minus_near (4,391 rows): N0 masked AP 0.995, masked
+  TPR 0.963; M1 and M2 (all rounds) masked AP 0.997 and masked TPR 1.000,
+  so they keep or improve it; M3 keeps the ranking (masked AP 0.998) but
+  its masked TPR at the 0.5 threshold falls to 0.923 (0.960 on the full
+  set against N0's 0.981)
+- Reading: the random and keyword counterparts teach the head that the
+  injected sentence is always malicious, so it flags almost every twin.
+  The semantic counterparts halve the twin false alarms of M1 and M2 and raise the
+  paired share to 0.84 while keeping the upstream test's ranking, yet the
+  word-counter baseline still beats every trained head on the twin
+  metrics
+- Evidence: docs/archive/phase7_results_2026-10-17/ (tables, driver
+  report and log, run.json, leaked.json, run report, and each cell's
+  manifest, record predictions and released-test metrics); checkpoints and
+  per-row predictions stay in C:\p7\repo_compatible
+- Docs: data card adds "Results on the folds (repo_compatible)"; training
+  plan marks the real run done
+- Next: the figures and the tie rule into a decision entry

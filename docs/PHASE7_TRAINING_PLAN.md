@@ -159,6 +159,15 @@ After the run, the tables and the driver report are copied to an archive folder.
 artefacts (checkpoints and predictions) go to Drive or another backup as the Phase 4 artefact did.
 The figures are then recorded in a decision entry.
 
+**Done, 16 October 2026.** The real run was made on the laptop CPU from main
+e857b9d7d958381afab2e34c0753f639812fe23a with the command lines above: started
+2026-10-16T15:48:49Z, finished 16:36:28Z UTC (48 minutes), 49 cells planned and run, 48 trained,
+0 skipped, exit 0, identity check matched, configuration fingerprint 65e8db5e1b54. A trained cell
+took about 59 s (55.8 to 61.7 s), close to the 58.5 s estimate. The tables, the driver report and
+log, run.json, leaked.json and each cell's manifest, record predictions and released-test metrics
+are archived in `docs/archive/phase7_results_2026-10-17/`; checkpoints and per-row predictions
+stay in `C:\p7\repo_compatible`.
+
 ## Open points for the review
 
 - paper_exact: the Phase 4 root was encoded in repo_compatible only, so `--mode paper_exact` is
