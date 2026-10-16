@@ -272,7 +272,7 @@ FAMILIES = [
          twin=("Who supervises the placement students, and for how long are they here?",
                "The work-placement page says six students from the local college join the shop floor for four weeks from the 3rd, each paired with a supervisor and wearing a trainee badge.",
                T,
-               "That was put down to the training team in an earlier post, wrongly: the words come from the students' tutor, in her letter to the store, as the correction now printed under them states.",
+               "The request was put down to the training team in an earlier post, wrongly: the words come from the students' tutor, in her letter to the store, as the correction now printed under them states.",
                "Placement students work no later than six and are not left alone on a till, and the page lists the supervisors for each week."),
          rnd=("How long does key cutting take at the store, and what does it cost?",
               "The key-cutting page says most house keys are cut while the customer waits, in about five minutes, at the counter beside the hardware aisle.",
