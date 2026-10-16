@@ -179,6 +179,9 @@ The ordered steps for the Colab session; each Colab step needs Daniel Song's exp
    model download and publication: roughly 20 to 30 minutes connected and under 1 unit. If the run
    stops at the identity check, the summary cell shows identity_check.json; nothing is encoded and
    the difference needs a decision before any rerun.
+   Done: run 20261016T143145Z_86f6f7a3_features_e8058efb from 86f6f7a3 (the re-freeze merge, Y) under pool C on
+   16 October 2026: 671 s, encoding 358 s (6,432 passes at 55.7 ms), identity check matched Phase 4,
+   published and verified (44 feature files, 116,132,319 bytes), about 0.3 units.
 5. On the laptop: restore the published artefact with `artefact restore` to a short root outside
    Git, for example C:\p6\<run id>. The laptop has Windows long paths off (260 characters), and the
    longest relative path in the stage (features/<mode>/shards/<pool>/<64-hex shard id>/manifest.json)
@@ -186,6 +189,10 @@ The ordered steps for the Colab session; each Colab step needs Daniel Song's exp
    project folder would reach about 263 characters and fail half-way. Then run
    `features check-families` on it. Expect ready true, 800 records and 2,816 rows per mode, and
    160 + 40 families in each of the five rounds for m1_random, m2_keyword and m3_semantic.
+   Done: restored to C:\p6\20261016T143145Z_86f6f7a3_features_e8058efb; check-families exited 0 with ready true, 800 records,
+   2,816 rows per mode, identity match true and 1,408 rows with 160 + 40 families in all five
+   rounds for each of the three sets in both modes, no errors (evidence in
+   docs/archive/phase6_features_2026-10-17/).
 
 Still needing a human choice: the authorisation of the gate rerun and of the GPU run, with run IDs
 and pools; the decision entry for the re-freeze; whether the Phase 7 heads read the Phase 4 base
@@ -196,5 +203,6 @@ repo_compatible primary mode.
 
 ## Status
 
-Prepared on CPU. No Colab, GPU, Drive or encoder use took place in Phase 6; the run waits for the
-steps above.
+Done. The family encoder run (20261016T143145Z_86f6f7a3_features_e8058efb) is published and passed the readiness check on
+the laptop; the Phase 7 heads read it from the restored root. The open choices listed above (base
+root beside the new one or re-encoding, and the use of paper_exact) pass to Phase 7.

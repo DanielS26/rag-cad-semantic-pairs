@@ -242,6 +242,12 @@ family_features_built and family_report_written. After publication,
 `features check-families` verifies the restored output on CPU. The ordered
 steps, including the gate rerun the stale tested profile needs first, are in
 the plan's section "Before the encoder run".
+The first features run (16 October 2026, run ID 20261016T143145Z_86f6f7a3_features_e8058efb,
+commit 86f6f7a3) took 671 s, 358 s of it encoding (6,432 passes at 55.7 ms),
+and about 0.3 units at 1.54 units per hour under pool C; the identity check
+matched Phase 4, the 44 feature files (116,132,319 bytes) were published and
+verified under phase6_features, and the restored copy passed
+`features check-families` (docs/archive/phase6_features_2026-10-17/).
 
 Final stages reject candidate/unknown profiles. A tested profile requires Run A
 and Run B manifest hashes, the reviewed commit and lock hash, matching runtime

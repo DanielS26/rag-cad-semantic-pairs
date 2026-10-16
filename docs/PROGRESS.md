@@ -3391,3 +3391,32 @@ Historical audit claims are distinguished from checks executed in this session.
   runbook's current-gate section adds the fifth pass; plan step 3 names the
   fd06bbda pass and step 4 the new BOOTSTRAP_SHA256
 - Next: merge (commit Y), then the features stage from Y under pool C
+
+
+## 2026-10-17 - Phase 6: family encoder run and readiness check
+
+- Scope: Daniel Song ran the features stage on Colab on 16 October 2026 from
+  main 86f6f7a3c7431600296bb979af8f0e5591eb6486 (commit Y, the re-freeze
+  merge) under budget pool C with the tested profile; run ID
+  20261016T143145Z_86f6f7a3_features_e8058efb, stage label phase6_family_features
+- Run: 671 s; encoding 358 s, 6,432 passes at 55.7 ms for 800 records, both
+  representation modes from one set of passes; cuBLAS workspace :4096:8
+- Identity check: matched Phase 4 (reference
+  phase4/20261004T101405Z_d40b6a6a_m0_8c0933ce) on representation_id,
+  encoder and code revisions, segmenter and dtype; commit and
+  feature_environment_id differ (informational)
+- Publication: published and verified under phase6_features; 44 feature
+  files, 116,132,319 bytes
+- Restore and readiness check (laptop, CPU): restored to
+  C:\p6\20261016T143145Z_86f6f7a3_features_e8058efb; features check-families exited 0 with ready
+  true, 800 records, 2,816 rows per mode, identity match true, m1_random,
+  m2_keyword and m3_semantic each 1,408 rows with 160 + 40 families in all
+  five rounds in both modes, no errors
+- Evidence: docs/archive/phase6_features_2026-10-17/ (check report, restore
+  receipt, stage report, identity check, bundle manifest, both mode
+  identities); feature arrays stay on Drive and in the restored root
+- Pool C: 671 connected seconds and about 0.3 compute units (1.54 units per
+  hour; to be confirmed by Daniel Song) of its 21,600-second / 12-unit cap
+- Docs: plan steps 4 and 5 marked done, runbook records the run, data card
+  adds "Encoded features"
+- Phase 6 closed. Next: Phase 7 heads on the restored features
