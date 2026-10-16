@@ -3560,3 +3560,49 @@ Historical audit claims are distinguished from checks executed in this session.
 - Tests: 367 passed (9 new); ruff clean
 - Next: a decision entry on the distractor and query choices, then the
   real run
+
+## 2026-10-17 - Phase 8: retrieval harness run completed
+
+- Scope: Daniel Song ran rag harness-run --mode repo_compatible on the
+  laptop CPU from main cfd34d8296491505f6680589ffd7256f9d9f7a51 (after PR
+  #69) into C:\p8\repo_compatible; exit 0 in 9.05 s, standard error empty;
+  identity check matched; Phase 7 run of 49 cells (fingerprint
+  65e8db5e1b54)
+- Store per round: 216 documents, the 160 family records of the held-out
+  families plus 56 distractor passages from 23 benign remainders
+- Retrieval (identical for every row): hit@5 0.771 and mean rank 11.55;
+  own sentences masked 0.241 and 46.18; own-match share 0.262; these
+  describe the query proxy, not retriever quality
+- Document gate (injected pass-through / twin loss / family context
+  survival): no gate 1.000 / 0.000 / 1.000; BoW 0.270 / 0.185 / 0.779; N0
+  0.321 / 0.492 / 0.427; M0 0.292 / 0.513 / 0.410; M1 random
+  0.071 / 0.945 / 0.436; M2 keyword 0.053 / 0.935 / 0.436; M3 semantic
+  0.275 / 0.493 / 0.643
+- Sentence filter: N0 0.600 / 0.392 / 0.789; M0 0.567 / 0.421 / 0.779; M1
+  0.071 / 0.943 / 0.897; M2 0.055 / 0.934 / 0.900; M3 0.275 / 0.487 / 0.947
+- Control and distractor loss: random and keyword control loss near zero
+  for M1 to M3 (0.021 to 0.054) and 0.5 to 0.6 for N0 and M0; distractor
+  loss 0.05 to 0.07 everywhere
+- By semantic role: under the sentence filter warning twins are lost most
+  by every head (M3 0.757, N0 0.598) and negation twins next (M3 0.663);
+  M3 forwards most historical description (0.606) and quotation (0.417)
+  injections and stops negation best (0.083)
+- By cue position: M3 forwards most injections with heading (0.360) and
+  preceding-sentence cues (0.342) and fewest with following-sentence cues
+  (0.191), where its twin loss is highest (0.574); M1 and M2 lose 0.99 of
+  twins with heading cues
+- Reading: in the pipeline the released scorer and the retrained base stop
+  two thirds of injected documents only by discarding half of everything
+  else; the random and keyword counterparts stop 93 to 95 percent of
+  injections but destroy almost every harmless twin; the semantic
+  counterparts forward 95 percent of harmless family context under the
+  sentence filter while stopping 72 percent of injections, the best
+  trade-off among the trained heads, while the word-counter baseline under
+  the document gate reaches a similar pass-through with less twin loss;
+  retrieval is identical across rows, so the comparison does not depend
+  on it
+- Evidence: docs/archive/phase8_results_2026-10-17/ (harness.md,
+  harness.json, retrievals.jsonl, standard output and log, README)
+- Docs: data card adds "Results in the retrieval pipeline
+  (repo_compatible)"; harness plan marks the real run done
+- Next: the figures into a decision entry

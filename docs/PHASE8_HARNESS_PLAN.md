@@ -212,6 +212,15 @@ three fixes, all applied:
 - Three refusal tests were added: an unscored distractor sentence, a record flag that disagrees
   with its rows, and a cue outside its record.
 
+## Done (2026-10-17)
+
+The real run was made with the command line above from main cfd34d8 (after PR #69) on the laptop
+CPU. It exited 0 in 9.05 s with an empty log, the identity check matched, and it read all 49
+Phase 7 cells. Each round's store held 216 documents: 160 family records plus 56 distractor
+passages from the 23 benign remainders. Retrieval, identical for every row: hit@5 0.771 (0.241
+masked), mean rank 11.55 (46.18 masked), own-match share 0.262, no centroid fallback. The outputs
+are archived in docs/archive/phase8_results_2026-10-17/, with the headline tables in its README.
+
 ## Open points for the decision entry
 
 - The distractor change above: 23 benign remainders in 56 passages instead of 160 benign records,
