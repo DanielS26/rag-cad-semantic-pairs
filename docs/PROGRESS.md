@@ -3520,24 +3520,27 @@ Historical audit claims are distinguished from checks executed in this session.
   once with seed 764; each document the mean of its cached standalone
   sentence embeddings (feature columns 0 to 1,023); family texts checked
   against the content hashes of the cached rows
-- Distractors, a change for the review: the released CAD test has no wholly
-  benign record, so a distractor is the benign remainder of a leak-excluded
-  test record; the 241 leak-excluded records give only 23 distinct
-  remainders (269 sentences), so 23 are used, not 160; they are scored
-  from the same cell's released-test predictions, made with the injected
-  sentence in context
+- Distractors, a change for the decision entry: the released CAD test has
+  no wholly benign record, so a distractor is the benign remainder of a
+  leak-excluded test record; the 241 leak-excluded records give only 23
+  distinct remainders (228 sentences), so 23 are used, not 160, cut into 56
+  passages of at most five sentences; each passage is scored by its parent
+  record's predictions in the same cell's released-test rows, made with the
+  injected sentence in context
 - Retriever: no cache holds a query embedding and the encoder is not
   called, so each family record's query is placed at the mean embedding of
   the five store sentences it matches best by TF-IDF cosine (store centroid
   if none); exact cosine top five; one retrieval per round serves every
-  row, checked by digest
+  row, checked by digest; hit@5 is partly by construction (the own record's
+  sentences are among the matches), so the masked hit@5 and the own-match
+  share are reported beside it
 - Gates (rag_cad.rag.gates): document gate (drop a record flagged under the
   record rule) and sentence filter (remove sentences above 0.5); rows no
   gate, bag-of-words baseline (document gate only, controls and distractors
   pass unscored), N0, M0 and M1 to M3 on every seed
 - Metrics: injected pass-through, twin loss (target or cue sentence lost),
-  random, keyword and distractor loss, context survival (all, family,
-  distractor); pooled over rounds per seed, mean and population sd over
+  random, keyword and distractor loss, context survival (family first,
+  then all slots and distractors, with the retrieved sentence counts); pooled over rounds per seed, mean and population sd over
   seeds; by semantic role and cue position; retrieval hit rate at five and
   mean rank
 - Command: rag harness-run writes harness.json, harness.md and
@@ -3549,6 +3552,11 @@ Historical audit claims are distinguished from checks executed in this session.
   (cell verification 2.4 s, caches 3.1 s, 49 cell predictions 2.5 s); the
   run should take under 30 s, allow one minute; command in
   docs/PHASE8_HARNESS_PLAN.md, output under C:\p8\
-- Tests: 366 passed (8 new); ruff clean
-- Next: independent review of the harness and the distractor and query
-  choices, a decision entry, then the real run
+- Review of the pull request applied: masked retrieval facts and the
+  own-match share, distractor passages (56 of at most five sentences, 216
+  documents per store), family context survival first with sentence counts,
+  distractor slot concentration in the JSON, every store document checked
+  as scored, three refusal tests; synthetic archive regenerated
+- Tests: 367 passed (9 new); ruff clean
+- Next: a decision entry on the distractor and query choices, then the
+  real run

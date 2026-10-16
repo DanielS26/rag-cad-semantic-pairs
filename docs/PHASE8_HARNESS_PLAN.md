@@ -31,8 +31,8 @@ hash stored with its cached rows, so the texts the harness reads are the texts t
 ## Store
 
 One store per fold round. It holds the 160 records of the round's 40 held-out families (all four
-kinds of every family; the store refuses an incomplete family) and a fixed set of distractors, the
-same in every round.
+kinds of every family; the store refuses an incomplete family) and a fixed set of distractor
+passages, the same in every round.
 
 Each document is the mean of its sentence embeddings, scaled to unit length. A sentence embedding
 is the first half of the cached CAD feature (columns 0 to 1,023): the sentence encoded alone and
@@ -50,17 +50,22 @@ The leak exclusion (minus_near, from `leaked.json`) removes 148 records and leav
 these records share one tool output and differ only in the injection, so their remainders are the
 same text. Only 23 distinct remainders exist. The harness keeps one record per distinct remainder
 (normalised text) and draws the set once with seed 764. With 23 available, all 23 are used. They
-hold 1 to 36 sentences each, 269 in all. Each round's store therefore holds 183 documents. The
-JSON records the shortfall ("capped": true).
+hold 1 to 36 sentences each, 228 in all. The JSON records the shortfall ("capped": true).
 
-A distractor is scored from the same cell's `released_test_rows.jsonl`, which covers every
-released-test sentence. Those scores were computed with the injected sentence still in the passage,
+Family records hold two to five sentences, but the remainders run up to 36. Whole remainders acted
+as retrieval hubs, and their many sentences dominated the all-slot context survival. So each
+remainder is cut into passages of at most five consecutive sentences, as even in length as
+possible (seven sentences become four and three; 36 become four of five and four of four). Each
+passage is a store document that records its parent record. The 23 remainders give 56 passages
+of 1 to 5 sentences, so each round's store holds 216 documents. The passages are the same in every
+round. The JSON reports the passage count, the passage lengths, and which passages and parent
+records take the most retrieved slots.
+
+A distractor passage is scored by its parent record's predictions in the same cell's
+`released_test_rows.jsonl`, which covers every released-test sentence. Those scores were computed with the injected sentence still in the passage,
 because the cached passage context includes it. Clean-context scores would need a new GPU
-encoding. The harness refuses to run if a distractor sentence is not covered.
-
-The review should confirm this change or choose another one, for example cutting the long
-remainders into passages of family-record length. A decision entry should record the choice before
-the real run.
+encoding. Before gating, every cell must score every store document, retrieved or not; otherwise the run is
+refused. The decision entry before the real run records this change.
 
 ## Retriever
 
@@ -79,7 +84,12 @@ each query in the embedding space through the store's own sentences:
    of such queries is reported.
 
 This uses the query field, keeps the dense document representation of the decision entry, and
-calls nothing. The rejected alternative was to use each record's own document vector as its query:
+calls nothing. The query's own record's sentences are among the matched sentences: about a quarter
+of them on average, by the review's count on the real caches. So hit@5 is partly by construction
+and is not a measure of retriever quality. The harness therefore also reports the same placement
+with the own record's sentences masked (hit@5 and mean rank), and the mean own-match share. The
+masked placement is reported only and never used for gating. Retrieval is identical for every row,
+so the gate comparisons do not depend on how good it is. The rejected alternative was to use each record's own document vector as its query:
 it ignores the query field and makes the hit rate 1.0 by construction.
 
 Retrieval is exact cosine search over the unit document vectors and returns the top five documents
@@ -87,8 +97,9 @@ per query. Ties are broken by store order (records sorted by id, then distractor
 per round serves every row. Each row's table carries the digests of the retrievals it used, and the
 tests check that these digests are the same for every row and gate. Retrieval facts per round and
 pooled: hit rate at five of the query's own record, mean and median rank of that record in the
-whole store, retrieved slots by kind, the share of slots from the query's own family, and the
-fallback count.
+whole store, the same two with the own sentences masked, the own-match share, retrieved slots by
+kind, retrieved benign sentences by kind, the share of slots from the query's own family, the
+fallback count, and the distractor slot concentration.
 
 ## Gates and rows
 
@@ -117,8 +128,10 @@ because the prompt would see it twice.
   those twins only the target sentence counts.
 - Random and keyword control loss, and distractor loss: the share of retrieved controls or
   distractors dropped, or forwarded with any sentence removed.
-- Context survival: the share of retrieved benign (label 0) sentences forwarded, over all slots,
-  over family records only, and over distractors only.
+- Context survival: the share of retrieved benign (label 0) sentences forwarded. The headline is
+  over family records only. The all-slot figure and the distractor-only figure sit beside it, and
+  the retrieved benign sentence counts per kind are printed under each gate table, so the
+  distractors' weight in the all-slot figure can be read.
 
 Each seed's slots are pooled over the five rounds. The table gives the mean over seeds with the
 population standard deviation (ddof 0). N0, the baseline and no gate have one value. Per-round
@@ -136,10 +149,10 @@ figures stay in the JSON. Breakdowns by semantic role and by cue position cover 
 
 ## Estimated time
 
-A read-only load of the real inputs on the laptop took 2.4 s to verify the 49 Phase 7 cells,
-3.1 s to load the two caches, 0.07 s to build the 800 family documents and 0.05 s to read one
-cell's predictions (2.5 s for all 49). No store, retrieval or gate was built on the real data. The
-synthetic run, at the same store size (160 family records per round, 49 cells), took 3.8 s in all.
+A read-only load of the real inputs on the laptop took 2.4 s to verify the 49 Phase 7 cells
+(0.5 s on a warm rerun), 3.0 s to load the two caches, 0.07 s to build the 800 family documents
+and 0.05 s to read one cell's predictions (2.5 s for all 49). No store, retrieval or gate was built on the real data. The
+synthetic run, with the same 160 family records per round and 49 cells, took 3.8 s in all.
 The real run should therefore take under 30 seconds. Allow one minute. Output is about 1 MB.
 
 ## Real-run command line (laptop, after the review)
@@ -178,18 +191,32 @@ M3 in five rounds on three seeds) took 5.8 s. The commands were:
 
 Each of the three synthetic released-test records is a near duplicate of a synthetic training
 record, so the minus_near set is empty there. The synthetic run therefore draws from the full set
-(`--distractor-set full`) and gets 3 distractors. The tests cover the minus_near path with
+(`--distractor-set full`) and gets 3 distractors (one passage each). The tests cover the minus_near path with
 leak-free synthetic test records. A second run into a fresh output gave identical retrievals,
 Markdown and JSON (apart from the timing). The files are archived in
 `docs/archive/phase8_synthetic_2026-10-17/`. They have no scientific meaning.
 
-## Open points for the review
+## Review applied (2026-10-17)
 
-- The distractor change above: 23 benign remainders instead of 160 benign records, scored in
-  their injected context.
-- The query placement through TF-IDF-matched store sentences, instead of a query embedding.
-- With 23 distractors among 183 documents and queries written for their own family, few
-  distractors may be retrieved. The table reports the retrieved slot counts by kind, so distractor
-  loss can be read with its count.
-- Control and distractor loss count any removed sentence as a loss. Context survival gives the
-  sentence-level view beside it.
+The independent review of the pull request accepted the gates and the reproducibility and asked for
+three fixes, all applied:
+
+- Retrieval facts: the masked hit@5 and mean rank and the own-match share are reported beside the
+  as-built figures. The definitions state that hit@5 describes the proxy, not retriever quality,
+  and that retrieval is identical for every row. Before the passages, the review measured on the
+  real caches hit@5 0.771 as built against 0.244 masked.
+- Distractors: the sentence count is 228, not 269. The remainders are cut into 56 passages of at
+  most five sentences. Before the cut, the 36-sentence remainder took 77 of 327 distractor slots
+  and 28 percent of the retrieved benign sentences were distractor sentences. Family context
+  survival now leads the gate tables, with the all-slot figure and the sentence counts beside it.
+- Three refusal tests were added: an unscored distractor sentence, a record flag that disagrees
+  with its rows, and a cue outside its record.
+
+## Open points for the decision entry
+
+- The distractor change above: 23 benign remainders in 56 passages instead of 160 benign records,
+  scored in their injected context.
+- The query placement through TF-IDF-matched store sentences, instead of a query embedding, with
+  the masked figure beside it.
+- Control and distractor loss count any removed sentence as a loss. With passages of at most five
+  sentences, this is comparable across kinds. Context survival gives the sentence-level view.
