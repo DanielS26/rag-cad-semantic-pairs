@@ -7,10 +7,10 @@ from pathlib import Path
 
 REPO = Path(os.environ.get("RCSP_REPO", str(Path(__file__).resolve().parents[4])))
 batch, out = Path(sys.argv[1]), Path(sys.argv[2])
-recs = [json.loads(l) for l in batch.read_text(encoding="utf-8").splitlines() if l.strip()]
-man = {json.loads(l)["family_id"]: json.loads(l)
-       for l in (REPO / "datasets/raw/augmentation/family_manifest.jsonl").read_text(encoding="utf-8").splitlines()
-       if l.strip()}
+recs = [json.loads(line) for line in batch.read_text(encoding="utf-8").splitlines() if line.strip()]
+man = {json.loads(line)["family_id"]: json.loads(line)
+       for line in (REPO / "datasets/raw/augmentation/family_manifest.jsonl").read_text(encoding="utf-8").splitlines()
+       if line.strip()}
 order = ["shared_malicious", "semantic_benign", "random_benign", "keyword_benign"]
 names = {"shared_malicious": "MALICIOUS MEMBER", "semantic_benign": "BENIGN TWIN",
          "random_benign": "RANDOM BENIGN (M1)", "keyword_benign": "KEYWORD BENIGN (M2)"}
