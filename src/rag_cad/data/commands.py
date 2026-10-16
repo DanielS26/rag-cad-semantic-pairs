@@ -74,6 +74,9 @@ def selfcheck(args) -> dict:
     return report
 
 
+FAMILIES_PER_ROLE_PER_FOLD = 5
+
+
 def assign(args) -> dict:
     """Write the fold table and its sibling summary once; never overwrite either (D-20261017-51 (b))."""
     from rag_cad.data.folds import assign_folds
@@ -88,6 +91,11 @@ def assign(args) -> dict:
     records, inventory = load_records(args.input)
     rows, summary = assign_folds(records, read_jsonl(local_path(args.manifest)),
                                  experiment_value(config, "split_seed"))
+    balance = summary["balance"]
+    per_role = {count for fold in summary["by_role"].values() for count in fold.values()}
+    if per_role != {FAMILIES_PER_ROLE_PER_FOLD} or balance["by_role_category"]["max_spread_between_folds"] > 1:
+        raise ValueError("Fold balance differs from D-20261017-51 (five families per role per fold, "
+                         "category within role at most one apart); record a decision entry first")
     summary = {"input_files": inventory, "manifest_sha256": sha256(args.manifest), **summary}
     write_jsonl(output, rows)
     write_json(summary_path, summary)
@@ -122,6 +130,8 @@ def run(args) -> dict:
         return assign(args)
     if args.action == "check-leakage" and args.folds is not None:
         return check_folds(args)
+    if args.action == "check-leakage" and args.round is not None:
+        raise ValueError("--round needs --folds")
     if args.action == "selfcheck":
         return selfcheck(args)
     local_path(args.input)

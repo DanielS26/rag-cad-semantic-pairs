@@ -31,7 +31,7 @@ def reject_secrets(value: object) -> None:
 def write_json(path: Path, value: object) -> None:
     reject_secrets(value)
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("x", encoding="utf-8") as handle:
+    with path.open("x", encoding="utf-8", newline="\n") as handle:
         handle.write(canonical_json(value) + "\n")
 
 

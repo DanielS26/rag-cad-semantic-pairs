@@ -55,7 +55,7 @@ def family_table(records, manifest_entries) -> list[dict]:
     return rows
 
 
-SEARCH_LIMIT = 5 ** 10
+SEARCH_LIMIT = 5 ** 9  # memory is about combinations x folds x columns x 12 bytes
 
 
 def _spread(values) -> int:

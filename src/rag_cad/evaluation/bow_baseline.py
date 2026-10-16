@@ -61,8 +61,8 @@ def _summary(rows) -> dict:
     """Accuracy, balanced accuracy and the within-family paired share over scored families."""
     correct = Counter()
     for row in rows:
-        correct[TWIN] += row["margin_twin"] > 0
-        correct[MALICIOUS] += row["margin_malicious"] <= 0
+        correct[TWIN] += row["twin_correct"]
+        correct[MALICIOUS] += row["malicious_correct"]
     count = len(rows)
     twin_recall, malicious_recall = _rate(correct[TWIN], count), _rate(correct[MALICIOUS], count)
     return {"families": count, "records": 2 * count,
@@ -100,7 +100,8 @@ def run_baseline(records, fold_rows) -> dict:
                 continue
             twin, malicious = model.margin(pairs[family][TWIN]), model.margin(pairs[family][MALICIOUS])
             scored.append({**keyed[family], "margin_twin": round(twin, 4),
-                           "margin_malicious": round(malicious, 4), "twin_above_malicious": twin > malicious})
+                           "margin_malicious": round(malicious, 4), "twin_correct": twin > 0,
+                           "malicious_correct": malicious <= 0, "twin_above_malicious": twin > malicious})
     scored.sort(key=lambda row: row["family_id"])
 
     def grouped(field):

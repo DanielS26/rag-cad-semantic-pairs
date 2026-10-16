@@ -94,8 +94,12 @@ One new feature root under the run's workspace, published under its own stage:
 
 With the default 256 records per shard each pool of 200 records is one shard of 200 records and
 about 704 rows (2,816 rows in all, about 23 MB of float32 features). A round's head selects its
-training rows by family_id through datasets/raw/augmentation/folds_v1.jsonl and scores the
-held-out fold's rows; the fold driver should ignore the rows' split field. The base rows come from
+training rows by group_id, joined to the group_id column of datasets/raw/augmentation/folds_v1.jsonl,
+and scores the held-out fold's rows the same way. The join must not use family_id: the
+random_benign and keyword_benign records carry family_id null, and the feature builder copies that
+null into their rows, so a family_id join would silently drop every control row from m1_random and
+m2_keyword. Every record and every feature row carries its group_id, one group per family. The fold
+driver should ignore the rows' split field. The base rows come from
 the restored Phase 4 root. A feature root holds one identity, and the identity includes the commit
 and the environment, so the new root cannot be assembled together with the Phase 4 one; the fold
 driver either reads both roots and checks that their representation_id (mode, encoder and code

@@ -16,7 +16,7 @@ from rag_cad.data.folds import (
     round_manifest,
     validate_folds,
 )
-from rag_cad.data.jsonl import load_records, read_jsonl
+from rag_cad.data.jsonl import load_records, read_jsonl, write_jsonl
 from rag_cad.data.schema import ContractError
 from rag_cad.evaluation.bow_baseline import NaiveBayes, features, format_table, run_baseline
 
@@ -152,7 +152,9 @@ def test_cli_assigns_checks_one_round_and_runs_the_baseline(tmp_path, capsys):
     arguments = ["data", "assign-folds", "--input", str(FAMILIES), "--manifest", str(MANIFEST),
                  "--output", str(folds)]
     assert main(arguments) == 0
-    assert folds.read_text(encoding="utf-8") == FOLDS.read_text(encoding="utf-8")
+    written = folds.read_bytes()
+    assert written == FOLDS.read_bytes().replace(b"\r\n", b"\n") and b"\r" not in written
+    assert b"\r" not in (tmp_path / "folds_v1.summary.json").read_bytes()
     assert (tmp_path / "folds_v1.summary.json").exists()
     assert main(arguments) == 2
     capsys.readouterr()
@@ -176,3 +178,39 @@ def test_cli_assigns_checks_one_round_and_runs_the_baseline(tmp_path, capsys):
     tampered.write_text("".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8")
     assert main(["evaluation", "bow-baseline", "--input", str(FAMILIES), "--manifest", str(MANIFEST),
                  "--folds", str(tampered), "--output", str(tmp_path / "bow2.json")]) == 2
+
+
+def test_writers_use_lf_on_every_platform(tmp_path):
+    from rag_cad.operations.provenance import write_json
+
+    write_jsonl(tmp_path / "rows.jsonl", [{"a": 1}, {"b": 2}])
+    write_json(tmp_path / "report.json", {"a": 1})
+    for name in ("rows.jsonl", "report.json"):
+        content = (tmp_path / name).read_bytes()
+        assert b"\r" not in content and content.endswith(b"\n")
+
+
+def test_fold_join_key_is_group_id(data, assigned):
+    records, _ = data
+    rows, _ = assigned
+    groups = {row["group_id"] for row in rows}
+    assert {record["group_id"] for record in records} == groups
+    assert all(record["family_id"] is None for record in records
+               if record["condition_source"] in ("random_benign", "keyword_benign"))
+
+
+def test_cli_refuses_unbalanced_roles_and_round_without_folds(tmp_path):
+    entries = read_jsonl(MANIFEST)
+    changed = next(entry for entry in entries if entry["semantic_role"] == "warning")
+    changed["semantic_role"] = "quotation"
+    manifest = tmp_path / "manifest.jsonl"
+    manifest.write_text("".join(json.dumps(entry) + "\n" for entry in entries), encoding="utf-8")
+    output = tmp_path / "folds.jsonl"
+    assert main(["data", "assign-folds", "--input", str(FAMILIES), "--manifest", str(manifest),
+                 "--output", str(output)]) == 2
+    assert not output.exists() and not (tmp_path / "folds.summary.json").exists()
+    split = tmp_path / "split.json"
+    split.write_text("{}", encoding="utf-8")
+    assert main(["data", "check-leakage", "--input", str(FAMILIES), "--manifest", str(split), "--round", "1",
+                 "--output", str(tmp_path / "leak.json")]) == 2
+    assert not (tmp_path / "leak.json").exists()
