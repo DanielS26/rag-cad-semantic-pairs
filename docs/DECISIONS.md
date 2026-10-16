@@ -711,3 +711,18 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: team decision under the standing permission for checker rule additions; the allocation question is put to Daniel Song.
 - Related files, commands, results, correspondence, or commit: [self-check module](../src/rag_cad/data/selfcheck.py), [tests](../tests/test_selfcheck_cli.py); D-20261015-31; D-20261016-42; D-20261016-43.
 - Supersedes / superseded by: Amends D-20261016-42 (d); nothing superseded.
+
+## D-20261016-45 - Allocation for batches 19 and 20 (amends D-20261016-43); the standing genus-count warnings
+
+- Status: Confirmed
+- Date: 2026-10-16
+- Project phase: Phase 5 onward
+- Category: Process; Data quality
+- Decision or important note: (a) Batches 19 and 20 are drafted by one Claude Fable 5.1 worker each, one after the other, read as a pair by Claude Opus 5 and finalised by Claude Opus 5. The Fable-light pair (17 and 18) matched the Fable-drafted pair (13 and 14) at gate level but produced one new cue mechanism in twenty twins against eight; the dataset exists to teach a scorer to read cues rather than to recognise frames, so mechanism novelty outweighs the token saving for the last twenty families. (b) The weekly Fable allowance stood at 59 percent used after the pair review of 17 and 18 (a 270k-token review moved it from 54 to 59 percent, about 54k tokens per point); two Fable drafts of about 320k tokens each are expected to end near 71 percent, under the 80 percent stop line of D-20261016-43; the figure is checked again before batch 20 is drafted. (c) The genus-count warnings standing after the pair (ownership-claim 3, awaiting-rendering 3, duty-assignment 3 and compromised-source-hold 4) arise from the reader's corrections of mislabelled genera, not from new text; the tags stay honest and the counts stand as the planning signal the register exists to give (as D-20261016-42 e), so batches 19 and 20 avoid those four genera and every genus already at two.
+- Context and reason: Daniel Song's choice of 2026-10-16 among four allocations, with the cost and novelty figures of D-20261016-42 and D-20261016-44 before him.
+- Evidence: docs/archive/review_batch_17_18_2026-10-16/ (the reader's mechanism counts); the usage figures reported by Daniel Song on 2026-10-16.
+- Alternatives considered: Opus drafting with a mechanism-planning step and a Fable reader (cheaper on Fable, novelty unproven); all-Opus (no Fable spend, one new mechanism per pair so far); a mixed pair for a side-by-side (one observation each, too little to compare).
+- Consequences for implementation/evaluation/report: the data card names Claude Fable 5.1 as drafter for 19 and 20; the report's cost study presents the three allocations with the novelty row.
+- Approved by: Daniel Song, 2026-10-16.
+- Related files, commands, results, correspondence, or commit: D-20261016-42; D-20261016-43; D-20261016-44; [data card](DATA_CARD.md).
+- Supersedes / superseded by: Amends D-20261016-43 for batches 19 and 20; nothing superseded.
