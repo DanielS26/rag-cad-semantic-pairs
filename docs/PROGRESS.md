@@ -3452,5 +3452,13 @@ Historical audit claims are distinguished from checks executed in this session.
 - Real-run estimate: one 30-epoch fit of 25,799 rows takes 58.5 s on the
   laptop CPU; 48 trained cells about 48 minutes, about one hour in all;
   commands in docs/PHASE7_TRAINING_PLAN.md, output under C:\p7\
-- Tests: 356 passed (8 new); ruff clean
-- Next: independent review, then the real run on the laptop
+- Review of the pull request applied: the paired share compares logit
+  margins (float32 probabilities saturate at 1.0 and tie), an exact tie
+  counts one half, tie count and share reported beside it, strict share
+  kept in the JSON; the pinned N0 hash, planned seeds, commit and thread
+  count fixed per output; manifests written atomically; tables refuse a
+  missing condition or unequal seeds; refusals log their cause; plan
+  command sets --threads 6; synthetic archive regenerated
+- Tests: 358 passed (10 new); ruff clean
+- Next: the tie rule into a decision entry, then the real run on the
+  laptop
