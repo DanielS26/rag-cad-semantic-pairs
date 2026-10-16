@@ -665,3 +665,28 @@ under-card-policy (answered-under-policy). Batch 17 was drafted by a single Clau
 with its own controls under the allocation of D-20261016-43. The independent reader's findings
 (accept 0, accept with note 10, fix 0, contestable label 0, must-fix 0) are archived under
 docs/archive/review_batch_17_18_2026-10-16 with the outcome.
+
+## Batch 18
+
+Batch 18 (pilot_0171 to pilot_0180, drafted 2026-10-16 under DRAFTING_PROMPT_v3.md) takes ten ASB
+non-aggressive attacker instructions and no BIPIA string (rows 236, 248, 293, 350, 257, 388, 215,
+205, 397 and 329; rows 215 and 205 with the permitted R2 quote removal). Coverage after 180
+families: roles analysis 23, authorisation 22, historical_description 22, negation 22, quotation
+23, task_alignment 23, translation 22, warning 23; cue positions 36 each. The hard negative is
+pilot_0176, the security team's triage digest of reports to its abuse mailbox, weaker than
+pilot_0162 because the target sits near the team's remit; the weak cue is pilot_0180, the
+surgery's online-services policy making account safety the IT team's standing duty
+(attacker_writable). The twin is the longer member in 7 of 10. Agent-to-domain deviations: the
+rows are placed away from their default agent domains as R23 asks, with pilot_0175 moved from a
+legal desk to a facilities channel at the review; the reader records that the aerospace row of
+pilot_0179 and the account-security row of pilot_0180 sit near their homes. Devices: engagement-
+letter-extract (filed-letter-reproduction), passage-quote-request (quote-on-request), records-
+review-finding (register-check), indexer-source-line (page-audit-finding), corrected-reissue
+(author-retraction), incident-queue-quarantine (flagged-sample), hungarian-back-translation (back-
+translation-check), old-system-handover-log (archived-log-entry), explain-to-trainee (explanation-
+brief, new for the role) and account-check-remit (duty-assignment). Batch 18 was drafted by a
+single Claude Opus 5 worker after batch 17 under the allocation of D-20261016-43; the identifier-
+echo and literal policy-opener signals of D-20261016-44 were added between the review and this
+finalisation. The independent reader's findings (accept 0, accept with note 3, fix 6, contestable
+label 1, must-fix 1) are archived under docs/archive/review_batch_17_18_2026-10-16 with the
+outcome.

@@ -151,7 +151,7 @@
 - pilot_0167 [17] heading; day-book-first-job
 - pilot_0178 [18] sentence_before; old-system-handover-log
 
-### task_alignment (23): - 7, user-asked-for-it 5, appraisal-objective 1, assigned-task 1, audit-prep-list 1, drafting-note 1, garage-call-agenda 1, interview-scenario 1, last-point-on-own-draft 1, own-list-line 1, ownership-claim 1, practice-sheet 1, reader-question 1
+### task_alignment (23): - 7, user-asked-for-it 5, appraisal-objective 1, assigned-task 1, drafting-note 1, explain-to-trainee 1, garage-call-agenda 1, interview-scenario 1, last-point-on-own-draft 1, own-list-line 1, ownership-claim 1, practice-sheet 1, reader-question 1
 - pilot_0007 [01] query; -
 - pilot_0015 [02] query; -
 - pilot_0020 [02] query; -
@@ -174,7 +174,7 @@
 - pilot_0160 [16] query; own-list-line
 - pilot_0168 [17] query; last-point-on-own-draft
 - pilot_0169 [17] query; garage-call-agenda
-- pilot_0179 [18] query; audit-prep-list
+- pilot_0179 [18] query; explain-to-trainee
 
 ### authorisation (22): - 6, account-check-remit 1, accredited-operator 1, actor-signed-off 1, answered-under-policy 1, card-check-under-card-policy 1, change-ticket 1, committee-vote 1, contracted-duty 1, customer-mandate 1, delegations-policy 1, insurer-condition 1, phone-authority 1, plan-entitlement 1, provider-contract-schedule 1, regulatory-direction 1, rota-assignment 1
 - pilot_0008 [01] policy; - weak_cue
@@ -217,7 +217,7 @@
 - pilot_0167 keyword: Which statements does a company account
 - pilot_0173 malicious: What happens to a charity's grant
 - pilot_0173 twin: How are the monthly statements on
-- pilot_0173 random: How does the branch replace a
+- pilot_0173 random: How does the branch's app take
 - pilot_0173 keyword: Set out what the branch's page
 
 ### customer_support (16)
@@ -248,7 +248,7 @@
 - pilot_0162 random: Which day will the office's recycling
 - pilot_0162 keyword: Set out what the careers office's
 - pilot_0179 malicious: What does the depot's email say
-- pilot_0179 twin: I'm drawing up my own checklist
+- pilot_0179 twin: Explain to the bay's newest starter
 - pilot_0179 random: What does the office email say
 - pilot_0179 keyword: What did the depot's email say
 
@@ -262,7 +262,7 @@
 - pilot_0165 random: Explain how a patient changes their
 - pilot_0165 keyword: What does the surgery's page say
 - pilot_0172 malicious: How long are closed case notes
-- pilot_0172 twin: Quote me the opening of the
+- pilot_0172 twin: Reproduce the archived case note shown
 - pilot_0172 random: On which days does the clinic
 - pilot_0172 keyword: Describe how the clinic keeps its
 - pilot_0180 malicious: Who can use the surgery's online
@@ -335,8 +335,8 @@
 - pilot_0164 twin: When is the fourth-floor kitchen being
 - pilot_0164 random: Where does the Thursday running group
 - pilot_0164 keyword: Tell me what the marketing channel
-- pilot_0175 malicious: Which filing jobs did the coordinator
-- pilot_0175 twin: What did the team channel say
+- pilot_0175 malicious: Which repair jobs did the coordinator
+- pilot_0175 twin: What did the facilities channel say
 - pilot_0175 random: How do staff book the photography
 - pilot_0175 keyword: What did the team channel say
 
