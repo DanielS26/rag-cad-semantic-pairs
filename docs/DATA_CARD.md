@@ -796,3 +796,14 @@ By attack category: task-type 82.2 percent accuracy and 94.5 percent paired, ope
 share is the same); every scorer result on these folds is reported beside these two rows
 (review/bow_baseline_v1.json).
 
+## Encoded features
+
+All 800 family records are encoded once (6,432 encoder passes, 2,816 sentence rows) in both
+representation modes, repo_compatible and paper_exact, with the Phase 4 encoder identity (same
+encoder and code revisions, segmenter, dtype and representation hashes; the commit and the feature
+environment differ). The artefact is run 20261016T143145Z_86f6f7a3_features_e8058efb, published on Drive
+under the phase6_features stage. The readiness check on a restored copy passed: every record is in
+exactly one shard per mode, and the m1_random, m2_keyword and m3_semantic sets (1,408 rows each)
+reproduce the 160 training and 40 held-out families of all five rounds of folds_v1
+(docs/archive/phase6_features_2026-10-17/).
+
