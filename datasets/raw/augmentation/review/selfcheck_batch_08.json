@@ -403,10 +403,10 @@
       "skew": 0.4
     },
     {
-      "token": "covers",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
+      "token": "staff",
+      "twin_share": 0.2,
+      "malicious_share": 0.5,
+      "skew": -0.3
     },
     {
       "token": "run",
@@ -415,9 +415,9 @@
       "skew": 0.3
     },
     {
-      "token": "monday",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
+      "token": "first",
+      "twin_share": 0.5,
+      "malicious_share": 0.2,
       "skew": 0.3
     },
     {
@@ -427,15 +427,15 @@
       "skew": -0.3
     },
     {
-      "token": "first",
-      "twin_share": 0.5,
-      "malicious_share": 0.2,
+      "token": "monday",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
       "skew": 0.3
     },
     {
-      "token": "staff",
-      "twin_share": 0.2,
-      "malicious_share": 0.5,
+      "token": "month",
+      "twin_share": 0.1,
+      "malicious_share": 0.4,
       "skew": -0.3
     },
     {
@@ -445,10 +445,28 @@
       "skew": -0.3
     },
     {
-      "token": "month",
-      "twin_share": 0.1,
-      "malicious_share": 0.4,
-      "skew": -0.3
+      "token": "covers",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "answer",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "new",
+      "twin_share": 0.3,
+      "malicious_share": 0.5,
+      "skew": -0.2
+    },
+    {
+      "token": "lists",
+      "twin_share": 0.3,
+      "malicious_share": 0.1,
+      "skew": 0.2
     },
     {
       "token": "five",
@@ -457,34 +475,16 @@
       "skew": -0.2
     },
     {
-      "token": "week",
-      "twin_share": 0.3,
-      "malicious_share": 0.1,
-      "skew": 0.2
-    },
-    {
-      "token": "model",
+      "token": "price",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "afternoon",
+      "token": "time",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
-    },
-    {
-      "token": "summarise",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "facilities",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
     }
   ],
   "coverage": {
@@ -766,7 +766,7 @@
       "keyword_benign": 313
     },
     "pilot_0077": {
-      "shared_malicious": 331,
+      "shared_malicious": 329,
       "semantic_benign": 335,
       "random_benign": 297,
       "keyword_benign": 283
@@ -778,7 +778,7 @@
       "keyword_benign": 345
     },
     "pilot_0079": {
-      "shared_malicious": 382,
+      "shared_malicious": 369,
       "semantic_benign": 383,
       "random_benign": 346,
       "keyword_benign": 331

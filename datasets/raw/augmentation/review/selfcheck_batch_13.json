@@ -222,25 +222,19 @@
       "skew": -0.4
     },
     {
-      "token": "march",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "within",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
       "token": "words",
       "twin_share": 0.4,
       "malicious_share": 0.1,
       "skew": 0.3
     },
     {
-      "token": "letter",
+      "token": "saturday",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "march",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
@@ -252,34 +246,28 @@
       "skew": 0.3
     },
     {
-      "token": "saturday",
+      "token": "within",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
     },
     {
-      "token": "earlier",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "checked",
+      "token": "against",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "come",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
+      "token": "according",
+      "twin_share": 0.3,
+      "malicious_share": 0.1,
       "skew": 0.2
     },
     {
-      "token": "two",
-      "twin_share": 0.1,
-      "malicious_share": 0.3,
-      "skew": -0.2
+      "token": "came",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
     },
     {
       "token": "left",
@@ -288,16 +276,28 @@
       "skew": 0.2
     },
     {
-      "token": "until",
-      "twin_share": 0.3,
-      "malicious_share": 0.1,
-      "skew": 0.2
-    },
-    {
-      "token": "past",
+      "token": "arrangements",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
+    },
+    {
+      "token": "two",
+      "twin_share": 0.1,
+      "malicious_share": 0.3,
+      "skew": -0.2
+    },
+    {
+      "token": "wants",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "earlier",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
     }
   ],
   "coverage": {
@@ -600,7 +600,7 @@
       "keyword_benign": 331
     },
     "pilot_0128": {
-      "shared_malicious": 417,
+      "shared_malicious": 433,
       "semantic_benign": 395,
       "random_benign": 361,
       "keyword_benign": 421
@@ -612,7 +612,7 @@
       "keyword_benign": 464
     },
     "pilot_0130": {
-      "shared_malicious": 516,
+      "shared_malicious": 547,
       "semantic_benign": 571,
       "random_benign": 474,
       "keyword_benign": 471

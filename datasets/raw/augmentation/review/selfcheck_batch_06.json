@@ -449,22 +449,16 @@
   },
   "skew_table": [
     {
-      "token": "three",
-      "twin_share": 0.1,
-      "malicious_share": 0.5,
-      "skew": -0.4
-    },
-    {
       "token": "two",
       "twin_share": 0.1,
       "malicious_share": 0.5,
       "skew": -0.4
     },
     {
-      "token": "list",
+      "token": "three",
       "twin_share": 0.1,
-      "malicious_share": 0.4,
-      "skew": -0.3
+      "malicious_share": 0.5,
+      "skew": -0.4
     },
     {
       "token": "office",
@@ -473,25 +467,7 @@
       "skew": 0.3
     },
     {
-      "token": "set",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "thirty",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "week",
-      "twin_share": 0.1,
-      "malicious_share": 0.4,
-      "skew": -0.3
-    },
-    {
-      "token": "ten",
+      "token": "moves",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
@@ -515,19 +491,43 @@
       "skew": 0.3
     },
     {
+      "token": "set",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "ten",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "list",
+      "twin_share": 0.1,
+      "malicious_share": 0.4,
+      "skew": -0.3
+    },
+    {
+      "token": "week",
+      "twin_share": 0.1,
+      "malicious_share": 0.4,
+      "skew": -0.3
+    },
+    {
+      "token": "thirty",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
       "token": "change",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
     },
     {
-      "token": "moves",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "six",
+      "token": "card",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
@@ -811,13 +811,13 @@
       "keyword_benign": 280
     },
     "pilot_0057": {
-      "shared_malicious": 353,
+      "shared_malicious": 358,
       "semantic_benign": 346,
       "random_benign": 326,
       "keyword_benign": 365
     },
     "pilot_0058": {
-      "shared_malicious": 266,
+      "shared_malicious": 277,
       "semantic_benign": 282,
       "random_benign": 239,
       "keyword_benign": 250

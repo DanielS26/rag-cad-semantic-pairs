@@ -422,10 +422,10 @@
       "skew": 0.4
     },
     {
-      "token": "one",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
+      "token": "message",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
     },
     {
       "token": "team",
@@ -434,10 +434,22 @@
       "skew": 0.3
     },
     {
-      "token": "message",
-      "twin_share": 0.3,
+      "token": "one",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "desk",
+      "twin_share": 0.2,
       "malicious_share": 0.0,
-      "skew": 0.3
+      "skew": 0.2
+    },
+    {
+      "token": "end",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     },
     {
       "token": "days",
@@ -446,43 +458,25 @@
       "skew": -0.2
     },
     {
-      "token": "four",
+      "token": "working",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "found",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
+      "token": "confirmation",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "fee",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     },
     {
       "token": "last",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "according",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "guidance",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "below",
-      "twin_share": 0.3,
-      "malicious_share": 0.1,
-      "skew": 0.2
-    },
-    {
-      "token": "help",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
@@ -500,10 +494,16 @@
       "skew": -0.2
     },
     {
-      "token": "open",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
+      "token": "found",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "help",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
     }
   ],
   "coverage": {
@@ -709,7 +709,7 @@
       "keyword_benign": 246
     },
     "pilot_0003": {
-      "shared_malicious": 245,
+      "shared_malicious": 258,
       "semantic_benign": 239,
       "random_benign": 208,
       "keyword_benign": 228
@@ -727,7 +727,7 @@
       "keyword_benign": 187
     },
     "pilot_0006": {
-      "shared_malicious": 283,
+      "shared_malicious": 293,
       "semantic_benign": 273,
       "random_benign": 231,
       "keyword_benign": 244

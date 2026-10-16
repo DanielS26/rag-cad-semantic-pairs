@@ -421,9 +421,39 @@
       "skew": 0.4
     },
     {
+      "token": "off",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "rota",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "day",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
       "token": "reply",
       "twin_share": 0.3,
       "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "number",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "request",
+      "twin_share": 0.4,
+      "malicious_share": 0.1,
       "skew": 0.3
     },
     {
@@ -433,7 +463,19 @@
       "skew": -0.3
     },
     {
-      "token": "day",
+      "token": "note",
+      "twin_share": 0.4,
+      "malicious_share": 0.1,
+      "skew": 0.3
+    },
+    {
+      "token": "six",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "back",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
@@ -445,55 +487,13 @@
       "skew": 0.3
     },
     {
-      "token": "back",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "off",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "note",
-      "twin_share": 0.4,
-      "malicious_share": 0.1,
-      "skew": 0.3
-    },
-    {
-      "token": "request",
-      "twin_share": 0.4,
-      "malicious_share": 0.1,
-      "skew": 0.3
-    },
-    {
-      "token": "number",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "rota",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "six",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "box",
+      "token": "desk",
       "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
+      "malicious_share": 0.5,
+      "skew": -0.3
     },
     {
-      "token": "policy",
+      "token": "same",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
@@ -740,7 +740,7 @@
   },
   "lengths": {
     "pilot_0061": {
-      "shared_malicious": 406,
+      "shared_malicious": 403,
       "semantic_benign": 375,
       "random_benign": 322,
       "keyword_benign": 330
@@ -770,7 +770,7 @@
       "keyword_benign": 419
     },
     "pilot_0066": {
-      "shared_malicious": 340,
+      "shared_malicious": 364,
       "semantic_benign": 334,
       "random_benign": 299,
       "keyword_benign": 282

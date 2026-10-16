@@ -441,19 +441,13 @@
       "skew": 0.4
     },
     {
-      "token": "next",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "team",
+      "token": "second",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
     },
     {
-      "token": "second",
+      "token": "day",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
@@ -471,22 +465,22 @@
       "skew": -0.3
     },
     {
-      "token": "day",
+      "token": "team",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
     },
     {
-      "token": "badge",
+      "token": "next",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "fixed",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
-    },
-    {
-      "token": "kept",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
     },
     {
       "token": "transfers",
@@ -495,33 +489,39 @@
       "skew": -0.2
     },
     {
-      "token": "partner",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "branch",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "two",
-      "twin_share": 0.1,
-      "malicious_share": 0.3,
-      "skew": -0.2
-    },
-    {
-      "token": "days",
+      "token": "monthly",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
+      "token": "training",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
       "token": "one",
       "twin_share": 0.4,
       "malicious_share": 0.2,
+      "skew": 0.2
+    },
+    {
+      "token": "words",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "file",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "policy",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
       "skew": 0.2
     }
   ],
@@ -792,13 +792,13 @@
       "keyword_benign": 226
     },
     "pilot_0039": {
-      "shared_malicious": 260,
+      "shared_malicious": 271,
       "semantic_benign": 247,
       "random_benign": 210,
       "keyword_benign": 240
     },
     "pilot_0040": {
-      "shared_malicious": 262,
+      "shared_malicious": 264,
       "semantic_benign": 244,
       "random_benign": 234,
       "keyword_benign": 228
