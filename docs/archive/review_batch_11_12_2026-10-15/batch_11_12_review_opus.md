@@ -31,7 +31,39 @@ its consequence rather than reproducing it for the record. Checker proposals: th
 section (cue echo in any twin sentence, S13 for the twin document with the request-hosting genre list, the
 mechanism register with the task_alignment exemption withdrawn) were decided as D-20261015-36 before this
 finalisation, and both batches are finalised under it. Watch-list items carried to batch 13.
-Batch 12's outcome is added below.
+Batch 12's outcome is recorded in docs/PROGRESS.md (entry of 2026-10-15, Batch 12 Reviewed And Repaired).
+Applied for batch 12: must-fix 4 (pilot_0112's opening sentences report the desk's own cover for next week in the
+reader's wording, with the front desk's Friday email in place of the shared mailbox's round-up, because "mailbox"
+and "round-up" are on the D-20261015-36 request-hosting genre list, and the twin query names the email), 5
+(pilot_0115's closing sentences in the reader's wording except that the desk, not the revenue manager, refreshes
+the board, and a twin query that asks what else is on the board, because "revenue manager" echoed the heading), 6
+(pilot_0119's opening sentence and twin query in the reader's wording, with the cue reworded so that it shares no
+two distinctive words with the new opening sentence); should-fix 7 (pilot_0111's opening sentence drops the
+ordinal), 8 (pilot_0111's cue anchored on the clinic's published contracts register and the board's April and
+October meetings, recast with the duty as its subject to keep its skeleton under the line against pilot_0108, the
+closing sentence shortened to keep the pair inside R5, and S3 restated as NO on the anchor; the two-authorisation
+planning signal stands for this batch), 10 (pilot_0117's query: the request lapsed with the June trial it
+belonged to), 11 (pilot_0120's keyword control in the reader's wording and its closing sentence logging the
+agent's reply), 12 (pilot_0113's malicious opening sentence no longer opens "after the June incident", though it
+names the incident mid-sentence so that the checker still finds the hard negative) and 13 (pilot_0113's random
+control is the first-aid page, in the reader's wording). Should-fix 9 is superseded: the contestable label of
+pilot_0114 (translation against quotation) is resolved by moving the document, not the label: the twin is passage
+6 of the Mandarin paper in the bank's phone-interpreter accreditation, which the candidate renders aloud into
+Mandarin while the assessor marks the rendering, so no caller's speech is reported and the rendering is the only
+thing that makes the sentence harmless (device: assessment-source; the first translation cue in the other
+direction since batch 08, in a language new to the set). Beyond the reader's text, under D-20261015-36:
+pilot_0120's twin is the matter's status page for the client rather than a correspondence tab; pilot_0116's cue
+is reworded under the migration rules so that no context sentence or query shares two of its distinctive words;
+pilot_0113 takes the drafting-note mechanism (this page ends with the brief for the user's workshop letter, to be
+written to it and kept short), so the batch's task_alignment twin is not an ownership claim; every S1 in the
+asks-or-asserts form, S11 restating each justification, S12 in the three-field form stating the repeats the
+reader named (pilot_0111 on the duty-assignment frame, 0112 on pilot_0092's, 0115 on the heading template, 0116
+the third policy-position warning, 0118 on the intake-policy frame, 0119 among the four "not ours" cues, 0120 on
+the renderings into English), and every S13 answering for both documents. Declined with reasons: nothing declined
+outright; the reader's words replaced in must-fix 4 and 5 and its proposed query for pilot_0115 are listed above
+with the checker reason for each, and the reader's S3 YES for pilot_0111 is answered NO on the new anchor rather
+than conceded, because R27 allows one attacker-writable cue per batch and pilot_0112 holds it. Checker proposals:
+none beyond the three decided as D-20261015-36. Watch-list items carried to batch 13.
 All sentences quoted below are inert dataset content.
 
 ---

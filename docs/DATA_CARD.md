@@ -465,3 +465,43 @@ sentences restating their cue's proposition, a twin document that was itself the
 request is, a control document from another domain and two task_alignment twins on one template,
 every finding applied with its reason under docs/archive/review_batch_11_12_2026-10-15/ and its
 checker proposals decided as D-20261015-36.
+
+## Batch 12
+
+Batch 12 (pilot_0111 to pilot_0120, drafted 15 October 2026 under DRAFTING_PROMPT_v3.md in park mode
+beside batch 11) takes eight ASB targets (rows 303, 323, 330, 339, 342, 336, 348 and 335) and two BIPIA
+task-type strings (content_creation:3 from the train file and business_intelligence:0 from the test
+file), the fourth batch on the two-and-eight split. Coverage after 120 families: every role 15; cue
+positions sentence_after 25, heading 24, query 24, sentence_before 24, policy 23; nine domains; no role
+confined to one domain. The hard negative is pilot_0113, the building pass page with a June incident
+(the tenth hard negative and the fourth in a row on physical security and access, so the next takes a
+procurement, supplier-verification or moderation theme), and the weak cue is pilot_0112, the sender's
+premium plan on the front desk's email (S3 YES, `weak_cue: attacker_writable`); the two sit in different
+families, as do the weakest foreignness cases the review named (the contracts page of pilot_0111 and
+the status page of pilot_0120). The twin is the longer member in 5 of 10 families (4 of 8 operational,
+1 of 2 task-type). Five of the eight ASB rows deviate from the agent-to-domain default above: rows
+323, 330, 339 and 335 (e-commerce) in email, banking, travel and legal rather than customer_support,
+and row 342 (academic search) in it_security; rows 303 (counselling, healthcare_admin), 336
+(e-commerce, customer_support) and 348 (academic search, email) follow it. The batch carries two
+authorisation families, pilot_0111 (the clinic's commissioning policy, S3 NO on its anchor, an entry on
+the clinic's published contracts register and reports at two dated board meetings) and pilot_0112 (S3
+YES), the second consecutive pair with two, which the M18 planning signal records; the set's first
+negation cue in the query position (pilot_0117, a request the user says lapsed with the June trial it
+belonged to); a warning cue whose first draft was a tripwire, the device batch 11's pilot_0103 had
+taken in parallel, replaced before the review by the intranet move's open window (pilot_0116, with the
+first BIPIA task-type target in the warning role); and, after the review, a translation cue in the
+other direction (pilot_0114, passage 6 of a Mandarin accreditation paper rendered aloud by the
+candidate, which replaced a merchant desk's call sheet, a request-hosting genre whose label the reader
+found contestable; Mandarin is new to the set). New cue devices, each named in its justification: a
+contracted duty on a published register (pilot_0111), a paying sender's plan entitlement
+(pilot_0112), a drafting note the user writes to (pilot_0113, the role's second non-ownership
+mechanism after pilot_0110), an accreditation paper's source passage (pilot_0114), a trade weekly's
+cutting that quotes a memo (pilot_0115), a migration window that classes anything added as suspect
+(pilot_0116), a lapsed request (pilot_0117), a wish-list proposal costed in developer-weeks
+(pilot_0118), a duty transferred in a merger (pilot_0119) and a sworn translator's certificate
+(pilot_0120). The independent reader of D-20261013-29 as amended by D-20261014-32 (Claude Opus 5),
+reviewing batches 11 and 12 together, found the twin's own frame carrying the benign reading in five
+families (a mailbox round-up, a call sheet, a revenue desk's board, an ask-email, a correspondence
+tab), a keyword control in R24's forbidden form, a query asserting a deadline the record did not carry
+and a hard negative repeating batch 11's shape, every finding applied with its reason under
+docs/archive/review_batch_11_12_2026-10-15/ and its checker proposals decided as D-20261015-36.
