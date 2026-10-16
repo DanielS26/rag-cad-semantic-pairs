@@ -12,7 +12,7 @@ from rag_cad.data import commands as data_commands
 from rag_cad.data.conditions import PRIMARY
 from rag_cad.evaluation.bow_baseline import bow_baseline_command
 from rag_cad.evaluation.posthoc import leak_excluded_report
-from rag_cad.operations import artefacts
+from rag_cad.operations import artefacts, family_features
 from rag_cad.operations import features as feature_operations
 from rag_cad.operations import phase4 as phase4_operations
 from rag_cad.operations import smoke as smoke_operations
@@ -104,6 +104,12 @@ def parser() -> argparse.ArgumentParser:
                                  help="with --folds: the held-out fold of the round (1 to 5)")
         if name == "compare-budgets":
             command.add_argument("--conditions", nargs="+", default=list(PRIMARY))
+        if name == "split":
+            command.add_argument(
+                "--all-train", action="store_true",
+                help="put every group in train with no validation or test partition (the manifest "
+                     "the family feature build reads, D-20261013-28); ignores split_ratios and the "
+                     "seed, refuses records pinned to test")
         if name == "validate":
             command.add_argument("--roundtrip", action="store_true")
             command.add_argument("--profile", type=Path)
@@ -137,6 +143,56 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--resources", type=Path, required=True)
             command.add_argument("--model-bundle", type=Path, required=True)
             command.add_argument("--allow-network", action="store_true")
+    pending = Path("datasets/raw/augmentation/review/encoder_pending_v1.txt")
+    reference = Path("configs/phase6/phase4_feature_identity.json")
+    for name in ("fake-build-families", "build-families"):
+        real = name == "build-families"
+        command = features.add_parser(
+            name, help=("gated family feature stage (Phase 6)" if real else
+                        "CPU twin of build-families with the synthetic encoder"),
+            description="Encode exactly the records of --pending (the 800 family records) in both "
+                        "representation modes from one set of encoder passes. Writes a new stage "
+                        "directory --output holding features/<mode>/ (identity.json, shards/<pool>/, "
+                        "assembled/m1_random|m2_keyword|m3_semantic/train/), "
+                        "family_features_report.json and identity_check.json; refuses an existing "
+                        "--output, so it never writes over a restored cache. "
+                        + ("Behind the features gate (tested profile, approved budget); compares the "
+                           "repo_compatible identity with --reference before loading the encoder and "
+                           "stops when any compared hash differs; records the model bundle manifest."
+                           if real else "Synthetic identity and encoder; no scientific meaning. "
+                           "--reference is optional here."))
+        command.add_argument("--input", type=Path, required=True, help="family batch directory")
+        command.add_argument("--split-manifest", type=Path, required=True,
+                             help="all-train split manifest (data split --all-train); not a Drive "
+                                  "artefact manifest")
+        command.add_argument("--pending", type=Path, default=pending)
+        command.add_argument("--output", type=Path, required=True)
+        command.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
+        command.add_argument("--shard-records", type=int, default=256)
+        command.add_argument("--groups", type=int, default=0,
+                             help="encode only the first N groups by group_id (0, the default, means all)")
+        command.add_argument("--reference", type=Path, default=reference if real else None,
+                             help="Phase 4 feature identity to compare with")
+        if real:
+            execution_options(command)
+            command.add_argument("--resources", type=Path, required=True)
+            command.add_argument("--model-bundle", type=Path, required=True)
+            command.add_argument("--allow-network", action="store_true")
+    ready = features.add_parser(
+        "check-families", help="readiness of the family features for the fold experiments (CPU)",
+        description="Verify a family feature directory after the encoder run: every record of --pending "
+                    "in exactly one shard per mode, both modes present with the same rows, records "
+                    "unchanged since encoding, the repo_compatible identity equal to --reference, and "
+                    "every assembled set joined to --folds by group_id reproducing each round's "
+                    "training and held-out families. Writes --output; exits 2 when not ready.")
+    ready.add_argument("--features", type=Path, required=True, help="stage directory or its features/")
+    ready.add_argument("--input", type=Path, required=True, help="family batch directory")
+    ready.add_argument("--pending", type=Path, default=pending)
+    ready.add_argument("--folds", type=Path, default=Path("datasets/raw/augmentation/folds_v1.jsonl"))
+    ready.add_argument("--reference", type=Path, default=reference)
+    ready.add_argument("--skip-reference", action="store_true",
+                       help="do not compare with --reference (synthetic features only)")
+    ready.add_argument("--output", type=Path, required=True)
     m0 = commands.add_parser("m0").add_subparsers(dest="action", required=True)
     for name in ("fake-run", "run"):
         command = m0.add_parser(name)
@@ -257,6 +313,10 @@ def execute(args) -> dict:
                        atol=1e-6, rtol=1e-6)
     if args.command == "features" and args.action == "fake-build":
         return feature_operations.fake_build(args)
+    if args.command == "features" and args.action == "fake-build-families":
+        return family_features.fake_build_families(args)
+    if args.command == "features" and args.action == "check-families":
+        return family_features.check_families_command(args)
     if args.command == "conformance" and args.action == "fake-released-test":
         local_path(args.archive)
         local_path(args.output)
@@ -284,6 +344,8 @@ def execute(args) -> dict:
     if args.command == "environment":
         write_json(args.output, evidence)
         return evidence
+    if args.command == "features" and args.action == "build-families":
+        return family_features.build_families(args, profile, evidence)
     if args.command == "features":
         return feature_operations.build(args, profile, evidence)
     if args.command == "m0":

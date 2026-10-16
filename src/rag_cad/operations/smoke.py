@@ -33,6 +33,7 @@ STEPS = (
     "released_test_report_written",
     "d0_adapted", "d0_split_assigned", "m0_train_features_built", "m0_test_features_built",
     "m0_trained", "m0_evaluated", "phase4_report_written",
+    "family_identity_checked", "family_features_built", "family_report_written",
 )
 PROGRESS_PATH: Path | None = None
 

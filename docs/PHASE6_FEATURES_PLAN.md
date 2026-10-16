@@ -55,45 +55,65 @@ minutes. The released test set needs no new pass for the twin evaluation.
 
 ## The command or notebook stage that would run it
 
-The encoder runs through the gated command `features build`, which writes content-addressed shards
-per pool and an assembled set per condition and split:
+The runner notebook has a `features` stage (`STAGE = "features"`), which calls the gated command
 
-    python -m rag_cad.cli features build --condition <m1_random|m2_keyword|m3_semantic> --split train
-      --input datasets/raw/augmentation/families --manifest <all-train split manifest>
-      --output <workspace>/features --resources <segmenter> --model-bundle <bundle>
-      --profile <tested profile> --lock <lock> --commit <commit> --workspace <workspace> --execute --resume
+    python -m rag_cad.cli features build-families --input datasets/raw/augmentation/families
+      --split-manifest datasets/raw/augmentation/split_all_train_v1.json
+      --pending datasets/raw/augmentation/review/encoder_pending_v1.txt
+      --reference configs/phase6/phase4_feature_identity.json
+      --resources <segmenter> --model-bundle <bundle> --output <stage output>
+      --profile <tested profile> --lock <lock> --commit <commit> --workspace <workspace> --execute
 
-run three times, once per family condition, into one output root. Pools are cut by
-condition_source, so shared_malicious is encoded in the first run and reused, after hash
-verification, by the other two; random_benign, keyword_benign and semantic_benign are each encoded
-once. Three things are not in place yet and are stated here rather than worked around:
+once. Its preflight runs at the `features` gate, its progress label is `phase6_family_features` and
+Cell 7 publishes it under the `phase6_features` stage on Drive. The command:
 
-1. The runner notebook has stages run-a, run-b, released-test and m0 only; a features stage that
-   calls the command above, with its preflight at the features gate and publication under its own
-   stage name, has to be added and reviewed.
-2. The command needs a split manifest; for the fold design the manifest should place all 200
-   family groups in train (the folds are applied when the heads are trained, not when features are
-   built). `data split` refuses a zero test ratio, so that manifest needs a small sanctioned
-   addition rather than a hand-written file.
-3. The tested profile was invalidated by the change to src/rag_cad on 10 October (and by this
-   phase's changes); under D-20260922-12 and D-20261004-18 the smoke gate is rerun from the
-   commit that will build the features before any final stage.
+1. reads the family records, the all-train split manifest and the pending list, and refuses unless
+   the records are exactly the 800 pending ids, all in train;
+2. builds the repo_compatible identity from the profile and compares it with the values the Phase 4
+   run recorded (configs/phase6/phase4_feature_identity.json, copied read-only from the restored
+   features/identity.json): representation_id, encoder_revision, encoder_code_revision, segmenter
+   and dtype must match. On any difference it writes identity_check.json with both values and stops
+   before the segmenter, the bundle or the model is touched; commit, config_sha256 and
+   feature_environment_id are expected to differ and are reported only;
+3. sets CUBLAS_WORKSPACE_CONFIG=:4096:8 before torch loads, as the Phase 4 m0 process that built
+   the base features did (recorded in the report), loads the verified bundle, writes its manifest (the weights and code file SHA-256 values) as
+   bundle_manifest.json, and encodes every record once: one pass over the passage and two per
+   sentence, 6,432 passes in all, each pass serving both modes;
+4. writes the shards and assembled sets below and family_features_report.json (pass count, timing,
+   identities, counts and row digests per mode and condition).
+
+`features fake-build-families` runs the same code on CPU with the synthetic encoder. Over all 800
+records on the laptop it made 6,432 passes in about 15 seconds and wrote 2,816 rows per mode; the
+readiness check passed on it except for the identity comparison, which correctly refuses the
+synthetic identity. `--groups N` limits a run to the first N groups by group_id (tests and pilots).
+
+The split manifest is datasets/raw/augmentation/split_all_train_v1.json, written by the new flag
+`data split --all-train` (every group in train, no validation or test partition; it refuses records
+the contract pins to test, so the released CAD test can never enter it): 800 records, 200 groups,
+SHA-256 c0076d87bfc1475821d0fb23fb0862eb047cba954bc3c4494d44b3795f5f97a5. The 70/15/15 manifest of
+the smoke paths is a different file (review/pilot_split.json) and is not read by this stage.
 
 ## Storage layout the heads will read
 
-One new feature root under the run's workspace, published under its own stage:
+One feature root per representation mode inside the new stage directory, published under its own
+stage; each root holds one identity, so the two modes cannot be mixed:
 
-    features/identity.json
-    features/shards/shared_malicious/<shard id>/{features.npz, rows.jsonl, manifest.json}
-    features/shards/random_benign/<shard id>/...
-    features/shards/keyword_benign/<shard id>/...
-    features/shards/semantic_benign/<shard id>/...
-    features/assembled/m1_random/train/...
-    features/assembled/m2_keyword/train/...
-    features/assembled/m3_semantic/train/...
+    features/<mode>/identity.json                      (mode: repo_compatible, paper_exact)
+    features/<mode>/shards/shared_malicious/<shard id>/{features.npz, rows.jsonl, manifest.json}
+    features/<mode>/shards/random_benign/<shard id>/...
+    features/<mode>/shards/keyword_benign/<shard id>/...
+    features/<mode>/shards/semantic_benign/<shard id>/...
+    features/<mode>/assembled/m1_random/train/...
+    features/<mode>/assembled/m2_keyword/train/...
+    features/<mode>/assembled/m3_semantic/train/...
+    family_features_report.json, identity_check.json, bundle_manifest.json
+
+The stage refuses an existing output directory, so it writes beside the restored Phase 4 cache and
+never over it.
 
 With the default 256 records per shard each pool of 200 records is one shard of 200 records and
-about 704 rows (2,816 rows in all, about 23 MB of float32 features). A round's head selects its
+about 704 rows (2,816 rows per mode, about 23 MB of float32 features per mode); each assembled
+set holds 1,408 rows, of which 704 in m1_random and m2_keyword carry family_id null. A round's head selects its
 training rows by group_id, joined to the group_id column of datasets/raw/augmentation/folds_v1.jsonl,
 and scores the held-out fold's rows the same way. The join must not use family_id: the
 random_benign and keyword_benign records carry family_id null, and the feature builder copies that
@@ -106,6 +126,69 @@ driver either reads both roots and checks that their representation_id (mode, en
 revisions, segmenter, dtype) agree, or the base pool is re-encoded under the new identity. That
 choice is a Phase 7 decision.
 
+## Readiness check after the run
+
+    python -m rag_cad.cli features check-families --features <restored stage directory>
+      --input datasets/raw/augmentation/families --output <report>
+
+The defaults are --pending review/encoder_pending_v1.txt, --folds folds_v1.jsonl and --reference
+the Phase 4 identity. It verifies every shard's hashes, that each of the 800 pending ids is in
+exactly one shard in each mode, that both modes hold the same rows (2,816) under one encoder and
+commit with different representation_ids, that no record changed since it was encoded, that the
+repo_compatible identity matches Phase 4, that every assembled set holds exactly the shard rows
+of its pools under the root's identity with those shards as parents, and that every assembled set joined to folds_v1.jsonl by
+group_id reproduces each round's 160 training and 40 held-out families. It writes the report, with
+unreadable or damaged sets recorded as errors, and exits 2 when anything fails.
+
+## Before the encoder run
+
+The ordered steps for the Colab session; each Colab step needs Daniel Song's explicit authorisation.
+
+1. Merge this preparation (after #61) and note the merge commit X. The tested profile is stale:
+   it was frozen from the e7d45fc8 gate pass, and src/rag_cad has changed since (10 October,
+   Phase 6 and this branch). Under D-20260922-12 and D-20261004-18 final stages are open only from
+   commits with src/rag_cad and scripts/bootstrap_colab.py unchanged since the gate pass, and the
+   preflight enforces this with a git diff against the profile's reviewed commit, so the features
+   stage would refuse today.
+2. Gate rerun from X under pool A (bounded gate runs; 21,600 s and 12 units, of which 1,080 s and
+   0.2 units were used on 4 October; confirm nothing since): Run A in a fresh L4 runtime with the
+   candidate profile and lock, publish, then Run B in a second fresh runtime restoring Run A. On
+   4 October each took about 9 minutes and 0.1 units, so expect about 20 minutes and 0.2 units.
+3. Re-freeze the tested profile from the X pass (reviewed commit X, Run A and Run B manifest
+   hashes) in a change that touches only configs, docs and tests, with a decision entry; merge it
+   and note commit Y. The code-identity check against X then holds at Y.
+4. Features stage from Y under pool C (Phases 5 and 6; 21,600 s and 12 units, unused), in a fresh
+   L4 runtime (the tested profile pins NVIDIA L4; another GPU fails at preflight after installation
+   and tests). Before it, confirm on CPU that test_tested_profile_reproduces_the_phase4_identity
+   still passes with the re-frozen profile. A prefilled runner copy with `STAGE = "features"`,
+   COMMIT Y, BOOTSTRAP_SHA256 unchanged (scripts/bootstrap_colab.py is untouched),
+   PHASE1B_AUTHORISED True, a new RUN_ID, RUN_A_MANIFEST empty, RELEASED_TEST_RECORDS left at 0,
+   CONNECTED_SECONDS_USED and COMPUTE_UNITS_USED 0 for pool C, COMPUTE_UNITS_PER_HOUR the displayed
+   rate, PROFILE_RELATIVE configs/environments/colab_tested.yaml,
+   LOCK_RELATIVE requirements/colab-core.lock.txt, BUDGET_POOL "C" with its caps, ALLOW_NETWORK True
+   (the segmenter resource and the named Jina files are downloaded and hash-checked; this stage
+   makes no upstream CAD fetch) and SOURCE_MANIFEST empty. Inputs come from the checkout: the
+   families, split_all_train_v1.json, encoder_pending_v1.txt and phase4_feature_identity.json.
+   Expect about 4.4 minutes of encoding (6,432 passes at up to 41 ms) plus installation, tests,
+   model download and publication: roughly 20 to 30 minutes connected and under 1 unit. If the run
+   stops at the identity check, the summary cell shows identity_check.json; nothing is encoded and
+   the difference needs a decision before any rerun.
+5. On the laptop: restore the published artefact with `artefact restore` to a short root outside
+   Git, for example C:\p6\<run id>. The laptop has Windows long paths off (260 characters), and the
+   longest relative path in the stage (features/<mode>/shards/<pool>/<64-hex shard id>/manifest.json)
+   is about 128 characters, so a restore under drive-artefacts\phase6\restored\<run id> in the
+   project folder would reach about 263 characters and fail half-way. Then run
+   `features check-families` on it. Expect ready true, 800 records and 2,816 rows per mode, and
+   160 + 40 families in each of the five rounds for m1_random, m2_keyword and m3_semantic.
+
+Still needing a human choice: the authorisation of the gate rerun and of the GPU run, with run IDs
+and pools; the decision entry for the re-freeze; whether the Phase 7 heads read the Phase 4 base
+root beside the new one (the readiness check confirms the repo_compatible representation_id
+matches, while feature_environment_id and commit differ) or the base pool is re-encoded (about 34
+GPU minutes); and whether the paper_exact features, which cost no extra pass, are used beyond the
+repo_compatible primary mode.
+
 ## Status
 
-Waiting for authorisation. No Colab, GPU, Drive or encoder use took place in Phase 6.
+Prepared on CPU. No Colab, GPU, Drive or encoder use took place in Phase 6; the run waits for the
+steps above.
