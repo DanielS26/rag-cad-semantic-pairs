@@ -53,3 +53,4 @@ dist/
 *.tar.gz
 .ipynb_checkpoints/
 .pipeline_out/
+.ci-venv/
