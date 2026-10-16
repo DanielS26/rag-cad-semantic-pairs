@@ -53,6 +53,8 @@
     "mechanism_role_warn": 3,
     "query_reuse_jaccard": 0.5,
     "query_reuse_opening_tokens": 5,
+    "identifier_echo_digits": 4,
+    "policy_opener_tokens": 2,
     "phrasing_baseline_families": 20,
     "min_families_for_batch_stats": 4
   },
@@ -236,22 +238,16 @@
       "skew": -0.4
     },
     {
-      "token": "within",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "soon",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
       "token": "brought",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
+    },
+    {
+      "token": "takes",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
     },
     {
       "token": "anything",
@@ -260,19 +256,7 @@
       "skew": 0.3
     },
     {
-      "token": "file",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "has",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "takes",
+      "token": "within",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
@@ -290,21 +274,39 @@
       "skew": 0.3
     },
     {
-      "token": "open",
+      "token": "file",
       "twin_share": 0.3,
-      "malicious_share": 0.1,
-      "skew": 0.2
+      "malicious_share": 0.0,
+      "skew": 0.3
     },
     {
-      "token": "box",
+      "token": "soon",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "has",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "asked",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "back",
-      "twin_share": 0.3,
-      "malicious_share": 0.1,
+      "token": "work",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "ended",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
       "skew": 0.2
     }
   ],
@@ -591,13 +593,13 @@
     },
     "pilot_0145": {
       "shared_malicious": 681,
-      "semantic_benign": 698,
+      "semantic_benign": 714,
       "random_benign": 746,
       "keyword_benign": 755
     },
     "pilot_0146": {
       "shared_malicious": 639,
-      "semantic_benign": 640,
+      "semantic_benign": 645,
       "random_benign": 640,
       "keyword_benign": 592
     },
@@ -609,13 +611,13 @@
     },
     "pilot_0148": {
       "shared_malicious": 725,
-      "semantic_benign": 701,
+      "semantic_benign": 713,
       "random_benign": 689,
       "keyword_benign": 756
     },
     "pilot_0149": {
       "shared_malicious": 657,
-      "semantic_benign": 686,
+      "semantic_benign": 680,
       "random_benign": 719,
       "keyword_benign": 702
     },
