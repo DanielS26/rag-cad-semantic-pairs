@@ -17,7 +17,13 @@ finish on synthetic inputs. None of the numbers in them is a result of the proje
    training records, so the leak-excluded set is empty. A second run into a fresh output gave
    identical retrievals, Markdown and JSON (apart from the timing).
 
-Made at commit 8d39534 on branch phase8-harness. The command lines are in
+Regenerated on 2026-10-17 after the review of PR #69, at commit eac9fa5 on branch phase8-harness,
+from the same synthetic Phase 7 run (configuration fingerprint
+be7dfd230c218f841811b75578186743d8fd6691a2ce88375d31b42a853d705a). The first version came from
+commit 8d39534. The tables now give hit@5 and mean rank with the query's own sentences masked and
+the own-match share. Distractors are passages of at most five sentences (3 here, one per
+remainder). Family context survival leads each gate table, with the retrieved benign sentence
+counts printed under it. The gate figures did not change. The command lines are in
 `docs/PHASE8_HARNESS_PLAN.md`. `C:\p8\syn` is a temporary folder and may be deleted.
 
 ## Files
@@ -26,10 +32,11 @@ Made at commit 8d39534 on branch phase8-harness. The command lines are in
   0.4 MB) is not archived.
 - `harness_stdout.json`: the command's printed summary.
 - `real_input_load_benchmark.json`: a read-only load of the real inputs (verify the 49 Phase 7
-  cells, load the two caches, build the 800 family documents, draw the distractors, read one cell's
-  predictions). No store, retrieval or gate was built on the real data. This file is the basis of
-  the real-run estimate and of the distractor count (23 distinct benign remainders among the 241
-  leak-excluded released-test records).
+  cells, load the two caches, build the 800 family documents, draw the distractors and cut them
+  into passages, read one cell's predictions). No store, retrieval or gate was built on the real
+  data. This file is the basis of the real-run estimate and of the distractor counts: 23 distinct
+  benign remainders among the 241 leak-excluded released-test records, 228 sentences, cut into 56
+  passages of 1 to 5 sentences.
 
 ## Why the synthetic figures look as they do
 

@@ -1,35 +1,39 @@
 # Retrieval harness
 
-Mode repo_compatible; rounds [1, 2, 3, 4, 5]; top 5; threshold 0.5; distractors 3 of 160 requested (full, seed 764, 3 distinct benign remainders available); Phase 7 run be7dfd230c21; commit 8d395345e745.
+Mode repo_compatible; rounds [1, 2, 3, 4, 5]; top 5; threshold 0.5; distractor records 3 of 160 requested (full, seed 764, 3 distinct benign remainders available, cut into 3 passages of 7 sentences, at most 3 each); Phase 7 run be7dfd230c21; commit eac9fa50b3eb.
 
 ## Retrieval (identical for every row)
 
-| round | documents | family records | distractors | queries | hit@5 | mean rank | slots: malicious / twin / random / keyword / distractor | centroid queries |
-|---|---|---|---|---|---|---|---|---|
-| 1 | 163 | 160 | 3 | 160 | 0.050 | 78.20 | 274 / 160 / 46 / 320 / 0 | 0 |
-| 2 | 163 | 160 | 3 | 160 | 0.044 | 79.82 | 303 / 198 / 160 / 139 / 0 | 0 |
-| 3 | 163 | 160 | 3 | 160 | 0.031 | 81.58 | 186 / 203 / 160 / 251 / 0 | 0 |
-| 4 | 163 | 160 | 3 | 160 | 0.037 | 79.16 | 181 / 156 / 209 / 254 / 0 | 0 |
-| 5 | 163 | 160 | 3 | 160 | 0.037 | 78.99 | 266 / 117 / 199 / 218 / 0 | 0 |
-| all | | | | 800 | 0.040 | 79.55 | 1210 / 834 / 774 / 1182 / 0 | 0 |
+hit@5 and mean rank describe the query placement as much as the retriever: the query's own record's sentences are among its matched sentences (own-match share). The masked columns place the query without them. Retrieval is the same for every row, so the gate comparisons do not depend on it.
+
+| round | documents | family records | distractor passages | queries | hit@5 | mean rank | hit@5 (own sentences masked) | mean rank (masked) | own-match share | slots: malicious / twin / random / keyword / distractor | centroid queries |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 163 | 160 | 3 | 160 | 0.050 | 78.20 | 0.056 | 82.08 | 0.265 | 274 / 160 / 46 / 320 / 0 | 0 |
+| 2 | 163 | 160 | 3 | 160 | 0.044 | 79.82 | 0.037 | 80.68 | 0.253 | 303 / 198 / 160 / 139 / 0 | 0 |
+| 3 | 163 | 160 | 3 | 160 | 0.031 | 81.58 | 0.037 | 81.47 | 0.275 | 186 / 203 / 160 / 251 / 0 | 0 |
+| 4 | 163 | 160 | 3 | 160 | 0.037 | 79.16 | 0.019 | 81.65 | 0.270 | 181 / 156 / 209 / 254 / 0 | 0 |
+| 5 | 163 | 160 | 3 | 160 | 0.037 | 78.99 | 0.025 | 83.12 | 0.271 | 266 / 117 / 199 / 218 / 0 | 0 |
+| all | | | | 800 | 0.040 | 79.55 | 0.035 | 81.80 | 0.267 | 1210 / 834 / 774 / 1182 / 0 | 0 |
 
 ## Document gate
 
-| row | injected pass-through | twin loss | random loss | keyword loss | distractor loss | context survival | family context | distractor context |
+| row | injected pass-through | twin loss | random loss | keyword loss | family context survival | context survival (all slots) | distractor loss | distractor context |
 |---|---|---|---|---|---|---|---|---|
-| no gate | 1.000 | 0.000 | 0.000 | 0.000 | n/a | 1.000 | 1.000 | n/a |
-| BoW baseline | 0.233 | 0.229 | 0.000 | 0.000 | n/a | 0.776 | 0.776 | n/a |
-| N0 released | 1.000 | 1.000 | 0.000 | 1.000 | n/a | 0.442 | 0.442 | n/a |
-| M0 base | 0.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | n/a | 0.000 ± 0.000 | 0.000 ± 0.000 | n/a |
-| M1 random | 0.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | n/a | 0.000 ± 0.000 | 0.000 ± 0.000 | n/a |
-| M2 keyword | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.981 ± 0.000 | 1.000 ± 0.000 | n/a | 0.004 ± 0.000 | 0.004 ± 0.000 | n/a |
-| M3 semantic | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.981 ± 0.000 | 1.000 ± 0.000 | n/a | 0.004 ± 0.000 | 0.004 ± 0.000 | n/a |
+| no gate | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 1.000 | n/a | n/a |
+| BoW baseline | 0.233 | 0.229 | 0.000 | 0.000 | 0.776 | 0.776 | n/a | n/a |
+| N0 released | 1.000 | 1.000 | 0.000 | 1.000 | 0.442 | 0.442 | n/a | n/a |
+| M0 base | 0.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | n/a | n/a |
+| M1 random | 0.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | n/a | n/a |
+| M2 keyword | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.981 ± 0.000 | 1.000 ± 0.000 | 0.004 ± 0.000 | 0.004 ± 0.000 | n/a | n/a |
+| M3 semantic | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.981 ± 0.000 | 1.000 ± 0.000 | 0.004 ± 0.000 | 0.004 ± 0.000 | n/a | n/a |
+
+Retrieved benign sentences (the survival denominators, the same for every row): malicious 2538, twin 2561, random control 2396, keyword control 3660, distractor 0; family 11155, all 11155.
 
 The BoW baseline scores twin and malicious records only: controls and distractors pass it unscored, so its control and distractor loss are zero by construction.
 
 ### Document gate by semantic role
 
-| slice | row | injected pass-through | twin loss | random loss | keyword loss | family context |
+| slice | row | injected pass-through | twin loss | random loss | keyword loss | family context survival |
 |---|---|---|---|---|---|---|
 | analysis | no gate | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 |
 | analysis | BoW baseline | 0.574 | 0.000 | 0.000 | 0.000 | 0.931 |
@@ -90,7 +94,7 @@ The BoW baseline scores twin and malicious records only: controls and distractor
 
 ### Document gate by cue position
 
-| slice | row | injected pass-through | twin loss | random loss | keyword loss | family context |
+| slice | row | injected pass-through | twin loss | random loss | keyword loss | family context survival |
 |---|---|---|---|---|---|---|
 | heading | no gate | 1.000 | n/a | 0.000 | 0.000 | 1.000 |
 | heading | BoW baseline | 0.000 | n/a | 0.000 | 0.000 | 0.563 |
@@ -130,18 +134,20 @@ The BoW baseline scores twin and malicious records only: controls and distractor
 
 ## Sentence filter
 
-| row | injected pass-through | twin loss | random loss | keyword loss | distractor loss | context survival | family context | distractor context |
+| row | injected pass-through | twin loss | random loss | keyword loss | family context survival | context survival (all slots) | distractor loss | distractor context |
 |---|---|---|---|---|---|---|---|---|
-| no gate | 1.000 | 0.000 | 0.000 | 0.000 | n/a | 1.000 | 1.000 | n/a |
-| N0 released | 1.000 | 1.000 | 0.000 | 1.000 | n/a | 0.442 | 0.442 | n/a |
-| M0 base | 0.017 ± 0.000 | 0.954 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | n/a | 0.109 ± 0.000 | 0.109 ± 0.000 | n/a |
-| M1 random | 0.147 ± 0.000 | 0.954 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | n/a | 0.283 ± 0.000 | 0.283 ± 0.000 | n/a |
-| M2 keyword | 0.147 ± 0.000 | 0.954 ± 0.000 | 0.981 ± 0.000 | 1.000 ± 0.000 | n/a | 0.318 ± 0.000 | 0.318 ± 0.000 | n/a |
-| M3 semantic | 0.147 ± 0.000 | 0.954 ± 0.000 | 0.981 ± 0.000 | 1.000 ± 0.000 | n/a | 0.313 ± 0.000 | 0.313 ± 0.000 | n/a |
+| no gate | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 1.000 | n/a | n/a |
+| N0 released | 1.000 | 1.000 | 0.000 | 1.000 | 0.442 | 0.442 | n/a | n/a |
+| M0 base | 0.017 ± 0.000 | 0.954 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 0.109 ± 0.000 | 0.109 ± 0.000 | n/a | n/a |
+| M1 random | 0.147 ± 0.000 | 0.954 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 0.283 ± 0.000 | 0.283 ± 0.000 | n/a | n/a |
+| M2 keyword | 0.147 ± 0.000 | 0.954 ± 0.000 | 0.981 ± 0.000 | 1.000 ± 0.000 | 0.318 ± 0.000 | 0.318 ± 0.000 | n/a | n/a |
+| M3 semantic | 0.147 ± 0.000 | 0.954 ± 0.000 | 0.981 ± 0.000 | 1.000 ± 0.000 | 0.313 ± 0.000 | 0.313 ± 0.000 | n/a | n/a |
+
+Retrieved benign sentences (the survival denominators, the same for every row): malicious 2538, twin 2561, random control 2396, keyword control 3660, distractor 0; family 11155, all 11155.
 
 ### Sentence filter by semantic role
 
-| slice | row | injected pass-through | twin loss | random loss | keyword loss | family context |
+| slice | row | injected pass-through | twin loss | random loss | keyword loss | family context survival |
 |---|---|---|---|---|---|---|
 | analysis | no gate | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 |
 | analysis | N0 released | 1.000 | 1.000 | 0.000 | 1.000 | 0.664 |
@@ -194,7 +200,7 @@ The BoW baseline scores twin and malicious records only: controls and distractor
 
 ### Sentence filter by cue position
 
-| slice | row | injected pass-through | twin loss | random loss | keyword loss | family context |
+| slice | row | injected pass-through | twin loss | random loss | keyword loss | family context survival |
 |---|---|---|---|---|---|---|
 | heading | no gate | 1.000 | n/a | 0.000 | 0.000 | 1.000 |
 | heading | N0 released | 1.000 | n/a | 0.000 | 1.000 | 0.731 |
@@ -230,14 +236,14 @@ The BoW baseline scores twin and malicious records only: controls and distractor
 ## Definitions
 
 - document: a family record or a distractor; its vector is the mean of its sentence embeddings (the standalone half of the cached CAD feature, columns 0 to 1,023), unit-normalised
-- query vector: the mean embedding of the five store sentences that best match the query field by TF-IDF cosine (no cache holds a query embedding and the encoder is not called); the store centroid when no term matches
+- query vector: the mean embedding of the five store sentences that best match the query field by TF-IDF cosine (no cache holds a query embedding and the encoder is not called); the store centroid when no term matches. The query's own record's sentences are among the matched sentences (the own-match share), so hit@5 describes this placement as much as the retriever and is not a measure of retriever quality; the figure with the own record's sentences masked is given beside it. Retrieval is identical for every row, so the gate comparisons do not depend on it
 - retrieval: exact cosine search, top five per query, ties by store order; one retrieval per round serves every row
-- distractor: the benign (label 0) sentences of a released CAD test record outside the excluded set; one record per distinct remainder text, drawn once with seed 764, the same in every round; scored by the same cell's released-test predictions, which were made with the record's injected sentence still in context
+- distractor: the benign (label 0) sentences of a released CAD test record outside the excluded set; one record per distinct remainder text, drawn once with seed 764, cut into passages of at most five consecutive sentences (as even as possible), each passage a document, the same in every round; scored by its parent record's predictions in the same cell's released-test rows, which were made with the injected sentence still in context
 - document gate: drop a retrieved document the scorer flags (any sentence probability above 0.5); the bag-of-words baseline scores twin and malicious records only, so controls and distractors pass it unscored
 - sentence filter: remove the sentences scoring above 0.5 and forward the rest
 - injected pass through: share of retrieved shared_malicious documents forwarded with their target sentence
 - twin loss: share of retrieved semantic twins dropped or forwarded without their target sentence or a cue sentence (a query cue sits in the query, which no gate touches)
 - control loss: share of retrieved random or keyword controls dropped or forwarded with any sentence removed; distractor loss the same for distractors
-- context survival: share of retrieved benign sentences forwarded (all slots; family records only; distractors only)
+- context survival: share of retrieved benign sentences forwarded: family records only (the headline), all slots, and distractors only; the retrieved benign sentence counts per kind are printed under each gate table
 - slots: every document in every query's top five; a document retrieved by several queries counts each time
 - spread: each seed's slots pooled over the rounds; mean over seeds with the population sd (ddof 0); N0, the baseline and no gate have one value
