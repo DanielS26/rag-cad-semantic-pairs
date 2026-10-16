@@ -3254,7 +3254,8 @@ Historical audit claims are distinguished from checks executed in this session.
   encodes exactly the 800 pending records in both representation modes from
   one set of passes, one feature root per mode in a new stage directory
   (shards per pool, assembled m1_random, m2_keyword and m3_semantic train
-  sets), records the bundle manifest, and stops before loading the encoder
+  sets), sets the Phase 4 cuBLAS workspace setting, records the bundle
+  manifest, and stops before loading the encoder
   when the repo_compatible identity differs from the Phase 4 values copied to
   configs/phase6/phase4_feature_identity.json. The tested profile's pins
   reproduce Phase 4's representation_id (tested). The runner gains
@@ -3263,7 +3264,8 @@ Historical audit claims are distinguished from checks executed in this session.
   6,432 passes in about 15 seconds and wrote 2,816 rows per mode (1,408 per
   assembled set)
 - Readiness: `features check-families` verifies coverage once per mode, equal
-  rows across modes, unchanged records, the Phase 4 identity and the
+  rows across modes, unchanged records, the Phase 4 identity, each assembled
+  set against its pools' shard rows, identity and parents, and the
   group_id join to folds_v1.jsonl. On the synthetic run every check passed
   (160 training and 40 held-out families in each round for all three
   conditions) except the identity comparison, which refuses the synthetic
@@ -3272,6 +3274,6 @@ Historical audit claims are distinguished from checks executed in this session.
   pool A (the tested profile is stale since src/rag_cad changed; about
   20 minutes), re-freeze, the features stage under pool C, then the
   readiness check on the laptop
-- Checks: tests 339 passed (six new in tests/test_family_features.py, one
+- Checks: tests 342 passed (nine new in tests/test_family_features.py, one
   in tests/test_notebook_contract.py); ruff clean
 - Next: authorisation of the gate rerun and the encoder run

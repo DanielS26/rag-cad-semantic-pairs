@@ -75,7 +75,8 @@ Cell 7 publishes it under the `phase6_features` stage on Drive. The command:
    and dtype must match. On any difference it writes identity_check.json with both values and stops
    before the segmenter, the bundle or the model is touched; commit, config_sha256 and
    feature_environment_id are expected to differ and are reported only;
-3. loads the verified bundle, writes its manifest (the weights and code file SHA-256 values) as
+3. sets CUBLAS_WORKSPACE_CONFIG=:4096:8 before torch loads, as the Phase 4 m0 process that built
+   the base features did (recorded in the report), loads the verified bundle, writes its manifest (the weights and code file SHA-256 values) as
    bundle_manifest.json, and encodes every record once: one pass over the passage and two per
    sentence, 6,432 passes in all, each pass serving both modes;
 4. writes the shards and assembled sets below and family_features_report.json (pass count, timing,
@@ -134,9 +135,10 @@ The defaults are --pending review/encoder_pending_v1.txt, --folds folds_v1.jsonl
 the Phase 4 identity. It verifies every shard's hashes, that each of the 800 pending ids is in
 exactly one shard in each mode, that both modes hold the same rows (2,816) under one encoder and
 commit with different representation_ids, that no record changed since it was encoded, that the
-repo_compatible identity matches Phase 4, and that every assembled set joined to folds_v1.jsonl by
-group_id reproduces each round's 160 training and 40 held-out families. It writes the report and
-exits 2 when anything fails.
+repo_compatible identity matches Phase 4, that every assembled set holds exactly the shard rows
+of its pools under the root's identity with those shards as parents, and that every assembled set joined to folds_v1.jsonl by
+group_id reproduces each round's 160 training and 40 held-out families. It writes the report, with
+unreadable or damaged sets recorded as errors, and exits 2 when anything fails.
 
 ## Before the encoder run
 
@@ -155,8 +157,14 @@ The ordered steps for the Colab session; each Colab step needs Daniel Song's exp
 3. Re-freeze the tested profile from the X pass (reviewed commit X, Run A and Run B manifest
    hashes) in a change that touches only configs, docs and tests, with a decision entry; merge it
    and note commit Y. The code-identity check against X then holds at Y.
-4. Features stage from Y under pool C (Phases 5 and 6; 21,600 s and 12 units, unused): a prefilled
-   runner copy with `STAGE = "features"`, PROFILE_RELATIVE configs/environments/colab_tested.yaml,
+4. Features stage from Y under pool C (Phases 5 and 6; 21,600 s and 12 units, unused), in a fresh
+   L4 runtime (the tested profile pins NVIDIA L4; another GPU fails at preflight after installation
+   and tests). Before it, confirm on CPU that test_tested_profile_reproduces_the_phase4_identity
+   still passes with the re-frozen profile. A prefilled runner copy with `STAGE = "features"`,
+   COMMIT Y, BOOTSTRAP_SHA256 unchanged (scripts/bootstrap_colab.py is untouched),
+   PHASE1B_AUTHORISED True, a new RUN_ID, RUN_A_MANIFEST empty, RELEASED_TEST_RECORDS left at 0,
+   CONNECTED_SECONDS_USED and COMPUTE_UNITS_USED 0 for pool C, COMPUTE_UNITS_PER_HOUR the displayed
+   rate, PROFILE_RELATIVE configs/environments/colab_tested.yaml,
    LOCK_RELATIVE requirements/colab-core.lock.txt, BUDGET_POOL "C" with its caps, ALLOW_NETWORK True
    (the segmenter resource and the named Jina files are downloaded and hash-checked; this stage
    makes no upstream CAD fetch) and SOURCE_MANIFEST empty. Inputs come from the checkout: the
@@ -165,8 +173,11 @@ The ordered steps for the Colab session; each Colab step needs Daniel Song's exp
    model download and publication: roughly 20 to 30 minutes connected and under 1 unit. If the run
    stops at the identity check, the summary cell shows identity_check.json; nothing is encoded and
    the difference needs a decision before any rerun.
-5. On the laptop: restore the published artefact from Drive beside the Phase 4 one (for example
-   drive-artefacts/phase6/restored/<run id>, outside Git) with `artefact restore`, then run
+5. On the laptop: restore the published artefact with `artefact restore` to a short root outside
+   Git, for example C:\p6\<run id>. The laptop has Windows long paths off (260 characters), and the
+   longest relative path in the stage (features/<mode>/shards/<pool>/<64-hex shard id>/manifest.json)
+   is about 128 characters, so a restore under drive-artefacts\phase6\restored\<run id> in the
+   project folder would reach about 263 characters and fail half-way. Then run
    `features check-families` on it. Expect ready true, 800 records and 2,816 rows per mode, and
    160 + 40 families in each of the five rounds for m1_random, m2_keyword and m3_semantic.
 

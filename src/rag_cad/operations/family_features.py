@@ -9,6 +9,7 @@ the records unchanged, and the rows joined to the fold table by group_id (never 
 """
 
 import json
+import os
 import time
 from dataclasses import replace
 from pathlib import Path
@@ -241,6 +242,9 @@ def fake_build_families(args) -> dict:
 
 def build_families(args, profile: dict, evidence: dict) -> dict:
     """The real stage behind the features gate: identity check first, then the encoder."""
+    from rag_cad.operations.phase4 import prepare_environment
+
+    prepare_environment()  # same cuBLAS workspace setting as the Phase 4 m0 process, before torch loads
     from rag_cad.cad.representation import JinaEncoder
     from rag_cad.operations import smoke
     from rag_cad.operations.upstream import prepare_resources, validate_resources
@@ -276,7 +280,8 @@ def build_families(args, profile: dict, evidence: dict) -> dict:
     return _stage("real", args, representations, encoder, feature_environment_id=evidence["environment_id"],
                   commit=args.commit, experiment=experiment, inventory=inventory, selected=selected,
                   provenance=provenance, identity_check=check, mark=smoke.mark,
-                  extra={"preflight": evidence, "bundle_manifest_sha256": sha256(output / BUNDLE_MANIFEST),
+                  extra={"preflight": evidence,
+                         "cublas_workspace_config": os.environ.get("CUBLAS_WORKSPACE_CONFIG"), "bundle_manifest_sha256": sha256(output / BUNDLE_MANIFEST),
                          "bundle_files": encoder.bundle_manifest["files"],
                          "maximum_token_length": encoder.max_token_length})
 
@@ -304,13 +309,21 @@ def check_family_features(features: Path, records, pending: list[str], fold_rows
             errors.append(f"{mode}: feature root missing")
             continue
         identity = json.loads((mode_root / "identity.json").read_text(encoding="utf-8"))
-        seen, rows_all, pools = {}, [], {}
+        seen, rows_all, pools, pool_keys, pool_shards = {}, [], {}, {}, {}
         for pool_dir in sorted((mode_root / "shards").iterdir()) if (mode_root / "shards").is_dir() else []:
             for shard_dir in sorted(pool_dir.iterdir()):
-                _, _, rows, manifest = read_feature_set(shard_dir)
+                try:
+                    _, _, rows, manifest = read_feature_set(shard_dir)
+                except (ValueError, OSError, KeyError) as error:
+                    errors.append(f"{mode}: shards/{pool_dir.name}/{shard_dir.name} unreadable "
+                                  f"({type(error).__name__}: {error})")
+                    continue
                 if manifest["identity"] != identity:
                     errors.append(f"{mode}: shard {shard_dir.name} has a different identity")
                 pools[pool_dir.name] = pools.get(pool_dir.name, 0) + manifest["counts"]["records"]
+                pool_keys.setdefault(pool_dir.name, set()).update(
+                    (row["record_id"], row["sentence_id"]) for row in rows)
+                pool_shards.setdefault(pool_dir.name, set()).add(manifest["name"])
                 for record_id, content in manifest["ordered_record_hashes"]:
                     seen[record_id] = seen.get(record_id, 0) + 1
                     if record_id in by_id and record_content_hash(by_id[record_id]) != content:
@@ -328,7 +341,22 @@ def check_family_features(features: Path, records, pending: list[str], fold_rows
                                 for row in rows_all)
         assembled = {}
         for condition in FAMILY_CONDITIONS:
-            _, _, rows, _ = read_feature_set(mode_root / "assembled" / condition / "train")
+            try:
+                _, _, rows, manifest = read_feature_set(mode_root / "assembled" / condition / "train")
+            except (ValueError, OSError, KeyError) as error:
+                errors.append(f"{mode}: assembled/{condition}/train unreadable ({type(error).__name__}: {error})")
+                continue
+            members = [pool for pool in CONDITIONS[condition] if pool != "base"]
+            expected_keys = set().union(*(pool_keys.get(pool, set()) for pool in members))
+            assembled_keys = [(row["record_id"], row["sentence_id"]) for row in rows]
+            if len(assembled_keys) != len(set(assembled_keys)) or set(assembled_keys) != expected_keys:
+                errors.append(f"{mode}: {condition} rows ({len(assembled_keys)}) differ from its pools' "
+                              f"shard rows ({len(expected_keys)})")
+            if manifest["identity"] != identity:
+                errors.append(f"{mode}: {condition} has a different identity from the feature root")
+            expected_parents = set().union(*(pool_shards.get(pool, set()) for pool in members))
+            if sorted(manifest["parents"]) != sorted(expected_parents):
+                errors.append(f"{mode}: {condition} parents differ from the shards of its pools")
             sources = {row["condition_source"] for row in rows}
             if sources != set(CONDITIONS[condition]) - {"base"}:
                 errors.append(f"{mode}: {condition} holds sources {sorted(sources)}")

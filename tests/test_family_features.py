@@ -151,3 +151,59 @@ def test_real_family_stage_is_gated_before_any_ml_import(tmp_path):
                             env=os.environ | {"PYTHONPATH": str(ROOT / "src")}, capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
     assert not (tmp_path / "w/out").exists()
+
+
+def _damaged_case(tmp_path, capsys):
+    out = tmp_path / "o"
+    assert main(["features", "fake-build-families", "--input", str(FAMILIES), "--split-manifest", str(ALL_TRAIN),
+                 "--output", str(out), "--groups", "2"]) == 0
+    ids = sorted({line for line in PENDING.read_text(encoding="utf-8").split()
+                  if line.rsplit("_", 1)[0] in {"pilot_0001", "pilot_0002"}})
+    pending, folds = _subset(tmp_path, ids)
+    check = ["features", "check-families", "--features", str(out), "--input", str(FAMILIES),
+             "--pending", str(pending), "--folds", str(folds), "--skip-reference"]
+    assert main([*check, "--output", str(tmp_path / "ok.json")]) == 0
+    capsys.readouterr()
+    return out / "features/repo_compatible", check
+
+
+def _failed(tmp_path, check, name):
+    assert main([*check, "--output", str(tmp_path / name)]) == 2
+    report = json.loads((tmp_path / name).read_text(encoding="utf-8"))
+    assert report["ready"] is False
+    return report["errors"]
+
+
+def test_check_reports_a_shortened_assembled_set(tmp_path, capsys):
+    from rag_cad.cad.feature_store import read_feature_set, write_feature_set
+
+    root, check = _damaged_case(tmp_path, capsys)
+    directory = root / "assembled/m1_random/train"
+    features, labels, rows, manifest = read_feature_set(directory)
+    keep = [index for index, row in enumerate(rows) if row["record_id"] != "pilot_0001_random"]
+    kept = [{**rows[index], "feature_row_index": position} for position, index in enumerate(keep)]
+    shutil.rmtree(directory)
+    write_feature_set(directory, features[keep], labels[keep], kept, manifest["identity"], kind="assembled",
+                      name=manifest["name"], parents=manifest["parents"])
+    errors = _failed(tmp_path, check, "r.json")
+    assert any("m1_random rows" in error and "differ from its pools' shard rows" in error for error in errors)
+    capsys.readouterr()
+
+
+def test_check_reports_a_dropped_shard_row(tmp_path, capsys):
+    root, check = _damaged_case(tmp_path, capsys)
+    rows = next((root / "shards/random_benign").iterdir()) / "rows.jsonl"
+    lines = rows.read_text(encoding="utf-8").splitlines(keepends=True)
+    rows.write_text("".join(lines[:-1]), encoding="utf-8", newline="")
+    errors = _failed(tmp_path, check, "r.json")
+    assert any(error.startswith("repo_compatible: shards/random_benign/") and "unreadable" in error
+               for error in errors)
+    capsys.readouterr()
+
+
+def test_check_reports_a_missing_assembled_set(tmp_path, capsys):
+    root, check = _damaged_case(tmp_path, capsys)
+    shutil.rmtree(root / "assembled/m2_keyword")
+    errors = _failed(tmp_path, check, "r.json")
+    assert any(error.startswith("repo_compatible: assembled/m2_keyword/train unreadable") for error in errors)
+    capsys.readouterr()
