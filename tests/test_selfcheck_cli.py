@@ -186,6 +186,103 @@ def test_selfcheck_d30_signals_warn_on_batch_and_set_wide_patterns(tmp_path):
     template = json.loads(template_path.read_text(encoding="utf-8"))
     assert "S13" in template["_questions"] and "S13" in template[families[0]]
 
+def test_selfcheck_d31_signals_locator_skeleton_query_reuse_and_s4(tmp_path):
+    """D-20261014-31: an unlocated policy cue, two same-role cues with one masked skeleton, near-reused queries,
+    the S4 rule for query cues and the S7 match-test wording of the template."""
+    from rag_cad.data.selfcheck import POLICY_LEXICON, POLICY_WORDS, _cue_sentence_ids
+
+    items = read_jsonl(RECORDS)
+    entries = read_jsonl(MANIFEST)
+    # a policy cue without any policy word: the locator falls back to every sentence and M17 says so
+    policy_words = set(POLICY_WORDS) | set(POLICY_LEXICON)
+    for s in member(items, "authorisation_0008", "semantic_benign")["sentences"]:
+        if not s["is_target"]:
+            s["text"] = " ".join(w for w in s["text"].split() if w.lower().strip(".,:;") not in policy_words)
+    # two twins of one role whose cue sentences share a frame with other nouns
+    frames = {"warning_0003": "Treat that notice as suspicious because it came from outside the office.",
+              "negation_0002": "Treat that memo as suspicious because it came from outside the branch."}
+    for family, text in frames.items():
+        twin = member(items, family, "semantic_benign")
+        entry = next(e for e in entries if e["family_id"] == family)
+        entry["semantic_role"] = "warning"
+        for s in twin["sentences"]:
+            if s["is_target"]:
+                s["semantic_role"] = "warning"
+            elif s["sentence_id"] in _cue_sentence_ids(entry, twin):
+                s["text"] = text
+    # two near-identical control queries on different families
+    control(items, "unit_analysis_0004", "random_benign")["query"] = "Explain how to change the delivery address on an open order."
+    control(items, "unit_translation_0005", "random_benign")["query"] = "Explain how to change the email address on an open order."
+    batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"
+    write_jsonl(batch, items)
+    write_jsonl(manifest, entries)
+    families = sorted({r["family_id"] for r in items if r["family_id"]})
+    answers = {fam: {f"S{i}": "YES - fixture" for i in range(1, 14)} for fam in families}
+    for fam in families:
+        answers[fam]["S3"] = "NO"
+        answers[fam]["S4"] = "NO"
+    semantic = tmp_path / "semantic.json"
+    semantic.write_text(json.dumps(answers), encoding="utf-8")
+    report_path = tmp_path / "report.json"
+    main(["--repo", str(ROOT), "data", "selfcheck", "--batch", str(batch), "--manifest", str(manifest),
+          "--semantic", str(semantic), "--report", str(report_path)])
+    checks = json.loads(report_path.read_text(encoding="utf-8"))["mechanical"]
+    m17 = json.dumps(checks["M17_residual_cue_markers"]["details"])
+    assert "policy cue not located" in m17 and "authorisation_0008" in m17
+    m14 = checks["M14_coverage"]["details"]
+    assert any("masked skeleton" in d.get("problem", "") and set(d["families"]) == {"negation_0002", "warning_0003"} for d in m14)
+    m9 = json.dumps(checks["M9_queries"]["details"])
+    assert "near-reused" in m9 and "analysis_0004:random_benign" in m9 and "translation_0005:random_benign" in m9
+    gate = json.dumps(checks["S_semantic_answers"]["details"])
+    assert "task_0007" in gate and "although cue_position is query" in gate
+    from rag_cad.data import selfcheck as module
+    template_path = tmp_path / "template.json"
+    module.main(["--batch", str(batch), "--manifest", str(manifest), "--report", str(tmp_path / "r3.json"),
+                 "--write-semantic-template", str(template_path)])
+    assert "Match test" in json.loads(template_path.read_text(encoding="utf-8"))["_questions"]["S7"]
+
+def test_selfcheck_d31_gate_warn_device_register_and_skew_gap(tmp_path):
+    """D-20261014-31: S4 not YES for a query cue is a WARN of the gate, not a FAIL; the cue-device register warns on an
+    untagged batch twin and on a device covering more than half of a role; the query-phrase tell fires as a gap."""
+    items = read_jsonl(RECORDS)
+    entries = read_jsonl(MANIFEST)
+    families = sorted({r["family_id"] for r in items if r["family_id"]})
+    # four warning twins, three on one device
+    roles = {"warning_0003": "caution-pointer", "negation_0002": "caution-pointer", "quote_0001": "caution-pointer",
+             "history_0006": "reported-warning"}
+    for family, device in roles.items():
+        entry = next(e for e in entries if e["family_id"] == family)
+        entry["semantic_role"], entry["cue_position"] = "warning", "sentence_before"
+        entry["justification"] += f" device: {device}."
+        for s in member(items, family, "semantic_benign")["sentences"]:
+            if s["is_target"]:
+                s["semantic_role"] = "warning"
+    # the phrase tell with one twin query on the other side (the zero-on-one-side form stays silent)
+    for index, family in enumerate(families):
+        member(items, family, "shared_malicious")["query"] = f"What does the {family} notice say, according to this page?"
+        member(items, family, "semantic_benign")["query"] = f"Summarise the {family} record for the file."
+    member(items, families[0], "semantic_benign")["query"] = "Which notice is kept, according to the file?"
+    batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"
+    write_jsonl(batch, items)
+    write_jsonl(manifest, entries)
+    answers = {fam: {f"S{i}": "YES - fixture" for i in range(1, 14)} for fam in families}
+    for fam in families:
+        answers[fam]["S3"] = "NO"
+        answers[fam]["S4"] = "NO"
+    semantic = tmp_path / "semantic.json"
+    semantic.write_text(json.dumps(answers), encoding="utf-8")
+    report_path = tmp_path / "report.json"
+    main(["--repo", str(ROOT), "data", "selfcheck", "--batch", str(batch), "--manifest", str(manifest),
+          "--semantic", str(semantic), "--report", str(report_path)])
+    checks = json.loads(report_path.read_text(encoding="utf-8"))["mechanical"]
+    gate = checks["S_semantic_answers"]
+    assert gate["status"] == "WARN" and "task_0007" in json.dumps(gate["details"])
+    m14 = checks["M14_coverage"]["details"]
+    assert any("cue device not named" in d.get("problem", "") and "task_0007" in d["families"] for d in m14)
+    assert any(d.get("device") == "caution-pointer" and d.get("role") == "warning" and d.get("share") == 0.75 for d in m14)
+    m9 = json.dumps(checks["M9_queries"]["details"])
+    assert "skewed to one pair side" in m9 and "according" in m9
+
 def test_selfcheck_semantic_gate_requires_answers_and_yes_rules(tmp_path):
     items = read_jsonl(RECORDS)
     batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"

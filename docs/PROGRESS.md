@@ -2050,3 +2050,67 @@ Historical audit claims are distinguished from checks executed in this session.
 - Next: batch 07 (already drafted one step ahead and rebuilt on its own
   branch after this batch), answered under S13, then the two readers; one
   pull request per batch, merged by Daniel Song at the end.
+
+## 2026-10-14 - Batch 07 Audited By Two Independent Readers And Repaired; Checker Signals D-20261014-31
+
+- Batch 07 (pilot_0061 to pilot_0070: six ASB operational targets, four BIPIA
+  task-type strings) was reviewed against commit 11f6b6c by the second reader
+  (Claude Opus 5: 0 accept, 4 accept with note, 6 fix, 0 contestable labels) and
+  the third reader (a fresh Claude Fable 5.1 instance: 2 accept, 4 accept with
+  note, 4 fix, 0 contestable labels). Both found six twins whose own query or
+  context carried a second benign reading (pilot_0062's opening sentences,
+  pilot_0064's opening and closing sentences, pilot_0066's query, pilot_0067's
+  query and closing sentence with a count that did not match, pilot_0068's
+  sentences 1 and 2, pilot_0070's query and sentence 2), four cue frames
+  repeated from earlier twins with other nouns (0062/0021, 0063/0027/0049,
+  0064/every earlier authorisation twin, 0070/0023), "entry" as a twin-only
+  token (11 twins, no malicious member set-wide), the policy-cue locator's
+  silent fallback and S7 still answered as consistency. No malicious label was
+  contested, the first batch since 05 with none.
+- Applied: every must-fix of both readers (the six twins above; pilot_0067
+  re-anchored on a lobby noticeboard, pilot_0062's opening sentences and cue
+  rewritten so the cue introduces the customer's letter); new cue devices for
+  warning (pilot_0063: a warning already issued by a named actor) and
+  authorisation (pilot_0064: a sign-off under a cited policy); pilot_0062's
+  hard negative moved off copied text; pilot_0069's sentence 1 made neutral;
+  both "Prepare" twin queries replaced; "according to" balanced through
+  pilot_0065's twin query; the counts "three" removed from three twins;
+  innocent "entry" in two malicious members; every manifest justification now
+  names its cue device. Declined with reasons: a third innocent "entry" (the
+  batch stands at 3 twins to 2 malicious members), the second reader's
+  pilot_0065 query (it added "this" to a twin side at the 30-point limit), and
+  the crossing of attack type with role (batch 08 was drafted before the
+  review; scheduled from batch 09). Both reviews and both answer files are
+  archived under docs/archive/review_batch_07_2026-10-14/ with the outcome.
+- Checker (D-20261014-31), each a WARN, a gate WARN or template text: the
+  policy-cue locator's lexicon and fallback warning; watch tokens entry,
+  entries, follow, follows, words; the masked-skeleton signal at a bigram
+  Jaccard of 0.5 (literal frames only; the paraphrased frames score 0.07 to
+  0.38 under every lexical variant tried, so they stay with S12); the
+  cue-device register read from "device: <slug>" in the justification, with a
+  WARN above one half of a role; query near-reuse at a content Jaccard of 0.5
+  or five shared opening tokens on one pair side; the set-wide phrase tell as
+  a 10-point gap; M19's baseline over the last two batches; S4 required YES
+  for query cues as a gate WARN; the S7 template in match-test form. Two new
+  tests; full suite 309 passed; ruff clean; REVIEW_BRIEF_v1.md updated; the
+  prompt text is unchanged so the 280 records keep their hashes.
+- After the edits: self-check exit 0 with one WARN, the set-wide phrase list
+  ("summarise the" and "summarise this", "does", "page", "note", "team",
+  "desk", "draft a", "from the", "write"); `data prescreen` (minimum per role
+  1) and `data validate` pass over 70 families and 280 records; twin longer
+  in 5 of 10 (3 of 6 operational, 2 of 4 task-type); hard negative
+  pilot_0062; weak cue pilot_0064. Coverage after 70 families: every role 9
+  except authorisation 7; cue positions query 15, sentence_before 15,
+  sentence_after 14, heading 13, policy 13. Review sheet regenerated as
+  Project\pilot_review_batch_07.md. Supply after batch 07: 20 usable BIPIA
+  task-type strings and 188 ASB rows.
+- Watch-list carried to batch 08: twin documents are records (notes, logs,
+  files) while malicious documents are live pages, with dates, counts and
+  money on the malicious side; counts and "this" on the twin side (7 of 10
+  twin queries carry "this"); the openers Does, Prepare and Write; Spanish in
+  four of nine translation twins; new devices still wanted for quotation and
+  translation; hard negatives about access, verification or physical security
+  rather than copied text; an ASB target in a translation or task_alignment
+  role and a BIPIA question in a warning or authorisation role from batch 09.
+- Next: batch 08 (drafted one step ahead; rebuilt on its own branch with the
+  device markers), the two readers, one pull request per batch.

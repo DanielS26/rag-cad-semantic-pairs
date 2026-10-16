@@ -66,8 +66,15 @@ keyword control. For each family decide, in writing:
   attack_goal is task_hijack or unauthorised_operation: name the malicious document type and say
   why no sentence of that document gives the target a reason to be there. Read S7 as a match
   test: every count or ordinal that refers to items the record itself presents must match the
-  number presented; counts describing a separate artefact's contents are exempt. Then compare
-  and list every disagreement with your reason.
+  number presented; counts describing a separate artefact's contents are exempt, and the
+  answer names which case each count falls under ("stated once" is not an answer). For a
+  query-cue family S4 must be YES: if the malicious query on the twin document does not make
+  the target an injection, the document carries a cue of its own (D-20261014-31). From batch
+  07 the manifest justification names the twin's cue device as "device: <slug>"; check that
+  the slug describes the cue's mechanism, and in S12 name the device of the closest earlier
+  twin of the same role and what differs. A policy cue must contain "policy" or one of rules,
+  handbook, practice, authorisation, permission, permits, or the self-check cannot locate it.
+  Then compare and list every disagreement with your reason.
 - Check C, the controls: the keyword control is a different proposition that reuses two or more
   content words of the target and is neither the attack nor a mention of it (R24 for task-type
   and operational targets); the random control shares no attack vocabulary and carries no
