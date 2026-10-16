@@ -3196,3 +3196,46 @@ Historical audit claims are distinguished from checks executed in this session.
 - Next: Phase 6 (fold assignment) on the 200-family set; pull requests #41 to
   #58 merged in order
 
+## 2026-10-17 - Phase 6: fold assignment, leakage check and the bag-of-words baseline
+
+- Scope: D-20261017-51 on branch phase6-folds from bc8ec1c; CPU only, no
+  record, manifest field or decision text changed
+- Folds: new command `data assign-folds` (src/rag_cad/data/folds.py) assigns
+  the 200 families by group_id to five folds with seed 764. Within each role
+  the families are ordered by attack category (malicious record source:
+  bipia_adapted task_type, asb_adapted operational), cue position and the
+  seeded hash, then dealt round robin from a per-role starting fold; the
+  starting folds are chosen by exhaustive search to balance the category
+  totals first and the cue positions second. Written once to
+  datasets/raw/augmentation/folds_v1.jsonl with folds_v1.summary.json; the
+  command refuses to overwrite either
+- Balance achieved: five families per role per fold, exact; every
+  role-by-category cell within one of its other folds; task_type 15, 15, 14,
+  14, 15 and operational 25, 25, 26, 26, 25 over folds 1 to 5; cue positions
+  7 to 9 per fold (worst spread two, against three for a greedy choice of
+  starts)
+- Leakage: `data check-leakage` gains `--folds` and `--round` and adds an
+  exact check for shared family, record_id, normalised query and normalised
+  sentence text (any kind) across the cut. All five rounds pass: 160
+  training and 40 held-out families, 640 and 160 records, zero on every
+  count; reports in datasets/raw/augmentation/review/leakage_round_1.json to
+  leakage_round_5.json
+- Baseline: new command `evaluation bow-baseline`
+  (src/rag_cad/evaluation/bow_baseline.py), the audit probe's naive Bayes
+  ported unchanged; on the audit's own folds it reproduces 81.5 percent and
+  90.5 percent exactly (tested). On folds_v1: accuracy 79.25 percent
+  (balanced 79.25; twins 81.0, malicious 77.5), per fold 81.25, 85.0, 77.5,
+  77.5, 75.0; within-family paired share 90.5 percent (per fold 90.0, 95.0,
+  87.5, 90.0, 90.0). Task-type families 82.2 and 94.5, operational 77.6 and
+  88.2. Report in datasets/raw/augmentation/review/bow_baseline_v1.json
+- Features: docs/PHASE6_FEATURES_PLAN.md. The restored Phase 4 cache holds
+  base (24,665 rows) and released-test (9,776 rows) features only; the 800
+  family records (list in review/encoder_pending_v1.txt) need 6,432 encoder
+  passes, about 4.4 GPU minutes at 41 ms per pass for one mode or both modes
+  from one set of passes (8.8 for two separate builds). Waits for
+  authorisation, a runner features stage, an all-train manifest and a gate
+  rerun
+- Checks: tests 329 passed (nine new in tests/test_folds.py); ruff clean
+- Next: Phase 7 training driver over the folds, once the encoder run is
+  authorised
+

@@ -31,7 +31,7 @@ def write_jsonl(path: Path, records: list[dict]) -> None:
     records = list(records)
     reject_secrets(records)
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("x", encoding="utf-8") as handle:
+    with path.open("x", encoding="utf-8", newline="\n") as handle:
         for record in records:
             handle.write(canonical_json(record) + "\n")
 
