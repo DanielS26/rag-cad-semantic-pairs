@@ -3349,3 +3349,45 @@ Historical audit claims are distinguished from checks executed in this session.
   fresh gate pass and re-freeze before the features stage
 - Next: merge, gate rerun from the merge commit, re-freeze, then the
   features stage under pool C
+
+
+## 2026-10-17 - Phase 6: second gate rerun from fd06bbda and re-frozen tested profile
+
+- Scope: PR #64 added the features label to scripts/bootstrap_colab.py, which
+  invalidates the 2ffa63a2 profile (D-20261017-52). Daniel Song reran the
+  smoke gate on 16 October 2026 from main
+  fd06bbdaa31a562960bce6d9b3eb74f9b0efd9e4 under budget pool A with the
+  candidate profile and lock; bootstrap SHA-256
+  5f0ee41811384c47b1c58324f4c5d2de8d8d73353de156919c5e25a11ae36309. Branch
+  phase6-refreeze-2 from fd06bbda changes only configs, docs and tests
+- Preflight (both runs): profile hash 5381ed8b... (unchanged), NVIDIA L4,
+  CUDA 12.8, driver 580.82.07, Python 3.13.15, lock 1b270c04... and package
+  versions unchanged, encoder pins ab036b02... / bd55a5ec... unchanged,
+  upstream CAD commit 26e38a67... unchanged; environment ID
+  b3268c5e343fc18705be8b9c2e1f9983c7acfcad96b0792d340341a25bf556c9 (changed
+  from 52277f97... with the commit and bootstrap bytes)
+- Run A (run ID 20261016T140249Z_fd06bbda_smoke_fe6f6a3d): ready, published
+  and verified under artefacts/smoke in 421 s connected; 6.60 rows/s; peak
+  GPU memory 2,302,938,624 bytes (unchanged); checkpoint SHA-256
+  bd1d6ead...; manifest SHA-256
+  8888cdd0bd98e50396e2197d375f2cb0e8407382daa160a7de243afa4b33faee as recorded
+  by Run B (run_a_sha256 f7256ba5...). Representation modes, as before:
+  contextual maximum absolute difference 0.1106, isolated blocks identical,
+  both modes deterministic and finite
+- Run B (run ID 20261016T140249Z_fd06bbda_smoke-run-b_fe6f6a3d) in a fresh L4
+  runtime (different runtime identity) restored the Run A artefact and
+  matched the saved predictions (restored_predictions_match true); published
+  and verified under artefacts/smoke in 271 s connected; manifest SHA-256
+  8ad561f98c496b6df2a07d110aacaf7ba5b05b5cbe3bd2dab0d1c2e0dd4465ed read from
+  its `_SUCCESS` marker on Drive by Daniel Song
+- Pool A after both runs: 2,369 connected seconds (1,677 + 421 + 271) and
+  0.6 compute units (0.1 per run, confirmed by Daniel Song) of its
+  21,600-second / 12-unit cap
+- Re-freeze: configs/environments/colab_tested.yaml takes reviewed commit
+  fd06bbda, both run IDs, the new environment ID and both manifest hashes
+  (D-20261017-53); lock, fingerprint, encoder pins, tolerances and budget
+  pools are unchanged. The regression test expects the new values, and
+  test_tested_profile_reproduces_the_phase4_identity passes unchanged. The
+  runbook's current-gate section adds the fifth pass; plan step 3 names the
+  fd06bbda pass and step 4 the new BOOTSTRAP_SHA256
+- Next: merge (commit Y), then the features stage from Y under pool C

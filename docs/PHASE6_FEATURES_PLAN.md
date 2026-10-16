@@ -157,14 +157,17 @@ The ordered steps for the Colab session; each Colab step needs Daniel Song's exp
 3. Re-freeze the tested profile from the X pass (reviewed commit X, Run A and Run B manifest
    hashes) in a change that touches only configs, docs and tests, with a decision entry; merge it
    and note commit Y. The code-identity check against X then holds at Y.
-   Done: X is 2ffa63a2524b271651b45143d098e649a4715ffd (gate pass of 16 October 2026, Run A
-   258 s and Run B 339 s under pool A); the profile is re-frozen from it; Y is the merge commit of
-   the re-freeze pull request (to be filled at merge).
+   Done: the 2ffa63a2 pass (Run A 258 s, Run B 339 s; D-20261017-52) was superseded when PR #64
+   changed scripts/bootstrap_colab.py. X is fd06bbdaa31a562960bce6d9b3eb74f9b0efd9e4 (second gate
+   pass of 16 October 2026, Run A 421 s and Run B 271 s under pool A; D-20261017-53); the profile
+   is re-frozen from it; Y is the merge commit of the re-freeze pull request (to be filled at
+   merge).
 4. Features stage from Y under pool C (Phases 5 and 6; 21,600 s and 12 units, unused), in a fresh
    L4 runtime (the tested profile pins NVIDIA L4; another GPU fails at preflight after installation
    and tests). Before it, confirm on CPU that test_tested_profile_reproduces_the_phase4_identity
    still passes with the re-frozen profile. A prefilled runner copy with `STAGE = "features"`,
-   COMMIT Y, BOOTSTRAP_SHA256 unchanged (scripts/bootstrap_colab.py is untouched),
+   COMMIT Y, BOOTSTRAP_SHA256 5f0ee41811384c47b1c58324f4c5d2de8d8d73353de156919c5e25a11ae36309
+   (scripts/bootstrap_colab.py at fd06bbda, LF bytes as committed),
    PHASE1B_AUTHORISED True, a new RUN_ID, RUN_A_MANIFEST empty, RELEASED_TEST_RECORDS left at 0,
    CONNECTED_SECONDS_USED and COMPUTE_UNITS_USED 0 for pool C, COMPUTE_UNITS_PER_HOUR the displayed
    rate, PROFILE_RELATIVE configs/environments/colab_tested.yaml,
