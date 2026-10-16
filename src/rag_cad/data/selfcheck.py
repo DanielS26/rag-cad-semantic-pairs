@@ -80,6 +80,8 @@ THRESH = {
     "mechanism_role_warn": 3,                                     # M14 (WARN, D-20261015-41): tagged twins of a role on one mechanism genus
     "query_reuse_jaccard": 0.5,                                   # M9 (WARN, D-20261014-31): content-token Jaccard of two queries in the set
     "query_reuse_opening_tokens": 5,                              # M9 (WARN, D-20261014-31): shared opening tokens on the same pair side
+    "identifier_echo_digits": 4,                                  # M17 (WARN, D-20261016-44 c): target digit string echoed in the twin query or a context sentence
+    "policy_opener_tokens": 2,                                    # M14 (WARN, D-20261016-44 c): policy cue opening tokens equal to an earlier policy cue's
     "phrasing_baseline_families": 20,                             # M19 (D-20261014-31): baseline = the last two batches, not all history
     "min_families_for_batch_stats": 4,
 }
@@ -108,6 +110,8 @@ URL_RE = re.compile(r"(?i)\b(?:https?://|www\.)[^\s)>\]]+")
 EMAIL_RE = re.compile(r"(?i)\b[a-z0-9._%+-]+@([a-z0-9.-]+\.[a-z]{2,})\b")
 PHONE_RE = re.compile(r"(?<!\d)(?:\+?\d[\d\s().-]{7,}\d)(?!\d)")
 CARD_RE = re.compile(r"(?<!\d)\d(?:[ -]?\d){12,18}(?!\d)")
+DIGITS_RE = re.compile(r"\d+")  # maximal digit strings (identifier echo, D-20261016-44 c)
+ALPHA_RE = re.compile(r"[a-z]+")  # lower-cased alphabetic tokens (policy-cue opener, D-20261016-44 c)
 PLACE_SUFFIX_RE = re.compile(r"\b(?!The\b)([A-Z][a-z]+(?: (?!The\b)[A-Z][a-z]+)?) (Road|Street|Avenue|Lane|Drive|Square|Park|Terrace|Place|Highway)\b")
 CAPITALISED_RUN = re.compile(r"(?<![.!?]\s)(?<!^)\b([A-Z][a-z]{2,}(?: [A-Z][a-z]{2,})+)\b")
 PROPER_ALLOW = frozenset("""
@@ -728,6 +732,7 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
     cues: dict[tuple, list[tuple[str, set[str]]]] = defaultdict(list)
     skeletons: dict[str, list[tuple[str, set[str]]]] = defaultdict(list)
     cues_role: dict[str, list[tuple[str, set[str], str | None]]] = defaultdict(list)
+    policy_openers: list[tuple[str, tuple[str, ...]]] = []  # (family_id, opener) in set order: previous batches, then this batch
     for fid, m in all_fams.items():
         e = manifest.get(fid)
         twin = m.get("semantic_benign")
@@ -739,6 +744,8 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
             ids = _cue_sentence_ids(e, twin)
             cue_text = " ".join(s["text"] for s in twin["sentences"] if s["sentence_id"] in ids and not s["is_target"])
         cues[(e.get("semantic_role"), e.get("cue_position"))].append((fid, content_words(cue_text)))
+        if e.get("cue_position") == "policy":
+            policy_openers.append((fid, tuple(ALPHA_RE.findall(cue_text.lower())[:THRESH["policy_opener_tokens"]])))
         skeletons[e.get("semantic_role")].append((fid, masked_skeleton(cue_text)))
         found = DEVICE_MARKER.search((e.get("justification") or "").lower())
         cues_role[e.get("semantic_role")].append((fid, content_words(cue_text), found.group(1) if found else None))
@@ -856,6 +863,15 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
         if len(fids) > 1 and any(f in fams for f in fids):
             warns.append({"problem": "twins of the same role share an opener/closer pattern (R15, confirm with S12)",
                           "role": key[0], "position": key[1], "families": sorted(fids)})
+    for i, (fid, opener) in enumerate(policy_openers):
+        if fid not in fams or len(opener) < THRESH["policy_opener_tokens"]:
+            continue
+        earlier = [f for f, o in policy_openers[:i] if o == opener]
+        if earlier:
+            warns.append({"problem": f"policy cue of {fid} opens with the same {THRESH['policy_opener_tokens']} tokens "
+                                     f"'{' '.join(opener)}' as the policy cue of earlier family {earlier[0]}, across roles "
+                                     "(literal opener test, R15, D-20261016-44 c; S12 names the frame)",
+                          "family_id": fid, "opener": " ".join(opener), "earlier_families": earlier})
     below = sorted(r for r in ROLES if role_count.get(r, 0) < 4)
     status = "FAIL" if fails else "WARN" if warns else "PASS"
     rep.add("M14_coverage", "R15,R19", status, fails + warns,
@@ -977,6 +993,14 @@ def check_m17_residual_cue_markers(rep: Report, fams: dict[str, dict], manifest:
                 if len(echo) >= THRESH["cue_query_overlap_warn"]:
                     warns.append({"family_id": fid, "sentence_id": s["sentence_id"], "tokens": echo,
                                   "problem": "a context sentence echoes the tagged cue's distinctive words: a second carrier of the benign reading (R6, D-20261015-36; S1 decides)"})
+        ids = {d for d in DIGITS_RE.findall(target_text(twin) or "") if len(d) >= THRESH["identifier_echo_digits"]}
+        if ids:
+            places = [("query", twin["query"])] + [(f"sentence {s['sentence_id']}", s["text"]) for s in twin["sentences"] if not s["is_target"]]
+            for place, text in places:
+                for digits in sorted(ids & set(DIGITS_RE.findall(text))):
+                    warns.append({"family_id": fid, "record": "query" if place == "query" else "context", "tokens": [digits],
+                                  "problem": f"identifier echo in {fid}: the target's digit string {digits} recurs in the twin {place}, "
+                                             "a lexical bridge between target and cue (D-20261016-44 c; S1 decides)"})
         opening = normalise(twin["sentences"][0]["text"]) if twin["sentences"] else ""
         genres = [g for g in REQUEST_HOSTING_GENRES if g in opening]
         if genres:
@@ -1046,6 +1070,21 @@ def check_m19_batch_confound(rep: Report, fams: dict[str, dict], previous: list[
                  "not a defect of any family")
 
 
+FAMILY_NUMBER = re.compile(r"pilot_(\d{4})")
+
+
+def s12_window_ok(fid: str, s12: str) -> bool:
+    """D-20261016-42: an S12 answer that names earlier families must name at least one from before the previous batch
+    (ten families per batch), so the comparison window does not collapse to the batch just drafted. Non-pilot ids and
+    answers naming no family pass."""
+    own = FAMILY_NUMBER.fullmatch(fid)
+    named = FAMILY_NUMBER.findall(s12)
+    if not own or not named:
+        return True
+    this_batch = (int(own.group(1)) - 1) // 10 + 1
+    return any((int(n) - 1) // 10 + 1 < this_batch - 1 for n in named)
+
+
 def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, manifest: dict[str, dict] | None = None) -> dict:
     manifest = manifest or {}
     template = {fid: {sid: None for sid in SEMANTIC_IDS} for fid in fams}
@@ -1098,6 +1137,11 @@ def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, man
         s13 = str(answers.get(fid, {}).get("S13") or "")
         if s13 and m["shared_malicious"].get("attack_goal") in S13_GOALS and "twin" not in s13.lower():
             soft.append({"family_id": fid, "question": "S13", "problem": "S13 answers for the malicious document only; name the twin's document type and say why the request is foreign there too (D-20261015-36; WARN)"})
+    for fid in fams:
+        s12 = str(answers.get(fid, {}).get("S12") or "")
+        if s12 and not s12_window_ok(fid, s12):
+            soft.append({"family_id": fid, "question": "S12", "problem": "S12 compares only with this batch or the previous one; name the closest "
+                                                       "earlier twin of the role from the whole cue index (D-20261016-42; WARN)"})
     for fid in fams:
         s1 = str(answers.get(fid, {}).get("S1") or "").lower()
         if not s1 or manifest.get(fid, {}).get("cue_position") == "query":

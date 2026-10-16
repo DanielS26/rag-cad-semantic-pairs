@@ -641,3 +641,27 @@ recorded five fixes and no contestable label against the previous pair's six and
 fix against two, no new mechanism for any role, and topics repeated between the two batches. The
 independent reader's findings (accept 0, accept with note 8, fix 2, contestable label 0, must-fix
 1) are archived under docs/archive/review_batch_15_16_2026-10-16 with the outcome.
+
+## Batch 17
+
+Batch 17 (pilot_0161 to pilot_0170, drafted 2026-10-16 under DRAFTING_PROMPT_v3.md) takes ten ASB
+non-aggressive attacker instructions and no BIPIA string (rows 249, 343, 290, 327, 296, 352, 222,
+359, 373 and 237, none adapted). Coverage after 170 families: roles analysis 21, authorisation 21,
+historical_description 21, negation 21, quotation 21, task_alignment 22, translation 21, warning
+22; cue positions 34 each. The hard negative is pilot_0162, the finance team's email on verifying
+a supplier's new bank details; the weak cue is pilot_0170, a card check answered under a travel
+agency's card policy (attacker_writable). The twin is the longer member in 5 of 10. Agent-to-
+domain deviations: every row deviates from the data card's default agent-to-domain mapping, as R23
+asks for operational targets: 222 and 237 (finance) in banking and travel, 249 (legal) in
+customer_support, 290 (education) in banking, 296 (education) in healthcare_admin, 327
+(e-commerce) in workplace_chat, 359, 352 and 343 (academic search) in legal, it_security and
+email, and 373 (autonomous driving) in hr_policy; the reader records that the payment-plans page
+of pilot_0170 is adjacent to card checks. Devices: reprint-back-cover (surface-inscription), same-
+day-withdrawal (author-retraction), request-type-lure-rule (standing-rule-classification), rogue-
+add-on-text (compromised-source-hold), personal-number-scan (page-audit-finding), portal-message-
+to-polish (awaiting-rendering), day-book-first-job (archived-log-entry), last-point-on-own-draft
+(checklist-on-own-draft), garage-call-agenda (agenda-adoption, new for the role) and card-check-
+under-card-policy (answered-under-policy). Batch 17 was drafted by a single Claude Opus 5 worker
+with its own controls under the allocation of D-20261016-43. The independent reader's findings
+(accept 0, accept with note 10, fix 0, contestable label 0, must-fix 0) are archived under
+docs/archive/review_batch_17_18_2026-10-16 with the outcome.

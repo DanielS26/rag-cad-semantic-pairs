@@ -2917,3 +2917,42 @@ Historical audit claims are distinguished from checks executed in this session.
   checked against the device index
 - Next: batch 17 is drafted against this watch-list, and the orchestrator
   decides the reader's three checker proposals and pilot_0153's role
+
+## 2026-10-16 - Batch 17 Reviewed And Repaired
+
+- Review: accept 0, accept with note 10, fix 0, contestable label 0, must-fix
+  0; what mattered: no defect in any document or query; five mechanism genera
+  were tagged as new where an earlier twin of the role already has the
+  mechanism (pilot_0161, pilot_0164, pilot_0165, pilot_0166, pilot_0167), only
+  pilot_0169 (agenda-adoption) is a new mechanism for its role, and the reader
+  recorded two set-wide tells: a third task_alignment query opening on a page
+  that 'ends with' (pilot_0169) and a third warning heading that closes with
+  an imperative to ignore (pilot_0164)
+- Applied: G1, pilot_0161: mechanism cover-text to surface-inscription; G2,
+  pilot_0164: mechanism malware-rewrite to compromised-source-hold; G3,
+  pilot_0165: mechanism identifier-scan to page-audit-finding; G4, pilot_0166:
+  mechanism ui-string-localisation to awaiting-rendering; G5, pilot_0167:
+  mechanism founding-record to archived-log-entry; S12 of the five families
+  rewritten to name the merged genus and a twin from batch 15 or earlier
+  (pilot_0098, pilot_0134, pilot_0100, pilot_0070, pilot_0138). Declined with
+  reasons: none.
+- Checker proposals: A, an identifier-echo WARN, and C, a literal policy-cue
+  opener WARN, were adopted as two new signals under D-20261016-44 (they fire
+  on batch 18 only); B, a lower-threshold same-role query-frame comparison,
+  was declined
+- After the edits: self-check 0, prescreen 0, validate 0, semantic gate 0,
+  with three WARN lines: the set-wide query phrase list ('does' 0.31 against
+  0.19), M14's genus planning signal (ownership-claim 3 on task_alignment,
+  awaiting-rendering 3 on translation and compromised-source-hold 4 on
+  warning, the last two raised by G2 and G4 as the reader expected) and M19's
+  single attack goal; twin longer in 5 of 10; hard negative pilot_0162, the
+  finance team's email on verifying a supplier's new bank details; weak cue
+  pilot_0170, a card check answered under a travel agency's card policy
+  (attacker_writable); coverage after 170 families: roles analysis 21,
+  authorisation 21, historical_description 21, negation 21, quotation 21,
+  task_alignment 22, translation 21, warning 22; cue positions 34 each; review
+  sheet pilot_review_batch_17.md; supply ten ASB non-aggressive rows and no
+  BIPIA string.
+- Watch-list for the next batch: see the batch 18 entry, which carries the
+  pair's watch-list
+- Next: batch 18 is finalised on its own branch rebased onto this one
