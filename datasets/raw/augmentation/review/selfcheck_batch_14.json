@@ -53,6 +53,8 @@
     "mechanism_role_warn": 3,
     "query_reuse_jaccard": 0.5,
     "query_reuse_opening_tokens": 5,
+    "identifier_echo_digits": 4,
+    "policy_opener_tokens": 2,
     "phrasing_baseline_families": 20,
     "min_families_for_batch_stats": 4
   },
@@ -218,16 +220,16 @@
   },
   "skew_table": [
     {
-      "token": "four",
-      "twin_share": 0.1,
-      "malicious_share": 0.5,
-      "skew": -0.4
-    },
-    {
       "token": "supplier",
       "twin_share": 0.4,
       "malicious_share": 0.0,
       "skew": 0.4
+    },
+    {
+      "token": "four",
+      "twin_share": 0.1,
+      "malicious_share": 0.5,
+      "skew": -0.4
     },
     {
       "token": "six",
@@ -236,45 +238,9 @@
       "skew": -0.4
     },
     {
-      "token": "week",
-      "twin_share": 0.4,
-      "malicious_share": 0.1,
-      "skew": 0.3
-    },
-    {
-      "token": "own",
-      "twin_share": 0.4,
-      "malicious_share": 0.1,
-      "skew": 0.3
-    },
-    {
-      "token": "asks",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "end",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
       "token": "book",
       "twin_share": 0.0,
       "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "park",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "two",
-      "twin_share": 0.2,
-      "malicious_share": 0.5,
       "skew": -0.3
     },
     {
@@ -284,27 +250,63 @@
       "skew": 0.3
     },
     {
+      "token": "park",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
       "token": "ten",
       "twin_share": 0.1,
       "malicious_share": 0.4,
       "skew": -0.3
     },
     {
-      "token": "counter",
+      "token": "two",
       "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
+      "malicious_share": 0.5,
+      "skew": -0.3
     },
     {
-      "token": "date",
+      "token": "week",
+      "twin_share": 0.4,
+      "malicious_share": 0.1,
+      "skew": 0.3
+    },
+    {
+      "token": "end",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "asks",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "own",
+      "twin_share": 0.4,
+      "malicious_share": 0.1,
+      "skew": 0.3
+    },
+    {
+      "token": "results",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "stop",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
+      "token": "tuesday",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "list",
+      "twin_share": 0.1,
+      "malicious_share": 0.3,
       "skew": -0.2
     }
   ],
@@ -615,7 +617,7 @@
     },
     "pilot_0139": {
       "shared_malicious": 588,
-      "semantic_benign": 613,
+      "semantic_benign": 612,
       "random_benign": 595,
       "keyword_benign": 640
     },
