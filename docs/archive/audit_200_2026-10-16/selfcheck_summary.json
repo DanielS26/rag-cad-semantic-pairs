@@ -1,0 +1,172 @@
+{
+ "exits": {
+  "01 drafting": 2,
+  "01 review": 2,
+  "02 drafting": 2,
+  "02 review": 2,
+  "03 drafting": 2,
+  "03 review": 2,
+  "04 drafting": 2,
+  "04 review": 2,
+  "05 drafting": 2,
+  "05 review": 2,
+  "06 drafting": 0,
+  "06 review": 0,
+  "07 drafting": 0,
+  "07 review": 0,
+  "08 drafting": 0,
+  "08 review": 0,
+  "09 drafting": 0,
+  "09 review": 0,
+  "10 drafting": 0,
+  "10 review": 0,
+  "11 drafting": 0,
+  "11 review": 0,
+  "12 drafting": 0,
+  "12 review": 0,
+  "13 drafting": 0,
+  "13 review": 0,
+  "14 drafting": 0,
+  "14 review": 0,
+  "15 drafting": 0,
+  "15 review": 0,
+  "16 drafting": 0,
+  "16 review": 0,
+  "17 drafting": 0,
+  "17 review": 0,
+  "18 drafting": 0,
+  "18 review": 0,
+  "19 drafting": 0,
+  "19 review": 0,
+  "20 drafting": 0,
+  "20 review": 0
+ },
+ "counts": {
+  "1": {
+   "M6_lexical_skew": "WARN 5",
+   "M9_queries": "WARN 3",
+   "M12_manifest_provenance": "FAIL 40",
+   "M14_coverage": "WARN 2",
+   "M16_hard_negative": "WARN 1",
+   "M17_residual_cue_markers": "WARN 6",
+   "S_semantic_answers": "WARN 19"
+  },
+  "2": {
+   "M6_lexical_skew": "WARN 3",
+   "M9_queries": "WARN 3",
+   "M12_manifest_provenance": "FAIL 40",
+   "M14_coverage": "WARN 6",
+   "M16_hard_negative": "WARN 1",
+   "M17_residual_cue_markers": "WARN 8",
+   "S_semantic_answers": "WARN 20"
+  },
+  "3": {
+   "M6_lexical_skew": "WARN 5",
+   "M9_queries": "WARN 2",
+   "M12_manifest_provenance": "FAIL 40",
+   "M14_coverage": "WARN 10",
+   "M17_residual_cue_markers": "WARN 4",
+   "S_semantic_answers": "WARN 8"
+  },
+  "4": {
+   "M6_lexical_skew": "WARN 2",
+   "M9_queries": "WARN 2",
+   "M12_manifest_provenance": "FAIL 40",
+   "M14_coverage": "WARN 8",
+   "M17_residual_cue_markers": "WARN 8",
+   "S_semantic_answers": "WARN 8"
+  },
+  "5": {
+   "M6_lexical_skew": "WARN 1",
+   "M9_queries": "WARN 3",
+   "M12_manifest_provenance": "FAIL 40",
+   "M14_coverage": "WARN 10",
+   "M17_residual_cue_markers": "WARN 7",
+   "M19_batch_confound": "WARN 2",
+   "S_semantic_answers": "FAIL 19"
+  },
+  "6": {
+   "M6_lexical_skew": "WARN 2",
+   "M9_queries": "WARN 2",
+   "M14_coverage": "WARN 3",
+   "M17_residual_cue_markers": "WARN 13",
+   "S_semantic_answers": "WARN 20"
+  },
+  "7": {
+   "M6_lexical_skew": "WARN 2",
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 2",
+   "M17_residual_cue_markers": "WARN 12",
+   "S_semantic_answers": "WARN 21"
+  },
+  "8": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 2",
+   "M17_residual_cue_markers": "WARN 12",
+   "S_semantic_answers": "WARN 22"
+  },
+  "9": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 3",
+   "M17_residual_cue_markers": "WARN 14",
+   "M18_weak_cue_marker": "WARN 1",
+   "S_semantic_answers": "WARN 11"
+  },
+  "10": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 2",
+   "M17_residual_cue_markers": "WARN 7",
+   "M18_weak_cue_marker": "WARN 1",
+   "S_semantic_answers": "WARN 11"
+  },
+  "11": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 2",
+   "S_semantic_answers": "WARN 1"
+  },
+  "12": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 4",
+   "M18_weak_cue_marker": "WARN 1"
+  },
+  "13": {
+   "M9_queries": "WARN 1"
+  },
+  "14": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 1"
+  },
+  "15": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 1",
+   "M18_weak_cue_marker": "WARN 1",
+   "M19_batch_confound": "WARN 1"
+  },
+  "16": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 3",
+   "M19_batch_confound": "WARN 1"
+  },
+  "17": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 3",
+   "M19_batch_confound": "WARN 1"
+  },
+  "18": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 4",
+   "M19_batch_confound": "WARN 1"
+  },
+  "19": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 6",
+   "M19_batch_confound": "WARN 1"
+  },
+  "20": {
+   "M9_queries": "WARN 1",
+   "M14_coverage": "WARN 9",
+   "M18_weak_cue_marker": "WARN 1",
+   "M19_batch_confound": "WARN 1"
+  }
+ }
+}

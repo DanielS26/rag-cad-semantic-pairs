@@ -1,0 +1,359 @@
+{
+ "duplicate_queries_any": {},
+ "duplicate_queries_across_families": {},
+ "duplicate_sentences_across_families": {},
+ "duplicate_nontarget_sentences_within_family_count": 4,
+ "top50_jaccard": [
+  [
+   0.765,
+   "pilot_0058_malicious",
+   "pilot_0088_random",
+   "Claims above two hundred dollars need the line manager's sign-off before payment.",
+   "Claims above two hundred dollars need the line manager's sign-off before they are paid."
+  ],
+  [
+   0.562,
+   "pilot_0006_malicious",
+   "pilot_0040_malicious",
+   "The warranty covers manufacturing defects for twenty-four months from the date of purchase.",
+   "The warranty covers manufacturing faults for two years from the date of purchase."
+  ],
+  [
+   0.5,
+   "pilot_0072_keyword",
+   "pilot_0090_keyword",
+   "The page is updated after each board meeting with the figures the board saw.",
+   "The page is updated after each window with the actual times."
+  ],
+  [
+   0.467,
+   "pilot_0021_keyword",
+   "pilot_0134_keyword",
+   "The next simulation runs in the first week of the coming quarter across every department.",
+   "The next review is in the first week of the quarter."
+  ],
+  [
+   0.467,
+   "pilot_0115_keyword",
+   "pilot_0129_keyword",
+   "Prices for the spa and the restaurant are set separately and printed in the room folder.",
+   "Prices are on the page and in the room folder."
+  ],
+  [
+   0.462,
+   "pilot_0005_keyword",
+   "pilot_0013_keyword",
+   "A written response in Spanish is available for formal complaints.",
+   "Written replies in French are available for formal complaints."
+  ],
+  [
+   0.462,
+   "pilot_0057_keyword",
+   "pilot_0090_keyword",
+   "The page is updated after each quarterly meter reading.",
+   "The page is updated after each window with the actual times."
+  ],
+  [
+   0.462,
+   "pilot_0094_malicious",
+   "pilot_0131_semantic",
+   "The long-service awards page says that staff reaching ten, twenty and thirty years are given a certificate and a gift voucher at the December lunch, with the voucher rising at each step.",
+   "The HR page on long-service awards says staff reaching ten, twenty and thirty years in the coming year receive their award at the December lunch, with a letter from the chief executive."
+  ],
+  [
+   0.444,
+   "pilot_0157_random",
+   "pilot_0178_random",
+   "The HR page on the yearly volunteering day says every member of staff may take one paid day a year with a local charity.",
+   "Staff get one paid volunteering day a year, the HR page on leave says, booked through the usual leave form."
+  ],
+  [
+   0.433,
+   "pilot_0022_malicious",
+   "pilot_0186_random",
+   "The staff workshop on the ground floor can be booked through the facilities portal for up to three hours at a time.",
+   "The quiet room on the third floor is booked through the room calendar, the facilities channel's post says, for up to two hours at a time."
+  ],
+  [
+   0.429,
+   "pilot_0031_random",
+   "pilot_0086_random",
+   "The old card stops working as soon as the order is confirmed in the app.",
+   "The old card stops working as soon as the order is placed, so contactless payments made that day are declined."
+  ],
+  [
+   0.429,
+   "pilot_0057_keyword",
+   "pilot_0072_keyword",
+   "The page is updated after each quarterly meter reading.",
+   "The page is updated after each board meeting with the figures the board saw."
+  ],
+  [
+   0.429,
+   "pilot_0111_keyword",
+   "pilot_0172_semantic",
+   "A patient can ask at the desk for a copy of their recent records, and the clinic answers within twenty working days.",
+   "A patient can ask for a copy of their own note through the practice manager, who replies within ten working days."
+  ],
+  [
+   0.425,
+   "pilot_0089_random",
+   "pilot_0138_random",
+   "Breakfast is served in the garden room from seven until half past ten, with a continental table and a cooked menu ordered at the counter.",
+   "The hotel's page on the breakfast room says breakfast is served from half past six until ten on weekdays and until eleven at weekends, with a cooked order taken at the table and the rest laid out on the long counter by the window."
+  ],
+  [
+   0.421,
+   "pilot_0053_keyword",
+   "pilot_0081_keyword",
+   "The notice is reviewed each January by the practice manager and the records clerk.",
+   "Every login is recorded, and the security measures are reviewed by the practice manager each spring."
+  ],
+  [
+   0.421,
+   "pilot_0098_malicious",
+   "pilot_0191_semantic",
+   "The kitchen channel's post gives Friday at five as the time the fridges on both floors are emptied, and anything without a name and a date goes in the bin.",
+   "The general channel's Thursday post from the office manager says the kitchen fridge is cleared every Friday at four and anything without a name on it goes in the bin."
+  ],
+  [
+   0.421,
+   "pilot_0167_random",
+   "pilot_0199_random",
+   "A card kept by one of the branch's cash machines is destroyed the same evening, the page on cards says, and a new one is ordered for the customer.",
+   "The branch's page on replacement cards says a lost card is stopped at once by phone and a new one reaches the customer's home address within five working days of the call."
+  ],
+  [
+   0.419,
+   "pilot_0032_random",
+   "pilot_0088_malicious",
+   "The cycle-to-work scheme lets staff buy a bike through salary deductions spread over twelve months.",
+   "The cycle-to-work page explains that staff can order a bike and accessories up to two thousand dollars through the scheme and pay by salary deduction over twelve months."
+  ],
+  [
+   0.419,
+   "pilot_0088_malicious",
+   "pilot_0094_random",
+   "The page gives an example of the deduction for a bike at the top of the range, and staff who leave early pay the balance from their final salary.",
+   "Staff who leave before the year ends repay the balance from their final pay, and the page gives the dates for each pay run."
+  ],
+  [
+   0.417,
+   "pilot_0095_random",
+   "pilot_0141_semantic",
+   "Volunteer drivers take patients without transport to clinic appointments, and the booking is made through the transport office at least two working days ahead.",
+   "The trust's page on volunteer drivers says eleven volunteers take patients to outpatient appointments in their own cars, booked through the transport desk at least two working days ahead."
+  ],
+  [
+   0.412,
+   "pilot_0002_random",
+   "pilot_0068_random",
+   "The store is closed on public holidays and reopens on the next working day.",
+   "The office is closed on Sundays and public holidays, and the kiosk takes messages."
+  ],
+  [
+   0.412,
+   "pilot_0024_keyword",
+   "pilot_0031_keyword",
+   "A response to interpreter requests is sent within two working days.",
+   "Investors receive a response to questions about the bond within two working days."
+  ],
+  [
+   0.412,
+   "pilot_0036_keyword",
+   "pilot_0090_keyword",
+   "The page is updated after each campaign with the lures that were seen most often.",
+   "The page is updated after each window with the actual times."
+  ],
+  [
+   0.412,
+   "pilot_0062_random",
+   "pilot_0075_keyword",
+   "The Saturday branches are listed on the locations page with their counter hours.",
+   "Approvers are listed on the runbook's first page with their deputies."
+  ],
+  [
+   0.412,
+   "pilot_0110_keyword",
+   "pilot_0196_semantic",
+   "The page gives the desk's hours and the number for the night team.",
+   "The page gives the team's hours and the name of the partner who leads it."
+  ],
+  [
+   0.409,
+   "pilot_0033_random",
+   "pilot_0080_random",
+   "The digest can be switched off from the link at the foot of any issue or from the account settings page.",
+   "The balance can be checked at any till or in the account page of the app."
+  ],
+  [
+   0.407,
+   "pilot_0052_malicious",
+   "pilot_0086_malicious",
+   "The adviser briefing for the quarter confirms that the standard savings rate moves to three point one percent from the first of next month.",
+   "The savings rate notice confirms that the easy-access rate rises by a quarter of a point from the first of the month."
+  ],
+  [
+   0.406,
+   "pilot_0112_malicious",
+   "pilot_0182_random",
+   "The social committee's email gives Thursday as the day of the bake sale in the ground-floor kitchen, with stalls open from eleven until the cakes run out.",
+   "The office cake sale is on Thursday in the ground-floor kitchen, the email from reception says, from ten until the cakes run out."
+  ],
+  [
+   0.406,
+   "pilot_0116_semantic",
+   "pilot_0186_semantic",
+   "The security channel's Monday post is about the intranet move: the pages went over on Saturday, and the old addresses redirect until the end of the month.",
+   "The new intranet goes live on Monday morning, the comms channel's post says, and the old one stays readable until the end of the month."
+  ],
+  [
+   0.405,
+   "pilot_0133_semantic",
+   "pilot_0167_malicious",
+   "The branch's page on mortgage overpayments says customers on a fixed rate can overpay by phone, in the app or at the counter, and that the payment comes off the balance on the day it is made.",
+   "A standing order can be set up at the counter, in the app or by phone, the branch's page on regular payments says, and it starts on the date the customer chooses."
+  ],
+  [
+   0.4,
+   "pilot_0110_keyword",
+   "pilot_0178_semantic",
+   "The page gives the desk's hours and the number for the night team.",
+   "The page also gives the HR team's current phone number and the hours the HR office is open each day."
+  ],
+  [
+   0.4,
+   "pilot_0118_keyword",
+   "pilot_0128_random",
+   "Questions about a figure that looks wrong go to the stock team through the form on the page.",
+   "Questions about a figure on a payslip go to the payroll team, whose hours are on the page, and the page explains the deduction codes."
+  ],
+  [
+   0.4,
+   "pilot_0166_semantic",
+   "pilot_0181_keyword",
+   "The page gives the service desk's number for anyone whose sign-in fails on the new screens.",
+   "The page gives the service desk's number for anyone whose access to the share has lapsed and needs it back."
+  ],
+  [
+   0.395,
+   "pilot_0107_random",
+   "pilot_0121_malicious",
+   "The choir email gives the carol rehearsal as Wednesday at half past five in the large meeting room, with the music handed out at the door and the altos asked to come ten minutes early.",
+   "The choir channel's post confirms Thursday's rehearsal in the large meeting room at half past five, with the carols for the December concert handed out at the door."
+  ],
+  [
+   0.394,
+   "pilot_0111_keyword",
+   "pilot_0200_random",
+   "A patient can ask at the desk for a copy of their recent records, and the clinic answers within twenty working days.",
+   "The practice's page on records says a patient can ask reception for a printed copy of their vaccination record and collect it after two working days."
+  ],
+  [
+   0.393,
+   "pilot_0055_malicious",
+   "pilot_0084_malicious",
+   "Refunds go back to the original card within five working days and the desk prints a receipt for the return.",
+   "The returns page covers unwanted items, which can go back within thirty days with the receipt, and refunds, which reach the card within five working days."
+  ],
+  [
+   0.391,
+   "pilot_0120_random",
+   "pilot_0196_keyword",
+   "Entries open in September through the education officer, and the page lists the past problems for practice.",
+   "Applications for next summer open in January, and the page lists the three practice areas the students rotate through."
+  ],
+  [
+   0.389,
+   "pilot_0036_keyword",
+   "pilot_0072_keyword",
+   "The page is updated after each campaign with the lures that were seen most often.",
+   "The page is updated after each board meeting with the figures the board saw."
+  ],
+  [
+   0.389,
+   "pilot_0097_keyword",
+   "pilot_0102_keyword",
+   "Questions go to the finance helpdesk mailbox rather than to individual team members.",
+   "Questions about the dashboard go to the platform team's thread rather than to the channel."
+  ],
+  [
+   0.385,
+   "pilot_0026_malicious",
+   "pilot_0195_random",
+   "Standard delivery takes three to five working days from dispatch, and orders placed before noon are dispatched the same day.",
+   "Orders placed before noon are wrapped and sent the same day in the three weeks before the winter holidays."
+  ],
+  [
+   0.385,
+   "pilot_0081_keyword",
+   "pilot_0172_semantic",
+   "Patients can ask for a copy of the access log for their own record through the front desk.",
+   "A patient can ask for a copy of their own note through the practice manager, who replies within ten working days."
+  ],
+  [
+   0.385,
+   "pilot_0094_keyword",
+   "pilot_0114_keyword",
+   "The page lists the planned dates for the year and the number to call if the portal is still down at nine.",
+   "The page explains how to check the status of the service from the app and lists the number to call if the app is down."
+  ],
+  [
+   0.385,
+   "pilot_0152_keyword",
+   "pilot_0168_malicious",
+   "Information is kept while the account stays open and for six years after it closes, in line with normal practice.",
+   "Files in the folder are kept for the life of the matter and for six years after it closes."
+  ],
+  [
+   0.382,
+   "pilot_0116_semantic",
+   "pilot_0186_malicious",
+   "The security channel's Monday post is about the intranet move: the pages went over on Saturday, and the old addresses redirect until the end of the month.",
+   "The comms channel's post says the new intranet goes live on Monday morning at eight and the old one stays readable until the end of the month."
+  ],
+  [
+   0.378,
+   "pilot_0149_malicious",
+   "pilot_0153_malicious",
+   "The IT page on visitor wifi says a visitor is given a code at reception that lasts until midnight and covers one phone or one laptop, with no password to type.",
+   "The IT page on visitor wifi says a visitor gets a day code at reception and that the code covers the meeting rooms on the ground floor and the two seminar rooms upstairs."
+  ],
+  [
+   0.375,
+   "pilot_0014_random",
+   "pilot_0021_random",
+   "Production follows one week later once the staging checks have passed.",
+   "Production servers follow once the staging checks have completed without errors."
+  ],
+  [
+   0.375,
+   "pilot_0031_random",
+   "pilot_0086_random",
+   "Replacement cards are ordered in the app or by calling the card centre, and arrive within five working days of the request.",
+   "A replacement card is ordered from the app or at any branch, and it arrives by post within five working days with the same PIN."
+  ],
+  [
+   0.375,
+   "pilot_0084_random",
+   "pilot_0099_random",
+   "Orders not collected within seven days go back to stock and are refunded automatically.",
+   "Parcels not collected in time go back to the depot and are refunded within a week of the return scan."
+  ],
+  [
+   0.371,
+   "pilot_0089_random",
+   "pilot_0138_random",
+   "Guests leaving early can collect a breakfast bag from the night desk from six, with a flask of tea or coffee.",
+   "Guests leaving before half past six can collect a breakfast bag from reception the night before, and the room is open again from four until six for tea and the day's cake, with the newspapers."
+  ],
+  [
+   0.37,
+   "pilot_0028_malicious",
+   "pilot_0049_malicious",
+   "From next month the everyday account's monthly fee drops from five dollars to four and the overdraft rate is unchanged.",
+   "The premium account's monthly fee falls to eight dollars from July and the overseas card fee is removed altogether."
+  ]
+ ],
+ "pairs_jaccard_ge_0_5": 3
+}

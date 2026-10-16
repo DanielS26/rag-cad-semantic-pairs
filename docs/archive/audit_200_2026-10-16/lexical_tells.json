@@ -1,0 +1,1529 @@
+{
+ "a": {
+  "shared_malicious": {
+   "records": 200,
+   "records_with_colon_ended_sentence": 0,
+   "sentences": 504,
+   "colon_ended_sentences": 0,
+   "queries_ending_colon": 0,
+   "records_with_any_colon_in_nontarget": 7
+  },
+  "semantic_benign": {
+   "records": 200,
+   "records_with_colon_ended_sentence": 16,
+   "sentences": 504,
+   "colon_ended_sentences": 16,
+   "queries_ending_colon": 0,
+   "records_with_any_colon_in_nontarget": 59
+  },
+  "random_benign": {
+   "records": 200,
+   "records_with_colon_ended_sentence": 0,
+   "sentences": 704,
+   "colon_ended_sentences": 0,
+   "queries_ending_colon": 0,
+   "records_with_any_colon_in_nontarget": 2
+  },
+  "keyword_benign": {
+   "records": 200,
+   "records_with_colon_ended_sentence": 0,
+   "sentences": 704,
+   "colon_ended_sentences": 0,
+   "queries_ending_colon": 0,
+   "records_with_any_colon_in_nontarget": 5
+  },
+  "twin_cue_sentences": {
+   "twins_with_located_cue_sentence": 160,
+   "twins_cue_ending_colon": 16,
+   "families": [
+    "pilot_0136",
+    "pilot_0138",
+    "pilot_0145",
+    "pilot_0148",
+    "pilot_0161",
+    "pilot_0165",
+    "pilot_0171",
+    "pilot_0173",
+    "pilot_0174",
+    "pilot_0176",
+    "pilot_0178",
+    "pilot_0181",
+    "pilot_0185",
+    "pilot_0186",
+    "pilot_0196",
+    "pilot_0198"
+   ],
+   "by_cue_position": {
+    "sentence_before": 12,
+    "heading": 2,
+    "policy": 2
+   },
+   "by_role": {
+    "analysis": 6,
+    "historical_description": 2,
+    "authorisation": 1,
+    "quotation": 4,
+    "warning": 1,
+    "translation": 2
+   },
+   "by_batch": {
+    "14": 2,
+    "15": 2,
+    "17": 2,
+    "18": 5,
+    "19": 3,
+    "20": 2
+   },
+   "twins_with_colon_outside_cue_sentence": []
+  }
+ },
+ "b": {
+  "shared_malicious": {
+   "That": [
+    0,
+    504
+   ],
+   "Under the": [
+    0,
+    504
+   ],
+   "After": [
+    2,
+    504
+   ],
+   "This": [
+    0,
+    504
+   ],
+   "Please": [
+    2,
+    504
+   ]
+  },
+  "semantic_benign": {
+   "That": [
+    16,
+    504
+   ],
+   "Under the": [
+    6,
+    504
+   ],
+   "After": [
+    0,
+    504
+   ],
+   "This": [
+    7,
+    504
+   ],
+   "Please": [
+    0,
+    504
+   ]
+  },
+  "random_benign": {
+   "That": [
+    0,
+    704
+   ],
+   "Under the": [
+    0,
+    704
+   ],
+   "After": [
+    2,
+    704
+   ],
+   "This": [
+    0,
+    704
+   ],
+   "Please": [
+    1,
+    704
+   ]
+  },
+  "keyword_benign": {
+   "That": [
+    0,
+    704
+   ],
+   "Under the": [
+    0,
+    704
+   ],
+   "After": [
+    0,
+    704
+   ],
+   "This": [
+    1,
+    704
+   ],
+   "Please": [
+    0,
+    704
+   ]
+  },
+  "twin_cue_sentences": {
+   "That": [
+    16,
+    160
+   ],
+   "Under the": [
+    6,
+    160
+   ],
+   "After": [
+    0,
+    160
+   ],
+   "This": [
+    2,
+    160
+   ],
+   "Please": [
+    0,
+    160
+   ]
+  },
+  "records_with_opener": {
+   "shared_malicious": {
+    "That": 0,
+    "Under the": 0,
+    "After": 2,
+    "This": 0,
+    "Please": 2
+   },
+   "semantic_benign": {
+    "That": 16,
+    "Under the": 6,
+    "After": 0,
+    "This": 7,
+    "Please": 0
+   },
+   "random_benign": {
+    "That": 0,
+    "Under the": 0,
+    "After": 2,
+    "This": 0,
+    "Please": 1
+   },
+   "keyword_benign": {
+    "That": 0,
+    "Under the": 0,
+    "After": 0,
+    "This": 1,
+    "Please": 0
+   }
+  },
+  "twin_cue_that_families": [
+   "pilot_0002",
+   "pilot_0021",
+   "pilot_0032",
+   "pilot_0041",
+   "pilot_0103",
+   "pilot_0107",
+   "pilot_0130",
+   "pilot_0139",
+   "pilot_0146",
+   "pilot_0149",
+   "pilot_0151",
+   "pilot_0159",
+   "pilot_0183",
+   "pilot_0189",
+   "pilot_0195",
+   "pilot_0197"
+  ],
+  "that_and_colon_overlap": [],
+  "either_that_or_colon": 32,
+  "queries_with_opener": {
+   "shared_malicious": {
+    "That": 0,
+    "Under the": 0,
+    "After": 0,
+    "This": 0,
+    "Please": 0
+   },
+   "semantic_benign": {
+    "That": 0,
+    "Under the": 1,
+    "After": 0,
+    "This": 2,
+    "Please": 0
+   },
+   "random_benign": {
+    "That": 0,
+    "Under the": 0,
+    "After": 0,
+    "This": 0,
+    "Please": 0
+   },
+   "keyword_benign": {
+    "That": 0,
+    "Under the": 0,
+    "After": 1,
+    "This": 0,
+    "Please": 0
+   }
+  }
+ },
+ "c": {
+  "first_1": {
+   "shared_malicious": {
+    "summarise": 37,
+    "what": 33,
+    "how": 29,
+    "which": 29,
+    "list": 13,
+    "draft": 12,
+    "does": 9,
+    "when": 9,
+    "who": 8,
+    "where": 6,
+    "can": 3,
+    "write": 2,
+    "give": 2,
+    "tell": 2,
+    "explain": 2,
+    "set": 1,
+    "describe": 1,
+    "for": 1,
+    "is": 1
+   },
+   "semantic_benign": {
+    "summarise": 35,
+    "what": 27,
+    "which": 18,
+    "when": 15,
+    "how": 14,
+    "does": 10,
+    "draft": 7,
+    "write": 7,
+    "who": 6,
+    "where": 5,
+    "the": 5,
+    "prepare": 4,
+    "list": 3,
+    "set": 3,
+    "i": 3,
+    "act": 2,
+    "do": 2,
+    "our": 2,
+    "this": 2,
+    "is": 2,
+    "analyse": 1,
+    "translate": 1,
+    "apply": 1,
+    "quote": 1,
+    "follow": 1,
+    "copy": 1,
+    "turn": 1,
+    "complete": 1,
+    "work": 1,
+    "tidy": 1,
+    "put": 1,
+    "reply": 1,
+    "carry": 1,
+    "flag": 1,
+    "type": 1,
+    "paste": 1,
+    "review": 1,
+    "leave": 1,
+    "for": 1,
+    "tell": 1,
+    "under": 1,
+    "on": 1,
+    "reproduce": 1,
+    "describe": 1,
+    "explain": 1,
+    "word": 1,
+    "did": 1,
+    "roughly": 1
+   },
+   "random_benign": {
+    "how": 52,
+    "when": 35,
+    "where": 21,
+    "what": 19,
+    "summarise": 17,
+    "explain": 16,
+    "which": 9,
+    "describe": 8,
+    "who": 7,
+    "can": 5,
+    "tell": 3,
+    "is": 2,
+    "state": 2,
+    "set": 2,
+    "give": 1,
+    "on": 1
+   },
+   "keyword_benign": {
+    "what": 57,
+    "summarise": 49,
+    "how": 19,
+    "which": 19,
+    "describe": 12,
+    "set": 11,
+    "where": 6,
+    "when": 4,
+    "explain": 4,
+    "outline": 4,
+    "state": 2,
+    "for": 2,
+    "does": 1,
+    "why": 1,
+    "do": 1,
+    "list": 1,
+    "according": 1,
+    "since": 1,
+    "after": 1,
+    "following": 1,
+    "now": 1,
+    "tell": 1,
+    "who": 1
+   }
+  },
+  "first_2": {
+   "shared_malicious": {
+    "summarise the": 27,
+    "list the": 13,
+    "what does": 13,
+    "draft a": 10,
+    "summarise this": 8,
+    "how long": 8,
+    "does this": 6,
+    "how does": 6,
+    "what is": 4,
+    "when does": 4,
+    "how much": 3,
+    "when is": 3,
+    "does the": 3,
+    "how are": 3,
+    "who can": 3,
+    "how do": 3,
+    "what happens": 3,
+    "where can": 3,
+    "what time": 2,
+    "draft the": 2,
+    "give the": 2,
+    "how far": 2,
+    "how often": 2,
+    "what dates": 2,
+    "which rooms": 2,
+    "tell me": 2,
+    "explain how": 2,
+    "which reports": 2,
+    "what can": 2,
+    "when do": 2,
+    "can a": 2,
+    "what interest": 1,
+    "summarise my": 1,
+    "what happened": 1,
+    "summarise today": 1,
+    "which dates": 1,
+    "which fees": 1,
+    "what remedies": 1,
+    "which documents": 1,
+    "what should": 1,
+    "which backup": 1,
+    "which returns": 1,
+    "what deposit": 1,
+    "write the": 1,
+    "which car": 1,
+    "how many": 1,
+    "which printers": 1,
+    "which rides": 1,
+    "which bikes": 1,
+    "which excursions": 1,
+    "write a": 1,
+    "which years": 1,
+    "who looks": 1,
+    "which floors": 1,
+    "which route": 1,
+    "which date": 1,
+    "which cake": 1,
+    "which day": 1,
+    "which bidder": 1,
+    "set out": 1,
+    "which network": 1,
+    "where are": 1,
+    "which mornings": 1,
+    "which loan": 1,
+    "describe how": 1,
+    "what are": 1,
+    "who answers": 1,
+    "who sees": 1,
+    "which transfers": 1,
+    "where is": 1,
+    "who reviews": 1,
+    "where do": 1,
+    "what comes": 1,
+    "which briefings": 1,
+    "which repair": 1,
+    "for how": 1,
+    "which services": 1,
+    "is the": 1,
+    "can patients": 1,
+    "which posts": 1,
+    "who covers": 1,
+    "how is": 1
+   },
+   "semantic_benign": {
+    "summarise the": 20,
+    "summarise this": 14,
+    "what does": 8,
+    "does the": 8,
+    "write the": 6,
+    "when does": 6,
+    "draft the": 5,
+    "what is": 5,
+    "prepare the": 4,
+    "where are": 4,
+    "set out": 3,
+    "what did": 3,
+    "how many": 3,
+    "how long": 3,
+    "how are": 3,
+    "when are": 3,
+    "list the": 2,
+    "act on": 2,
+    "do the": 2,
+    "what happens": 2,
+    "when is": 2,
+    "which part": 2,
+    "when do": 2,
+    "does this": 2,
+    "which room": 2,
+    "what time": 2,
+    "how does": 2,
+    "is the": 2,
+    "analyse why": 1,
+    "translate each": 1,
+    "apply the": 1,
+    "quote the": 1,
+    "follow the": 1,
+    "copy out": 1,
+    "summarise exhibit": 1,
+    "write a": 1,
+    "turn these": 1,
+    "complete the": 1,
+    "work out": 1,
+    "draft a": 1,
+    "tidy up": 1,
+    "which columns": 1,
+    "list what": 1,
+    "put together": 1,
+    "reply to": 1,
+    "carry out": 1,
+    "flag anything": 1,
+    "what do": 1,
+    "which changes": 1,
+    "type up": 1,
+    "draft what": 1,
+    "paste the": 1,
+    "review this": 1,
+    "who makes": 1,
+    "which topics": 1,
+    "what came": 1,
+    "the ask": 1,
+    "what times": 1,
+    "which page": 1,
+    "which forms": 1,
+    "which training": 1,
+    "who else": 1,
+    "i wrote": 1,
+    "our service": 1,
+    "which agreements": 1,
+    "this page": 1,
+    "what else": 1,
+    "leave out": 1,
+    "when and": 1,
+    "our support": 1,
+    "for my": 1,
+    "who supervises": 1,
+    "the paste": 1,
+    "who staffs": 1,
+    "how well": 1,
+    "tell me": 1,
+    "which dates": 1,
+    "the loyalty": 1,
+    "which accessories": 1,
+    "the middle": 1,
+    "how is": 1,
+    "i pasted": 1,
+    "under the": 1,
+    "who runs": 1,
+    "who handles": 1,
+    "the closing": 1,
+    "which new": 1,
+    "what hours": 1,
+    "on which": 1,
+    "what date": 1,
+    "when can": 1,
+    "i ve": 1,
+    "this hr": 1,
+    "what appears": 1,
+    "reproduce the": 1,
+    "which store": 1,
+    "describe what": 1,
+    "explain to": 1,
+    "which tasks": 1,
+    "where is": 1,
+    "word a": 1,
+    "did any": 1,
+    "which department": 1,
+    "how far": 1,
+    "roughly how": 1,
+    "which floor": 1
+   },
+   "random_benign": {
+    "how do": 22,
+    "summarise the": 17,
+    "when does": 15,
+    "explain how": 13,
+    "how does": 12,
+    "describe the": 7,
+    "when is": 7,
+    "how long": 7,
+    "where is": 7,
+    "where do": 6,
+    "when are": 5,
+    "what are": 4,
+    "where can": 4,
+    "when do": 4,
+    "what is": 4,
+    "how are": 4,
+    "when can": 4,
+    "what time": 3,
+    "what happens": 3,
+    "which day": 3,
+    "which days": 3,
+    "tell me": 3,
+    "who can": 3,
+    "how is": 3,
+    "what does": 3,
+    "can i": 2,
+    "where are": 2,
+    "state the": 2,
+    "explain the": 2,
+    "where does": 2,
+    "set out": 2,
+    "how much": 2,
+    "can the": 2,
+    "how many": 1,
+    "who has": 1,
+    "is the": 1,
+    "is gift": 1,
+    "what should": 1,
+    "who is": 1,
+    "can patients": 1,
+    "what did": 1,
+    "which browser": 1,
+    "who looks": 1,
+    "who sends": 1,
+    "give the": 1,
+    "explain where": 1,
+    "which weeks": 1,
+    "which lift": 1,
+    "how early": 1,
+    "on which": 1,
+    "describe where": 1
+   },
+   "keyword_benign": {
+    "summarise the": 49,
+    "what does": 32,
+    "what did": 18,
+    "set out": 11,
+    "how does": 6,
+    "describe what": 6,
+    "describe the": 5,
+    "which languages": 3,
+    "what is": 3,
+    "explain the": 3,
+    "outline the": 3,
+    "how did": 2,
+    "how do": 2,
+    "where is": 2,
+    "how long": 2,
+    "how often": 2,
+    "where are": 2,
+    "where does": 2,
+    "does the": 1,
+    "when are": 1,
+    "what food": 1,
+    "why is": 1,
+    "do you": 1,
+    "which physics": 1,
+    "what was": 1,
+    "which book": 1,
+    "which dishes": 1,
+    "when does": 1,
+    "how are": 1,
+    "when is": 1,
+    "state the": 1,
+    "which rules": 1,
+    "which heating": 1,
+    "outline last": 1,
+    "state what": 1,
+    "list the": 1,
+    "how has": 1,
+    "which data": 1,
+    "how were": 1,
+    "what happened": 1,
+    "how was": 1,
+    "according to": 1,
+    "which agencies": 1,
+    "since the": 1,
+    "after the": 1,
+    "for staff": 1,
+    "following the": 1,
+    "now that": 1,
+    "tell me": 1,
+    "which statements": 1,
+    "which trading": 1,
+    "describe how": 1,
+    "which part": 1,
+    "which protections": 1,
+    "which records": 1,
+    "which two": 1,
+    "how many": 1,
+    "which university": 1,
+    "when did": 1,
+    "for how": 1,
+    "who travels": 1,
+    "what are": 1,
+    "explain what": 1,
+    "which educational": 1,
+    "which academic": 1
+   }
+  }
+ },
+ "d": {
+  "shared_malicious": {
+   "mean_chars": 425,
+   "median_chars": 413.0,
+   "mean_sentences": 3.52,
+   "median_sentences": 4.0,
+   "mean_query_chars": 61.5
+  },
+  "semantic_benign": {
+   "mean_chars": 426.1,
+   "median_chars": 418.5,
+   "mean_sentences": 3.52,
+   "median_sentences": 4.0,
+   "mean_query_chars": 69.5
+  },
+  "random_benign": {
+   "mean_chars": 393.7,
+   "median_chars": 383.0,
+   "mean_sentences": 3.52,
+   "median_sentences": 4.0,
+   "mean_query_chars": 52.1
+  },
+  "keyword_benign": {
+   "mean_chars": 400.9,
+   "median_chars": 390.0,
+   "mean_sentences": 3.52,
+   "median_sentences": 4.0,
+   "mean_query_chars": 58.5
+  },
+  "twin_longer": {
+   "overall": [
+    105,
+    200
+   ],
+   "per_batch": {
+    "1": 3,
+    "2": 6,
+    "3": 5,
+    "4": 5,
+    "5": 6,
+    "6": 6,
+    "7": 5,
+    "8": 5,
+    "9": 5,
+    "10": 6,
+    "11": 5,
+    "12": 5,
+    "13": 5,
+    "14": 4,
+    "15": 7,
+    "16": 5,
+    "17": 5,
+    "18": 7,
+    "19": 5,
+    "20": 5
+   },
+   "twin_minus_mal_mean": 1.1,
+   "twin_minus_mal_median": 1.0
+  }
+ },
+ "e": {
+  "twin_vs_mal": {
+   "a_over_b": [
+    {
+     "word": "training",
+     "log_odds": 2.98,
+     "count_a": 19,
+     "count_b": 0,
+     "records": 15
+    },
+    {
+     "word": "english",
+     "log_odds": 2.93,
+     "count_a": 18,
+     "count_b": 0,
+     "records": 16
+    },
+    {
+     "word": "here",
+     "log_odds": 2.76,
+     "count_a": 15,
+     "count_b": 0,
+     "records": 15
+    },
+    {
+     "word": "written",
+     "log_odds": 2.38,
+     "count_a": 10,
+     "count_b": 0,
+     "records": 10
+    },
+    {
+     "word": "editor",
+     "log_odds": 2.0,
+     "count_a": 14,
+     "count_b": 1,
+     "records": 10
+    },
+    {
+     "word": "pages",
+     "log_odds": 1.83,
+     "count_a": 18,
+     "count_b": 2,
+     "records": 16
+    },
+    {
+     "word": "went",
+     "log_odds": 1.78,
+     "count_a": 11,
+     "count_b": 1,
+     "records": 12
+    },
+    {
+     "word": "vendor",
+     "log_odds": 1.72,
+     "count_a": 16,
+     "count_b": 2,
+     "records": 11
+    },
+    {
+     "word": "guide",
+     "log_odds": 1.69,
+     "count_a": 21,
+     "count_b": 3,
+     "records": 13
+    },
+    {
+     "word": "copied",
+     "log_odds": 1.59,
+     "count_a": 9,
+     "count_b": 1,
+     "records": 10
+    },
+    {
+     "word": "text",
+     "log_odds": 1.59,
+     "count_a": 19,
+     "count_b": 3,
+     "records": 19
+    },
+    {
+     "word": "quarter",
+     "log_odds": 1.59,
+     "count_a": 19,
+     "count_b": 3,
+     "records": 18
+    },
+    {
+     "word": "june",
+     "log_odds": 1.52,
+     "count_a": 13,
+     "count_b": 2,
+     "records": 10
+    },
+    {
+     "word": "came",
+     "log_odds": 1.52,
+     "count_a": 13,
+     "count_b": 2,
+     "records": 15
+    },
+    {
+     "word": "version",
+     "log_odds": 1.45,
+     "count_a": 12,
+     "count_b": 2,
+     "records": 11
+    },
+    {
+     "word": "policy",
+     "log_odds": 1.41,
+     "count_a": 24,
+     "count_b": 5,
+     "records": 28
+    },
+    {
+     "word": "you",
+     "log_odds": 1.37,
+     "count_a": 11,
+     "count_b": 2,
+     "records": 11
+    },
+    {
+     "word": "did",
+     "log_odds": 1.37,
+     "count_a": 11,
+     "count_b": 2,
+     "records": 13
+    },
+    {
+     "word": "message",
+     "log_odds": 1.33,
+     "count_a": 22,
+     "count_b": 5,
+     "records": 24
+    },
+    {
+     "word": "case",
+     "log_odds": 1.31,
+     "count_a": 14,
+     "count_b": 3,
+     "records": 12
+    }
+   ],
+   "b_over_a": [
+    {
+     "word": "dollars",
+     "log_odds": -2.05,
+     "count_a": 2,
+     "count_b": 22,
+     "records": 21
+    },
+    {
+     "word": "need",
+     "log_odds": -2.03,
+     "count_a": 1,
+     "count_b": 14,
+     "records": 13
+    },
+    {
+     "word": "thirty",
+     "log_odds": -1.89,
+     "count_a": 1,
+     "count_b": 12,
+     "records": 13
+    },
+    {
+     "word": "twelve",
+     "log_odds": -1.89,
+     "count_a": 1,
+     "count_b": 12,
+     "records": 12
+    },
+    {
+     "word": "collect",
+     "log_odds": -1.72,
+     "count_a": 1,
+     "count_b": 10,
+     "records": 10
+    },
+    {
+     "word": "receipt",
+     "log_odds": -1.69,
+     "count_a": 2,
+     "count_b": 15,
+     "records": 13
+    },
+    {
+     "word": "if",
+     "log_odds": -1.48,
+     "count_a": 2,
+     "count_b": 12,
+     "records": 14
+    },
+    {
+     "word": "should",
+     "log_odds": -1.48,
+     "count_a": 2,
+     "count_b": 12,
+     "records": 13
+    },
+    {
+     "word": "free",
+     "log_odds": -1.34,
+     "count_a": 3,
+     "count_b": 14,
+     "records": 15
+    },
+    {
+     "word": "rate",
+     "log_odds": -1.3,
+     "count_a": 4,
+     "count_b": 17,
+     "records": 15
+    },
+    {
+     "word": "cost",
+     "log_odds": -1.22,
+     "count_a": 2,
+     "count_b": 9,
+     "records": 11
+    },
+    {
+     "word": "leaves",
+     "log_odds": -1.22,
+     "count_a": 2,
+     "count_b": 9,
+     "records": 11
+    },
+    {
+     "word": "car",
+     "log_odds": -1.21,
+     "count_a": 6,
+     "count_b": 22,
+     "records": 18
+    },
+    {
+     "word": "key",
+     "log_odds": -1.19,
+     "count_a": 3,
+     "count_b": 12,
+     "records": 12
+    },
+    {
+     "word": "bring",
+     "log_odds": -1.19,
+     "count_a": 3,
+     "count_b": 12,
+     "records": 13
+    },
+    {
+     "word": "fee",
+     "log_odds": -1.11,
+     "count_a": 7,
+     "count_b": 23,
+     "records": 20
+    },
+    {
+     "word": "wednesday",
+     "log_odds": -1.11,
+     "count_a": 3,
+     "count_b": 11,
+     "records": 12
+    },
+    {
+     "word": "order",
+     "log_odds": -1.07,
+     "count_a": 6,
+     "count_b": 19,
+     "records": 21
+    },
+    {
+     "word": "collected",
+     "log_odds": -1.03,
+     "count_a": 3,
+     "count_b": 10,
+     "records": 13
+    },
+    {
+     "word": "get",
+     "log_odds": -1.03,
+     "count_a": 3,
+     "count_b": 10,
+     "records": 13
+    }
+   ]
+  },
+  "twin_vs_controls": {
+   "a_over_b": [
+    {
+     "word": "here",
+     "log_odds": 3.45,
+     "count_a": 15,
+     "count_b": 0,
+     "records": 15
+    },
+    {
+     "word": "words",
+     "log_odds": 3.24,
+     "count_a": 12,
+     "count_b": 0,
+     "records": 12
+    },
+    {
+     "word": "editor",
+     "log_odds": 2.69,
+     "count_a": 14,
+     "count_b": 1,
+     "records": 10
+    },
+    {
+     "word": "policy",
+     "log_odds": 2.51,
+     "count_a": 24,
+     "count_b": 3,
+     "records": 27
+    },
+    {
+     "word": "job",
+     "log_odds": 2.47,
+     "count_a": 11,
+     "count_b": 1,
+     "records": 10
+    },
+    {
+     "word": "language",
+     "log_odds": 2.29,
+     "count_a": 14,
+     "count_b": 2,
+     "records": 10
+    },
+    {
+     "word": "copied",
+     "log_odds": 2.29,
+     "count_a": 9,
+     "count_b": 1,
+     "records": 10
+    },
+    {
+     "word": "english",
+     "log_odds": 2.24,
+     "count_a": 18,
+     "count_b": 3,
+     "records": 19
+    },
+    {
+     "word": "text",
+     "log_odds": 2.07,
+     "count_a": 19,
+     "count_b": 4,
+     "records": 21
+    },
+    {
+     "word": "pages",
+     "log_odds": 2.01,
+     "count_a": 18,
+     "count_b": 4,
+     "records": 18
+    },
+    {
+     "word": "sheet",
+     "log_odds": 1.98,
+     "count_a": 32,
+     "count_b": 8,
+     "records": 27
+    },
+    {
+     "word": "draft",
+     "log_odds": 1.86,
+     "count_a": 12,
+     "count_b": 3,
+     "records": 13
+    },
+    {
+     "word": "this",
+     "log_odds": 1.74,
+     "count_a": 126,
+     "count_b": 43,
+     "records": 136
+    },
+    {
+     "word": "put",
+     "log_odds": 1.69,
+     "count_a": 10,
+     "count_b": 3,
+     "records": 13
+    },
+    {
+     "word": "reply",
+     "log_odds": 1.66,
+     "count_a": 23,
+     "count_b": 8,
+     "records": 24
+    },
+    {
+     "word": "version",
+     "log_odds": 1.63,
+     "count_a": 12,
+     "count_b": 4,
+     "records": 13
+    },
+    {
+     "word": "me",
+     "log_odds": 1.63,
+     "count_a": 12,
+     "count_b": 4,
+     "records": 15
+    },
+    {
+     "word": "letter",
+     "log_odds": 1.6,
+     "count_a": 14,
+     "count_b": 5,
+     "records": 16
+    },
+    {
+     "word": "guide",
+     "log_odds": 1.57,
+     "count_a": 21,
+     "count_b": 8,
+     "records": 15
+    },
+    {
+     "word": "carried",
+     "log_odds": 1.55,
+     "count_a": 11,
+     "count_b": 4,
+     "records": 12
+    }
+   ],
+   "b_over_a": [
+    {
+     "word": "academic",
+     "log_odds": -2.21,
+     "count_a": 0,
+     "count_b": 17,
+     "records": 15
+    },
+    {
+     "word": "large",
+     "log_odds": -2.15,
+     "count_a": 0,
+     "count_b": 16,
+     "records": 14
+    },
+    {
+     "word": "lock",
+     "log_odds": -2.03,
+     "count_a": 0,
+     "count_b": 14,
+     "records": 12
+    },
+    {
+     "word": "deposit",
+     "log_odds": -2.03,
+     "count_a": 0,
+     "count_b": 14,
+     "records": 10
+    },
+    {
+     "word": "available",
+     "log_odds": -2.03,
+     "count_a": 0,
+     "count_b": 14,
+     "records": 14
+    },
+    {
+     "word": "access",
+     "log_odds": -2.03,
+     "count_a": 1,
+     "count_b": 29,
+     "records": 22
+    },
+    {
+     "word": "planned",
+     "log_odds": -1.96,
+     "count_a": 0,
+     "count_b": 13,
+     "records": 12
+    },
+    {
+     "word": "limit",
+     "log_odds": -1.96,
+     "count_a": 0,
+     "count_b": 13,
+     "records": 10
+    },
+    {
+     "word": "visitors",
+     "log_odds": -1.96,
+     "count_a": 0,
+     "count_b": 13,
+     "records": 10
+    },
+    {
+     "word": "explain",
+     "log_odds": -1.89,
+     "count_a": 1,
+     "count_b": 25,
+     "records": 26
+    },
+    {
+     "word": "but",
+     "log_odds": -1.81,
+     "count_a": 0,
+     "count_b": 11,
+     "records": 11
+    },
+    {
+     "word": "stored",
+     "log_odds": -1.81,
+     "count_a": 0,
+     "count_b": 11,
+     "records": 10
+    },
+    {
+     "word": "describe",
+     "log_odds": -1.76,
+     "count_a": 1,
+     "count_b": 22,
+     "records": 23
+    },
+    {
+     "word": "twelve",
+     "log_odds": -1.76,
+     "count_a": 1,
+     "count_b": 22,
+     "records": 21
+    },
+    {
+     "word": "if",
+     "log_odds": -1.66,
+     "count_a": 2,
+     "count_b": 30,
+     "records": 31
+    },
+    {
+     "word": "ward",
+     "log_odds": -1.62,
+     "count_a": 1,
+     "count_b": 19,
+     "records": 12
+    },
+    {
+     "word": "instead",
+     "log_odds": -1.62,
+     "count_a": 1,
+     "count_b": 19,
+     "records": 19
+    },
+    {
+     "word": "explains",
+     "log_odds": -1.62,
+     "count_a": 5,
+     "count_b": 59,
+     "records": 63
+    },
+    {
+     "word": "reports",
+     "log_odds": -1.59,
+     "count_a": 2,
+     "count_b": 28,
+     "records": 28
+    },
+    {
+     "word": "changed",
+     "log_odds": -1.57,
+     "count_a": 1,
+     "count_b": 18,
+     "records": 17
+    }
+   ]
+  }
+ },
+ "f": {
+  "shared_malicious": [],
+  "semantic_benign": [
+   {
+    "family_id": "pilot_0063",
+    "digits": [
+     "829374"
+    ]
+   }
+  ],
+  "random_benign": [],
+  "keyword_benign": [
+   {
+    "family_id": "pilot_0104",
+    "digits": [
+     "2020"
+    ]
+   },
+   {
+    "family_id": "pilot_0126",
+    "digits": [
+     "2010",
+     "2020"
+    ]
+   }
+  ]
+ },
+ "g": {
+  "instruction": {
+   "shared_malicious": 3,
+   "semantic_benign": 9,
+   "random_benign": 0,
+   "keyword_benign": 0
+  },
+  "instructions": {
+   "shared_malicious": 3,
+   "semantic_benign": 2,
+   "random_benign": 0,
+   "keyword_benign": 1
+  },
+  "directive": {
+   "shared_malicious": 0,
+   "semantic_benign": 0,
+   "random_benign": 0,
+   "keyword_benign": 0
+  },
+  "directives": {
+   "shared_malicious": 0,
+   "semantic_benign": 0,
+   "random_benign": 0,
+   "keyword_benign": 0
+  },
+  "entry": {
+   "shared_malicious": 3,
+   "semantic_benign": 10,
+   "random_benign": 1,
+   "keyword_benign": 4
+  },
+  "entries": {
+   "shared_malicious": 1,
+   "semantic_benign": 4,
+   "random_benign": 3,
+   "keyword_benign": 1
+  },
+  "follow": {
+   "shared_malicious": 3,
+   "semantic_benign": 2,
+   "random_benign": 1,
+   "keyword_benign": 2
+  },
+  "follows": {
+   "shared_malicious": 0,
+   "semantic_benign": 7,
+   "random_benign": 2,
+   "keyword_benign": 2
+  },
+  "words": {
+   "shared_malicious": 3,
+   "semantic_benign": 12,
+   "random_benign": 0,
+   "keyword_benign": 0
+  },
+  "note": {
+   "shared_malicious": 18,
+   "semantic_benign": 26,
+   "random_benign": 8,
+   "keyword_benign": 9
+  },
+  "notes": {
+   "shared_malicious": 4,
+   "semantic_benign": 11,
+   "random_benign": 6,
+   "keyword_benign": 10
+  },
+  "notice": {
+   "shared_malicious": 21,
+   "semantic_benign": 11,
+   "random_benign": 14,
+   "keyword_benign": 10
+  },
+  "notices": {
+   "shared_malicious": 0,
+   "semantic_benign": 4,
+   "random_benign": 1,
+   "keyword_benign": 1
+  },
+  "records": {
+   "shared_malicious": 6,
+   "semantic_benign": 14,
+   "random_benign": 1,
+   "keyword_benign": 25
+  },
+  "log": {
+   "shared_malicious": 6,
+   "semantic_benign": 10,
+   "random_benign": 0,
+   "keyword_benign": 6
+  },
+  "logs": {
+   "shared_malicious": 0,
+   "semantic_benign": 0,
+   "random_benign": 0,
+   "keyword_benign": 3
+  },
+  "digest": {
+   "shared_malicious": 5,
+   "semantic_benign": 8,
+   "random_benign": 1,
+   "keyword_benign": 2
+  },
+  "policy": {
+   "shared_malicious": 4,
+   "semantic_benign": 24,
+   "random_benign": 3,
+   "keyword_benign": 0
+  },
+  "policies": {
+   "shared_malicious": 0,
+   "semantic_benign": 0,
+   "random_benign": 0,
+   "keyword_benign": 0
+  },
+  "rule": {
+   "shared_malicious": 3,
+   "semantic_benign": 2,
+   "random_benign": 0,
+   "keyword_benign": 1
+  },
+  "rules": {
+   "shared_malicious": 6,
+   "semantic_benign": 16,
+   "random_benign": 4,
+   "keyword_benign": 5
+  },
+  "handbook": {
+   "shared_malicious": 2,
+   "semantic_benign": 8,
+   "random_benign": 2,
+   "keyword_benign": 0
+  },
+  "practice": {
+   "shared_malicious": 6,
+   "semantic_benign": 15,
+   "random_benign": 8,
+   "keyword_benign": 12
+  },
+  "authorisation": {
+   "shared_malicious": 0,
+   "semantic_benign": 1,
+   "random_benign": 0,
+   "keyword_benign": 1
+  },
+  "authorization": {
+   "shared_malicious": 0,
+   "semantic_benign": 0,
+   "random_benign": 0,
+   "keyword_benign": 1
+  },
+  "permission": {
+   "shared_malicious": 0,
+   "semantic_benign": 0,
+   "random_benign": 0,
+   "keyword_benign": 2
+  },
+  "permits": {
+   "shared_malicious": 0,
+   "semantic_benign": 2,
+   "random_benign": 3,
+   "keyword_benign": 0
+  }
+ }
+}
