@@ -710,3 +710,24 @@ plan). Batch 19 was drafted by a single Claude Fable 5.1 worker under the alloca
 D-20261016-45 and finalised under D-20261016-46. The independent reader's findings (accept 4,
 accept with note 4, fix 1, must-fix 1, contestable label 0) are archived under
 docs/archive/review_batch_19_20_2026-10-16 with the outcome.
+
+## Batch 20
+
+Batch 20 (pilot_0191 to pilot_0200, drafted 2026-10-16 under DRAFTING_PROMPT_v3.md) takes ten ASB
+non-aggressive attacker instructions and no BIPIA string (rows 326, 288, 384, 250, 247, 294, 381,
+235, 341 and 355). Coverage after 200 families: every role at 25 and every cue position at 40. The
+hard negative is pilot_0198, the security office's weekly badge-request log, with the target after
+'The log closes'; the weak cue is pilot_0193, a policy sentence on a bonded part's job sheet
+carrying both signatures under the stores handbook's dual control (attacker_writable). The twin is
+the longer member in 5 of 10. Agent-to-domain deviations: none. Devices: misposted-request-routing
+(routing-decision, new for the role), identifier-format-check (format-validation, new), two-
+signature-sheet (dual-control, the sign-off frame of pilot_0064 and pilot_0075), leavers-process-
+closure (voided-object), jointly-named-adjudicator (duty-assignment), two-readings-offered
+(candidate-rendering, new), information-copy-of-notice (foreign-language-rendering), induction-
+film-script (scripted-dialogue, new), retired-portal-welcome (decommissioned-prompt, close to
+pilot_0087 and pilot_0066) and researcher-demonstration-text (responsible-disclosure, new). Batch
+20 was drafted by a single Claude Fable 5.1 worker after batch 19 under D-20261016-45 and
+finalised under D-20261016-46. With it the set closes at 200 families: every role at 25 and every
+cue position at 40. The independent reader's findings (accept 3, accept with note 5, fix 2, must-
+fix 0, contestable label 0) are archived under docs/archive/review_batch_19_20_2026-10-16 with the
+outcome.
