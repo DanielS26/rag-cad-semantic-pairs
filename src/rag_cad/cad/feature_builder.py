@@ -57,10 +57,12 @@ class FeatureBuilder:
             write_json(marker, self.identity)
         return root
 
-    def encode_record(self, record: dict, *, condition: str, start: int = 0):
+    def encode_record(self, record: dict, *, condition: str, start: int = 0, features: np.ndarray | None = None):
+        """Rows for one record; features computed elsewhere from the same passes may be passed in."""
         record = validate_record(record, require_split=True)
         sentences = texts(record)
-        features = self.features(record["query"], sentences)
+        if features is None:
+            features = self.features(record["query"], sentences)
         if features.shape != (len(sentences), FEATURE_DIM):
             raise ValueError("Encoder returned a misaligned feature matrix")
         content = record_content_hash(record)

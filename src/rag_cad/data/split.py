@@ -112,6 +112,30 @@ def assign_splits(records, ratios, seed, *, d0_holdout_policy: str = "none") -> 
             "assignments": dict(sorted(assignments.items())), "counts": split_counts(assigned)}
 
 
+ALL_TRAIN_RATIOS = {"train": 1.0, "validation": 0.0, "test": 0.0}
+
+
+def assign_all_train(records, *, d0_holdout_policy: str = "none") -> dict:
+    """Every group in train, no validation or test partition: the manifest the family feature build
+    reads (D-20261013-28: folds are applied when heads train, not when features are built).
+
+    Refuses records the contract pins to test (the released CAD test stays outside the folds)."""
+    if d0_holdout_policy not in D0_HOLDOUT_POLICIES:
+        raise ValueError("Only the none D0 holdout policy is implemented (D-20261004-15)")
+    checked = unique_records(records)
+    family_groups(checked)
+    pins = group_pins(checked)
+    pinned_test = sorted(group for group, split in pins.items() if split not in (None, "train"))
+    if pinned_test:
+        raise ValueError(f"All-train manifest refuses groups pinned to test: {pinned_test[:EXAMPLE_LIMIT]}")
+    assigned = [{**record, "split": "train"} for record in checked]
+    return {"schema": MANIFEST_SCHEMA, "group_field": "group_id", "mode": "all_train", "seed": None,
+            "ratios": dict(ALL_TRAIN_RATIOS), "d0_holdout_policy": d0_holdout_policy,
+            "input": {"records": len(checked), "groups": len(pins), "content_sha256": dataset_digest(checked)},
+            "pinned_groups": sorted(group for group, split in pins.items() if split is not None),
+            "assignments": {group: "train" for group in sorted(pins)}, "counts": split_counts(assigned)}
+
+
 def apply_manifest(records, manifest: dict) -> list[dict]:
     """Fill every record's split from the manifest, refusing drift or contradictions."""
     checked = unique_records(records)

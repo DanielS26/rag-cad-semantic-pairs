@@ -23,7 +23,7 @@ def test_notebook_is_output_cleared_guarded_orchestration():
     assert combined.count('bootstrap["remaining_seconds"](STARTED, CONNECTED_SECONDS_USED, COMPUTE_UNITS_USED, '
                           'COMPUTE_UNITS_PER_HOUR, POOL_CONNECTED_SECONDS_CAP, POOL_COMPUTE_UNITS_CAP)') == 8
     assert 'bootstrap["remaining_seconds"](STARTED, CONNECTED_SECONDS_USED, COMPUTE_UNITS_USED, COMPUTE_UNITS_PER_HOUR)' not in combined
-    assert 'PREFLIGHT_STAGE = {"run-a": "smoke", "run-b": "smoke", "released-test": "conformance", "m0": "train"}[STAGE]' in code[2]
+    assert 'PREFLIGHT_STAGE = {"run-a": "smoke", "run-b": "smoke", "released-test": "conformance", "m0": "train", "features": "features"}[STAGE]' in code[2]
     assert combined.index('"preflight"') < combined.index("drive.mount")
     assert combined.index("hashlib.sha256(bootstrap_path.read_bytes())") < combined.index("runpy.run_path")
     assert combined.index("clone_env.clear()") < combined.index("runpy.run_path")
@@ -125,15 +125,28 @@ def test_notebook_process_boundaries_use_fixed_sanitized_stages():
                         assert isinstance(lookup.slice, ast.Name) and lookup.slice.id == "STAGE"
                         labels = [value.value for value in lookup.value.values]
                         assert all(isinstance(value, ast.Constant) for value in lookup.value.values)
-                        assert labels == ["smoke_run_a", "smoke_run_b", "conformance_released_test", "phase4_m0"]
+                        assert labels == ["smoke_run_a", "smoke_run_b", "conformance_released_test", "phase4_m0",
+                                          "phase6_family_features"]
                         stages.extend(labels)
                     assert any(keyword.arg == "timeout" for keyword in node.keywords)
     assert stages == ["environment_preflight", "artefact_restore", "artefact_restore",
                       "upstream_fetch", "smoke_run_a", "smoke_run_b", "conformance_released_test",
-                      "phase4_m0", "artefact_publish"]
+                      "phase4_m0", "phase6_family_features", "artefact_publish"]
     checkout = ast.parse(code[1])
     handlers = [node for node in ast.walk(checkout) if isinstance(node, ast.ExceptHandler)]
     assert sum(ast.unparse(node.type) == "subprocess.TimeoutExpired" for node in handlers) == 2
     assert sum(ast.unparse(node.type) == "subprocess.CalledProcessError" for node in handlers) == 2
     assert not any(isinstance(child, ast.Raise) for node in handlers for child in ast.walk(node))
     assert code[1].index("clone_env.clear()") < code[1].index('raise RuntimeError(f"git_clone:')
+
+def test_notebook_features_stage_reads_the_tracked_phase6_inputs():
+    root = Path(__file__).resolve().parents[1]
+    book = nbformat.read(root / "notebooks/COMPSCI764_Colab_Runner.ipynb", as_version=4)
+    stage = [cell.source for cell in book.cells if cell.cell_type == "code"][4]
+    assert '"features", "build-families", *gate' in stage
+    for relative in ("datasets/raw/augmentation/families", "datasets/raw/augmentation/split_all_train_v1.json",
+                     "datasets/raw/augmentation/review/encoder_pending_v1.txt",
+                     "configs/phase6/phase4_feature_identity.json"):
+        assert f'CHECKOUT / "{relative}"' in stage and (root / relative).exists()
+    assert 'if STAGE != "features" and not source.exists():' in stage
+    assert '"features": "phase6_features"}[STAGE]' in stage

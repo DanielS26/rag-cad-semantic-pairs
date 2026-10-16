@@ -1,0 +1,23 @@
+{
+  "compared_fields": [
+    "representation_id",
+    "encoder_revision",
+    "encoder_code_revision",
+    "segmenter",
+    "dtype"
+  ],
+  "identity": {
+    "commit": "d40b6a6a6a33fa9cc6adbe47f58399bbcff68e04",
+    "config_sha256": "ea2c9f2475193cd40caa968f076bfd3b1dc336622845e9a156f2dc0704b96017",
+    "dtype": "float32",
+    "encoder_code_revision": "bd55a5ec8e6c0fb1d6c26efb4b6a4a74ce8a88d3",
+    "encoder_revision": "ab036b023d30b4d1138c4c3bfa9f0c445ab455d6",
+    "feature_environment_id": "eca91b7c15376e7556dcc17f02e1e82acd4abcd2479dec7849bab5848ef7a5ba",
+    "representation_id": "dc422ef570b0cb2bc33a79fa35be3dd097752a3238c8d55cd78c00610c0ec3b6",
+    "segmenter": "806d4d514c86ff1fed04055fb1dc030208a262a2d9952cbdafe1ce1344adcd3a"
+  },
+  "note": "Copied read-only from the restored Phase 4 feature root on 2026-10-17. The family feature stage refuses to encode when its repo_compatible identity differs from these values in any compared field; commit, config_sha256 and feature_environment_id are expected to differ and are only reported.",
+  "source_artefact": "phase4/20261004T101405Z_d40b6a6a_m0_8c0933ce",
+  "source_file": "features/identity.json",
+  "source_file_sha256": "e66421c20ea112c3fa3f21ec319c3aefc53a62b9f85d6a673b665345a545ca50"
+}
