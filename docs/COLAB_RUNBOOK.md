@@ -219,6 +219,26 @@ it the two feature builds (24,665 training and 9,776 test rows), with each
 further run of this size fits; later phases should restore the published
 feature shards rather than rebuild them.
 
+The `features` stage (`STAGE = "features"`) is the Phase 6 family encoder run
+of [PHASE6_FEATURES_PLAN.md](PHASE6_FEATURES_PLAN.md), a final stage under
+budget pool C: the preflight runs at the `features` gate, the stage label is
+`phase6_family_features`, and Cell 7 publishes under the `phase6_features`
+stage on Drive. It calls `features build-families` with the tracked family
+records, the all-train split manifest
+`datasets/raw/augmentation/split_all_train_v1.json`, the pending list
+`datasets/raw/augmentation/review/encoder_pending_v1.txt` and the Phase 4
+identity `configs/phase6/phase4_feature_identity.json`; it makes no upstream
+CAD fetch and needs no restored input. Before loading the encoder it compares
+its repo_compatible identity with the Phase 4 values and stops, with
+`identity_check.json` in the stage output, when a hash differs; otherwise it
+encodes the 800 records once (6,432 passes) into one feature root per
+representation mode and records the bundle manifest. Its progress steps are
+family_identity_checked, resources_validated, the model-loading steps,
+family_features_built and family_report_written. After publication,
+`features check-families` verifies the restored output on CPU. The ordered
+steps, including the gate rerun the stale tested profile needs first, are in
+the plan's section "Before the encoder run".
+
 Final stages reject candidate/unknown profiles. A tested profile requires Run A
 and Run B manifest hashes, the reviewed commit and lock hash, matching runtime
 values, and unchanged tested project code. A subsequent code fix requires review
@@ -231,7 +251,8 @@ Use `python -m rag_cad.cli --help` and the subcommand's `--help`. Commands are
 `upstream validate-cad`, `artefact publish`, `artefact restore`, `artefact verify`,
 `smoke fake`, `smoke run-a`, `smoke run-b`, `data adapt-cad`, `data validate`, `data prescreen`, `data selfcheck`, `data split`,
 `data check-leakage`, `data compare-budgets`, `features fake-build`,
-`features build`, `m0 fake-run`, `m0 run`, `conformance fake-released-test`,
+`features build`, `features fake-build-families`, `features build-families`,
+`features check-families`, `m0 fake-run`, `m0 run`, `conformance fake-released-test`,
 `conformance released-test`, and `evaluation leak-excluded` (CPU post-hoc on a
 restored m0 artefact; no gate). The default config paths are relative to the
 repository working directory. All real smoke commands require explicit execution flags and
@@ -248,7 +269,10 @@ The `data` commands are CPU-only checks over project JSONL records and
 need no `--execute` or profile, with one exception: `data validate --roundtrip`
 requires the approved profile and the hash-verified segmenter resources so the
 join-and-resegment check uses the frozen NLTK segmenter rather than a default.
-`data split`, `data check-leakage` and `data compare-budgets` refuse to run
+`data split --all-train` puts every group in train with no validation or test
+partition (the family feature build's manifest) and refuses records pinned to
+test; it needs no split ratios. Otherwise `data split`, `data check-leakage`
+and `data compare-budgets` refuse to run
 while `split_ratios`, `near_duplicate_threshold` or `benign_length_tolerance`
 are null in `configs/experiment.yaml`, and a failed leakage or budget check
 still writes its report before exiting with status 2.
