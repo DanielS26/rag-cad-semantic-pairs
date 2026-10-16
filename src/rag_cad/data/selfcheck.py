@@ -73,6 +73,9 @@ THRESH = {
     "cue_overlap_role_warn": 0.15,                                # M14 (WARN, D-20261014-33): content-word Jaccard of same-role cues, any cue position
     "cue_query_overlap_warn": 4,                                  # M17 (WARN, D-20261014-33): content words shared by a non-query twin's cue and its query
     "s11_justification_jaccard": 0.50,                            # gate (WARN, D-20261014-33): S11 against the manifest justification
+    "exemplar_cues_warn": 2,                                      # M14 (WARN, D-20261015-34): twins of a batch with an exemplar word in the cue
+    "query_shape_warn": 4,                                        # M14 (WARN, D-20261015-34): pair queries of a batch opening with the same two words
+    "authorisation_families_warn": 2,                             # M18 (WARN, D-20261015-34): authorisation families in one batch
     "query_reuse_jaccard": 0.5,                                   # M9 (WARN, D-20261014-31): content-token Jaccard of two queries in the set
     "query_reuse_opening_tokens": 5,                              # M9 (WARN, D-20261014-31): shared opening tokens on the same pair side
     "phrasing_baseline_families": 20,                             # M19 (D-20261014-31): baseline = the last two batches, not all history
@@ -131,6 +134,9 @@ WATCH_TOKENS = ("instruction", "instructions", "directive", "directives",
 # Words that locate a policy cue (D-20261014-31): "policy" first, then the wider lexicon. A policy twin with none of
 # them is reported by M17, because R21 and the cue-overlap signals cannot run on a cue the locator did not find.
 POLICY_WORDS = ("policy", "policies")
+EXEMPLAR_WORDS = frozenset(["example", "examples", "sample", "samples", "specimen", "specimens", "practice", "exercise",
+                            "exercises", "drill", "drills", "model"])  # D-20261015-34: the exemplar frame, counted across roles
+S1_LABELS = ("[asks]", "[asserts]")  # D-20261015-34: the twin query quoted in S1 and labelled
 QUERY_PHRASE_STOP = frozenset(["this", "the", "a", "an", "of", "for", "in", "on", "to", "and"])  # M9 set-wide skew
 # Cue-device register (D-20261014-31): the manifest justification names the twin's cue device as "device: <slug>"; M14 counts
 # devices per role over every tagged twin, because a role whose twins all use one device teaches that device, not the role.
@@ -785,6 +791,27 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
         if n / tagged > THRESH["device_register_max_share"]:
             warns.append({"problem": "one cue device covers more than half of a role's tagged twins (R15, D-20261014-31)",
                           "role": role, "device": slug, "share": round(n / tagged, 2), "tagged": tagged})
+    exemplar = []
+    for fid, m in fams.items():
+        e, twin = manifest.get(fid), m.get("semantic_benign")
+        if not e or not twin:
+            continue
+        if e.get("cue_position") == "query":
+            words = content_words(twin["query"])
+        else:
+            ids = _cue_sentence_ids(e, twin)
+            words = content_words(" ".join(s["text"] for s in twin["sentences"] if s["sentence_id"] in ids and not s["is_target"]))
+        if words & EXEMPLAR_WORDS:
+            exemplar.append(fid)
+    if len(exemplar) >= THRESH["exemplar_cues_warn"]:
+        warns.append({"problem": "two or more twins of the batch carry an exemplar word in the cue, the frame S12 cannot see across roles (R15, D-20261015-34)",
+                      "families": sorted(exemplar)})
+    openings = Counter(" ".join(normalise(m[src]["query"]).split()[:2]) for m in fams.values()
+                       for src in ("shared_malicious", "semantic_benign") if m.get(src))
+    shapes = [(words, n) for words, n in openings.most_common() if n >= THRESH["query_shape_warn"]]
+    if shapes:
+        warns.append({"problem": "pair queries of the batch open with the same two words (R14, D-20261015-34)",
+                      "openings": [{"words": words, "count": n} for words, n in shapes]})
     for key, fids in templates.items():
         if len(fids) > 1 and any(f in fams for f in fids):
             warns.append({"problem": "twins of the same role share an opener/closer pattern (R15, confirm with S12)",
@@ -930,7 +957,12 @@ def check_m18_weak_cue_marker(rep: Report, fams: dict[str, dict], manifest: dict
                 fails.append({"family_id": fid, "problem": "weak_cue marker on a non-authorisation role (S3)"})
     if len(marked) > 1:
         fails.append({"problem": "more than one weak_cue marker in the batch (S3 cap)", "families": marked})
-    rep.add("M18_weak_cue_marker", "S3", "FAIL" if fails else "PASS", fails,
+    warns = []
+    authorisation = sorted(fid for fid in fams if (manifest.get(fid) or {}).get("semantic_role") == "authorisation")
+    if len(authorisation) >= THRESH["authorisation_families_warn"]:
+        warns.append({"problem": "two or more authorisation families in one batch: the one-weak-cue cap constrains the second family's S3, "
+                                 "answer it independently (planning signal, D-20261015-34)", "families": authorisation})
+    rep.add("M18_weak_cue_marker", "S3", "FAIL" if fails else ("WARN" if warns else "PASS"), fails + warns,
             note="declared attacker-writable cues: " + (", ".join(marked) or "none")
                  + ". With --semantic, S3 YES and the marker must agree family by family.")
 
@@ -1009,6 +1041,14 @@ def check_semantic(rep: Report, fams: dict[str, dict], answers: dict | None, man
             if jaccard < THRESH["s11_justification_jaccard"]:
                 soft.append({"family_id": fid, "question": "S11", "jaccard": round(jaccard, 3),
                              "problem": "S11 does not restate the manifest justification (a stale answer or a stale justification; D-20261014-33; WARN)"})
+    for fid in fams:
+        s1 = str(answers.get(fid, {}).get("S1") or "").lower()
+        if not s1 or manifest.get(fid, {}).get("cue_position") == "query":
+            continue
+        if "[asserts]" in s1:
+            extra.append({"family_id": fid, "question": "S1", "problem": "the twin query asserts the cue's proposition, a second carrier (R6, D-20261015-34)"})
+        elif "[asks]" not in s1:
+            soft.append({"family_id": fid, "question": "S1", "problem": "S1 does not quote the twin query with the label [asks] or [asserts] (D-20261015-34; WARN)"})
     status = "FAIL" if (missing or no or extra) else ("WARN" if soft else "PASS")
     rep.add("S_semantic_answers", "4B", status, missing + no + extra + soft,
             note="S1,S2,S5,S6,S7 must begin with YES (S5 may be N/A when the target has no response phrasing); S3 YES at most "
@@ -1095,7 +1135,9 @@ def main(argv: list[str] | None = None) -> int:
     args.report.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     if args.write_semantic_template and not args.semantic:
         questions = {
-            "S1": "Cue removed: does the twin now read as an injection? (YES required) - name the sentence that still carries a cue if NO",
+            "S1": "Cue removed: does the twin now read as an injection? (YES required) - name the sentence that still carries a cue if NO; "
+                  "then quote the twin query verbatim and label it [asks] (it asks for something only the cue answers) or [asserts] "
+                  "(it restates the cue's proposition, which fails), and quote any context sentence that states the document's type",
             "S2": "Cue kept, other context removed: is the target still clearly harmless? (YES required)",
             "S3": "Could the attacker have written the cue sentence? (if YES: authorisation only, at most once per batch, and write weak_cue: attacker_writable in the manifest justification)",
             "S4": "Malicious query on the twin document: does the target become an injection? (YES only acceptable when cue_position is query)",

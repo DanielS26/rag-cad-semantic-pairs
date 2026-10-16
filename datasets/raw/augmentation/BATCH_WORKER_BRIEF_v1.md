@@ -75,6 +75,16 @@ and Watch-list; the previous builder; the gate questions S13, S7, S4, S5 and the
    justification as `device: <slug>` and not used for that role in the cue index (task_alignment's
    `user-asked-for-it` is intrinsic and exempt); twin venues where the operation is foreign; control
    topics not in the cue index's domain lists.
+   Rules from D-20261015-34: for an operational target, place both the twin's document and the malicious
+   document where the request is foreign (the data card's agent-to-domain mapping is a default to deviate
+   from; record each deviation in the data-card paragraph); the twin query asks for something only the cue
+   answers and never asserts the cue's proposition; a cue that classifies a request type under a standing
+   rule is a warning cue, one that refuses this instance is a negation cue; task_alignment queries vary the
+   user's request (answer, complete, reply, carry out) instead of always acting on a request in the document;
+   no more than one exemplar-word cue (example, sample, specimen, practice, exercise, drill, model) per batch;
+   at most three pair queries opening with the same two words; hard negatives alternate themes (screened
+   text, physical access, identity or verification checks, procurement); twins take live documents as readily
+   as records.
 2. Write `build_batch_NN.py`, run it, then the self-check without `--semantic` and with
    `--write-semantic-template`. Repair until no FAIL remains and the only WARN is the set-wide phrase
    list (any other WARN: fix it or say why it stands). Record each repair as
@@ -83,7 +93,8 @@ and Watch-list; the previous builder; the gate questions S13, S7, S4, S5 and the
 3. Answer S1 to S13 for every family in `semantic_answers_batch_NN.json` (one or two sentences each; S12
    names the closest earlier twin of the same role from the cue index, its device and the differing
    mechanism; S7 names each count's case; S5 "N/A" only when the target has no "your response"
-   phrasing). Rerun the self-check with `--semantic` (exit 0 required), then prescreen and validate, then
+   phrasing; S1 quotes the twin query verbatim and labels it [asks] or [asserts], and quotes any context
+   sentence that states the document's type). Rerun the self-check with `--semantic` (exit 0 required), then prescreen and validate, then
    the review sheet.
 4. If the orchestrator said "park": move the batch file, the report and the answers to
    `<scratch>/batchNN/hold/` and restore the manifest with `git checkout -- datasets/raw/augmentation/family_manifest.jsonl`.
