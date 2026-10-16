@@ -475,24 +475,6 @@
       "skew": -0.4
     },
     {
-      "token": "one",
-      "twin_share": 0.6,
-      "malicious_share": 0.3,
-      "skew": 0.3
-    },
-    {
-      "token": "team",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "question",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
       "token": "two",
       "twin_share": 0.2,
       "malicious_share": 0.5,
@@ -505,19 +487,19 @@
       "skew": 0.3
     },
     {
-      "token": "digest",
-      "twin_share": 0.2,
+      "token": "question",
+      "twin_share": 0.3,
       "malicious_share": 0.0,
-      "skew": 0.2
+      "skew": 0.3
     },
     {
-      "token": "unless",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
+      "token": "one",
+      "twin_share": 0.6,
+      "malicious_share": 0.3,
+      "skew": 0.3
     },
     {
-      "token": "four",
+      "token": "letter",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
@@ -529,19 +511,13 @@
       "skew": -0.2
     },
     {
-      "token": "fees",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "unrelated",
+      "token": "summary",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "part",
+      "token": "policy",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
@@ -553,10 +529,34 @@
       "skew": -0.2
     },
     {
-      "token": "taken",
+      "token": "four",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
+    },
+    {
+      "token": "part",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "unrelated",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "team",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "course",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
     }
   ],
   "coverage": {
@@ -791,7 +791,7 @@
   },
   "lengths": {
     "pilot_0041": {
-      "shared_malicious": 351,
+      "shared_malicious": 338,
       "semantic_benign": 356,
       "random_benign": 311,
       "keyword_benign": 301
@@ -815,7 +815,7 @@
       "keyword_benign": 367
     },
     "pilot_0045": {
-      "shared_malicious": 268,
+      "shared_malicious": 282,
       "semantic_benign": 260,
       "random_benign": 233,
       "keyword_benign": 247

@@ -252,27 +252,9 @@
       "skew": -0.4
     },
     {
-      "token": "anything",
-      "twin_share": 0.4,
-      "malicious_share": 0.1,
-      "skew": 0.3
-    },
-    {
-      "token": "office",
+      "token": "desk",
       "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "eight",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "rather",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
+      "malicious_share": 0.6,
       "skew": -0.3
     },
     {
@@ -288,10 +270,28 @@
       "skew": -0.3
     },
     {
-      "token": "desk",
+      "token": "anything",
+      "twin_share": 0.4,
+      "malicious_share": 0.1,
+      "skew": 0.3
+    },
+    {
+      "token": "eight",
       "twin_share": 0.3,
-      "malicious_share": 0.6,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "rather",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
       "skew": -0.3
+    },
+    {
+      "token": "office",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
     },
     {
       "token": "manager",
@@ -300,22 +300,10 @@
       "skew": 0.3
     },
     {
-      "token": "duty",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
+      "token": "friday",
+      "twin_share": 0.4,
+      "malicious_share": 0.2,
       "skew": 0.2
-    },
-    {
-      "token": "trade",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "open",
-      "twin_share": 0.1,
-      "malicious_share": 0.3,
-      "skew": -0.2
     },
     {
       "token": "asks",
@@ -324,13 +312,25 @@
       "skew": -0.2
     },
     {
-      "token": "due",
+      "token": "finance",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "lockers",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "reception",
+      "token": "stays",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "receipt",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
@@ -618,7 +618,7 @@
       "keyword_benign": 405
     },
     "pilot_0115": {
-      "shared_malicious": 515,
+      "shared_malicious": 499,
       "semantic_benign": 518,
       "random_benign": 496,
       "keyword_benign": 542
@@ -636,7 +636,7 @@
       "keyword_benign": 346
     },
     "pilot_0118": {
-      "shared_malicious": 577,
+      "shared_malicious": 564,
       "semantic_benign": 528,
       "random_benign": 514,
       "keyword_benign": 561

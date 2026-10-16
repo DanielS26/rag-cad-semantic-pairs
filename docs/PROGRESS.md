@@ -3169,3 +3169,30 @@ Historical audit claims are distinguished from checks executed in this session.
   docs/archive/audit_200_2026-10-16/reopening_edits.json and
   reopening_summary.md
 - Next: the decision on the 81 percent framing floor (D-20261016-47 c)
+
+## 2026-10-16 - Pilot against the framing shortcut measured; the set stands (D-20261016-48, D-20261016-49)
+
+- Scope: forty malicious documents, two per batch, chosen as the two the
+  audit's word model found easiest to tell from their twins (existing hard
+  negatives excluded), each given two or three of the twin cue's content
+  words in one non-target sentence in a role that explained nothing about
+  the target; no target, label, query, twin or control touched
+- Measurement: the naive Bayes probe over the query and non-target sentences,
+  five folds grouped by family, moved from 81.5 to 81.8 percent overall; the
+  within-family ranking stayed at 90.5 percent over 200 families and went
+  from 40 of 40 to 39 of 40 over the edited families; every touched batch
+  exited 0 with no new warning
+- Outcome: the five-point bar of D-20261016-48 (d) is not met, so the forty
+  edits are reverted and the set stands; the measurement, the probe script
+  and both per-family outputs are kept under
+  docs/archive/audit_200_2026-10-16/ (pilot40_probe.md); six answers that
+  still quoted pre-reopening cue wording were brought up to date (pilot_0084
+  S11; S1 of pilot_0138, 0171, 0174, 0176, 0178) and the gates of batches
+  09, 14 and 18 rerun (exit 0)
+- Consequence: 81.5 percent (word model) and 90.5 percent (within-family
+  ranking) are the dataset's lexical floor; every scorer result in the
+  evaluation phases is reported beside this baseline and with the paired
+  metric
+- Next: Phase 6 (fold assignment) on the 200-family set; pull requests #41 to
+  #58 merged in order
+

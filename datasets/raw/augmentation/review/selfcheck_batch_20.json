@@ -280,19 +280,19 @@
       "skew": 0.4
     },
     {
-      "token": "comes",
+      "token": "sit",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
+    },
+    {
+      "token": "month",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
     },
     {
       "token": "long",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "sit",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
@@ -310,7 +310,7 @@
       "skew": -0.3
     },
     {
-      "token": "month",
+      "token": "free",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
@@ -320,6 +320,12 @@
       "twin_share": 0.2,
       "malicious_share": 0.5,
       "skew": -0.3
+    },
+    {
+      "token": "comes",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
     },
     {
       "token": "signed",
@@ -334,31 +340,25 @@
       "skew": 0.3
     },
     {
-      "token": "free",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
-      "token": "contractor",
+      "token": "count",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "gets",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
+      "token": "own",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "office",
+      "twin_share": 0.2,
+      "malicious_share": 0.4,
       "skew": -0.2
     },
     {
-      "token": "until",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "final",
+      "token": "panel",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
@@ -634,7 +634,7 @@
       "keyword_benign": 529
     },
     "pilot_0193": {
-      "shared_malicious": 641,
+      "shared_malicious": 671,
       "semantic_benign": 619,
       "random_benign": 577,
       "keyword_benign": 563
@@ -658,7 +658,7 @@
       "keyword_benign": 589
     },
     "pilot_0197": {
-      "shared_malicious": 639,
+      "shared_malicious": 588,
       "semantic_benign": 641,
       "random_benign": 543,
       "keyword_benign": 569

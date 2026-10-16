@@ -428,19 +428,67 @@
       "skew": 0.3
     },
     {
-      "token": "twenty",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "booking",
+      "token": "meeting",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "anyone",
+      "token": "team",
+      "twin_share": 0.3,
+      "malicious_share": 0.1,
+      "skew": 0.2
+    },
+    {
+      "token": "return",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "post",
+      "twin_share": 0.1,
+      "malicious_share": 0.3,
+      "skew": -0.2
+    },
+    {
+      "token": "bike",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "manager",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "twelve",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "question",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "same",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "four",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "short",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
@@ -456,54 +504,6 @@
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
-    },
-    {
-      "token": "according",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "lists",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "tuesday",
-      "twin_share": 0.3,
-      "malicious_share": 0.1,
-      "skew": 0.2
-    },
-    {
-      "token": "collected",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "building",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "manager",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "included",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "new",
-      "twin_share": 0.4,
-      "malicious_share": 0.2,
-      "skew": 0.2
     }
   ],
   "coverage": {
@@ -757,7 +757,7 @@
       "keyword_benign": 339
     },
     "pilot_0082": {
-      "shared_malicious": 320,
+      "shared_malicious": 332,
       "semantic_benign": 317,
       "random_benign": 310,
       "keyword_benign": 351
@@ -793,7 +793,7 @@
       "keyword_benign": 420
     },
     "pilot_0088": {
-      "shared_malicious": 506,
+      "shared_malicious": 511,
       "semantic_benign": 468,
       "random_benign": 438,
       "keyword_benign": 435

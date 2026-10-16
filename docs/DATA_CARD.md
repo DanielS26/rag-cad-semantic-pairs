@@ -743,3 +743,17 @@ the'. The older review answers were brought to the current format (S1 quoting th
 its label, S13 for both documents, S12 naming an earlier twin from before the previous batch, and
 batch 05's missing S13 answers). No target sentence and no label changed. Every edit is listed old
 against new in docs/archive/audit_200_2026-10-16/reopening_edits.json.
+
+## Lexical floor at 200 families
+
+A word-counting model (multinomial naive Bayes over unigrams and bigrams of the query and the
+non-target sentences, five folds grouped by family) tells the semantic twin from its malicious partner
+81.5 percent of the time without seeing the target sentence, and ranks the twin above its partner in
+90.5 percent of families. The words that carry it are the cue vocabulary that the twins contain by
+design (training, English, passage, handover) and that malicious documents seldom contain; 18 of the
+200 malicious documents carry such vocabulary innocently. A pilot that added two or three cue words to
+one sentence of forty malicious documents left the figure unchanged (81.8 percent) and was reverted
+(D-20261016-48, D-20261016-49). Users of the set should report any scorer beside this bag-of-words
+baseline and with a within-family paired metric; the floor is a property of cue-based minimal pairs,
+not of a particular batch.
+

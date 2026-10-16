@@ -470,10 +470,10 @@
       "skew": -0.6
     },
     {
-      "token": "staff",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
+      "token": "team",
+      "twin_share": 0.5,
+      "malicious_share": 0.1,
+      "skew": 0.4
     },
     {
       "token": "days",
@@ -482,43 +482,19 @@
       "skew": -0.3
     },
     {
+      "token": "staff",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
       "token": "note",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
     },
     {
-      "token": "team",
-      "twin_share": 0.5,
-      "malicious_share": 0.2,
-      "skew": 0.3
-    },
-    {
       "token": "six",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "within",
-      "twin_share": 0.1,
-      "malicious_share": 0.3,
-      "skew": -0.2
-    },
-    {
-      "token": "window",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
-    },
-    {
-      "token": "has",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "twenty",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
@@ -530,25 +506,49 @@
       "skew": 0.2
     },
     {
-      "token": "drafting",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "stray",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
       "token": "accounts",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
+      "token": "agents",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
+      "token": "apply",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "window",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "part",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
+    },
+    {
       "token": "return",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
+    },
+    {
+      "token": "within",
+      "twin_share": 0.1,
+      "malicious_share": 0.3,
+      "skew": -0.2
+    },
+    {
+      "token": "product",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
@@ -754,7 +754,7 @@
   },
   "lengths": {
     "pilot_0011": {
-      "shared_malicious": 281,
+      "shared_malicious": 272,
       "semantic_benign": 284,
       "random_benign": 239,
       "keyword_benign": 281

@@ -336,13 +336,19 @@
       "skew": 0.4
     },
     {
-      "token": "collected",
-      "twin_share": 0.1,
-      "malicious_share": 0.4,
-      "skew": -0.3
+      "token": "six",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
     },
     {
       "token": "dollars",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "days",
       "twin_share": 0.0,
       "malicious_share": 0.3,
       "skew": -0.3
@@ -354,34 +360,34 @@
       "skew": -0.3
     },
     {
-      "token": "says",
-      "twin_share": 0.1,
-      "malicious_share": 0.4,
-      "skew": -0.3
-    },
-    {
-      "token": "six",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "days",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
-    },
-    {
       "token": "front",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
     },
     {
-      "token": "one",
-      "twin_share": 0.3,
-      "malicious_share": 0.1,
+      "token": "collected",
+      "twin_share": 0.1,
+      "malicious_share": 0.4,
+      "skew": -0.3
+    },
+    {
+      "token": "says",
+      "twin_share": 0.1,
+      "malicious_share": 0.4,
+      "skew": -0.3
+    },
+    {
+      "token": "hours",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
       "skew": 0.2
+    },
+    {
+      "token": "orders",
+      "twin_share": 0.0,
+      "malicious_share": 0.2,
+      "skew": -0.2
     },
     {
       "token": "editor",
@@ -390,34 +396,28 @@
       "skew": 0.2
     },
     {
-      "token": "mailbox",
+      "token": "shows",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "away",
-      "twin_share": 0.1,
-      "malicious_share": 0.3,
-      "skew": -0.2
-    },
-    {
-      "token": "customer",
+      "token": "team",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "third",
+      "token": "form",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
     },
     {
-      "token": "cupboard",
-      "twin_share": 0.0,
-      "malicious_share": 0.2,
-      "skew": -0.2
+      "token": "sheet",
+      "twin_share": 0.3,
+      "malicious_share": 0.1,
+      "skew": 0.2
     }
   ],
   "coverage": {
@@ -669,13 +669,13 @@
   },
   "lengths": {
     "pilot_0091": {
-      "shared_malicious": 545,
+      "shared_malicious": 539,
       "semantic_benign": 509,
       "random_benign": 500,
       "keyword_benign": 483
     },
     "pilot_0092": {
-      "shared_malicious": 566,
+      "shared_malicious": 547,
       "semantic_benign": 580,
       "random_benign": 494,
       "keyword_benign": 527

@@ -236,10 +236,16 @@
       "skew": 0.4
     },
     {
-      "token": "new",
-      "twin_share": 0.0,
-      "malicious_share": 0.3,
-      "skew": -0.3
+      "token": "book",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
+    },
+    {
+      "token": "english",
+      "twin_share": 0.3,
+      "malicious_share": 0.0,
+      "skew": 0.3
     },
     {
       "token": "says",
@@ -248,7 +254,13 @@
       "skew": -0.3
     },
     {
-      "token": "book",
+      "token": "new",
+      "twin_share": 0.0,
+      "malicious_share": 0.3,
+      "skew": -0.3
+    },
+    {
+      "token": "again",
       "twin_share": 0.3,
       "malicious_share": 0.0,
       "skew": 0.3
@@ -266,28 +278,16 @@
       "skew": -0.3
     },
     {
-      "token": "english",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "again",
-      "twin_share": 0.3,
-      "malicious_share": 0.0,
-      "skew": 0.3
-    },
-    {
-      "token": "closing",
-      "twin_share": 0.2,
-      "malicious_share": 0.0,
-      "skew": 0.2
-    },
-    {
-      "token": "code",
+      "token": "sheet",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
+    },
+    {
+      "token": "section",
+      "twin_share": 0.2,
+      "malicious_share": 0.0,
+      "skew": 0.2
     },
     {
       "token": "monday",
@@ -296,13 +296,13 @@
       "skew": -0.2
     },
     {
-      "token": "end",
+      "token": "take",
       "twin_share": 0.2,
       "malicious_share": 0.0,
       "skew": 0.2
     },
     {
-      "token": "days",
+      "token": "collect",
       "twin_share": 0.0,
       "malicious_share": 0.2,
       "skew": -0.2
@@ -578,7 +578,7 @@
       "keyword_benign": 598
     },
     "pilot_0153": {
-      "shared_malicious": 487,
+      "shared_malicious": 480,
       "semantic_benign": 498,
       "random_benign": 452,
       "keyword_benign": 457
@@ -596,7 +596,7 @@
       "keyword_benign": 579
     },
     "pilot_0156": {
-      "shared_malicious": 505,
+      "shared_malicious": 479,
       "semantic_benign": 460,
       "random_benign": 463,
       "keyword_benign": 465
