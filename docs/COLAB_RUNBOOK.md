@@ -2,20 +2,22 @@
 
 ## Current Gate
 
-The live smoke gate has passed three times, each from an exact commit in two
+The live smoke gate has passed four times, each from an exact commit in two
 fresh NVIDIA L4 runtimes: a822b9a0 on 21 September 2026 (the first tested
 profile, [decision D-20260922-12](DECISIONS.md#d-20260922-12---freeze-the-tested-colab-environment-profile-from-run-a-and-run-b)),
 0cc9ad77 on 22 September (evidence only, including the representation-mode
-measurements in [REPRESENTATION_MODES.md](REPRESENTATION_MODES.md)) and
+measurements in [REPRESENTATION_MODES.md](REPRESENTATION_MODES.md)),
 e7d45fc8 on 4 October 2026 under budget pool A, in the repo_compatible mode of
-D-20261004-13 and after the Phase 4 code. The tested profile
-`configs/environments/colab_tested.yaml` with `requirements/colab-core.lock.txt`
-is re-frozen from the e7d45fc8 pass with `compute_budget_approved: true` under
-[decision D-20261004-18](DECISIONS.md#d-20261004-18---re-freeze-the-tested-colab-profile-from-the-e7d45fc8-gate-pass-with-the-compute-budget-approved),
-so the final stages (feature generation, training, evaluation) are open from
-any commit that descends from e7d45fc8 without a change to `src/rag_cad` or
-`scripts/bootstrap_colab.py`; such a change invalidates the profile until the
-gate is rerun. For the smoke gate, the standing instruction applies: Daniel
+D-20261004-13 and after the Phase 4 code (the profile of
+[decision D-20261004-18](DECISIONS.md#d-20261004-18---re-freeze-the-tested-colab-profile-from-the-e7d45fc8-gate-pass-with-the-compute-budget-approved)),
+and 2ffa63a2 on 16 October 2026 under budget pool A, after the Phase 6 code.
+The tested profile `configs/environments/colab_tested.yaml` with
+`requirements/colab-core.lock.txt` is re-frozen from the 2ffa63a2 pass with
+`compute_budget_approved: true` under the pools of D-20261004-17 (lock,
+fingerprint and encoder pins unchanged), so the final stages (feature
+generation, training, evaluation) are open from any commit that descends from
+2ffa63a2 without a change to `src/rag_cad` or `scripts/bootstrap_colab.py`;
+such a change invalidates the profile until the gate is rerun. For the smoke gate, the standing instruction applies: Daniel
 Song setting the two flags and running the runner from a named commit is the
 authorisation for that commit. No code changes may be made or pushed from
 Colab. The candidate profile remains for further bounded smoke or conformance

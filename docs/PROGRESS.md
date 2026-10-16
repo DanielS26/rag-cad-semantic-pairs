@@ -3277,3 +3277,49 @@ Historical audit claims are distinguished from checks executed in this session.
 - Checks: tests 342 passed (nine new in tests/test_family_features.py, one
   in tests/test_notebook_contract.py); ruff clean
 - Next: authorisation of the gate rerun and the encoder run
+
+
+## 2026-10-17 - Phase 6: gate rerun from 2ffa63a2 and re-frozen tested profile
+
+- Scope: step 2 and step 3 of docs/PHASE6_FEATURES_PLAN.md. The tested
+  profile was stale (src/rag_cad changed after e7d45fc8), so Daniel Song
+  reran the smoke gate on 16 October 2026 from main
+  2ffa63a2524b271651b45143d098e649a4715ffd (dirty false) under budget
+  pool A with the candidate profile and lock. Branch phase6-refreeze from
+  2ffa63a2 changes only configs, docs and tests
+- Preflight (both runs): NVIDIA L4 (23,659,151,360 bytes), CUDA 12.8,
+  driver 580.82.07, Python 3.13.15, lock 1b270c04... (unchanged), the same
+  packages, encoder pins ab036b02... / bd55a5ec..., segmenter 806d4d51...,
+  float32, native attention, repo_compatible; profile hash 5381ed8b...;
+  environment ID
+  52277f9752e70fc7c981d026d649bc3f0ed0425cd8650577bea6eb25e955d4f5 (differs
+  from the e7d45fc8 ID only through the commit); upstream CAD commit
+  26e38a67... unchanged; model.safetensors SHA-256 17ca06ef...
+- Run A (run ID 20261016T123931Z_2ffa63a2_smoke_fe6f6a3d): ready, published
+  and verified under artefacts/smoke in 258 s connected; 7.07 rows/s; peak
+  GPU memory 2,302,938,624 bytes (as on 4 October); checkpoint SHA-256
+  f2bd1b07...; source manifest SHA-256 1b399c7e... (as on 4 October);
+  manifest SHA-256
+  ea55c8dffa0fb21b25da27455f9bcae6dc26a66b46403629ff7e2f074ced92f9 as recorded
+  by Run B (run_a_sha256 fb28c164...). Representation modes, as in Phase 4:
+  contextual maximum absolute difference 0.1106, isolated blocks identical,
+  both modes deterministic and finite (primary_mode_selected false,
+  reference_decisions_agree false)
+- Run B (run ID 20261016T123931Z_2ffa63a2_smoke-run-b_fe6f6a3d) in a fresh L4
+  runtime (different runtime identity) restored the Run A artefact,
+  reproduced the fingerprint and environment ID and matched the saved
+  predictions (restored_predictions_match true); published and verified
+  under artefacts/smoke in 339 s connected; manifest SHA-256 to be read
+  from its `_SUCCESS` marker on Drive by Daniel Song
+- Pool A after both runs: 1,677 connected seconds (1,080 + 258 + 339) and
+  about 0.4 compute units (to be confirmed by Daniel Song) of its
+  21,600-second / 12-unit cap
+- Re-freeze: configs/environments/colab_tested.yaml takes reviewed commit
+  2ffa63a2, both run IDs, the Run A manifest hash and the new environment
+  ID; lock, fingerprint, encoder pins, tolerances and budget pools are
+  unchanged. The regression test expects the new values, and
+  test_tested_profile_reproduces_the_phase4_identity passes unchanged (the
+  encoder identity did not change). The runbook's current-gate section adds
+  the fourth pass; plan step 3 is marked done
+- Next: the Run B manifest hash from Drive, the decision entry, merge (commit
+  Y), then the features stage from Y under pool C
