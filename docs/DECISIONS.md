@@ -786,3 +786,18 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: team decision under D-20261016-48 (d); Daniel Song is informed with the figures.
 - Related files, commands, results, correspondence, or commit: D-20261016-47; D-20261016-48; [audit archive](archive/audit_200_2026-10-16/).
 - Supersedes / superseded by: Closes the pilot of D-20261016-48; nothing superseded.
+
+## D-20261016-50 - Two cheaper remedies for the lexical floor measured without touching the data; neither adopted
+
+- Status: Confirmed
+- Date: 2026-10-16
+- Project phase: Phase 5 closing
+- Category: Data quality; Evaluation
+- Decision or important note: (a) Daniel Song asked on 2026-10-16 whether the 81.5 percent word-model floor (D-20261016-47, D-20261016-49) could be lowered cheaply, by replacing words or by a smaller structural change. Two candidates were measured in memory with the audit's probe and folds, changing no record. (b) A minimal-pair malicious member, the twin with its cue removed or swapped for the malicious partner's sentence at the same position, bounds the floor between 71.0 percent (cue deleted; the cue is on average 38 percent of a twin's tokens) and 79.3 percent (cue swapped), a fall of two to ten points for roughly a drafting cycle of work and a redefinition of the malicious member; not adopted. (c) Rewording the queries: queries alone separate twin from malicious at 68.8 percent (65.9 over the 160 families whose cue is not the query), the non-target sentences alone at 80.3 percent, and swapping the twin and malicious queries of those 160 families moves the full probe from 81.9 to 81.3 percent; the query tell is scattered content words, not a question template (the two sides' ten most frequent first words share eight). Rewording queries would lower the floor by about one point; not adopted. (d) Replacing cue words with other words is not a remedy: the model learns from the set itself, so the replacement words become the tell. (e) The set stands as finalised; the floor is reported as in D-20261016-49 (d), and the two measurements are archived beside the audit so the report can show that the cheaper remedies were tried on paper first.
+- Context and reason: D-20261016-48 and 49 measured the one-sentence edit; these two measurements complete the remedy study at no cost to the data.
+- Evidence: docs/archive/audit_200_2026-10-16/minpair_probe.md and query_probe.md with their JSON and scripts (merged with pull request #58).
+- Alternatives considered: adopting the minimal-pair member (deferred: the gain is small against the cost and it changes what the malicious record is); a topic rewrite of the malicious documents (deferred, about 1.8M tokens); a query reopening (declined on the measurement).
+- Consequences for implementation/evaluation/report: none for the data; the report's audit section gains the remedy table (one-sentence edit, minimal-pair bounds, query swap).
+- Approved by: team decision on the measurements; Daniel Song informed.
+- Related files, commands, results, correspondence, or commit: D-20261016-47; D-20261016-48; D-20261016-49; [audit archive](archive/audit_200_2026-10-16/).
+- Supersedes / superseded by: Nothing superseded.
