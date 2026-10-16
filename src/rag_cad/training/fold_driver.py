@@ -20,6 +20,7 @@ fixed recipe of configs/experiment.yaml; an epochs override is recorded in every
 the configuration fingerprint, so cells of different recipes never mix.
 """
 
+import os
 import shutil
 import time
 from datetime import datetime, timezone
@@ -94,13 +95,26 @@ def cell_complete(directory: Path, fingerprint: str) -> dict | None:
     manifest_path = directory / CELL_MANIFEST
     if not manifest_path.is_file():
         return None
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return None  # cut short: the cell is redone
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+        return None
     if manifest.get("config_fingerprint") != fingerprint:
         raise ValueError(f"Cell {directory.name} was written under another configuration")
     for name, expected in manifest["files"].items():
         if not (directory / name).is_file() or sha256(directory / name) != expected:
             return None
     return manifest
+
+
+def write_json_atomic(path: Path, value: dict) -> None:
+    """Write beside the target and rename over it, so a reader sees the whole file or none."""
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.unlink(missing_ok=True)
+    write_json(temporary, value)
+    os.replace(temporary, path)
 
 
 def leaked_records(phase4_root: Path, near_duplicate_threshold: float) -> dict:
@@ -120,22 +134,26 @@ def _check(probabilities: np.ndarray, rows: int) -> np.ndarray:
     return probabilities
 
 
-def held_out_rows(cache: TwoCache, rows: list[dict], scores: np.ndarray, threshold: float) -> list[dict]:
+def held_out_rows(cache: TwoCache, rows: list[dict], scores: np.ndarray, margins: np.ndarray,
+                  threshold: float) -> list[dict]:
+    """Per sentence: the malicious-class probability (which decides the flag) and the logit margin
+    z1 - z0 (which orders scores that the float32 probability rounds to the same value)."""
     result = []
-    for row, score in zip(rows, scores):
+    for row, score, margin in zip(rows, scores, margins):
         fold = cache.folds[row["group_id"]]
         result.append({"record_id": row["record_id"], "sentence_id": row["sentence_id"],
                        "group_id": row["group_id"], "family_id": fold["family_id"], "fold": fold["fold"],
                        "record_kind": RECORD_KINDS[row["condition_source"]],
                        "condition_source": row["condition_source"], "label": int(row["label"]),
                        "is_target": bool(row["is_target"]), "probability": float(score),
-                       "decision": bool(score > threshold)})
+                       "margin": float(margin), "decision": bool(score > threshold)})
     return result
 
 
 def held_out_records(cache: TwoCache, rows: list[dict], threshold: float) -> list[dict]:
     """Per record: the maximum sentence probability (the passage filter's view: the record is
-    flagged when any sentence is removed) and, where the record has one, its target sentence's."""
+    flagged when any sentence is removed) and, where the record has one, its target sentence's;
+    the same for the logit margin, which the paired comparison uses."""
     grouped: dict[str, list[dict]] = {}
     for row in rows:
         grouped.setdefault(row["record_id"], []).append(row)
@@ -143,10 +161,10 @@ def held_out_records(cache: TwoCache, rows: list[dict], threshold: float) -> lis
     for record_id in sorted(grouped):
         members = grouped[record_id]
         first = members[0]
-        targets = [row["probability"] for row in members if row["is_target"]]
+        targets = [row for row in members if row["is_target"]]
         if len(targets) > 1:
             raise ValueError(f"Record {record_id} has more than one target sentence")
-        target = targets[0] if targets else None
+        target = targets[0]["probability"] if targets else None
         highest = max(row["probability"] for row in members)
         fold = cache.folds[first["group_id"]]
         records.append({"record_id": record_id, "group_id": first["group_id"], "family_id": fold["family_id"],
@@ -155,8 +173,10 @@ def held_out_records(cache: TwoCache, rows: list[dict], threshold: float) -> lis
                         "label": int(any(row["label"] for row in members)), "sentences": len(members),
                         "max_probability": highest, "flagged": bool(highest > threshold),
                         "flagged_rows": sum(row["decision"] for row in members),
+                        "max_margin": max(row["margin"] for row in members),
                         "target_probability": target,
-                        "target_flagged": None if target is None else bool(target > threshold)})
+                        "target_flagged": None if target is None else bool(target > threshold),
+                        "target_margin": targets[0]["margin"] if targets else None})
     return records
 
 
@@ -167,6 +187,9 @@ class ReleasedScorer:
     def __init__(self, kind: str, checkpoint: Path | None = None, expected_sha256: str | None = None):
         self.kind = kind
         if kind == "torch":
+            import torch
+
+            self.torch = torch
             from rag_cad.cad.upstream_adapter import load_checkpoint
 
             if checkpoint is None or not expected_sha256:
@@ -181,16 +204,19 @@ class ReleasedScorer:
         else:
             raise ValueError("Unknown released scorer")
 
-    def __call__(self, features: np.ndarray) -> np.ndarray:
+    def score(self, features: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        """Probabilities [N, 2] and logit margins z1 - z0 [N] in float64."""
         if self.kind == "fake":
-            return self.model.reference_score(features)
-        import torch
+            probabilities = np.asarray(self.model.reference_score(features), dtype=np.float64)
+            return probabilities, np.log(probabilities[:, 1]) - np.log(probabilities[:, 0])
+        from rag_cad.training.torch_trainer import logit_margins
 
+        torch = self.torch
         with torch.no_grad():
             chunks = [torch.softmax(self.model(torch.from_numpy(np.ascontiguousarray(
                 features[start:start + 4096], dtype=np.float32))), dim=-1).numpy()
                 for start in range(0, len(features), 4096)]
-        return np.concatenate(chunks)
+        return np.concatenate(chunks), logit_margins(torch, self.model, features)
 
 
 def run_cell(cache: TwoCache, cell: dict, directory: Path, *, trainer, released, recipe: dict, config: dict,
@@ -202,7 +228,7 @@ def run_cell(cache: TwoCache, cell: dict, directory: Path, *, trainer, released,
     held = held_out_set(cache, round_number if condition in PRIMARY else None)
     training, train_seconds, checkpoint, history, counts = None, 0.0, None, None, None
     if condition == N0:
-        score = released
+        score = released.score
         counts = {"d0_rows": 0, "family_rows": 0, "training_families": 0}
     else:
         training, counts = training_set(cache, condition, round_number if condition in PRIMARY else None)
@@ -221,17 +247,21 @@ def run_cell(cache: TwoCache, cell: dict, directory: Path, *, trainer, released,
         checkpoint = {"file": trainer.checkpoint_file, "sha256": trainer.save(trained, path, metadata)}
 
         def score(features):
-            return trainer.predict(trained, features)
+            return trainer.predict(trained, features), trainer.margins(trained, features)
 
         reloaded = trainer.reload_predict(path, checkpoint["sha256"], held.features)
-        if not np.allclose(reloaded, score(held.features), atol=1e-5, rtol=1e-4):
+        if not np.allclose(reloaded, score(held.features)[0], atol=1e-5, rtol=1e-4):
             raise ValueError("Reloaded checkpoint does not reproduce its predictions")
     predict_started = time.perf_counter()
-    held_probabilities = _check(score(held.features), len(held.rows))
+    held_probabilities, held_margins = score(held.features)
+    held_probabilities = _check(held_probabilities, len(held.rows))
+    held_margins = np.asarray(held_margins, dtype=np.float64)
+    if held_margins.shape != (len(held.rows),) or not np.isfinite(held_margins).all():
+        raise ValueError("Head produced misaligned or non-finite margins")
     test = cache.released_test
-    test_probabilities = _check(score(test.features), len(test.rows))
+    test_probabilities = _check(score(test.features)[0], len(test.rows))
     predict_seconds = time.perf_counter() - predict_started
-    rows = held_out_rows(cache, held.rows, held_probabilities[:, 1], threshold)
+    rows = held_out_rows(cache, held.rows, held_probabilities[:, 1], held_margins, threshold)
     records = held_out_records(cache, rows, threshold)
     write_jsonl(directory / HELD_ROWS, rows)
     write_jsonl(directory / HELD_RECORDS, records)
@@ -248,7 +278,7 @@ def run_cell(cache: TwoCache, cell: dict, directory: Path, *, trainer, released,
                 "round": round_number, "seed": seed, "mode": cache.mode, "config_fingerprint": fingerprint,
                 "config": config, "identity": cache.identity_check, "provenance": provenance,
                 "trainer": None if condition == N0 else trainer.kind,
-                "checkpoint": checkpoint or {"released_sha256": released.sha256},
+                "checkpoint": checkpoint or {"released_sha256": config["released_checkpoint_sha256"]},
                 "training_rows": counts if training is None else {**counts, "rows": len(training.rows),
                                                                   "malicious_rows": int(training.labels.sum())},
                 "held_out": {"rows": len(rows), "records": len(records), "records_by_kind": kinds,
@@ -262,7 +292,7 @@ def run_cell(cache: TwoCache, cell: dict, directory: Path, *, trainer, released,
                                     "total": time.perf_counter() - started},
                 "files": {name: sha256(directory / name) for name in files},
                 "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds")}
-    write_json(directory / CELL_MANIFEST, manifest)
+    write_json_atomic(directory / CELL_MANIFEST, manifest)
     return manifest
 
 
@@ -276,8 +306,17 @@ def run_folds(cache: TwoCache, output: Path, *, trainer, released, recipe: dict,
     run_path = output / RUN_FILE
     if run_path.is_file():
         existing = json.loads(run_path.read_text(encoding="utf-8"))
+        before = existing.get("config", {})
+        for key, label in (("commit", "commit"), ("threads", "torch thread count")):
+            if before.get(key) != config.get(key):
+                raise ValueError(f"Output was started at {label} {before.get(key)}, this sitting has "
+                                 f"{config.get(key)}; resume with the same {label} or use a new output")
+        if before.get("seeds") != config.get("seeds"):
+            raise ValueError(f"Output plans seeds {before.get('seeds')}, this sitting {config.get('seeds')}; "
+                             "the seed set is fixed per run")
         if existing.get("config_fingerprint") != fingerprint:
-            raise ValueError("Output holds a run of another configuration; use a new output directory")
+            raise ValueError("Output holds a run of another configuration (recipe, mode, folds, checkpoint "
+                             "or caches); use a new output directory")
     else:
         output.mkdir(parents=True, exist_ok=True)
         write_json(output / LEAKED_FILE, leaked)
@@ -312,10 +351,29 @@ def run_folds(cache: TwoCache, output: Path, *, trainer, released, recipe: dict,
     return report
 
 
-def run_folds_command(args) -> dict:
-    """CLI body of training run-folds."""
+REFUSALS = (ValueError, OSError, KeyError, TypeError, RuntimeError)
+
+
+def log_refusal(command: str, error: BaseException) -> None:
+    """The cause of a refusal on standard error (the CLI itself prints only the exception class)."""
     import sys
 
+    print(f"{command} refused: {type(error).__name__}: {error}", file=sys.stderr, flush=True)
+
+
+def run_folds_command(args) -> dict:
+    """CLI body of training run-folds; a refusal logs its cause before the CLI exits 2."""
+    try:
+        return _run_folds_command(args)
+    except REFUSALS as error:
+        log_refusal("training run-folds", error)
+        raise
+
+
+def _run_folds_command(args) -> dict:
+    import sys
+
+    import rag_cad
     from rag_cad.config import load_config
     from rag_cad.data.schema import ContractError
     from rag_cad.operations.provenance import git_output
@@ -323,11 +381,12 @@ def run_folds_command(args) -> dict:
     from rag_cad.training.two_cache import load_two_caches
 
     output = local_path(args.output)
-    repo = Path(args.repo).resolve()
-    for source in (args.phase4_root, args.families, repo):
+    repo = Path(rag_cad.__file__).resolve().parents[2]
+    for source in (args.phase4_root, args.families, repo, Path(args.repo)):
         source = local_path(source)
         if output.is_relative_to(source) or source.is_relative_to(output):
-            raise ValueError("Output must lie outside the repository and both feature caches")
+            raise ValueError(f"Output {output} must lie outside the repository and both feature caches "
+                             f"(conflicts with {source})")
     experiment = load_config(args.experiment)
     recipe = training_recipe(experiment)
     if args.epochs is not None:
@@ -358,15 +417,18 @@ def run_folds_command(args) -> dict:
         if args.threads:
             torch.set_num_threads(args.threads)
         trainer = TorchTrainer(recipe, device="cpu")
-        spec = load_config(args.release)
-        released = ReleasedScorer("torch", local_path(args.released_checkpoint),
-                                  spec["files"]["classifier_fullcad.pt"]["sha256"]) if N0 in args.conditions else None
+        # the pinned hash is part of every sitting's configuration; the file is loaded only for N0
+        pinned = load_config(args.release)["files"]["classifier_fullcad.pt"]["sha256"]
+        released = None
+        if N0 in args.conditions:
+            released = ReleasedScorer("torch", local_path(args.released_checkpoint), pinned)
         runtime = {"torch": torch.__version__, "threads": torch.get_num_threads(), "device": "cpu"}
     else:
         from rag_cad.training.fake_trainer import FakeTrainer
 
         trainer = FakeTrainer(recipe)
         released = ReleasedScorer("fake")
+        pinned = released.sha256
         runtime = {"torch": None, "threads": None, "device": "fake"}
     try:
         commit = git_output(repo, "rev-parse", "HEAD")
@@ -377,7 +439,8 @@ def run_folds_command(args) -> dict:
               "recipe": {key: value for key, value in recipe.items() if key != "seeds"},
               "epochs_override": args.epochs, "threshold": recipe["threshold"],
               "near_duplicate_threshold": near, "folds_sha256": sha256(local_path(args.folds)),
-              "released_checkpoint_sha256": None if released is None else released.sha256,
+              "released_checkpoint_sha256": pinned, "seeds": seeds, "commit": commit,
+              "threads": runtime["threads"],
               "cache": {key: cache.summary[key] for key in ("d0_row_digest", "released_test_row_digest",
                                                             "assembled_row_digests", "family_rows")},
               "identity": {name: cache.summary["identities"]["phase4"][name]

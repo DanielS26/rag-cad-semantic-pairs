@@ -55,32 +55,37 @@ Each cell writes one directory under `<output>/cells/`:
 `n0_released/`, `m0_base/seed_<s>/` or `<condition>/round_<k>/seed_<s>/`. It holds:
 
 - `model.pt`: the checkpoint, for trained cells;
-- `heldout_rows.jsonl`: one row per sentence;
-- `heldout_records.jsonl`: one row per record, with the maximum sentence probability, the target
-  sentence probability where there is one, and the role, attack category and cue position from the
-  fold table;
+- `heldout_rows.jsonl`: one row per sentence, with the probability of the malicious class and
+  the logit margin (malicious-class logit minus benign-class logit, in float64);
+- `heldout_records.jsonl`: one row per record, with the maximum sentence probability and margin,
+  the target sentence probability and margin where there is one, and the role, attack category and
+  cue position from the fold table;
 - `released_test_rows.jsonl` and `released_test_metrics.json`: the released test, full and with the
   leaked records excluded, as `evaluation leak-excluded` computes it;
-- `manifest.json`: written last. It records the identity check, the configuration and its
-  fingerprint, the seed, the round, the row counts, the training history and the timings, and the
-  hashes of every file in the cell.
+- `manifest.json`: written last, to a temporary file renamed into place. It records the identity
+  check, the configuration and its fingerprint, the seed, the round, the row counts, the training
+  history and the timings, and the hashes of every file in the cell.
 
-A cell counts as complete when its manifest exists and every hash in it verifies. A rerun skips
-complete cells and removes and redoes an incomplete one. It refuses a cell, or a whole output, that
-was written under another configuration (another recipe, mode, fold table, checkpoint or cache).
-The run can therefore be stopped and resumed, or split across several sittings with `--conditions`,
-`--seeds` and `--rounds`. Keep `--threads` the same across sittings so that results stay
-bit-for-bit reproducible. A test checks that two runs of one cell give byte-identical predictions.
+A cell counts as complete when its manifest parses and every hash in it verifies. A rerun skips
+complete cells and removes and redoes an incomplete one, including one whose manifest was cut short.
+The configuration of an output is fixed by its first sitting: the recipe, mode, fold table, caches,
+the pinned hash of the released checkpoint (recorded even when a sitting does not score N0), the
+planned seed set, the code commit and the torch thread count. A later sitting that differs in any of
+these is refused with the reason. The run can therefore be stopped and resumed, or split across
+several sittings with `--conditions` and `--rounds`, from the same commit with the same `--threads`.
+A test checks that two runs of one cell give byte-identical predictions.
 
 `evaluation fold-tables` verifies every cell of a run. It pools the held-out records of the five
-rounds per condition and seed, and refuses unless every family is scored exactly once per condition
-and seed. It writes a JSON file and a Markdown file with:
+rounds per condition and seed. It refuses unless every family is scored exactly once per condition
+and seed, every condition is present, M0 to M3 hold exactly the run's planned seeds, and all cells
+come from one commit and one thread count. It writes a JSON file and a Markdown file with:
 
 - the family table, record basis: twin false-alarm rate, random and keyword control false-alarm
-  rates, malicious detection rate and within-family paired share (the share of families whose twin
-  scores strictly lower than its malicious partner). Rows are, in order, the bag-of-words baseline,
-  N0, M0, M1, M2 and M3, with the paired share as the last column. Each value is the mean over seeds,
-  with the seed standard deviation and the standard deviation over the per-fold values;
+  rates, malicious detection rate, the tie count and share, and the within-family paired share.
+  Rows are, in order, the bag-of-words baseline, N0, M0, M1, M2 and M3, with the paired share as the
+  last column. Each value is the mean over seeds, with the seed standard deviation and the standard
+  deviation over the per-fold values; both are population standard deviations (ddof 0), and the
+  fold one mixes seed and fold variation;
 - the same five figures by attack category (bipia_adapted task-type, asb_adapted operational), by
   semantic role and by cue position;
 - the target-sentence basis: twin false alarm, detection and paired share from the target sentence
@@ -92,8 +97,21 @@ and seed. It writes a JSON file and a Markdown file with:
 A record is flagged when any of its sentences scores strictly above 0.5, because that is what the
 passage filter removes. This record basis is the primary table. The target basis is reported beside
 it so the review can see whether the twin's cue sentence itself or other sentences drive the false
-alarms. The baseline row converts the baseline's figures: twin false alarm is one minus its twin
-accuracy, detection is its malicious accuracy, and it has no control columns.
+alarms.
+
+The paired share is the share of families whose twin's margin is below its malicious partner's,
+that is, the twin is scored more trustworthy. It is computed on the logit margin, not the
+probability: the float32 softmax rounds to exactly 1.0 once the logit gap passes about 17, so
+saturated twin and malicious records would tie, which the review observed with the released
+checkpoint. An exact tie of margins counts one half (the convention of the area under the ROC curve); the
+tie count and share are reported beside the paired share in every table, and the JSON also holds the
+strict share, with ties counted as failures. The flags and rates still use the probability against
+the 0.5 threshold.
+
+The baseline row is computed with the same rules from the baseline's scored families: a twin it
+calls malicious is a false alarm, a malicious record it calls malicious is a detection, and its
+margin is its negated log-odds of the twin. It has no control columns. Its log-odds are stored to
+four decimals, so a tie there may be a rounding tie (there are none in bow_baseline_v1).
 
 ## Cell list and estimated time
 
@@ -121,6 +139,7 @@ From the repository root, in Git Bash:
       --phase4-root "C:/Users/songh/Desktop/Master of AI 2025/COMPSCI764/Project/drive-artefacts/phase4/restored/20261004T101405Z_d40b6a6a_m0_8c0933ce" \
       --families C:/p6/20261016T143145Z_86f6f7a3_features_e8058efb \
       --mode repo_compatible \
+      --threads 6 \
       --output C:/p7/repo_compatible \
       > C:/p7/repo_compatible_driver.json 2> C:/p7/repo_compatible_driver.log
 
@@ -131,8 +150,10 @@ From the repository root, in Git Bash:
 
 Create `C:\p7\` first (`mkdir -p /c/p7`). The output stays under that short root, never in the
 repository, because the cell paths are long. If the driver stops, the same first command resumes
-it. Exit code 0 means every planned cell is complete; 2 means refused, and the cause is in the log
-or in `identity_refused_*.json`.
+it, from the same commit and with the same `--threads`. Exit code 0 means every planned cell is
+complete; 2 means refused. The cause of a refusal is written to standard error, so to the log, as
+"training run-folds refused: <class>: <reason>"; an identity refusal also writes
+`identity_refused_*.json` into the output.
 
 After the run, the tables and the driver report are copied to an archive folder. The real-run
 artefacts (checkpoints and predictions) go to Drive or another backup as the Phase 4 artefact did.
@@ -145,4 +166,6 @@ The figures are then recorded in a decision entry.
   need D0 and the released test encoded in paper_exact, which is a GPU stage. The family artefact
   already holds paper_exact.
 - The record basis as the primary family table, with the target basis beside it.
+- The tie rule of the paired share (margins, a tie counts one half), to be recorded in a decision
+  entry with the real tables.
 - M0 is retrained on CPU instead of reusing the GPU-trained Phase 4 checkpoints.

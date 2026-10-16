@@ -233,7 +233,12 @@ def parser() -> argparse.ArgumentParser:
                     "false-alarm rates, malicious detection rate, within-family paired share; overall and "
                     "by attack category, semantic role and cue position; the bag-of-words baseline of "
                     "--bow as the first row) and the leak-excluded released CAD test table to --output "
-                    "(JSON) and --markdown. CPU only; refuses a partial run.")
+                    "(JSON) and --markdown. The paired share compares the twin's and the malicious "
+                    "record's logit margins (z1 - z0), counts an exact tie as one half, and is reported "
+                    "with the tie count and share; the strict share (ties as failures) is in the JSON. "
+                    "Standard deviations are population sd (ddof 0). CPU only; refuses a partial run, a "
+                    "condition missing or on other seeds than the run plans, or cells of more than one "
+                    "commit or thread count; a refusal logs its cause on standard error.")
     tables.add_argument("--run", type=Path, required=True, help="output directory of training run-folds")
     tables.add_argument("--bow", type=Path,
                         default=Path("datasets/raw/augmentation/review/bow_baseline_v1.json"))
@@ -247,8 +252,10 @@ def parser() -> argparse.ArgumentParser:
                     "round, seed): N0 scored as released, M0 once per seed on D0, M1 to M3 once per "
                     "round and seed on D0 plus the round's training families. Each cell writes its "
                     "checkpoint, held-out row and record predictions, released-test predictions and "
-                    "leak-excluded metrics, and a manifest last. Reruns skip complete cells. CPU only; "
-                    "--output must lie outside the repository and both caches.")
+                    "leak-excluded metrics, and a manifest last. Reruns skip complete cells; a sitting "
+                    "with another configuration, seed set, commit or thread count is refused. CPU only; "
+                    "--output must lie outside the repository and both caches; a refusal logs its cause "
+                    "on standard error.")
     folds_run.add_argument("--phase4-root", type=Path, required=True,
                            help="restored Phase 4 m0 artefact (adapted/ and features/)")
     folds_run.add_argument("--families", type=Path, required=True,
@@ -264,11 +271,13 @@ def parser() -> argparse.ArgumentParser:
     folds_run.add_argument("--trainer", choices=["torch", "fake"], default="torch",
                            help="torch on CPU (default) or the fake trainer for plumbing checks")
     folds_run.add_argument("--conditions", nargs="+", default=list(FOLD_CONDITIONS), choices=list(FOLD_CONDITIONS))
-    folds_run.add_argument("--seeds", type=int, nargs="+", help="subset of the experiment seeds")
+    folds_run.add_argument("--seeds", type=int, nargs="+",
+                           help="subset of the experiment seeds (default: all); fixed per output")
     folds_run.add_argument("--rounds", type=int, nargs="+", help="subset of the folds (default: all)")
     folds_run.add_argument("--epochs", type=int,
                            help="override the recipe's epochs (synthetic runs only; recorded in every cell)")
-    folds_run.add_argument("--threads", type=int, help="torch CPU threads (recorded)")
+    folds_run.add_argument("--threads", type=int,
+                           help="torch CPU threads; recorded and fixed per output (resume with the same value)")
     conformance = commands.add_parser("conformance").add_subparsers(dest="action", required=True)
     fake_test = conformance.add_parser("fake-released-test")
     fake_test.add_argument("--archive", type=Path, required=True)

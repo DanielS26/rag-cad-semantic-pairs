@@ -39,9 +39,17 @@ class FakeTrainer:
 
     @staticmethod
     def _probabilities(model: dict, features) -> np.ndarray:
-        logits = (np.asarray(features, dtype=np.float64) @ np.asarray(model["direction"]) + model["bias"]) * model["scale"]
+        logits = FakeTrainer._logits(model, features)
         positive = 1.0 / (1.0 + np.exp(-logits))
         return np.column_stack([1 - positive, positive]).astype(np.float32)
+
+    @staticmethod
+    def _logits(model: dict, features) -> np.ndarray:
+        return (np.asarray(features, dtype=np.float64) @ np.asarray(model["direction"]) + model["bias"]) * model["scale"]
+
+    def margins(self, trained: dict, features) -> np.ndarray:
+        """The logit of the malicious class over the benign class, as the torch trainer reports it."""
+        return self._logits(trained["model"], features)
 
     def predict(self, trained: dict, features) -> np.ndarray:
         return self._probabilities(trained["model"], features)

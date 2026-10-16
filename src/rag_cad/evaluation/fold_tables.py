@@ -7,7 +7,9 @@ rounds per condition and seed, and reports per condition:
 - random and keyword control false-alarm rates: share of each control record flagged;
 - malicious detection rate: share of malicious records flagged;
 - within-family paired share: share of families whose twin scores lower (more trustworthy) than
-  its malicious partner, strictly.
+  its malicious partner, compared on the logit margin z1 - z0 (unbounded, where the float32
+  probability saturates at 1.0); an exact tie counts one half (the AUC convention), the tie count
+  and share are reported beside it, and the strict share (ties as failures) is kept in the JSON.
 
 A record is flagged when any of its sentences scores strictly above the threshold, the passage
 filter's view (record basis, the primary table); the target basis uses the target sentence alone and
@@ -41,19 +43,19 @@ from rag_cad.training.fold_driver import (
 SCHEMA = "rag_cad.fold_tables/1"
 METRICS = ("twin_false_alarm", "random_control_false_alarm", "keyword_control_false_alarm",
            "malicious_detection", "paired_share")
+TIE_METRICS = ("paired_ties", "paired_tie_share", "paired_share_strict")
+ALL_METRICS = METRICS + TIE_METRICS
 LABELS = {"twin_false_alarm": "twin FA", "random_control_false_alarm": "random FA",
           "keyword_control_false_alarm": "keyword FA", "malicious_detection": "detection",
           "paired_share": "paired share"}
 KIND_METRIC = {"twin": "twin_false_alarm", "random_control": "random_control_false_alarm",
                "keyword_control": "keyword_control_false_alarm", "malicious": "malicious_detection"}
-BASES = {"record": ("flagged", "max_probability"), "target": ("target_flagged", "target_probability")}
+BASES = {"record": ("flagged", "max_margin"), "target": ("target_flagged", "target_margin")}
 TEST_HEADLINE = (("masked_average_precision", "upstream_masked", ("average_precision",)),
                  ("masked_tpr", "upstream_masked", ("at_threshold_strict", "tpr")),
                  ("all_rows_average_precision", "all_rows", ("average_precision",)),
                  ("all_rows_tpr", "all_rows", ("at_threshold_strict", "tpr")),
                  ("all_rows_fpr", "all_rows", ("at_threshold_strict", "fpr")))
-BOW_BREAKDOWNS = {"semantic_role": "per_role", "attack_category": "per_attack_category",
-                  "cue_position": "per_cue_position"}
 SEED_NONE = "none"
 
 
@@ -62,7 +64,8 @@ def _share(values: list[bool]) -> float | None:
 
 
 def family_metrics(records: list[dict], basis: str = "record") -> dict:
-    """The five figures over a set of held-out records; None where a record kind is absent."""
+    """The five figures and the tie counts over a set of held-out records; None where a record kind
+    is absent. The paired share compares margins: below counts one, an exact tie one half."""
     flag, score = BASES[basis]
     result = {}
     for kind, metric in KIND_METRIC.items():
@@ -73,7 +76,12 @@ def family_metrics(records: list[dict], basis: str = "record") -> dict:
         if record["record_kind"] in ("twin", "malicious") and record[score] is not None:
             pairs.setdefault(record["group_id"], {})[record["record_kind"]] = record[score]
     complete = [pair for pair in pairs.values() if len(pair) == 2]
-    result["paired_share"] = _share([pair["twin"] < pair["malicious"] for pair in complete])
+    ties = sum(pair["twin"] == pair["malicious"] for pair in complete)
+    below = sum(pair["twin"] < pair["malicious"] for pair in complete)
+    result["paired_share"] = round((below + 0.5 * ties) / len(complete), 6) if complete else None
+    result["paired_share_strict"] = round(below / len(complete), 6) if complete else None
+    result["paired_ties"] = ties if complete else None
+    result["paired_tie_share"] = round(ties / len(complete), 6) if complete else None
     result["families"] = len({record["group_id"] for record in records})
     result["paired_families"] = len(complete)
     return result
@@ -122,12 +130,12 @@ def pooled_records(cells: dict[str, dict], groups: set[str]) -> dict[str, dict[s
 
 
 def condition_table(seeds: dict[str, list[dict]], basis: str) -> dict:
-    per_seed, fold_values, slices = {}, {metric: [] for metric in METRICS}, {}
+    per_seed, fold_values, slices = {}, {metric: [] for metric in ALL_METRICS}, {}
     for seed, records in sorted(seeds.items()):
         folds = sorted({record["fold"] for record in records})
         per_fold = {str(fold): family_metrics([r for r in records if r["fold"] == fold], basis) for fold in folds}
         for values in per_fold.values():
-            for metric in METRICS:
+            for metric in ALL_METRICS:
                 fold_values[metric].append(values[metric])
         by = {name: {value: family_metrics([r for r in records if r[name] == value], basis)
                      for value in sorted({record[name] for record in records})} for name in BREAKDOWN_FIELDS}
@@ -136,32 +144,45 @@ def condition_table(seeds: dict[str, list[dict]], basis: str) -> dict:
             for value, metrics in values.items():
                 slices.setdefault(name, {}).setdefault(value, []).append(metrics)
     overall = {metric: {**_spread([entry["overall"][metric] for entry in per_seed.values()]),
-                        "fold_sd": _spread(fold_values[metric])["sd"]} for metric in METRICS}
-    by = {name: {value: {metric: _spread([entry[metric] for entry in entries]) for metric in METRICS}
+                        "fold_sd": _spread(fold_values[metric])["sd"]} for metric in ALL_METRICS}
+    by = {name: {value: {metric: _spread([entry[metric] for entry in entries]) for metric in ALL_METRICS}
                  for value, entries in values.items()} for name, values in slices.items()}
     families = {entry["overall"]["families"] for entry in per_seed.values()}
     return {"seeds": sorted(per_seed), "families": max(families), "overall": overall, "by": by,
             "per_seed": per_seed}
 
 
-def bow_row(bow: dict) -> dict:
-    """The bag-of-words baseline in the table's terms: a twin it calls malicious is a false alarm."""
-    def convert(block: dict) -> dict:
-        twin = block.get("twin_accuracy")
-        return {"twin_false_alarm": None if twin is None else round(1 - twin, 6),
-                "random_control_false_alarm": None, "keyword_control_false_alarm": None,
-                "malicious_detection": block.get("malicious_accuracy"), "paired_share": block.get("paired_share")}
+def bow_records(bow: dict) -> list[dict]:
+    """The baseline's scored families as held-out records in the heads' terms. Its log-odds margin is
+    positive for the twin, so the negated margin orders like a head's z1 - z0 (higher means more
+    malicious); a twin it calls malicious is a flag (a false alarm), a malicious record it calls
+    malicious is a detection."""
+    families = bow.get("families")
+    if not families:
+        raise ValueError("The bag-of-words baseline file must hold its scored families")
+    records = []
+    for family in families:
+        common = {"group_id": family["group_id"], "family_id": family["family_id"], "fold": family["fold"],
+                  **{name: family[name] for name in BREAKDOWN_FIELDS}}
+        records.append({**common, "record_id": f"{family['family_id']}:twin", "record_kind": "twin",
+                        "flagged": not family["twin_correct"], "max_margin": -family["margin_twin"]})
+        records.append({**common, "record_id": f"{family['family_id']}:malicious", "record_kind": "malicious",
+                        "flagged": bool(family["malicious_correct"]), "max_margin": -family["margin_malicious"]})
+    return records
 
-    overall = convert(bow["overall"])
-    folds = [convert(block) for block in bow["per_fold"].values()]
-    return {"seeds": [SEED_NONE], "families": bow["overall"]["families"],
-            "overall": {metric: {"mean": overall[metric], "sd": None if overall[metric] is None else 0.0,
-                                 "n": 0 if overall[metric] is None else 1,
-                                 "fold_sd": _spread([fold[metric] for fold in folds])["sd"]} for metric in METRICS},
-            "by": {name: {value: {metric: {"mean": convert(block)[metric], "sd": None, "n": 1}
-                                  for metric in METRICS}
-                          for value, block in bow[key].items()} for name, key in BOW_BREAKDOWNS.items()},
-            "note": "twin vs malicious only, no controls; deterministic, one value per figure"}
+
+def bow_row(bow: dict) -> dict:
+    """The bag-of-words baseline as the first row, computed with the heads' own rules from its scored
+    families (deterministic: one value per figure), and checked against the file's own summary."""
+    row = condition_table({SEED_NONE: bow_records(bow)}, "record")
+    overall, reference = row["overall"], bow["overall"]
+    if (abs(overall["twin_false_alarm"]["mean"] - (1 - reference["twin_accuracy"])) > 1e-4
+            or abs(overall["malicious_detection"]["mean"] - reference["malicious_accuracy"]) > 1e-4
+            or abs(overall["paired_share_strict"]["mean"] - reference["paired_share"]) > 1e-4):
+        raise ValueError("The bag-of-words families do not reproduce the file's summary")
+    row["note"] = ("twin vs malicious only, no controls; margins are the file's log-odds rounded to four "
+                   "decimals, so a tie may be a rounding tie")
+    return row
 
 
 def _metric(section: dict, path: tuple[str, ...]):
@@ -192,6 +213,23 @@ def _test_order(name: str):
     return (CONDITIONS.index(condition), rest == "all_rounds", rest)
 
 
+def check_complete(run_file: dict, pooled: dict) -> None:
+    """Every condition present, N0 once, and M0 to M3 each on exactly the run's planned seeds."""
+    planned = run_file["config"].get("seeds")
+    if planned is None:
+        raise ValueError("The run does not record its planned seeds; rerun it with this version")
+    expected = sorted(str(seed) for seed in planned)
+    missing = [condition for condition in CONDITIONS if condition not in pooled]
+    if missing:
+        raise ValueError(f"The run has no cells for {missing}; tables need every condition")
+    if sorted(pooled[N0]) != [SEED_NONE]:
+        raise ValueError("N0 must be scored once, without a seed")
+    for condition in CONDITIONS[1:]:
+        if sorted(pooled[condition]) != expected:
+            raise ValueError(f"{condition} holds seeds {sorted(pooled[condition])}, the run plans {expected}; "
+                             "M0 to M3 must share the planned seed set before tables are built")
+
+
 def build_tables(run: Path, bow_path: Path) -> dict:
     run_file, cells = load_run(run)
     bow = json.loads(local_path(bow_path).read_text(encoding="utf-8"))
@@ -200,33 +238,43 @@ def build_tables(run: Path, bow_path: Path) -> dict:
     groups = {record["group_id"] for manifest in cells.values()
               for record in read_jsonl(manifest["directory"] / HELD_RECORDS)}
     pooled = pooled_records(cells, groups)
-    order = [condition for condition in CONDITIONS if condition in pooled]
-    family = {basis: {"bow_baseline": bow_row(bow) if basis == "record" else None,
-                      **{condition: condition_table(pooled[condition], basis) for condition in order}}
+    check_complete(run_file, pooled)
+    commits = sorted({manifest["config"].get("commit") for manifest in cells.values()}, key=str)
+    threads = sorted({manifest["config"].get("threads") for manifest in cells.values()}, key=str)
+    if len(commits) != 1 or len(threads) != 1:
+        raise ValueError(f"Cells come from more than one commit {commits} or thread count {threads}")
+    family = {basis: {condition: condition_table(pooled[condition], basis) for condition in CONDITIONS}
               for basis in BASES}
-    family["target"].pop("bow_baseline")
+    family["record"] = {"bow_baseline": bow_row(bow), **family["record"]}
     timings = [manifest["timings_seconds"] for manifest in cells.values()]
     trained = [timing for timing in timings if timing["train"] > 0]
     return {"schema": SCHEMA, "run": str(local_path(run)), "config_fingerprint": run_file["config_fingerprint"],
             "mode": run_file["config"]["mode"], "trainer": run_file["config"]["trainer"],
             "epochs": run_file["config"]["recipe"]["epochs"], "threshold": run_file["config"]["threshold"],
+            "seeds": run_file["config"]["seeds"], "commit": commits[0], "threads": threads[0],
             "folds_sha256": run_file["config"]["folds_sha256"], "bow_baseline_sha256": sha256(local_path(bow_path)),
             "cells": len(cells), "cells_by_condition": {condition: sum(m["condition"] == condition
-                                                                       for m in cells.values()) for condition in order},
+                                                                       for m in cells.values())
+                                                        for condition in CONDITIONS},
             "families": len(groups),
             "cell_seconds": {"trained_cells": len(trained),
                              "mean_train": _spread([timing["train"] for timing in trained])["mean"],
                              "mean_total": _spread([timing["total"] for timing in timings])["mean"],
                              "max_total": round(max(timing["total"] for timing in timings), 3)},
-            "definitions": {"record_basis": "a record is flagged when any sentence scores strictly above the "
-                                            "threshold; paired share compares the records' maximum probabilities",
+            "definitions": {"record_basis": "a record is flagged when any sentence's probability is strictly "
+                                            "above the threshold; its margin is its highest sentence margin",
                             "target_basis": "the target sentence alone; twin and malicious records only",
-                            "paired_share": "share of families whose twin scores strictly lower (more "
-                                            "trustworthy) than its malicious partner",
-                            "spread": "mean over seeds; sd is the population sd over seeds; fold_sd is the "
-                                      "population sd over the per-fold values of every seed",
+                            "margin": "malicious-class logit minus benign-class logit (z1 - z0), float64; "
+                                      "for the baseline, its negated log-odds of twin",
+                            "paired_share": "share of families whose twin's margin is below its malicious "
+                                            "partner's (more trustworthy); an exact tie counts one half",
+                            "paired_share_strict": "the same with ties counted as failures",
+                            "paired_ties": "families whose twin and malicious margins are exactly equal",
+                            "spread": "mean over seeds; sd is the population sd (ddof 0) over seeds; fold_sd "
+                                      "is the population sd over the per-fold values of every seed, so it "
+                                      "mixes seed and fold variation",
                             "released_test": "leak-excluded as evaluation leak-excluded: full, minus_verbatim, "
-                                             "minus_near; mean and sd over seeds"},
+                                             "minus_near; mean and population sd over seeds"},
             "family_tables": family, "released_test": released_test_table(cells)}
 
 
@@ -245,34 +293,53 @@ NAMES = {"bow_baseline": "BoW baseline", N0: "N0 released", M0: "M0 base", "m1_r
          "m2_keyword": "M2 keyword", "m3_semantic": "M3 semantic"}
 
 
+def _ties(table: dict) -> str:
+    ties, share = table["paired_ties"], table["paired_tie_share"]
+    if ties.get("mean") is None:
+        return "n/a"
+    return f"{ties['mean']:g} ({share['mean']:.3f})"
+
+
+COLUMNS = ("twin_false_alarm", "random_control_false_alarm", "keyword_control_false_alarm",
+           "malicious_detection", "ties", "paired_share")
+TARGET_COLUMNS = ("twin_false_alarm", "malicious_detection", "ties", "paired_share")
+
+
+def _row(entry: dict, columns, *, fold: bool) -> str:
+    return " | ".join(_ties(entry) if column == "ties" else _cell(entry[column], fold=fold) for column in columns)
+
+
 def markdown(tables: dict) -> str:
+    labels = {**LABELS, "ties": "ties (share)"}
     lines = [f"# Fold tables ({tables['mode']}, {tables['trainer']} trainer, {tables['epochs']} epochs)", "",
-             f"Cells: {tables['cells']}; families: {tables['families']}; config {tables['config_fingerprint'][:12]}.",
-             "Values are the mean over seeds, ± the seed sd when there is more than one seed, and (f ...) the "
-             "sd over the per-fold values. A record is flagged when any sentence scores above the threshold.", ""]
-    def overall(basis: str, metrics=METRICS):
-        lines.extend(["| row | " + " | ".join(LABELS[metric] for metric in metrics) + " |",
-                      "|" + "---|" * (len(metrics) + 1)])
+             f"Cells: {tables['cells']}; families: {tables['families']}; seeds: {tables['seeds']}; "
+             f"commit {str(tables['commit'])[:12]}; threads {tables['threads']}; "
+             f"config {tables['config_fingerprint'][:12]}.",
+             "A record is flagged when any sentence's probability is above the threshold. The paired share "
+             "compares the twin's and the malicious record's logit margins; an exact tie counts one half, "
+             "and the ties column gives the mean tie count and share.", ""]
+
+    def overall(basis: str, columns):
+        lines.extend(["| row | " + " | ".join(labels[column] for column in columns) + " |",
+                      "|" + "---|" * (len(columns) + 1)])
         for name, table in tables["family_tables"][basis].items():
-            lines.append(f"| {NAMES[name]} | " + " | ".join(_cell(table["overall"][m]) for m in metrics) + " |")
+            lines.append(f"| {NAMES[name]} | " + _row(table["overall"], columns, fold=True) + " |")
         lines.append("")
 
-    lines.append("## Held-out families, pooled over rounds (record basis)")
-    lines.append("")
-    overall("record")
+    lines.extend(["## Held-out families, pooled over rounds (record basis)", ""])
+    overall("record", COLUMNS)
     for name in BREAKDOWN_FIELDS:
         lines.extend([f"### By {name.replace('_', ' ')}", "", "| slice | row | " +
-                      " | ".join(LABELS[metric] for metric in METRICS) + " |", "|" + "---|" * (len(METRICS) + 2)])
+                      " | ".join(labels[column] for column in COLUMNS) + " |", "|" + "---|" * (len(COLUMNS) + 2)])
         values = sorted({value for table in tables["family_tables"]["record"].values() for value in table["by"][name]})
         for value in values:
             for row, table in tables["family_tables"]["record"].items():
                 entry = table["by"][name].get(value)
                 if entry is not None:
-                    lines.append(f"| {value} | {NAMES[row]} | " +
-                                 " | ".join(_cell(entry[m], fold=False) for m in METRICS) + " |")
+                    lines.append(f"| {value} | {NAMES[row]} | " + _row(entry, COLUMNS, fold=False) + " |")
         lines.append("")
     lines.extend(["## Held-out families, target sentence basis (twin and malicious only)", ""])
-    overall("target", ("twin_false_alarm", "malicious_detection", "paired_share"))
+    overall("target", TARGET_COLUMNS)
     lines.extend(["## Released CAD test", "",
                   "Leak-excluded (minus_near: test records whose malicious sentences are verbatim or near "
                   "duplicates of D0 training sentences removed) beside the full set; strict threshold.", "",
@@ -283,16 +350,30 @@ def markdown(tables: dict) -> str:
             section = entry[exclusion]
             lines.append(f"| {name} | {exclusion} | {section['rows']} | " + " | ".join(
                 _cell(section[label], fold=False) for label, _, _ in TEST_HEADLINE) + " |")
+    lines.extend(["", "Spread: values are the mean over seeds; ± is the population standard deviation (ddof 0) "
+                      "over seeds, shown when there is more than one seed; (f ...) is the population standard "
+                      "deviation over the per-fold values of every seed, which mixes seed and fold variation."])
     return "\n".join(lines) + "\n"
 
 
 def fold_tables_command(args) -> dict:
+    """CLI body of evaluation fold-tables; a refusal logs its cause before the CLI exits 2."""
+    from rag_cad.training.fold_driver import REFUSALS, log_refusal
+
+    try:
+        return _fold_tables(args)
+    except REFUSALS as error:
+        log_refusal("evaluation fold-tables", error)
+        raise
+
+
+def _fold_tables(args) -> dict:
     for path in (args.run, args.bow, args.output, args.markdown):
         local_path(path)
     tables = build_tables(args.run, args.bow)
     write_json(args.output, tables)
     with local_path(args.markdown).open("x", encoding="utf-8", newline="\n") as handle:
         handle.write(markdown(tables))
-    return {key: tables[key] for key in ("schema", "mode", "trainer", "epochs", "cells", "cells_by_condition",
-                                          "families", "cell_seconds")} | {"output": str(args.output),
+    return {key: tables[key] for key in ("schema", "mode", "trainer", "epochs", "seeds", "commit", "threads",
+                                          "cells", "cells_by_condition", "families", "cell_seconds")} | {"output": str(args.output),
                                                                           "markdown": str(args.markdown)}
