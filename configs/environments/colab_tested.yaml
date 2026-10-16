@@ -1,6 +1,7 @@
-# Tested Colab environment profile re-frozen from Run A and Run B of 4 October 2026 (D-20261004-18);
-# first frozen from the a822b9a0 pass (D-20260922-12). Final stages require this profile and the
-# compute budget pools of D-20261004-17, approved below.
+# Tested Colab environment profile re-frozen from Run A and Run B of 16 October 2026 (D-20261017-52);
+# previously frozen from the e7d45fc8 pass (D-20261004-18) and first from the a822b9a0 pass
+# (D-20260922-12). Final stages require this profile and the compute budget pools of
+# D-20261004-17, approved below.
 status: tested
 approved: true
 approved_by: Daniel Song
@@ -52,10 +53,10 @@ tolerance:
   atol: 0.000001
   rtol: 0.00001
 evidence:
-  run_a_manifest_sha256: 32d91cae4056f3cbc223f08d09ef22e639a9e83fc92fac0e2cabc22ea686b5aa
-  run_b_manifest_sha256: d08ef5f3a9164356389e1e2213b453fa024546d482bf7a9a43bbb598618c994b
+  run_a_manifest_sha256: ea55c8dffa0fb21b25da27455f9bcae6dc26a66b46403629ff7e2f074ced92f9
+  run_b_manifest_sha256: 4985d134d86416465cda49822252377e45ee34d0722e2acbf0a76713c2cd5a72
   lock_sha256: 1b270c043e4cbe273dd7c5e67b6f720bd9ec18a2b105ffcc83a7900d746f11e9
-  reviewed_commit: e7d45fc84464cbad027eeafc47bcb9a7f93754e6
-  run_a_run_id: 20261004T083811Z_e7d45fc8_smoke_fe6f6a3d
-  run_b_run_id: 20261004T083811Z_e7d45fc8_smoke-run-b_fe6f6a3d
-  environment_id: d95a1d816fd98cbde914a4491becd40cd6ae4e3fad7e60a94b164ba86a158614
+  reviewed_commit: 2ffa63a2524b271651b45143d098e649a4715ffd
+  run_a_run_id: 20261016T123931Z_2ffa63a2_smoke_fe6f6a3d
+  run_b_run_id: 20261016T123931Z_2ffa63a2_smoke-run-b_fe6f6a3d
+  environment_id: 52277f9752e70fc7c981d026d649bc3f0ed0425cd8650577bea6eb25e955d4f5

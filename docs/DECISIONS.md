@@ -816,3 +816,18 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song, 2026-10-17 ("start phase 6").
 - Related files, commands, results, correspondence, or commit: [split module](../src/rag_cad/data/split.py), [experiment config](../configs/experiment.yaml), [data card](DATA_CARD.md); D-20261013-28; D-20261016-47; D-20261016-49.
 - Supersedes / superseded by: Nothing superseded.
+
+## D-20261017-52 - Gate rerun from 2ffa63a2 under pool A and the re-frozen tested profile
+
+- Status: Confirmed
+- Date: 2026-10-17
+- Project phase: Phase 6
+- Category: Infrastructure; Budget
+- Decision or important note: (a) Daniel Song authorised and ran the smoke gate again from main 2ffa63a2524b271651b45143d098e649a4715ffd under pool A on 2026-10-17, because the tested profile frozen from the e7d45fc8 pass no longer matched src/rag_cad after the Phase 5 and Phase 6 changes and the preflight would have refused the features stage. Run A (20261016T123931Z_2ffa63a2_smoke_fe6f6a3d, 258 s) published and verified; Run B (20261016T123931Z_2ffa63a2_smoke-run-b_fe6f6a3d, 339 s) restored Run A in a fresh runtime and matched its predictions. Both ran on an NVIDIA L4 with the unchanged candidate lock (sha256 1b270c04...), encoder weights ab036b02 and code bd55a5ec as in Phase 4, environment id 52277f97..., profile hash 5381ed8b...; the representation-mode comparison repeated the Phase 4 picture (isolated block identical, contextual maximum difference 0.11, both modes deterministic). (b) The tested profile is re-frozen from this pass: reviewed commit 2ffa63a2, Run A manifest sha256 ea55c8dffa0fb21b25da27455f9bcae6dc26a66b46403629ff7e2f074ced92f9, Run B manifest sha256 4985d134d86416465cda49822252377e45ee34d0722e2acbf0a76713c2cd5a72, lock and encoder pins unchanged; the change touches configs, tests and docs only, as D-20261004-18 requires, and the merge commit of this change is the commit Y from which the features stage runs. (c) Budget: the two runs cost 597 connected seconds and 0.2 compute units (0.1 each, as on 4 October); pool A stands at 1,677 s and 0.4 units of its 21,600 s and 12 units.
+- Context and reason: docs/PHASE6_FEATURES_PLAN.md steps 1 to 3; D-20260922-12 and D-20261004-18 on gate passes and final stages.
+- Evidence: the two published smoke artefacts on Drive (run ids above); the summary cells Daniel Song reported on 2026-10-17; configs/environments/colab_tested.yaml at this change.
+- Alternatives considered: running the features stage from the stale profile (the preflight forbids it); freezing without Run B (Run B is the restore proof the gate requires).
+- Consequences for implementation/evaluation/report: the features stage and later GPU stages run from commit Y; the report's budget table gains these two runs.
+- Approved by: Daniel Song, 2026-10-17 (ran the gate and supplied the Run B marker hash and the unit figure).
+- Related files, commands, results, correspondence, or commit: [tested profile](../configs/environments/colab_tested.yaml), [runbook](COLAB_RUNBOOK.md), [features plan](PHASE6_FEATURES_PLAN.md); D-20261004-17; D-20261004-18; D-20261017-51.
+- Supersedes / superseded by: Supersedes the e7d45fc8 freeze as the current gate pass; nothing else superseded.

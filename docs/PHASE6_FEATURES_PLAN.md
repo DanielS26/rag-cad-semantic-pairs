@@ -157,6 +157,9 @@ The ordered steps for the Colab session; each Colab step needs Daniel Song's exp
 3. Re-freeze the tested profile from the X pass (reviewed commit X, Run A and Run B manifest
    hashes) in a change that touches only configs, docs and tests, with a decision entry; merge it
    and note commit Y. The code-identity check against X then holds at Y.
+   Done: X is 2ffa63a2524b271651b45143d098e649a4715ffd (gate pass of 16 October 2026, Run A
+   258 s and Run B 339 s under pool A); the profile is re-frozen from it; Y is the merge commit of
+   the re-freeze pull request (to be filled at merge).
 4. Features stage from Y under pool C (Phases 5 and 6; 21,600 s and 12 units, unused), in a fresh
    L4 runtime (the tested profile pins NVIDIA L4; another GPU fails at preflight after installation
    and tests). Before it, confirm on CPU that test_tested_profile_reproduces_the_phase4_identity
