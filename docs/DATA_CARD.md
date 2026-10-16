@@ -829,3 +829,48 @@ the paired share to 0.84, but the bag-of-words baseline still does better on the
 full tables (by role, attack category and cue position, the target-sentence basis and the released
 CAD test), the driver report and the per-cell predictions are in
 docs/archive/phase7_results_2026-10-17/. The interpretation is recorded in the decision log.
+
+## Results in the retrieval pipeline (repo_compatible)
+
+The Phase 7 heads were run as gates in a retrieval pipeline on the laptop CPU (commit cfd34d8,
+17 October 2026, 9 s). Each round's store holds the 160 records of the 40 held-out families plus 56
+distractor passages, 216 documents; five documents are retrieved per query. Pooled over rounds,
+mean over seeds:
+
+Document gate (drop a flagged document):
+
+| row | injected pass-through | twin loss | random loss | keyword loss | family context survival | context survival (all slots) | distractor loss | distractor context |
+|---|---|---|---|---|---|---|---|---|
+| no gate | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 1.000 | 0.000 | 1.000 |
+| BoW baseline | 0.270 | 0.185 | 0.000 | 0.000 | 0.779 | 0.802 | 0.000 | 1.000 |
+| N0 released | 0.321 | 0.492 | 0.593 | 0.507 | 0.427 | 0.483 | 0.049 | 0.955 |
+| M0 base | 0.292 ± 0.019 | 0.513 ± 0.011 | 0.598 ± 0.028 | 0.517 ± 0.026 | 0.410 ± 0.018 | 0.468 ± 0.016 | 0.049 ± 0.000 | 0.955 ± 0.000 |
+| M1 random | 0.071 ± 0.006 | 0.945 ± 0.010 | 0.023 ± 0.010 | 0.054 ± 0.018 | 0.436 ± 0.005 | 0.489 ± 0.003 | 0.073 ± 0.014 | 0.936 ± 0.012 |
+| M2 keyword | 0.053 ± 0.020 | 0.935 ± 0.008 | 0.042 ± 0.001 | 0.032 ± 0.012 | 0.436 ± 0.005 | 0.488 ± 0.005 | 0.073 ± 0.006 | 0.935 ± 0.005 |
+| M3 semantic | 0.275 ± 0.007 | 0.493 ± 0.005 | 0.042 ± 0.014 | 0.021 ± 0.008 | 0.643 ± 0.006 | 0.676 ± 0.005 | 0.051 ± 0.001 | 0.953 ± 0.002 |
+
+Sentence filter (remove sentences above 0.5):
+
+| row | injected pass-through | twin loss | random loss | keyword loss | family context survival | context survival (all slots) | distractor loss | distractor context |
+|---|---|---|---|---|---|---|---|---|
+| no gate | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 1.000 | 0.000 | 1.000 |
+| N0 released | 0.600 | 0.392 | 0.593 | 0.507 | 0.789 | 0.810 | 0.049 | 0.989 |
+| M0 base | 0.567 ± 0.015 | 0.421 ± 0.014 | 0.598 ± 0.028 | 0.517 ± 0.026 | 0.779 ± 0.013 | 0.801 ± 0.012 | 0.049 ± 0.000 | 0.989 ± 0.000 |
+| M1 random | 0.071 ± 0.006 | 0.943 ± 0.009 | 0.023 ± 0.010 | 0.054 ± 0.018 | 0.897 ± 0.002 | 0.906 ± 0.002 | 0.073 ± 0.014 | 0.982 ± 0.005 |
+| M2 keyword | 0.055 ± 0.022 | 0.934 ± 0.009 | 0.042 ± 0.001 | 0.032 ± 0.012 | 0.900 ± 0.001 | 0.909 ± 0.001 | 0.073 ± 0.006 | 0.981 ± 0.004 |
+| M3 semantic | 0.275 ± 0.007 | 0.487 ± 0.006 | 0.042 ± 0.014 | 0.021 ± 0.008 | 0.947 ± 0.002 | 0.952 ± 0.001 | 0.051 ± 0.001 | 0.988 ± 0.000 |
+
+The released scorer and the retrained base stop about two thirds of injected documents only by
+discarding half of the harmless ones. The random and keyword counterparts stop 93 to 95 percent of
+injections but lose almost every twin. The semantic counterparts keep 95 percent of the harmless
+family context under the sentence filter while stopping 72 percent of injections; the
+bag-of-words baseline under the document gate reaches a similar pass-through with less twin loss.
+
+Limitations: the released CAD test has no wholly benign record, so the distractors are the benign
+remainders of leak-excluded test records, of which only 23 distinct ones exist, cut into 56
+passages and scored in their injected context. No query embedding is cached, so each query is
+placed at the mean of the five store sentences it matches best by TF-IDF; its own record's
+sentences are among them, so hit@5 (0.771, 0.241 with them masked) describes this proxy, not the
+retriever. Retrieval is identical for every row, so the gate comparisons do not depend on it. The
+full tables, slices and retrievals are in docs/archive/phase8_results_2026-10-17/. The
+interpretation is recorded in the decision log.
