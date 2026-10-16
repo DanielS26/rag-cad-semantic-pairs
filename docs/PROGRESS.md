@@ -3420,3 +3420,45 @@ Historical audit claims are distinguished from checks executed in this session.
 - Docs: plan steps 4 and 5 marked done, runbook records the run, data card
   adds "Encoded features"
 - Phase 6 closed. Next: Phase 7 heads on the restored features
+
+## 2026-10-17 - Phase 7: fold training driver and table builder
+
+- Scope: the Phase 7 build step of D-20261017-55 on branch phase7-training;
+  no real training yet, which waits for an independent review
+- Two-cache reader (rag_cad.training.two_cache): reads the Phase 4 root
+  (D0 24,665 rows, released test 9,776 rows) and the family artefact (four
+  pools, assembled M1 to M3 sets) only after their identities agree on
+  representation_id, encoder and code revisions, segmenter and dtype;
+  refuses with a report otherwise; joins family rows to folds_v1 by
+  group_id. Read-only load of the real caches: identity match, 3.0 s,
+  1,114 to 1,134 family training rows per round; paper_exact is refused
+  because the Phase 4 root holds repo_compatible only
+- Driver (training run-folds): N0 scored, M0 once per seed, M1 to M3 once
+  per round and seed with the existing torch trainer on CPU; one artefact
+  per cell with checkpoint, held-out row and record predictions (all four
+  record kinds), released-test predictions and leak-excluded metrics, and
+  a manifest written last; complete cells skipped on rerun, cells of
+  another configuration refused; two runs of one cell byte-identical
+- Tables (evaluation fold-tables): twin, random and keyword false-alarm
+  rates, detection rate and within-family paired share, pooled over
+  rounds, overall and by attack category, role and cue position, mean
+  with seed and fold spread; bag-of-words baseline first, paired share
+  last; target-sentence basis beside the record basis; released CAD test
+  table (N0, M0, M1 to M3 per round), minus_near beside full
+- Synthetic end to end (fake caches, torch trainer, seed 0, five rounds,
+  3 epochs): 17 cells, exit 0, 0.36 s per cell, rerun skipped all 17;
+  archived under docs/archive/phase7_synthetic_2026-10-17/ (no scientific
+  meaning)
+- Real-run estimate: one 30-epoch fit of 25,799 rows takes 58.5 s on the
+  laptop CPU; 48 trained cells about 48 minutes, about one hour in all;
+  commands in docs/PHASE7_TRAINING_PLAN.md, output under C:\p7\
+- Review of the pull request applied: the paired share compares logit
+  margins (float32 probabilities saturate at 1.0 and tie), an exact tie
+  counts one half, tie count and share reported beside it, strict share
+  kept in the JSON; the pinned N0 hash, planned seeds, commit and thread
+  count fixed per output; manifests written atomically; tables refuse a
+  missing condition or unequal seeds; refusals log their cause; plan
+  command sets --threads 6; synthetic archive regenerated
+- Tests: 358 passed (10 new); ruff clean
+- Next: the tie rule into a decision entry, then the real run on the
+  laptop

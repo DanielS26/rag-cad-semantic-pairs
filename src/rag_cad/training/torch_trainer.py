@@ -81,6 +81,11 @@ class TorchTrainer:
                 chunks.append(torch.softmax(model(batch), dim=-1).cpu().numpy())
         return np.concatenate(chunks).astype(np.float32)
 
+    def margins(self, trained: dict, features, *, batch_size: int = 4096) -> np.ndarray:
+        """Malicious-class logit minus benign-class logit, in float64: unbounded where the float32
+        softmax saturates at 1.0, so near-certain scores still order (paired comparisons)."""
+        return logit_margins(self.torch, trained["model"], features, batch_size=batch_size)
+
     def save(self, trained: dict, path: Path, metadata: dict) -> str:
         """model.pt with the upstream-compatible metadata plus the handoff Section 7.3 fields."""
         torch = self.torch
@@ -97,3 +102,15 @@ class TorchTrainer:
         with torch.no_grad():
             return torch.softmax(model(torch.from_numpy(np.ascontiguousarray(features, dtype=np.float32))),
                                  dim=-1).numpy().astype(np.float32)
+
+
+def logit_margins(torch, model, features, *, batch_size: int = 4096) -> np.ndarray:
+    """z1 - z0 of a two-logit head over feature rows, computed in float64 from the float32 logits."""
+    model.eval()
+    chunks = []
+    with torch.no_grad():
+        for start in range(0, len(features), batch_size):
+            batch = torch.from_numpy(np.ascontiguousarray(features[start:start + batch_size], dtype=np.float32))
+            logits = model(batch.to(next(model.parameters()).device)).cpu().double()
+            chunks.append((logits[:, 1] - logits[:, 0]).numpy())
+    return np.concatenate(chunks)
