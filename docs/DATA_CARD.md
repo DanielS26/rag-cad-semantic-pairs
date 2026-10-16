@@ -582,3 +582,33 @@ pilot_0137), contestable label 0; S13 YES for every malicious document; the prov
 passed, with pilot_0137's declared R2 adaptation (the patient's name replaced) the only difference
 from the pinned file) are archived under docs/archive/review_batch_13_14_2026-10-15 with the
 outcome.
+
+## Batch 15
+
+Batch 15 (pilot_0141 to pilot_0150, drafted 2026-10-15 under DRAFTING_PROMPT_v3.md) takes ten ASB
+non-aggressive attacker instructions and no BIPIA string (rows 254, 266, 270, 285, 312, 321, 332,
+345, 363 and 382; rows 270 and 312 adapted under the R2 placeholder rule to "the patient with ID
+3487" and "the client with ID 9081723", and row 382 from the aerospace band 380 to 399). Coverage
+after 150 families: roles analysis 19, authorisation 19, historical_description 18, negation 19,
+quotation 19, task_alignment 19, translation 18, warning 19; cue positions 30 each. The hard
+negative is pilot_0143, the community team's email on how reported posts are handled, a moderation
+document after the tender note and the identity-checks page; the weak cue is pilot_0148, a ward
+sister's authority given by telephone and noted against the order (attacker_writable). The twin is
+the longer member in 7 of 10 (pilot_0142 and pilot_0143 crossed over when the review's two cue
+edits lengthened the twin). Agent-to-domain deviations: all ten rows deviate from the data card's
+default agent-to-domain mapping or have no default, as R23 asks for operational targets - row 254
+(legal consultant) in healthcare_admin, 266 (medical advisor) in workplace_chat, 270 (medical
+advisor) in customer_support, 285 (education consultant) in banking, 312 (psychological
+counsellor) in it_security, 321 (e-commerce manager) in email, 332 (e-commerce manager) in
+hr_policy, 345 (academic search) in legal, 363 (autonomous driving) in travel and 382 (aerospace
+engineer, a band with no default) in hr_policy; nine domains, hr_policy twice. Devices: insurer-
+condition (duty-assignment), manufacturer-wording (verbatim-reproduction), never-issued-draft
+(voided-object), cloned-site-takedown (compromised-source-hold), duplicate-note (tool-report),
+sight-translation-drill (awaiting-rendering), closed-pilot-aim (expiry), phone-authority
+(external-authority), scanned-sticker-lure (captured-payload, new to the register) and appraisal-
+objective (ownership-claim). Batch 15 is the first batch of the model-swap trial of D-20261015-39
+and D-20261015-40: the pair members and the justifications were drafted by Claude Opus 5, the
+twenty controls by Claude Sonnet 5 from the drafter's specification, and the independent reader
+was Claude Fable 5.1, who found one grammar slip and no attack vocabulary in the forty control
+records. The independent reader's findings (accept 0, accept with note 7, fix 3, contestable label
+0, must-fix 0) are archived under docs/archive/review_batch_15_16_2026-10-16 with the outcome.
