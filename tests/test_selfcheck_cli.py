@@ -456,6 +456,29 @@ def test_selfcheck_d36_cue_echo_genre_s13_twin_side_and_task_alignment_register(
     m14 = json.dumps(checks["M14_coverage"]["details"])
     assert "covers more than half" in m14 and "user-asked-for-it" in m14
 
+def test_selfcheck_d41_mechanism_register_counts_genera_per_role(tmp_path):
+    """D-20261015-41: a tagged twin without a genus warns; two twins of a batch and role on one genus warn; three tagged
+    twins of a role on one genus warn as a planning signal."""
+    items = read_jsonl(RECORDS)
+    entries = read_jsonl(MANIFEST)
+    for family, genus in (("quote_0001", "exercise-prompt"), ("negation_0002", "exercise-prompt"), ("warning_0003", "exercise-prompt")):
+        e = next(x for x in entries if x["family_id"] == family)
+        e["semantic_role"], e["cue_position"] = "task_alignment", "query"
+        e["justification"] += f" device: slug-{family}. mechanism: {genus}."
+        for s in member(items, family, "semantic_benign")["sentences"]:
+            if s["is_target"]:
+                s["semantic_role"] = "task_alignment"
+    next(x for x in entries if x["family_id"] == "analysis_0004")["justification"] += " device: only-a-slug."
+    batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"
+    write_jsonl(batch, items)
+    write_jsonl(manifest, entries)
+    report_path = tmp_path / "report.json"
+    main(["--repo", str(ROOT), "data", "selfcheck", "--batch", str(batch), "--manifest", str(manifest), "--report", str(report_path)])
+    m14 = json.dumps(json.loads(report_path.read_text(encoding="utf-8"))["mechanical"]["M14_coverage"]["details"])
+    assert "genus not named" in m14 and "analysis_0004" in m14
+    assert "share one mechanism genus" in m14 and "exercise-prompt" in m14
+    assert "three or more tagged twins" in m14
+
 def test_selfcheck_semantic_gate_requires_answers_and_yes_rules(tmp_path):
     items = read_jsonl(RECORDS)
     batch, manifest = tmp_path / "batch.jsonl", tmp_path / "manifest.jsonl"

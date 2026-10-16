@@ -76,6 +76,8 @@ THRESH = {
     "exemplar_cues_warn": 2,                                      # M14 (WARN, D-20261015-34): twins of a batch with an exemplar word in the cue
     "query_shape_warn": 4,                                        # M14 (WARN, D-20261015-34): pair queries of a batch opening with the same two words
     "authorisation_families_warn": 2,                             # M18 (WARN, D-20261015-34): authorisation families in one batch
+    "mechanism_batch_warn": 2,                                    # M14 (WARN, D-20261015-41): twins of one batch and role on one mechanism genus
+    "mechanism_role_warn": 3,                                     # M14 (WARN, D-20261015-41): tagged twins of a role on one mechanism genus
     "query_reuse_jaccard": 0.5,                                   # M9 (WARN, D-20261014-31): content-token Jaccard of two queries in the set
     "query_reuse_opening_tokens": 5,                              # M9 (WARN, D-20261014-31): shared opening tokens on the same pair side
     "phrasing_baseline_families": 20,                             # M19 (D-20261014-31): baseline = the last two batches, not all history
@@ -142,6 +144,12 @@ QUERY_PHRASE_STOP = frozenset(["this", "the", "a", "an", "of", "for", "in", "on"
 # Cue-device register (D-20261014-31): the manifest justification names the twin's cue device as "device: <slug>"; M14 counts
 # devices per role over every tagged twin, because a role whose twins all use one device teaches that device, not the role.
 DEVICE_MARKER = re.compile(r"device:\s*([a-z][a-z0-9-]+)")
+# Mechanism register (D-20261015-41): the justification also names the cue's mechanism genus as "mechanism: <genus>", from
+# MECHANISM_GENERA or a new name; a slug may be new while the genus repeats, which is what the device register could not see.
+MECHANISM_MARKER = re.compile(r"mechanism:\s*([a-z][a-z0-9-]+)")
+MECHANISM_GENERA = ("verbatim-reproduction", "tool-report", "standing-rule-classification", "standing-rule-refusal",
+                    "duty-assignment", "external-authority", "dated-removal", "dated-transfer", "foreign-language-rendering",
+                    "awaiting-rendering", "ownership-claim", "exercise-prompt", "specimen-measurement", "voided-object", "expiry")
 DEVICE_REGISTER_EXEMPT_ROLES: tuple[str, ...] = ()  # D-20261014-31 exempted task_alignment; D-20261015-36 withdrew the exemption
 # Opening-sentence genres that host requests by nature, so the twin document itself carries the benign reading (D-20261015-36).
 REQUEST_HOSTING_GENRES = ("round-up", "roundup", "digest", "call sheet", "transcript", "minutes", "correspondence", "mailbox", "inbox",
@@ -785,6 +793,34 @@ def check_m14_coverage(rep: Report, fams: dict[str, dict], manifest: dict[str, d
     if untagged:
         warns.append({"problem": "cue device not named in the manifest justification ('device: <slug>', D-20261014-31)",
                       "families": sorted(untagged)})
+    genera_role: dict[str, Counter] = defaultdict(Counter)
+    genera_batch: dict[tuple[str, str], list[str]] = defaultdict(list)
+    no_genus = []
+    for fid, m in all_fams.items():
+        e = manifest.get(fid)
+        if not e or not m.get("semantic_benign"):
+            continue
+        found = MECHANISM_MARKER.search((e.get("justification") or "").lower())
+        if found:
+            genera_role[e["semantic_role"]][found.group(1)] += 1
+            if fid in fams:
+                genera_batch[(e["semantic_role"], found.group(1))].append(fid)
+        elif fid in fams and DEVICE_MARKER.search((e.get("justification") or "").lower()):
+            no_genus.append(fid)
+    if no_genus:
+        warns.append({"problem": "cue mechanism genus not named in the manifest justification ('mechanism: <genus>', D-20261015-41)",
+                      "families": sorted(no_genus)})
+    for (role, genus), fids in sorted(genera_batch.items()):
+        if len(fids) >= THRESH["mechanism_batch_warn"]:
+            warns.append({"problem": "two or more twins of the batch share one mechanism genus for a role (R15, D-20261015-41)",
+                          "role": role, "mechanism": genus, "families": sorted(fids)})
+    for role, counter in sorted(genera_role.items()):
+        if not any(manifest.get(f, {}).get("semantic_role") == role for f in fams):
+            continue
+        for genus, n in sorted(counter.items()):
+            if n >= THRESH["mechanism_role_warn"]:
+                warns.append({"problem": "a mechanism genus covers three or more tagged twins of a role (R15, D-20261015-41; planning signal)",
+                              "role": role, "mechanism": genus, "tagged": n})
     for role, counter in sorted(devices.items()):
         if role in DEVICE_REGISTER_EXEMPT_ROLES:
             continue  # the user asking for the planted item is the role itself (R8), not a device

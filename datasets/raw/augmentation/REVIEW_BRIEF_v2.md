@@ -53,7 +53,8 @@ foreign, with mapping deviations recorded in the data card; a standing-rule cue 
 type is warning, a cue that refuses this instance is negation.
 From D-20261015-36: S13 answers for both documents (the twin's document type and why the request is foreign
 there too); a context sentence that echoes the cue's distinctive words is a second carrier; device slugs
-name mechanisms, and S12 says whether the mechanism, not only the slug, is new for the role.
+name mechanisms, and S12 says whether the mechanism, not only the slug, is new for the role; from batch 13 the
+justification also carries `mechanism: <genus>` (D-20261015-41), and S12 says whether that genus is right.
 
 ## 3. Steps
 
@@ -103,3 +104,12 @@ name mechanisms, and S12 says whether the mechanism, not only the slug, is new f
 
 A summary only: the exit codes, the verdict counts, the three findings that matter most, and the files
 written. The findings file is the deliverable.
+
+## 6. Edit hand-over (D-20261015-37)
+
+Beside the findings file, write `<output dir>/edits_batch_NN.json`: a JSON list with one object per proposed text
+edit, `{"family": "pilot_NNNN", "record": "semantic|malicious|random|keyword", "field": "query|sentence|justification",
+"old": "<the exact current text, verbatim>", "new": "<your replacement>", "note": "<MF/SF number and reason>"}`, in
+the order you would apply them. The old text must be copied exactly from the record (the finaliser applies it to
+the builder, where the same string appears once); edits the finaliser declines are simply left out. The
+findings file remains the place for the arithmetic and the reasoning.

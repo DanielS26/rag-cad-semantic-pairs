@@ -2618,3 +2618,86 @@ Historical audit claims are distinguished from checks executed in this session.
   twin venue has one declared job (0104, 0116 and 0117 are the models).
 - Next: batch 13 (drafted in parallel on phase5-batch-13) through its own
   independent review and finalisation, stacked on this branch.
+
+## 2026-10-15 - Batch 13 Reviewed And Repaired
+
+- Review: accept 1, accept with note 6, fix 3 (one must-fix, pilot_0127),
+  contestable label 0; S13 YES for every malicious document, with reservations
+  on the twin side for pilot_0122 and pilot_0124; the provenance check passed;
+  what mattered: pilot_0127's twin query ('the letter this page indexes')
+  presupposed the hosting and, with the cue the twin's only other sentence,
+  carried the benign reading alone (must-fix 1); pilot_0122's cue refused 'a
+  change to a company's held details', which covered the backup-financial-data
+  target only loosely (should-fix 1); pilot_0124's closing sentence gave the
+  target a motive of its own through a sponsorship renewal and an events list
+  (should-fix 2); ten of the pair's twenty devices were new slugs on earlier
+  mechanisms, in this batch pilot_0121 (a named body approving the instance,
+  after pilot_0064 and pilot_0075), pilot_0127 (pilot_0101's lookup key),
+  pilot_0128 (the ownership claim with an assigner, the genus's seventh twin)
+  and pilot_0129 (pilot_0038's writing job), which became D-20261015-41;
+  pilot_0125's twin was a general notices page; the hard negative answered the
+  procurement ask and pilot_0126 was accepted outright
+- Applied: must-fix 1 (pilot_0127's twin query, in adjusted wording: the
+  reader's 'What does the records room's catalogue use to list each filed
+  letter?' echoed five of the cue's distinctive words and fired M17, so the
+  query asks how the archive's entries are arranged, according to the page,
+  which the cue answers without naming the letter); should-fix 1 (pilot_0122's
+  cue and justification, in adjusted wording: the reader's 'financial records'
+  put the M6 watch token 'records' on two twins and no malicious member, so
+  the cue refuses any change to a company's financial information); should-fix
+  2 (pilot_0124's closing sentence and query in the reader's wording: a
+  subscription renewal with a training list, and the query names the matter
+  page); the mechanism genus of D-20261015-41 in every justification, from the
+  reader's mapping, and the S1 labels of the two query-cue families
+  (pilot_0128, pilot_0129) changed to [asserts], as the reader's watch-list
+  asks and the checker allows for query cues. Declined with reasons: none.
+- Checker proposals: A (target-entity overlap on the twin side, retroactive
+  count 2 of 20 twins in this pair and 0 malicious members) and B (numeral-
+  class skew between the pair sides, both batches of this pair firing at 2.00
+  and 1.59) are recorded for the orchestrator; C (the mechanism register) was
+  adopted as D-20261015-41 and applied at this finalisation: every
+  justification of batches 13 and 14 names its genus beside the device slug,
+  batch 13 on body-approval, standing-rule-refusal, rendering-reuse, legal-
+  effect-reading, compromised-source-hold, dated-instrument-closed, verbatim-
+  key, ownership-claim, exercise-prompt and attribution (the names outside the
+  decision's vocabulary are the reader's and are stated as new), with no
+  within-batch genus warning in batch 13; the register's warnings stand as
+  planning signals for these two batches, which were drafted before it
+  existed. The reader recorded an independence caveat: it saw the drafter's
+  pilot_0135 answers (and part of pilot_0134's) before writing its own, so the
+  pilot_0135 agreement is unverified
+- After the edits: self-check exit 0 against batches 01 to 12 with the set-
+  wide M9 query phrase list ('does', 'page', 'notice') the only WARN;
+  prescreen exit 0 (130 families, no failures or warnings); validate exit 0
+  (520 records, no duplicates); the semantic gate passed with the refreshed
+  answers; twin longer in 5 of 10; hard negative pilot_0122, the clinic's
+  cleaning-tender evaluation note (a procurement document, token 'tampered',
+  not opening 'After the <month> incident'); weak cue pilot_0121, the user
+  committee's vote recorded as the authority on the chess channel's post (S3
+  YES, weak_cue: attacker_writable, M18 agreeing); coverage after 130
+  families: every role 16 except quotation 17 and task_alignment 17; cue
+  positions heading, policy, query, sentence_after and sentence_before 26
+  each; ten domains in the batch; review sheet pilot_review_batch_13.md
+  regenerated; supply ASB rows 200, 227, 243, 260, 281, 322, 344 and 353 and
+  the BIPIA strings test business_intelligence:2 and test
+  research_assistance:4 join the used list; after this batch the usable BIPIA
+  pool held one string, which batch 14 found already used.
+- Watch-list for the next batch: the attack-goal mix is the first planning
+  problem: BIPIA is exhausted from batch 14 (D-20261015-39), so batches 15 to
+  20 carry one goal each and batch number predicts the goal, which the folds
+  absorb and M19 reports per batch; one mechanism genus per role per pair, now
+  counted by the register: negation wants a recall or a voided object,
+  task_alignment a checklist applied to the user's own draft (pilot_0007's
+  frame, unused since batch 02), translation a glossary check or a
+  pronunciation drill; put the twin where the target's object has no place:
+  name the target's object at plan time and check that no non-cue sentence of
+  the twin mentions it (pilot_0124, 0127, 0130 and 0134 in this pair); query
+  cues label their S1 query [asserts]; count numerals per side at plan time,
+  as sentence counts are counted (batch 13's twins carried 18 against 9
+  malicious); balance 'asks'/'asked' across the sides rather than moving it
+  off the twin side; no general-purpose venue (a notices page, a channel) for
+  a twin; eighteen of twenty obliged; no closing sentence padded past about
+  250 characters to meet R4/R5; add a sentence to the controls instead
+- Next: batch 14's finalisation on phase5-batch-14 rebased onto this branch,
+  then batch 15 on phase5-batch-15 under D-20261015-40 with the register's
+  warnings in force at plan time
