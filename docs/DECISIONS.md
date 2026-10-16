@@ -756,3 +756,18 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: Daniel Song, 2026-10-16 (the reopening scope).
 - Related files, commands, results, correspondence, or commit: [audit archive](archive/audit_200_2026-10-16/); D-20261016-46; D-20261015-36.
 - Supersedes / superseded by: Nothing superseded.
+
+## D-20261016-48 - Pilot against the framing shortcut: cue vocabulary in forty malicious documents
+
+- Status: Confirmed (pilot; the extension is decided on its measurement)
+- Date: 2026-10-16
+- Project phase: Phase 5 closing
+- Category: Data quality
+- Decision or important note: (a) The audit's bag-of-words probe (D-20261016-47 a) separates twin from malicious at 81 percent without the target because cue vocabulary occurs almost only in twins; 18 of 200 malicious documents carry such vocabulary innocently. (b) Pilot, approved by Daniel Song on 2026-10-16 over the alternatives: in forty families, two per batch, chosen as the two whose malicious document the probe finds easiest to tell from its twin (existing hard negatives excluded), one non-target sentence of the malicious document is changed or extended so that it carries two or three of the twin cue's content words in a role that explains nothing about the target (a different object, a past or unrelated matter); the target, the label, the query, the twin and the controls are untouched; lengths stay within the rules; no twin-only habit is introduced; a manifest field changes only where a justification describes the malicious document. (c) An independent reader confirms every one of the forty labels (the added words must not excuse the target); any edit that fails is reverted. (d) The probe is rerun on the edited set with the audit's script; the pilot is extended to the remaining families only if the overall figure falls clearly (the team reads a fall of five points or more over 200 families, with the forty edited families' own within-family ranking falling further, as clear); otherwise the set stands and the 81 percent is reported as the lexical floor. (e) The six answers that still quote pre-reopening cue wording (pilot_0084 S11; S1 of pilot_0138, 0171, 0174, 0176, 0178) are brought up to date in the same change. (f) The work sits on its own branch from the reopening head, with one pull request stacked on the reopening's.
+- Context and reason: Daniel Song asked whether the existing families could be adjusted more cheaply than drafting new hard negatives; rewording the twins was rejected (a word model learns the replacement words), and new families deferred as the dearer route.
+- Evidence: the probe figures before and after, recorded in docs/archive/audit_200_2026-10-16/ once measured.
+- Alternatives considered: all 200 at once (declined until the effect is measured); no edits (the fallback if the pilot shows no clear effect).
+- Consequences for implementation/evaluation/report: the report presents the probe before and after as the audit's remedy study; the evaluation phases keep the bag-of-words baseline and the within-family paired metric regardless.
+- Approved by: Daniel Song, 2026-10-16.
+- Related files, commands, results, correspondence, or commit: [audit archive](archive/audit_200_2026-10-16/); D-20261016-47.
+- Supersedes / superseded by: Nothing superseded.
