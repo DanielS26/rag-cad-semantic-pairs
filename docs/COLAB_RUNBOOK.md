@@ -13,7 +13,8 @@ D-20261004-13 and after the Phase 4 code (the profile of
 and 2ffa63a2 on 16 October 2026 under budget pool A, after the Phase 6 code.
 The tested profile `configs/environments/colab_tested.yaml` with
 `requirements/colab-core.lock.txt` is re-frozen from the 2ffa63a2 pass with
-`compute_budget_approved: true` under the pools of D-20261004-17 (lock,
+`compute_budget_approved: true` under decision D-20261017-52 and the pools
+of D-20261004-17 (lock,
 fingerprint and encoder pins unchanged), so the final stages (feature
 generation, training, evaluation) are open from any commit that descends from
 2ffa63a2 without a change to `src/rag_cad` or `scripts/bootstrap_colab.py`;

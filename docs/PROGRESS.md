@@ -3309,17 +3309,18 @@ Historical audit claims are distinguished from checks executed in this session.
   runtime (different runtime identity) restored the Run A artefact,
   reproduced the fingerprint and environment ID and matched the saved
   predictions (restored_predictions_match true); published and verified
-  under artefacts/smoke in 339 s connected; manifest SHA-256 to be read
-  from its `_SUCCESS` marker on Drive by Daniel Song
+  under artefacts/smoke in 339 s connected; manifest SHA-256
+  4985d134d86416465cda49822252377e45ee34d0722e2acbf0a76713c2cd5a72 read from
+  its `_SUCCESS` marker on Drive by Daniel Song
 - Pool A after both runs: 1,677 connected seconds (1,080 + 258 + 339) and
-  about 0.4 compute units (to be confirmed by Daniel Song) of its
+  0.4 compute units (0.1 per run, confirmed by Daniel Song) of its
   21,600-second / 12-unit cap
 - Re-freeze: configs/environments/colab_tested.yaml takes reviewed commit
-  2ffa63a2, both run IDs, the Run A manifest hash and the new environment
-  ID; lock, fingerprint, encoder pins, tolerances and budget pools are
+  2ffa63a2, both run IDs, the new environment
+  ID and both manifest hashes (D-20261017-52); lock, fingerprint, encoder
+  pins, tolerances and budget pools are
   unchanged. The regression test expects the new values, and
   test_tested_profile_reproduces_the_phase4_identity passes unchanged (the
   encoder identity did not change). The runbook's current-gate section adds
   the fourth pass; plan step 3 is marked done
-- Next: the Run B manifest hash from Drive, the decision entry, merge (commit
-  Y), then the features stage from Y under pool C
+- Next: merge (commit Y), then the features stage from Y under pool C
