@@ -3510,3 +3510,53 @@ Historical audit claims are distinguished from checks executed in this session.
 - Docs: data card adds "Results on the folds (repo_compatible)"; training
   plan marks the real run done
 - Next: the figures and the tie rule into a decision entry
+
+## 2026-10-17 - Phase 8: retrieval harness built
+
+- Scope: the Phase 8 build step of D-20261017-58 on branch phase8-harness;
+  no real harness run yet, which waits for an independent review
+- Store (rag_cad.rag.retrieval): per round the 160 records of the 40
+  held-out families (whole families only) and a fixed distractor set drawn
+  once with seed 764; each document the mean of its cached standalone
+  sentence embeddings (feature columns 0 to 1,023); family texts checked
+  against the content hashes of the cached rows
+- Distractors, a change for the decision entry: the released CAD test has
+  no wholly benign record, so a distractor is the benign remainder of a
+  leak-excluded test record; the 241 leak-excluded records give only 23
+  distinct remainders (228 sentences), so 23 are used, not 160, cut into 56
+  passages of at most five sentences; each passage is scored by its parent
+  record's predictions in the same cell's released-test rows, made with the
+  injected sentence in context
+- Retriever: no cache holds a query embedding and the encoder is not
+  called, so each family record's query is placed at the mean embedding of
+  the five store sentences it matches best by TF-IDF cosine (store centroid
+  if none); exact cosine top five; one retrieval per round serves every
+  row, checked by digest; hit@5 is partly by construction (the own record's
+  sentences are among the matches), so the masked hit@5 and the own-match
+  share are reported beside it
+- Gates (rag_cad.rag.gates): document gate (drop a record flagged under the
+  record rule) and sentence filter (remove sentences above 0.5); rows no
+  gate, bag-of-words baseline (document gate only, controls and distractors
+  pass unscored), N0, M0 and M1 to M3 on every seed
+- Metrics: injected pass-through, twin loss (target or cue sentence lost),
+  random, keyword and distractor loss, context survival (family first,
+  then all slots and distractors, with the retrieved sentence counts); pooled over rounds per seed, mean and population sd over
+  seeds; by semantic role and cue position; retrieval hit rate at five and
+  mean rank
+- Command: rag harness-run writes harness.json, harness.md and
+  retrievals.jsonl into a new directory outside the repository and inputs
+- Synthetic end to end (Phase 7 synthetic caches, fake-trainer Phase 7 run
+  of 49 cells in C:\p8\syn): exit 0 in 3.8 s, rerun identical; archived
+  under docs/archive/phase8_synthetic_2026-10-17/ (no scientific meaning)
+- Real-run estimate: a read-only load of the real inputs takes about 8 s
+  (cell verification 2.4 s, caches 3.1 s, 49 cell predictions 2.5 s); the
+  run should take under 30 s, allow one minute; command in
+  docs/PHASE8_HARNESS_PLAN.md, output under C:\p8\
+- Review of the pull request applied: masked retrieval facts and the
+  own-match share, distractor passages (56 of at most five sentences, 216
+  documents per store), family context survival first with sentence counts,
+  distractor slot concentration in the JSON, every store document checked
+  as scored, three refusal tests; synthetic archive regenerated
+- Tests: 367 passed (9 new); ruff clean
+- Next: a decision entry on the distractor and query choices, then the
+  real run

@@ -23,6 +23,7 @@ from rag_cad.operations.provenance import canonical_json, sha256, verify_upstrea
 from rag_cad.operations.released_test import ARCHIVE, evaluate_released_test
 from rag_cad.operations.smoke import FakeBackend, RealBackend, runtime_identity, smoke_a, smoke_b
 from rag_cad.operations.upstream import fetch_release, prepare_resources, validate_release
+from rag_cad.rag.harness import DISTRACTOR_SETS, harness_command
 from rag_cad.training.fold_driver import CONDITIONS as FOLD_CONDITIONS
 from rag_cad.training.fold_driver import run_folds_command
 
@@ -278,6 +279,39 @@ def parser() -> argparse.ArgumentParser:
                            help="override the recipe's epochs (synthetic runs only; recorded in every cell)")
     folds_run.add_argument("--threads", type=int,
                            help="torch CPU threads; recorded and fixed per output (resume with the same value)")
+    rag = commands.add_parser("rag").add_subparsers(dest="action", required=True)
+    harness = rag.add_parser(
+        "harness-run", help="retrieval harness: the Phase 7 scorers as trust gates (CPU, Phase 8)",
+        description="Per fold round, build a store of the round's 160 held-out family records and a "
+                    "fixed set of benign distractors (benign remainders of leak-excluded released CAD "
+                    "test records, seed 764), each the mean of its cached sentence embeddings; retrieve "
+                    "the top five documents for every family record's query by exact cosine search "
+                    "(one retrieval for every row); then gate those retrievals with the document gate "
+                    "and the sentence filter driven by the Phase 7 held-out and released-test "
+                    "predictions (N0, M0, M1 to M3 on every seed), a no-gate row and, for the document "
+                    "gate, the bag-of-words baseline. Writes harness.json, harness.md and "
+                    "retrievals.jsonl into --output, which must not exist and must lie outside the "
+                    "repository and every input. Calls no encoder and no language model; CPU only; a "
+                    "refusal logs its cause on standard error.")
+    harness.add_argument("--phase4-root", type=Path, required=True,
+                         help="restored Phase 4 m0 artefact (adapted/ and features/)")
+    harness.add_argument("--families", type=Path, required=True,
+                         help="family feature artefact (features/<mode>/)")
+    harness.add_argument("--run", type=Path, required=True, help="output directory of training run-folds")
+    harness.add_argument("--mode", choices=["repo_compatible", "paper_exact"],
+                         help="representation mode (default: the experiment's)")
+    harness.add_argument("--folds", type=Path, default=Path("datasets/raw/augmentation/folds_v1.jsonl"))
+    harness.add_argument("--records", type=Path, default=Path("datasets/raw/augmentation/families"),
+                         help="family batch file or directory (texts, queries, cue sentences)")
+    harness.add_argument("--bow", type=Path,
+                         default=Path("datasets/raw/augmentation/review/bow_baseline_v1.json"))
+    harness.add_argument("--distractors", type=int, default=160,
+                         help="distractors requested (fewer when fewer distinct ones exist)")
+    harness.add_argument("--distractor-set", choices=list(DISTRACTOR_SETS), default="minus_near",
+                         help="released-test records to draw from: minus_near (leak-excluded, the "
+                              "default) or full (synthetic runs, whose test records all leak)")
+    harness.add_argument("--output", type=Path, required=True)
+    harness.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
     conformance = commands.add_parser("conformance").add_subparsers(dest="action", required=True)
     fake_test = conformance.add_parser("fake-released-test")
     fake_test.add_argument("--archive", type=Path, required=True)
@@ -383,6 +417,8 @@ def execute(args) -> dict:
         return fold_tables_command(args)
     if args.command == "training" and args.action == "run-folds":
         return run_folds_command(args)
+    if args.command == "rag" and args.action == "harness-run":
+        return harness_command(args)
     if args.command == "evaluation":
         local_path(args.artefact)
         local_path(args.output)
