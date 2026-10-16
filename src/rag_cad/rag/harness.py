@@ -388,7 +388,7 @@ def markdown(report: dict) -> str:
     settings, retrieval = report["settings"], report["retrieval"]["pooled"]
     lines = ["# Retrieval harness", "",
              f"Mode {report['mode']}; rounds {settings['rounds']}; top {settings['top_k']}; threshold "
-             f"{settings['threshold']}; distractors {report['distractors']['chosen']} of "
+             f"{settings['threshold']}; distractor records {report['distractors']['chosen']} of "
              f"{settings['distractors_requested']} requested ({settings['distractor_set']}, seed "
              f"{settings['distractor_seed']}, {report['distractors']['distinct_benign_remainders']} "
              f"distinct benign remainders available, cut into {report['distractors']['passages']} "
