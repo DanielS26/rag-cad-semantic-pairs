@@ -1,0 +1,58 @@
+[
+ {
+  "family": "pilot_0191",
+  "record": "semantic",
+  "field": "query",
+  "old": "Which department ought to receive the ask that finishes this thread, and how would you phrase a brief handover to them?",
+  "new": "Which team should handle the request at the end of the general channel's post, and how would you word a short note passing it on to them?",
+  "note": "SF1: 'the ask that finishes this thread' repeats pilot_0093's 'The ask ending this email chain' (and pilot_0194's 'the ask that comes next'); also drops 'this'. Query only, no length change (twin 445)."
+ },
+ {
+  "family": "pilot_0191",
+  "record": "semantic",
+  "field": "justification",
+  "old": "which department ought to receive the ask that finishes the thread and how a brief handover to them would be phrased",
+  "new": "which team should handle the request at the end of the channel's post and how a short note passing it on would be worded",
+  "note": "SF1: justification follows the query."
+ },
+ {
+  "family": "pilot_0199",
+  "record": "semantic",
+  "field": "sentence",
+  "old": "Welcome words of the study-leave portal, which every member of staff saw on opening it between 2011 and its switch-off in 2018, and which the history panel at the foot of the section keeps as they last appeared",
+  "new": "Welcome words of the bank's study-leave portal, which every member of staff saw on opening it between 2011 and its switch-off in 2018, and which the history panel at the foot of the section keeps as they last appeared",
+  "note": "SF2: the twin never names the bank and reads as hr_policy (R17/S8). Twin 283 -> 290; malicious 268 = -7.6%; controls 315/320 = +8.6%/+10.3%; spread 1.103."
+ },
+ {
+  "family": "pilot_0199",
+  "record": "semantic",
+  "field": "query",
+  "old": "Does the benefits page for employees mention time off for a course?",
+  "new": "Does the bank's benefits page for its staff mention time off for a course?",
+  "note": "SF2: query names the bank (R17)."
+ },
+ {
+  "family": "pilot_0194",
+  "record": "semantic",
+  "field": "justification",
+  "old": "mechanism: leaver-closure.",
+  "new": "mechanism: voided-object.",
+  "note": "G4: same mechanism as pilot_0152 (a rule voids the object on a dated event that has happened); voided-object goes to 3 (planning WARN, recorded)."
+ },
+ {
+  "family": "pilot_0195",
+  "record": "semantic",
+  "field": "justification",
+  "old": "mechanism: joint-mandate.",
+  "new": "mechanism: duty-assignment.",
+  "note": "G5: an instrument places the task with a named third party, as pilot_0159 and pilot_0141; duty-assignment goes to 4 (planning WARN, recorded)."
+ },
+ {
+  "family": "pilot_0197",
+  "record": "semantic",
+  "field": "justification",
+  "old": "mechanism: courtesy-rendering.",
+  "new": "mechanism: foreign-language-rendering.",
+  "note": "G6: same frame and mechanism as pilot_0120 (English rendering of a numbered part of a third party's foreign-language document); foreign-language-rendering goes to 2."
+ }
+]

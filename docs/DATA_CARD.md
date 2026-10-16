@@ -690,3 +690,23 @@ echo and literal policy-opener signals of D-20261016-44 were added between the r
 finalisation. The independent reader's findings (accept 0, accept with note 3, fix 6, contestable
 label 1, must-fix 1) are archived under docs/archive/review_batch_17_18_2026-10-16 with the
 outcome.
+
+## Batch 19
+
+Batch 19 (pilot_0181 to pilot_0190, drafted 2026-10-16 under DRAFTING_PROMPT_v3.md) takes ten ASB
+non-aggressive attacker instructions and no BIPIA string (rows 232, 241, 246, 280, 289, 354, 340,
+325, 380 and 385). Coverage after 190 families: roles analysis 24, authorisation 23,
+historical_description 24, negation 24, quotation 24, task_alignment 24, translation 23, warning
+24; cue positions 38 each. The hard negative is pilot_0188, a forum moderation summary whose four
+held posts are counted and described and match none of the target; the weak cue is pilot_0189, an
+HR policy sentence placing the task with the senior person on site under an invoked continuity
+plan (attacker_writable). The twin is the longer member in 5 of 10. Agent-to-domain deviations:
+none. Devices: predictive-text-output (generated-suggestion, new for the role), refusal-to-draft
+(decline-drafting, new), bounced-from-closed-address (non-delivery, new), training-school-rulebook
+(expiry), english-relay-segment (pivot-rendering, new), reading-panel-sheet (page-audit-finding),
+phishing-drill-decoy (training-drill, new), countermanded-instruction (countermand, new),
+continuity-plan-invocation (contingency-activation, new) and shelved-tenancy-forecast (abandoned-
+plan). Batch 19 was drafted by a single Claude Fable 5.1 worker under the allocation of
+D-20261016-45 and finalised under D-20261016-46. The independent reader's findings (accept 4,
+accept with note 4, fix 1, must-fix 1, contestable label 0) are archived under
+docs/archive/review_batch_19_20_2026-10-16 with the outcome.

@@ -711,3 +711,33 @@ record the approved correction. This is not Phase 1A implementation authorisatio
 - Approved by: team decision under the standing permission for checker rule additions; the allocation question is put to Daniel Song.
 - Related files, commands, results, correspondence, or commit: [self-check module](../src/rag_cad/data/selfcheck.py), [tests](../tests/test_selfcheck_cli.py); D-20261015-31; D-20261016-42; D-20261016-43.
 - Supersedes / superseded by: Amends D-20261016-42 (d); nothing superseded.
+
+## D-20261016-45 - Allocation for batches 19 and 20 (amends D-20261016-43); the standing genus-count warnings
+
+- Status: Confirmed
+- Date: 2026-10-16
+- Project phase: Phase 5 onward
+- Category: Process; Data quality
+- Decision or important note: (a) Batches 19 and 20 are drafted by one Claude Fable 5.1 worker each, one after the other, read as a pair by Claude Opus 5 and finalised by Claude Opus 5. The Fable-light pair (17 and 18) matched the Fable-drafted pair (13 and 14) at gate level but produced one new cue mechanism in twenty twins against eight; the dataset exists to teach a scorer to read cues rather than to recognise frames, so mechanism novelty outweighs the token saving for the last twenty families. (b) The weekly Fable allowance stood at 59 percent used after the pair review of 17 and 18 (a 270k-token review moved it from 54 to 59 percent, about 54k tokens per point); two Fable drafts of about 320k tokens each are expected to end near 71 percent, under the 80 percent stop line of D-20261016-43; the figure is checked again before batch 20 is drafted. (c) The genus-count warnings standing after the pair (ownership-claim 3, awaiting-rendering 3, duty-assignment 3 and compromised-source-hold 4) arise from the reader's corrections of mislabelled genera, not from new text; the tags stay honest and the counts stand as the planning signal the register exists to give (as D-20261016-42 e), so batches 19 and 20 avoid those four genera and every genus already at two.
+- Context and reason: Daniel Song's choice of 2026-10-16 among four allocations, with the cost and novelty figures of D-20261016-42 and D-20261016-44 before him.
+- Evidence: docs/archive/review_batch_17_18_2026-10-16/ (the reader's mechanism counts); the usage figures reported by Daniel Song on 2026-10-16.
+- Alternatives considered: Opus drafting with a mechanism-planning step and a Fable reader (cheaper on Fable, novelty unproven); all-Opus (no Fable spend, one new mechanism per pair so far); a mixed pair for a side-by-side (one observation each, too little to compare).
+- Consequences for implementation/evaluation/report: the data card names Claude Fable 5.1 as drafter for 19 and 20; the report's cost study presents the three allocations with the novelty row.
+- Approved by: Daniel Song, 2026-10-16.
+- Related files, commands, results, correspondence, or commit: D-20261016-42; D-20261016-43; D-20261016-44; [data card](DATA_CARD.md).
+- Supersedes / superseded by: Amends D-20261016-43 for batches 19 and 20; nothing superseded.
+
+## D-20261016-46 - Outcome of the batch 19 and 20 pair review; the set closes at 200 families; audit items
+
+- Status: Confirmed
+- Date: 2026-10-16
+- Project phase: Phase 5 closing; the 200-family audit
+- Category: Data quality; Process
+- Decision or important note: (a) The independent reader (Claude Opus 5) of batches 19 and 20, both drafted by single Claude Fable 5.1 workers under D-20261016-45, returned for batch 19 four accept, four accept-with-note, one fix (pilot_0189) and one must-fix (pilot_0184: with the heading cue removed, a context sentence and the query still carried the closed-school reading, a second carrier), and for batch 20 three accept, five accept-with-note and two fix (pilot_0191, pilot_0199); no contestable label. Every edit is applied by the finaliser unless a rule would be broken; the reader's eight and seven edits are the hand-over. (b) Mechanism novelty: the reader counts twelve new mechanisms in twenty (seven in batch 19, five in batch 20) against one in twenty for the Opus-drafted pair, which confirms the ground of D-20261016-45; six genus tags are corrected to existing genera (pilot_0184 expiry, 0186 page-audit-finding, 0190 abandoned-plan, 0194 voided-object, 0195 duty-assignment, 0197 foreign-language-rendering), and the resulting counts (expiry, page-audit-finding and voided-object at three; duty-assignment at four; the four standing counts of D-20261016-45 unchanged) stand as honest register counts; no batch follows, so they are audit facts rather than planning signals. (c) The two M14 lines on pilot_0193 (masked skeleton against pilot_0141 at 0.37; opener pattern against pilot_0131) are surface matches, not a repeated frame, and stand as S12-named. (d) The reader's two set-wide observations go to the 200-family audit as its first items, measured over all 800 records before any change: twin cues ending in a colon (16 of 200 twin cues; no malicious or control sentence of batches 19 and 20 ends in one) and twin cues opening with "That" (16 of 200). No checker rule is added now; if the audit confirms either as a twin-only tell, the remedy is a single recorded reopening across batches rather than piecemeal edits to the last pair. (e) With batch 20 finalised the drafting phase closes at 200 families, every role at 25 and every cue position at 40.
+- Context and reason: the review of 2026-10-16 (archived with the batches); the allocation of D-20261016-45 and its stated purpose.
+- Evidence: docs/archive/review_batch_19_20_2026-10-16/ once finalised; the cue index at 200 families; the genus counts in the final self-check reports.
+- Alternatives considered: rewording the five colon-ended cues of this pair at finalisation (declined: it would treat the last pair differently from the set and hide the measurement the audit needs); keeping the drafters' genus tags (declined: the register is only useful if the tags are honest).
+- Consequences for implementation/evaluation/report: the audit's checklist opens with the colon and "That" counts by record type, the genus register at 200, and the role-boundary cases recorded in D-20261016-42 (e); the report's cost study gains the novelty row for the Fable-drafted pair under the register (12 of 20).
+- Approved by: team decision under the standing permissions; the audit's remedies, if any, are put to Daniel Song.
+- Related files, commands, results, correspondence, or commit: D-20261016-42; D-20261016-44; D-20261016-45; [self-check module](../src/rag_cad/data/selfcheck.py).
+- Supersedes / superseded by: Nothing superseded.
