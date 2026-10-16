@@ -82,6 +82,26 @@ def _mean_std(values: list[float | None]) -> dict:
     return {"mean": float(array.mean()), "std": float(array.std()), "n": len(present)}
 
 
+def exclusion_sets(leaked: dict) -> dict[str, set]:
+    return {"full": set(), "minus_verbatim": set(leaked["verbatim_records"]),
+            "minus_near": set(leaked["near_records"])}
+
+
+def exclusion_metrics(labels, scores, mask, record_ids, exclusions: dict[str, set], *,
+                      threshold: float = THRESHOLD) -> dict:
+    """All-rows and upstream-masked metrics of one head with each leaked record set excluded."""
+    labels, scores, mask = np.asarray(labels), np.asarray(scores, dtype=float), np.asarray(mask, dtype=bool)
+    record_ids = np.asarray(record_ids)
+    result = {}
+    for exclusion, excluded in exclusions.items():
+        keep = ~np.isin(record_ids, sorted(excluded))
+        result[exclusion] = {
+            "rows": int(keep.sum()), "records": int(len(set(record_ids[keep]))),
+            "all_rows": summarise(labels[keep], scores[keep], threshold=threshold),
+            "upstream_masked": summarise(labels[keep], scores[keep], mask=mask[keep], threshold=threshold)}
+    return result
+
+
 def leak_excluded_report(artefact: Path, *, threshold: float = THRESHOLD,
                          near_duplicate_threshold: float = 0.8) -> dict:
     train = read_jsonl(artefact / ADAPTED_TRAIN)
@@ -93,19 +113,10 @@ def leak_excluded_report(artefact: Path, *, threshold: float = THRESHOLD,
     labels = np.array([row["label"] for row in first], dtype=int)
     mask = np.array([row["upstream_mask"] for row in first], dtype=bool)
     record_ids = np.array([key[0] for key in keys])
-    exclusions = {"full": set(), "minus_verbatim": set(leaked["verbatim_records"]),
-                  "minus_near": set(leaked["near_records"])}
-    heads = {}
-    for name, rows in loaded.items():
-        scores = np.array([row["probability"] for row in rows], dtype=float)
-        heads[name] = {}
-        for exclusion, excluded in exclusions.items():
-            keep = ~np.isin(record_ids, sorted(excluded))
-            heads[name][exclusion] = {
-                "rows": int(keep.sum()), "records": int(len(set(record_ids[keep]))),
-                "all_rows": summarise(labels[keep], scores[keep], threshold=threshold),
-                "upstream_masked": summarise(labels[keep], scores[keep], mask=mask[keep],
-                                             threshold=threshold)}
+    exclusions = exclusion_sets(leaked)
+    heads = {name: exclusion_metrics(labels, np.array([row["probability"] for row in rows], dtype=float),
+                                     mask, record_ids, exclusions, threshold=threshold)
+             for name, rows in loaded.items()}
     seed_heads = [name for name in heads if name != "released_checkpoint"]
     aggregate = {}
     for exclusion in EXCLUSIONS:

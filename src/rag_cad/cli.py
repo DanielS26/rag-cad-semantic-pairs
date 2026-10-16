@@ -11,6 +11,7 @@ from rag_cad.config import load_config
 from rag_cad.data import commands as data_commands
 from rag_cad.data.conditions import PRIMARY
 from rag_cad.evaluation.bow_baseline import bow_baseline_command
+from rag_cad.evaluation.fold_tables import fold_tables_command
 from rag_cad.evaluation.posthoc import leak_excluded_report
 from rag_cad.operations import artefacts, family_features
 from rag_cad.operations import features as feature_operations
@@ -22,6 +23,8 @@ from rag_cad.operations.provenance import canonical_json, sha256, verify_upstrea
 from rag_cad.operations.released_test import ARCHIVE, evaluate_released_test
 from rag_cad.operations.smoke import FakeBackend, RealBackend, runtime_identity, smoke_a, smoke_b
 from rag_cad.operations.upstream import fetch_release, prepare_resources, validate_release
+from rag_cad.training.fold_driver import CONDITIONS as FOLD_CONDITIONS
+from rag_cad.training.fold_driver import run_folds_command
 
 FAILURE_RECORD = "last_failure.json"
 PROGRESS_RECORD = "smoke_progress.json"
@@ -223,6 +226,49 @@ def parser() -> argparse.ArgumentParser:
     bow.add_argument("--manifest", type=Path, required=True, help="family_manifest.jsonl")
     bow.add_argument("--folds", type=Path, required=True, help="fold table from data assign-folds")
     bow.add_argument("--output", type=Path, required=True)
+    tables = evaluation.add_parser(
+        "fold-tables", help="result tables of a training run-folds output (D-20261017-55 (c))",
+        description="Verify every cell of --run, pool the held-out predictions over the rounds per "
+                    "condition and seed, and write the family tables (twin, random and keyword control "
+                    "false-alarm rates, malicious detection rate, within-family paired share; overall and "
+                    "by attack category, semantic role and cue position; the bag-of-words baseline of "
+                    "--bow as the first row) and the leak-excluded released CAD test table to --output "
+                    "(JSON) and --markdown. CPU only; refuses a partial run.")
+    tables.add_argument("--run", type=Path, required=True, help="output directory of training run-folds")
+    tables.add_argument("--bow", type=Path,
+                        default=Path("datasets/raw/augmentation/review/bow_baseline_v1.json"))
+    tables.add_argument("--output", type=Path, required=True)
+    tables.add_argument("--markdown", type=Path, required=True)
+    training = commands.add_parser("training").add_subparsers(dest="action", required=True)
+    folds_run = training.add_parser(
+        "run-folds", help="fold-and-seed head training from the two feature caches (CPU, Phase 7)",
+        description="Check that the Phase 4 root and the family artefact agree on representation, "
+                    "encoder, code, segmenter and dtype, then train and score one cell per (condition, "
+                    "round, seed): N0 scored as released, M0 once per seed on D0, M1 to M3 once per "
+                    "round and seed on D0 plus the round's training families. Each cell writes its "
+                    "checkpoint, held-out row and record predictions, released-test predictions and "
+                    "leak-excluded metrics, and a manifest last. Reruns skip complete cells. CPU only; "
+                    "--output must lie outside the repository and both caches.")
+    folds_run.add_argument("--phase4-root", type=Path, required=True,
+                           help="restored Phase 4 m0 artefact (adapted/ and features/)")
+    folds_run.add_argument("--families", type=Path, required=True,
+                           help="family feature artefact (features/<mode>/)")
+    folds_run.add_argument("--mode", choices=["repo_compatible", "paper_exact"],
+                           help="representation mode (default: the experiment's)")
+    folds_run.add_argument("--folds", type=Path, default=Path("datasets/raw/augmentation/folds_v1.jsonl"))
+    folds_run.add_argument("--output", type=Path, required=True)
+    folds_run.add_argument("--experiment", type=Path, default=Path("configs/experiment.yaml"))
+    folds_run.add_argument("--release", type=Path, default=Path("configs/upstream/cad_release.yaml"))
+    folds_run.add_argument("--released-checkpoint", type=Path,
+                           default=Path("datasets/raw/cad_release/classifier_fullcad.pt"))
+    folds_run.add_argument("--trainer", choices=["torch", "fake"], default="torch",
+                           help="torch on CPU (default) or the fake trainer for plumbing checks")
+    folds_run.add_argument("--conditions", nargs="+", default=list(FOLD_CONDITIONS), choices=list(FOLD_CONDITIONS))
+    folds_run.add_argument("--seeds", type=int, nargs="+", help="subset of the experiment seeds")
+    folds_run.add_argument("--rounds", type=int, nargs="+", help="subset of the folds (default: all)")
+    folds_run.add_argument("--epochs", type=int,
+                           help="override the recipe's epochs (synthetic runs only; recorded in every cell)")
+    folds_run.add_argument("--threads", type=int, help="torch CPU threads (recorded)")
     conformance = commands.add_parser("conformance").add_subparsers(dest="action", required=True)
     fake_test = conformance.add_parser("fake-released-test")
     fake_test.add_argument("--archive", type=Path, required=True)
@@ -324,6 +370,10 @@ def execute(args) -> dict:
                                       "fake-local", records=args.records)
     if args.command == "evaluation" and args.action == "bow-baseline":
         return bow_baseline_command(args)
+    if args.command == "evaluation" and args.action == "fold-tables":
+        return fold_tables_command(args)
+    if args.command == "training" and args.action == "run-folds":
+        return run_folds_command(args)
     if args.command == "evaluation":
         local_path(args.artefact)
         local_path(args.output)
