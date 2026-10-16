@@ -33,7 +33,8 @@ Made at commit 8d39534 on branch phase8-harness. The command lines are in
 
 ## Why the synthetic figures look as they do
 
-The fake encoder gives near-identical sentence embeddings, so many cosines tie at 1.0 and the
-hit rate at five (0.040) is meaningless. The fake trainer flags almost everything, so the trained
+The fake encoder's standalone sentence embeddings all point the same way, so every retrieved
+cosine is 1.0 and the ranking falls back to store order. The hit rate at five (0.040) is therefore
+meaningless. The fake trainer flags almost everything, so the trained
 rows drop or strip nearly every document. No distractor was retrieved, so the distractor columns
 read n/a. The tests score distractors through the same cell's released-test predictions directly.
