@@ -29,7 +29,7 @@ wins and why.
 | # | Claim | Value | Source file | Where |
 |---|---|---|---|---|
 | 14 | Size and balance | 200 families, 800 records; every role at 25; every cue position at 40 | docs/DECISIONS.md | D-46 (e); D-47 (a) |
-| 15 | Sentence rows | 2,816 family rows; four pools of 704 rows; m1_random, m2_keyword, m3_semantic sets of 1,408 rows each | docs/DATA_CARD.md; docs/archive/phase7_results_2026-10-17/README.md | "Encoded features"; "Run facts", Inputs |
+| 15 | Sentence rows | 2,816 family rows; four pools of 704 rows; m1_random, m2_keyword, m3_semantic sets of 1,408 rows each | docs/DATA_CARD.md; docs/archive/phase7_results_2026-10-17/README.md | "Encoded features"; "Run facts", Inputs; the malicious pool is 200 label-1 and 504 label-0 rows, each partner pool 704 label-0 rows (counted 2026-10-17, field sentences[].label) |
 | 16 | Attack-sentence sources | 127 asb_adapted, 73 bipia_adapted, 600 team_authored records | datasets/raw/augmentation/families/*.jsonl | field provenance.source_dataset (counted 2026-10-17); also the "All roles" row of the folds table in DATA_CARD (73 / 127) |
 | 17 | Attack goals | content_injection 22, response_manipulation 9, promotion_insertion 5, contact_redirection 2, link_insertion 2 (40 BIPIA directive), task_hijack 33 (BIPIA task-type), unauthorised_operation 127 (ASB) | datasets/raw/augmentation/families/*.jsonl | field attack_goal (counted 2026-10-17) |
 | 18 | Drafting models | 160 families claude-fable-5-1, 40 claude-opus-5; controls of batches 15-16 by Claude Sonnet 5 | datasets/raw/augmentation/family_manifest.jsonl; docs/DECISIONS.md | field drafter; D-40, D-42 (a) |
@@ -154,5 +154,5 @@ All rows from `docs/archive/phase8_results_2026-10-17/harness.md` unless stated.
 | BoW accuracy | 81.2 (audit), 81.5 (after reopening), 79.25 (folds_v1) | 79.25 beside the fold results; 81.5 when describing the floor of the data set | different folds and data states; say which |
 | Seed and fold spread | D-57 "seed at most 0.03, fold 0.02 to 0.08" vs table max 0.042 and 0.084 | the table | the table is the measurement |
 | Meaning of N0 | "no scorer" in the early plan (REPORT_SOURCE_NOTES section 3) vs the released checkpoint (D-55) | the released checkpoint; the no-scorer reference is the "no gate" row | D-55 is the decision used by every result table |
-| Deadline | 26 October (handout; D-58) vs 25 October 23:59 (Canvas page) | 25 October | the earlier date is safe |
+| Deadline | 26 October (handout; D-58) vs 25 October 23:59 (Canvas page) | 25 October | Canvas is the submission page; the handout's date carries the year 2025, and 25 October 2026 is the Sunday |
 | PDF locations | the brief named `COMPSCI764\` for the handout and the literature review | both are in `C:\Users\songh\Downloads\` | found there |

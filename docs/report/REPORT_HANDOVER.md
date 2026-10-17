@@ -14,9 +14,12 @@ abstract 150 to 200 words (2%); introduction 1 to 1.5 pages ending with the cont
 related work at most 1 page, updating the literature review (2%); method 8%, "clear, detailed and
 replicable", with equations and justified choices; results 5%, graded on implementation and
 reasoning, not on whether the idea won; conclusion and future work about 1 page (2%); at least 10
-references in at most 1 page (2%); style 2%; a contribution breakdown; the GitHub link as a
-footnote. The students are the main writers; GenAI is an assistant only. Deadline: Canvas says
-25 October 23:59, the handout 26 October; plan for 25 October.
+references in at most 1 page (2%); style 2%; a breakdown of each student's contribution (Canvas: marks may be split
+if a significant discrepancy is detected); the GitHub link as a footnote in the Methodology
+section, referred to in the text; one PDF, checked by Turnitin. GenAI may check spelling,
+grammar and style; the students must be the main writers. Deadline: Canvas says 'Due 25 Oct by
+23:59'; the handout says 'Sunday 26th October 2025, 11:59pm', a date carried over from 2025
+(25 October 2026 is the Sunday). Plan for 25 October. Late penalty: 10 percent within 24 hours.
 
 ---
 
@@ -68,10 +71,10 @@ forwards 0.789 and lets 0.600 through.
 | Data | a plan | 200 families, 800 records, eight roles at 25 each, five cue positions at 40 each, attack sentences adapted from BIPIA (73) and ASB (127) | DATA_CARD; D-20261013-27, -29 |
 | PIGuard-style condition | NotInject-style benign keyword text | one keyword control written per family, reusing the target's words in a different harmless statement | D-20261010-22 |
 | Split | family-level train/test split | five-fold cross-validation over families, stratified by role and source, with a leakage check in every round | D-20261013-28, D-20261017-51 |
-| Equal budget | "the same number of added training examples" | met by construction: every condition adds the same 704 malicious and 704 benign sentence rows over the 200 families (1,408 per condition). The planned single figure `augmentation_budget_sentence_rows` was never written; it is still null in configs/experiment.yaml | DATA_CARD "Encoded features"; Phase 7 README; configs/experiment.yaml |
+| Equal budget | "the same number of added training examples" | met by construction: every condition adds the same 1,408 sentence rows over the 200 families: the 704 rows of the malicious records (200 malicious target sentences and 504 benign context sentences) and the 704 rows of one partner kind (all benign). Each partner has the same number of sentences as its malicious record, so the counts are equal in every round as well. The planned single figure `augmentation_budget_sentence_rows` was never written; it is still null in configs/experiment.yaml | DATA_CARD "Encoded features"; Phase 7 README; configs/experiment.yaml |
 | New finding | not foreseen | the lexical floor: a bag-of-words model separates twin from malicious at 81.5 percent without the target sentence; it is reported beside every scorer | D-20261016-47, -49, -50 |
 | RAG-level test | "whether any improvement preserves useful, retrieved content in the RAG pipeline" | a retrieval harness with two gates and no language model; attack success and answer quality were not measured | D-20261017-58, -59 |
-| Review of labels | two-person human review planned | AI drafting, a code checker and an independent AI reader of a different model; the per-family human sign-off was not recorded (all 200 manifest lines: status candidate, reviewer null) | D-20261010-20; family_manifest.jsonl |
+| Review of labels | not in the review; D-20261010-20 (10 October) planned a sign-off of each family by one researcher, with the second checking disagreements and a sample, because an AI reviewer is the kind of model the records are written to fool | AI drafting, a code checker and an independent AI reader of a different model; the per-family human sign-off was not recorded (all 200 manifest lines: status candidate, reviewer null) | D-20261010-20; family_manifest.jsonl |
 
 Planned but not done, said plainly: the paper_exact feature table (D-56 d); an end-to-end run
 with a language model and an attack success rate (D-58, Future Work); AgentDojo; the human
@@ -112,17 +115,10 @@ thresholds as a secondary analysis.
    non-aggressive operational instructions ("Please ..."). Adaptation only removes quotation
    marks and replaces names and identifiers with placeholders (R2). Twins and controls are new
    text. D-20261013-29, D-20261015-38, -39; DATA_CARD "Second target source".
-5. **Drafting and review loop.** A drafter model writes ten families from a plan table. The
-   self-check gate (`data selfcheck`: 20 mechanical checks M0 to M19 and 13 written questions S1
-   to S13 per family) runs over the batch in a repair loop until it exits 0. An independent reader
-   of a different model answers S1 to S13 itself before opening the drafter's answers, compares
-   the batch with a cue index of every earlier twin and proposes exact edits; a finaliser applies
-   or declines each with a reason; the review is archived and each lesson becomes a checker
-   signal with a test. A mechanism register tracks whether cues repeat. The loop was changed on
-   measured cost: two readers (batches 06 and 07), then one reader per pair with the cue index
-   (from 09), then leaner steps (from 13). Files: DRAFTING_PROMPT_v3.md, BATCH_WORKER_BRIEF_v2.md,
-   REVIEW_BRIEF_v2.md, `src/rag_cad/data/selfcheck.py`; D-20261011-25, D-20261014-32,
-   D-20261015-35, -37, -41.
+5. **Drafting and review loop.** An AI model drafted each batch of ten families, and a code
+   checker plus written questions had to pass before an AI reader of a different model reviewed the
+   batch and its edits were applied. Every lesson from a review became a new checker rule (detail
+   in the appendix note after the worked example).
 6. **Audit and remedy study.** At 200 families, validate and prescreen exit 0 with no duplicates.
    Two twin-only habits were found (a cue ending in a colon, a cue opening with "That") and
    reworded once across all batches, with no target or label touched (D-47). A naive Bayes over
@@ -155,7 +151,10 @@ thresholds as a secondary analysis.
     query embedding exists), so retrieval is the same for every row. Document gate: drop a
     flagged record. Sentence filter: remove sentences above 0.5. Metrics: injected pass-through,
     twin loss, control and distractor loss, family context survival. No language model is
-    called. D-20261017-58, -59; PHASE8_HARNESS_PLAN.md.
+    called. D-20261017-58, -59; PHASE8_HARNESS_PLAN.md. Two departures from the plan of D-58 (b),
+    accepted after review (D-59 a): the released CAD test has no wholly benign record, so the
+    distractors are the benign remainders of 23 records; and no query embedding exists, so the
+    query is a TF-IDF proxy. Both must be stated wherever harness figures appear.
 
 **Worked example for the family figure** (pilot_0181, it_security, quotation, cue in the
 sentence before; target adapted from ASB row 232; records in
@@ -175,6 +174,17 @@ Two more, both in `pilot_batch_20.jsonl`: pilot_0197 (translation, cue after: "I
 own English rendering, for information only, ...") and pilot_0200 (warning, heading cue: text a
 security researcher placed through the comment box, kept "as a caution to everyone who edits the
 site").
+
+**Appendix note: the loop in detail** (for an appendix or a footnote, not the main text). The
+self-check gate (`data selfcheck`: 20 mechanical checks M0 to M19 and 13 written questions S1 to
+S13 per family) runs over the batch in a repair loop until it exits 0. The independent reader
+answers S1 to S13 itself before opening the drafter's answers, compares the batch with a cue index
+of every earlier twin and proposes exact edits; a finaliser applies or declines each with a reason;
+the review is archived and each lesson becomes a checker signal with a test. A mechanism register
+tracks whether cues repeat. The loop was changed on measured cost: two readers (batches 06 and 07),
+then one reader per pair with the cue index (from 09), then leaner steps (from 13). Files:
+DRAFTING_PROMPT_v3.md, BATCH_WORKER_BRIEF_v2.md, REVIEW_BRIEF_v2.md,
+`src/rag_cad/data/selfcheck.py`; D-20261011-25, D-20261014-32, D-20261015-35, -37, -41.
 
 ---
 
@@ -275,7 +285,8 @@ and bigrams of the query and the non-target sentences, five folds grouped by fam
 
 The cue is on average 38.3 percent of a twin's tokens (minpair_probe.md). Twin against random
 control 91.2 percent and against keyword control 88.2 percent (audit200_report.md section 3).
-D-50 rounds the remedy 2 and remedy 3 figures to 79.3 and 81.9 to 81.3.
+D-50 rounds the remedy 2 and remedy 3 figures to 79.3 and 81.9 to 81.3. Bound C and the folds_v1
+figure are both 79.25 percent by coincidence: they are different measurements on different folds.
 
 ### D6. Retrieval harness
 
@@ -311,7 +322,7 @@ the TF-IDF query proxy rather than retriever quality: hit@5 0.771, mean rank 11.
 record's own sentences masked, hit@5 0.241 and mean rank 46.18 (harness.md, "Retrieval", row
 "all").
 
-### D7. Cost study of the drafting loop (tokens per pair of batches)
+### D7. Cost study of the drafting loop (tokens per pair of batches; appendix or footnote material)
 
 Source: REPORT_SOURCE_NOTES.md, entry "2026-10-16 - Batches 15 and 16 finalised", bullet "Cost
 study, complete per-pair rows"; novelty counts in D-20261016-42, -44 and -46.
@@ -327,18 +338,23 @@ Gate-level quality (labels, single carrier, lengths) was similar in all four; me
 was not. Earlier, each independent reader cost 340k to 370k tokens per batch; one reader per pair
 with a cue index brought a pair review down to 280k tokens (D-20261014-32, D-20261015-34).
 
-### D8. Compute budget pools and use
+### D8. Compute budget pools and use (appendix or footnote material)
 
 Sources: D-20261004-17 (pools and the history before them), D-20261017-53 (pool A), the Phase 4
 m0 progress entry (pool B), D-20261017-54 (pool C), the Phase 7 and Phase 8 archive READMEs.
 
 | pool | purpose | cap | used |
 |---|---|---|---|
-| A | gate and conformance runs | 6 h, 12 units | 2,369 s and 0.6 units (after the two gate reruns of 16 October) |
+| A | gate and conformance runs | 6 h, 12 units | 2,369 s and 0.6 units (after the two gate reruns of 17 October; run ids carry the UTC date 16 October) |
 | B | Phase 4: D0 features and M0 | 4 h, 8 units | 1 h 12 min and 2.17 units (one m0 run) |
 | C | Phases 5 and 6: family features | 6 h, 12 units | 671 s and about 0.3 units, plus the stopped first attempt |
 | D | Phases 7 and 8 | 8 h, 16 units | none: Phases 7 and 8 ran on the laptop CPU (48 min and 9.05 s) |
 | before the pools | Phase 1B and the fit test | - | 7,200 s and 1.84 units |
+
+The two gate reruns: the first (from 2ffa63a2, 597 s, 0.2 units) because the tested profile no
+longer matched the code after Phases 5 and 6; the second (from fd06bbda, 692 s, 0.2 units) after
+the first features attempt stopped at a stage label missing from the bootstrap whitelist, a gap
+the preparation review had missed; a test now checks every stage label (D-52, D-53).
 
 ---
 
@@ -381,9 +397,10 @@ Limitations to state:
 2. One encoder, one head architecture and one representation mode; paper_exact was not run.
 3. The data was drafted by AI models, and the per-family human sign-off was not recorded. The
    labels rest on the written rules, the code checker and an independent AI reader.
+   D-20261010-20 had required a human sign-off for this reason.
 4. Two sources of attack sentences; from batch 15 each batch has one attack goal, which the fold
    stratification absorbs but which is still a batch-level regularity (D-41).
-5. Small held-out sets per round (40 families); the fold spread reaches 0.083.
+5. Small held-out sets per round (40 families); the fold spread reaches 0.084 (0.083 for M3's detection).
 6. The harness has few distractors (23 benign remainders, 56 passages), scored in their injected
    context; it uses a TF-IDF query proxy instead of a query encoder; it calls no language model,
    so there is no attack success rate or answer quality (D-59 a).
@@ -392,6 +409,8 @@ Limitations to state:
    leak-excluded and only as a reference.
 9. The CAD head memorises D0 (final training loss 4e-8 to 1e-7 in Phase 4), and the 1,408 family
    rows per condition are small beside D0's 24,665.
+10. M3 gives up four points of upstream recall at the fixed threshold (masked TPR 0.923 against
+    0.963 for N0 on the leak-excluded CAD test), although its ranking holds (masked AP 0.998).
 
 ---
 
@@ -410,15 +429,15 @@ the paper's agent-level tables.
 
 ## (g) Proposed report outline and page budget
 
-IEEE two-column conference template. Target 11.5 pages before the references, which leaves half a
-page of slack under the 12-page limit.
+IEEE two-column conference template. Target 11.25 pages before the references, which leaves three
+quarters of a page of slack under the 12-page limit.
 
 | § | Section | Pages | Weight | What it must do |
 |---|---|---|---|---|
 | - | Title, authors, abstract | 0.3 | 2% | 150 to 200 words: problem, method, the key numbers (0.842 against 0.547 and 0.575; the floor 0.905), the harness trade-off |
 | I | Introduction | 1.25 | 2% | Injection in RAG; CAD and its unused context half; the research question verbatim; the hypothesis; four contributions |
 | II | Related Work | 1.0 | 2% | Update of the literature review (text-only guards, CAD, shortcut evidence, data remedies, the gap), plus BIPIA and ASB as data sources |
-| III | Method | 3.75 | 8% | Detector and feature equation; family design (Fig. 2); sources; drafting-and-review loop (Fig. 3); the audit and the floor; conditions; folds (Fig. 4); metrics with formulas; harness (Fig. 1) |
+| III | Method | 3.75 | 8% | Detector and feature equation; family design (Fig. 2); sources; drafting-and-review loop (Fig. 3); the audit and the floor; conditions; folds (Fig. 4); metrics with formulas; harness (refers back to Fig. 1) |
 | IV | Experiments and Results | 3.75 | 5% | Setup; reproduction check; Table I; per role and cue (Table II or Fig. 6); CAD test (Table III); harness (Table IV, Fig. 7); remedy study (Table V); discussion and limitations |
 | V | Conclusion and Future Work | 0.9 | 2% | The answer, its limits, future work |
 | - | Contributions and use of AI | 0.3 | contribution note | Section (h) below |
@@ -433,13 +452,16 @@ meets each idea once, in the order the experiment uses it.
 
 | Fig. | Shows | Data or source | Section |
 |---|---|---|---|
-| 1 | Pipeline: query, retriever (top 5), trust gate (frozen Jina encoder, 2048-d feature [isolated; context delta], MLP, p > 0.5?), document gate or sentence filter, prompt | D-20261017-58; PHASE8_HARNESS_PLAN.md; the feature equation in (c) step 1 | III-A |
+| 1 | Pipeline: query, retriever (top 5), trust gate (frozen Jina encoder, 2048-d feature [isolated; context delta], MLP, p > 0.5?), document gate or sentence filter, prompt | D-20261017-58; PHASE8_HARNESS_PLAN.md; the feature equation in (c) step 1 | I (cited first in the introduction as the overview; referred back to in III-F) |
 | 2 | One family as four cards (malicious, twin with its cue highlighted, random, keyword) around the shared target, with labels per sentence | pilot_0181 in `datasets/raw/augmentation/families/pilot_batch_19.jsonl`; the card sketch in REPORT_SOURCE_NOTES 8C | III-B |
 | 3 | Drafting-and-review loop: plan, draft, self-check (M0 to M19, S1 to S13), repair until exit 0, independent reader of a different model, finaliser, archive; an arrow back from findings to new checker rules | D-20261011-25, D-20261014-32, D-20261015-35, D-20261015-37 | III-C |
 | 4 | Five-fold evaluation: 200 families in five folds; round k holds out fold k; D0 always trains; the CAD test sits outside; conditions times three seeds | `datasets/raw/augmentation/folds_v1.summary.json`; D-20261013-28 | III-E |
 | 5 | Main result: twin false alarm (x) against paired share (y), one point per row of D1, with the BoW point marked as the floor | `docs/archive/phase7_results_2026-10-17/repo_compatible_tables.json` | IV-B |
 | 6 | Paired share by role and by cue position for N0, M3 and BoW (dot plot); optional if space is short | same JSON, the slices | IV-B |
 | 7 | Harness trade-off: injected pass-through (x) against family context survival (y), both gates, one point per scorer | `docs/archive/phase8_results_2026-10-17/harness.json` | IV-D |
+
+**Float budget:** keep Figs. 2 to 4 and 6 to single-column width; Tables I and IV are two-column
+(table*). If space runs short, drop Fig. 6 (Table II covers it) before cutting any text.
 
 **Tables to include:** I (D1, with the D2 twin false alarm and paired share as extra columns or a
 second block); II (D3, if Fig. 6 is not used); III (D4: minus_near rows, plus the full-set rows
@@ -452,6 +474,7 @@ versions gave the same fingerprint); checker signals by name (say "20 mechanical
 written questions", with two examples); model-swap details (D7 or two sentences); per-round CAD
 test rows; the fit test beyond one sentence; harness slices beyond one sentence; batch counts.
 They are true but do not change the answer, and the page limit rewards method and reasoning.
+Rule codes (R6, S1 and the like) stay out of the report text; describe the rule in words.
 
 ---
 
@@ -459,12 +482,11 @@ They are true but do not change the answer, and the page limit rewards method an
 
 Facts from the record, to be written in the students' own words:
 
-- **Design and decisions.** The two students set the question and made the design decisions.
-  docs/DECISIONS.md (59 entries) records each with its reasons; most name Daniel Song as approver
-  with his words quoted; some later ones are "team decision under the standing permission" for
-  checker and evaluation rules (for example D-44, D-46, D-49, D-56), with Daniel Song informed.
-  The entry texts were drafted by the AI coding sessions and approved by the students;
-  D-20261004-16 records that decisions rest with the two researchers.
+- **Design and decisions.** The two students designed the study and took every recorded
+  decision. docs/DECISIONS.md (59 entries) records each with its reasons. Most name Daniel Song as
+  approver and quote his words. A few checker and evaluation rules (for example D-44, D-46, D-49,
+  D-56) were adopted under a standing permission he had given, and he was informed with the
+  figures.
 - **Data.** The 200 families were drafted by AI language models (Claude Fable 5.1 for 160,
   Claude Opus 5 for 40; the controls of batches 15 and 16 by Claude Sonnet 5) under a written
   prompt (DRAFTING_PROMPT_v3.md) and the students' audit rules, checked by a code checker and
@@ -473,11 +495,12 @@ Facts from the record, to be written in the students' own words:
   candidate and reviewer null, every record review_status unreviewed; review sheets were
   generated per batch (Project\pilot_review_batch_NN.md).
 - **Code and experiments.** Built by AI coding assistants (Claude Code sessions running Claude
-  models) under the students' briefs, with CPU tests (367 passing at Phase 8) and an independent
-  AI review before each real run. Daniel Song authorised and ran every Colab GPU stage and the
-  CPU runs of Phases 7 and 8. Pull requests were merged on the students' instruction; in Phase 6
-  the orchestrating AI session itself performed the merges of PRs #61 to #66
-  (REPORT_SOURCE_NOTES, 2026-10-17).
+  models) under the students' briefs. The assistants also ran the CPU tests (367 passing at Phase
+  8), the synthetic end-to-end runs and the audit probes, and an independent AI review preceded
+  each real run. Daniel Song authorised and ran every Colab GPU stage and ran the real CPU runs of
+  Phases 7 and 8 (PROGRESS.md, entries of 2026-10-17). He authorised every merge. He merged the
+  pull requests up to #41 himself; from PR #42 onward the AI session executed the merges at his
+  explicit request (GitHub shows every merge under his account).
 - **Report.** The students write the report; this pack and any assistant draft are a scaffold
   they rewrite, and the GenAI statement should say so.
 - **Split between the two students.** The project record names only Daniel Song as approver and
@@ -485,12 +508,13 @@ Facts from the record, to be written in the students' own words:
   sources reviewed equally; Sections I, II and V driven by Daniel O, III and IV by Daniel S;
   editing shared. The students must write the final split themselves; it must not be inferred.
 
-Draft wording for the GenAI paragraph, to be checked and rewritten by the students: "We used AI
-assistants under our direction. Language models drafted the family texts under our written rules,
-and a second model reviewed every batch; a code checker we specified enforced the rules. AI coding
-assistants implemented the pipeline and the tests from our briefs; we reviewed the work,
-authorised and ran every experiment, and recorded every decision. We wrote this report; an AI
-assistant helped organise our notes and suggested draft text, which we rewrote."
+Draft wording for the GenAI paragraph, to be checked and rewritten by the students: "We designed
+the study and took every recorded decision. AI language models drafted the 200 families under our
+written prompt and audit rules; a code checker we specified and an independent AI reader of a
+different model checked every batch. We did not record a human sign-off for each family. AI coding
+assistants wrote the code and tests from our briefs. Daniel Song authorised every GPU run and every
+merge; from PR #42 the AI session carried out the merges at his request. We wrote this report; an
+AI assistant organised our notes and produced a draft scaffold, which we rewrote."
 
 ---
 
